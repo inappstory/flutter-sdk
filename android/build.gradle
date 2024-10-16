@@ -67,3 +67,16 @@ android {
         }
     }
 }
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    // find releases versions https://github.com/inappstory/android-sdk/releases
+    implementation 'com.github.inappstory:android-sdk:1.20.1' // github README
+}
