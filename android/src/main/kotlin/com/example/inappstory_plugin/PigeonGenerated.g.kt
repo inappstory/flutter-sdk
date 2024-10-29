@@ -46,18 +46,18 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
-enum class StoryType(val raw: Int) {
+enum class StoryTypeDto(val raw: Int) {
   COMMON(0),
   UGC(1);
 
   companion object {
-    fun ofRaw(raw: Int): StoryType? {
+    fun ofRaw(raw: Int): StoryTypeDto? {
       return values().firstOrNull { it.raw == raw }
     }
   }
 }
 
-enum class SourceType(val raw: Int) {
+enum class SourceTypeDto(val raw: Int) {
   SINGLE(0),
   ONBOARDING(1),
   LIST(2),
@@ -65,29 +65,29 @@ enum class SourceType(val raw: Int) {
   STACK(4);
 
   companion object {
-    fun ofRaw(raw: Int): SourceType? {
+    fun ofRaw(raw: Int): SourceTypeDto? {
       return values().firstOrNull { it.raw == raw }
     }
   }
 }
 
-enum class ClickAction(val raw: Int) {
+enum class ClickActionDto(val raw: Int) {
   BUTTON(0),
   SWIPE(1),
   GAME(2),
   DEEPLINK(3);
 
   companion object {
-    fun ofRaw(raw: Int): ClickAction? {
+    fun ofRaw(raw: Int): ClickActionDto? {
       return values().firstOrNull { it.raw == raw }
     }
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class StoryAPIData (
+data class StoryAPIDataDto (
   val id: Long,
-  val storyData: StoryData,
+  val storyData: StoryDataDto,
   val imageFilePath: String? = null,
   val videoFilePath: String? = null,
   val hasAudio: Boolean,
@@ -99,9 +99,9 @@ data class StoryAPIData (
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): StoryAPIData {
+    fun fromList(pigeonVar_list: List<Any?>): StoryAPIDataDto {
       val id = pigeonVar_list[0] as Long
-      val storyData = pigeonVar_list[1] as StoryData
+      val storyData = pigeonVar_list[1] as StoryDataDto
       val imageFilePath = pigeonVar_list[2] as String?
       val videoFilePath = pigeonVar_list[3] as String?
       val hasAudio = pigeonVar_list[4] as Boolean
@@ -110,7 +110,7 @@ data class StoryAPIData (
       val backgroundColor = pigeonVar_list[7] as String
       val opened = pigeonVar_list[8] as Boolean
       val aspectRatio = pigeonVar_list[9] as Double
-      return StoryAPIData(id, storyData, imageFilePath, videoFilePath, hasAudio, title, titleColor, backgroundColor, opened, aspectRatio)
+      return StoryAPIDataDto(id, storyData, imageFilePath, videoFilePath, hasAudio, title, titleColor, backgroundColor, opened, aspectRatio)
     }
   }
   fun toList(): List<Any?> {
@@ -130,26 +130,26 @@ data class StoryAPIData (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class StoryData (
+data class StoryDataDto (
   val id: Long,
   val title: String,
   val tags: String,
   val feed: String,
-  val sourceType: SourceType,
+  val sourceType: SourceTypeDto,
   val slidesCount: Long,
-  val storyType: StoryType
+  val storyType: StoryTypeDto
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): StoryData {
+    fun fromList(pigeonVar_list: List<Any?>): StoryDataDto {
       val id = pigeonVar_list[0] as Long
       val title = pigeonVar_list[1] as String
       val tags = pigeonVar_list[2] as String
       val feed = pigeonVar_list[3] as String
-      val sourceType = pigeonVar_list[4] as SourceType
+      val sourceType = pigeonVar_list[4] as SourceTypeDto
       val slidesCount = pigeonVar_list[5] as Long
-      val storyType = pigeonVar_list[6] as StoryType
-      return StoryData(id, title, tags, feed, sourceType, slidesCount, storyType)
+      val storyType = pigeonVar_list[6] as StoryTypeDto
+      return StoryDataDto(id, title, tags, feed, sourceType, slidesCount, storyType)
     }
   }
   fun toList(): List<Any?> {
@@ -166,18 +166,18 @@ data class StoryData (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class SlideData (
-  val story: StoryData,
+data class SlideDataDto (
+  val story: StoryDataDto,
   val index: Long,
   val payload: String
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): SlideData {
-      val story = pigeonVar_list[0] as StoryData
+    fun fromList(pigeonVar_list: List<Any?>): SlideDataDto {
+      val story = pigeonVar_list[0] as StoryDataDto
       val index = pigeonVar_list[1] as Long
       val payload = pigeonVar_list[2] as String
-      return SlideData(story, index, payload)
+      return SlideDataDto(story, index, payload)
     }
   }
   fun toList(): List<Any?> {
@@ -193,32 +193,32 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          StoryType.ofRaw(it.toInt())
+          StoryTypeDto.ofRaw(it.toInt())
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          SourceType.ofRaw(it.toInt())
+          SourceTypeDto.ofRaw(it.toInt())
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          ClickAction.ofRaw(it.toInt())
+          ClickActionDto.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryAPIData.fromList(it)
+          StoryAPIDataDto.fromList(it)
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryData.fromList(it)
+          StoryDataDto.fromList(it)
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SlideData.fromList(it)
+          SlideDataDto.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -226,27 +226,27 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is StoryType -> {
+      is StoryTypeDto -> {
         stream.write(129)
         writeValue(stream, value.raw)
       }
-      is SourceType -> {
+      is SourceTypeDto -> {
         stream.write(130)
         writeValue(stream, value.raw)
       }
-      is ClickAction -> {
+      is ClickActionDto -> {
         stream.write(131)
         writeValue(stream, value.raw)
       }
-      is StoryAPIData -> {
+      is StoryAPIDataDto -> {
         stream.write(132)
         writeValue(stream, value.toList())
       }
-      is StoryData -> {
+      is StoryDataDto -> {
         stream.write(133)
         writeValue(stream, value.toList())
       }
-      is SlideData -> {
+      is SlideDataDto -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
@@ -495,7 +495,7 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       } 
     }
   }
-  fun updateStoryData(var1Arg: StoryAPIData, callback: (Result<Unit>) -> Unit)
+  fun updateStoryData(var1Arg: StoryAPIDataDto, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData$separatedMessageChannelSuffix"
@@ -512,7 +512,7 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       } 
     }
   }
-  fun updateStoriesData(listArg: List<StoryAPIData>, callback: (Result<Unit>) -> Unit)
+  fun updateStoriesData(listArg: List<StoryAPIDataDto>, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData$separatedMessageChannelSuffix"
@@ -717,7 +717,7 @@ class CallToActionCallbackFlutterApi(private val binaryMessenger: BinaryMessenge
       PigeonGeneratedPigeonCodec()
     }
   }
-  fun callToAction(slideDataArg: SlideData?, urlArg: String?, clickActionArg: ClickAction?, callback: (Result<Unit>) -> Unit)
+  fun callToAction(slideDataArg: SlideDataDto?, urlArg: String?, clickActionArg: ClickActionDto?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.CallToActionCallbackFlutterApi.callToAction$separatedMessageChannelSuffix"

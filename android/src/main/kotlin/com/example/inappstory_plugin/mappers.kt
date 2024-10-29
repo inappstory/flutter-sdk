@@ -4,10 +4,10 @@ import android.os.Handler
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.StoryData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import SlideData as SlideDataDto
-import SourceType as SourceTypeDto
-import StoryData as StoryDataDto
-import StoryType as StoryTypeDto
+import SlideDataDto
+import SourceTypeDto
+import StoryDataDto
+import StoryTypeDto
 
 
 fun FlutterPlugin.FlutterPluginBinding.runOnMainThread(callback: () -> Unit) {

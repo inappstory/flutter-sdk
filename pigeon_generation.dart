@@ -1,7 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
 // Коментировать перед запуском
-// flutter pub run pigeon --input interfaces.dart
+// flutter pub run pigeon --input pigeon_generation.dart
 // import 'lib/inappstory_sdk_module.dart';
 
 @ConfigurePigeon(PigeonOptions(
@@ -9,7 +9,7 @@ import 'package:pigeon/pigeon.dart';
   dartOptions: DartOptions(),
   kotlinOut: 'android/src/main/kotlin/com/example/inappstory_plugin/PigeonGenerated.g.kt',
   kotlinOptions: KotlinOptions(),
-  swiftOut: 'ios/Runner/PigeonGenerated.g.swift',
+  swiftOut: 'ios/Classes/PigeonGenerated.g.swift',
   swiftOptions: SwiftOptions(),
 ))
 // ConfigurePigeon
@@ -48,9 +48,9 @@ abstract class IASStoryListHostApi {
 abstract class InAppStoryAPIListSubscriberFlutterApi {
   void storyIsOpened(int var1);
 
-  void updateStoryData(StoryAPIData var1);
+  void updateStoryData(StoryAPIDataDto var1);
 
-  void updateStoriesData(List<StoryAPIData> list);
+  void updateStoriesData(List<StoryAPIDataDto> list);
 
   void readerIsOpened();
 
@@ -76,9 +76,9 @@ abstract class ErrorCallbackFlutterApi {
   void noConnection();
 }
 
-class StoryAPIData {
+class StoryAPIDataDto {
   late int id;
-  late StoryData storyData;
+  late StoryDataDto storyData;
   late String? imageFilePath;
   late String? videoFilePath;
   late bool hasAudio;
@@ -89,22 +89,22 @@ class StoryAPIData {
   late double aspectRatio;
 }
 
-class StoryData {
+class StoryDataDto {
   late int id;
   late String title;
   late String tags;
   late String feed;
-  late SourceType sourceType;
+  late SourceTypeDto sourceType;
   late int slidesCount;
-  late StoryType storyType;
+  late StoryTypeDto storyType;
 }
 
-enum StoryType {
+enum StoryTypeDto {
   COMMON,
   UGC;
 }
 
-enum SourceType {
+enum SourceTypeDto {
   SINGLE,
   ONBOARDING,
   LIST,
@@ -114,16 +114,16 @@ enum SourceType {
 
 @FlutterApi()
 abstract class CallToActionCallbackFlutterApi {
-  void callToAction(SlideData? slideData, String? url, ClickAction? clickAction);
+  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
 }
 
-class SlideData {
-  late StoryData story;
+class SlideDataDto {
+  late StoryDataDto story;
   late int index;
   late String payload;
 }
 
-enum ClickAction {
+enum ClickActionDto {
   BUTTON,
   SWIPE,
   GAME,

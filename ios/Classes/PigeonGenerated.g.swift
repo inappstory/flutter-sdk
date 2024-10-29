@@ -68,12 +68,12 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
-enum StoryType: Int {
+enum StoryTypeDto: Int {
   case cOMMON = 0
   case uGC = 1
 }
 
-enum SourceType: Int {
+enum SourceTypeDto: Int {
   case sINGLE = 0
   case oNBOARDING = 1
   case lIST = 2
@@ -81,7 +81,7 @@ enum SourceType: Int {
   case sTACK = 4
 }
 
-enum ClickAction: Int {
+enum ClickActionDto: Int {
   case bUTTON = 0
   case sWIPE = 1
   case gAME = 2
@@ -89,9 +89,9 @@ enum ClickAction: Int {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct StoryAPIData {
+struct StoryAPIDataDto {
   var id: Int64
-  var storyData: StoryData
+  var storyData: StoryDataDto
   var imageFilePath: String? = nil
   var videoFilePath: String? = nil
   var hasAudio: Bool
@@ -104,9 +104,9 @@ struct StoryAPIData {
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> StoryAPIData? {
+  static func fromList(_ pigeonVar_list: [Any?]) -> StoryAPIDataDto? {
     let id = pigeonVar_list[0] as! Int64
-    let storyData = pigeonVar_list[1] as! StoryData
+    let storyData = pigeonVar_list[1] as! StoryDataDto
     let imageFilePath: String? = nilOrValue(pigeonVar_list[2])
     let videoFilePath: String? = nilOrValue(pigeonVar_list[3])
     let hasAudio = pigeonVar_list[4] as! Bool
@@ -116,7 +116,7 @@ struct StoryAPIData {
     let opened = pigeonVar_list[8] as! Bool
     let aspectRatio = pigeonVar_list[9] as! Double
 
-    return StoryAPIData(
+    return StoryAPIDataDto(
       id: id,
       storyData: storyData,
       imageFilePath: imageFilePath,
@@ -146,28 +146,28 @@ struct StoryAPIData {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct StoryData {
+struct StoryDataDto {
   var id: Int64
   var title: String
   var tags: String
   var feed: String
-  var sourceType: SourceType
+  var sourceType: SourceTypeDto
   var slidesCount: Int64
-  var storyType: StoryType
+  var storyType: StoryTypeDto
 
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> StoryData? {
+  static func fromList(_ pigeonVar_list: [Any?]) -> StoryDataDto? {
     let id = pigeonVar_list[0] as! Int64
     let title = pigeonVar_list[1] as! String
     let tags = pigeonVar_list[2] as! String
     let feed = pigeonVar_list[3] as! String
-    let sourceType = pigeonVar_list[4] as! SourceType
+    let sourceType = pigeonVar_list[4] as! SourceTypeDto
     let slidesCount = pigeonVar_list[5] as! Int64
-    let storyType = pigeonVar_list[6] as! StoryType
+    let storyType = pigeonVar_list[6] as! StoryTypeDto
 
-    return StoryData(
+    return StoryDataDto(
       id: id,
       title: title,
       tags: tags,
@@ -191,20 +191,20 @@ struct StoryData {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
-struct SlideData {
-  var story: StoryData
+struct SlideDataDto {
+  var story: StoryDataDto
   var index: Int64
   var payload: String
 
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> SlideData? {
-    let story = pigeonVar_list[0] as! StoryData
+  static func fromList(_ pigeonVar_list: [Any?]) -> SlideDataDto? {
+    let story = pigeonVar_list[0] as! StoryDataDto
     let index = pigeonVar_list[1] as! Int64
     let payload = pigeonVar_list[2] as! String
 
-    return SlideData(
+    return SlideDataDto(
       story: story,
       index: index,
       payload: payload
@@ -225,27 +225,27 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
     case 129:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return StoryType(rawValue: enumResultAsInt)
+        return StoryTypeDto(rawValue: enumResultAsInt)
       }
       return nil
     case 130:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return SourceType(rawValue: enumResultAsInt)
+        return SourceTypeDto(rawValue: enumResultAsInt)
       }
       return nil
     case 131:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return ClickAction(rawValue: enumResultAsInt)
+        return ClickActionDto(rawValue: enumResultAsInt)
       }
       return nil
     case 132:
-      return StoryAPIData.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 133:
-      return StoryData.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 134:
-      return SlideData.fromList(self.readValue() as! [Any?])
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -254,22 +254,22 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
 
 private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
   override func writeValue(_ value: Any) {
-    if let value = value as? StoryType {
+    if let value = value as? StoryTypeDto {
       super.writeByte(129)
       super.writeValue(value.rawValue)
-    } else if let value = value as? SourceType {
+    } else if let value = value as? SourceTypeDto {
       super.writeByte(130)
       super.writeValue(value.rawValue)
-    } else if let value = value as? ClickAction {
+    } else if let value = value as? ClickActionDto {
       super.writeByte(131)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIData {
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(132)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryData {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(133)
       super.writeValue(value.toList())
-    } else if let value = value as? SlideData {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(134)
       super.writeValue(value.toList())
     } else {
@@ -474,8 +474,8 @@ class IASStoryListHostApiSetup {
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
   func storyIsOpened(var1 var1Arg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func updateStoryData(var1 var1Arg: StoryAPIData, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func updateStoriesData(list listArg: [StoryAPIData], completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func readerIsOpened(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func readerIsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
@@ -507,7 +507,7 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
       }
     }
   }
-  func updateStoryData(var1 var1Arg: StoryAPIData, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([var1Arg] as [Any?]) { response in
@@ -525,7 +525,7 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
       }
     }
   }
-  func updateStoriesData(list listArg: [StoryAPIData], completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([listArg] as [Any?]) { response in
@@ -748,7 +748,7 @@ class ErrorCallbackFlutterApi: ErrorCallbackFlutterApiProtocol {
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol CallToActionCallbackFlutterApiProtocol {
-  func callToAction(slideData slideDataArg: SlideData?, url urlArg: String?, clickAction clickActionArg: ClickAction?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func callToAction(slideData slideDataArg: SlideDataDto?, url urlArg: String?, clickAction clickActionArg: ClickActionDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class CallToActionCallbackFlutterApi: CallToActionCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -760,7 +760,7 @@ class CallToActionCallbackFlutterApi: CallToActionCallbackFlutterApiProtocol {
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
   }
-  func callToAction(slideData slideDataArg: SlideData?, url urlArg: String?, clickAction clickActionArg: ClickAction?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func callToAction(slideData slideDataArg: SlideDataDto?, url urlArg: String?, clickAction clickActionArg: ClickActionDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.CallToActionCallbackFlutterApi.callToAction\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([slideDataArg, urlArg, clickActionArg] as [Any?]) { response in

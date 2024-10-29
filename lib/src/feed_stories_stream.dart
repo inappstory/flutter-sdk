@@ -5,13 +5,13 @@ import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
 import 'pigeon_generated.g.dart';
 import 'stories_stream.dart';
 
-class FeedStoriesStream extends Stream<Iterable<StoryAPIData>>
+class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
     implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi, StoriesStream {
   FeedStoriesStream(this.feed);
 
   final String feed;
 
-  late final controller = StreamController<Iterable<StoryAPIData>>(
+  late final controller = StreamController<Iterable<StoryAPIDataDto>>(
     onListen: onListen,
     onCancel: onCancel,
   );
@@ -28,8 +28,8 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIData>>
   }
 
   @override
-  void updateStoriesData(List<StoryAPIData?> list) {
-    controller.add(list.whereType<StoryAPIData>());
+  void updateStoriesData(List<StoryAPIDataDto?> list) {
+    controller.add(list.whereType<StoryAPIDataDto>());
   }
 
   @override
@@ -38,8 +38,8 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIData>>
   }
 
   @override
-  StreamSubscription<Iterable<StoryAPIData>> listen(
-    void Function(Iterable<StoryAPIData> event)? onData, {
+  StreamSubscription<Iterable<StoryAPIDataDto>> listen(
+    void Function(Iterable<StoryAPIDataDto> event)? onData, {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,
@@ -57,7 +57,7 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIData>>
   void storyIsOpened(int var1) {}
 
   @override
-  void updateStoryData(StoryAPIData var1) {
+  void updateStoryData(StoryAPIDataDto var1) {
     print(var1.imageFilePath);
   }
 

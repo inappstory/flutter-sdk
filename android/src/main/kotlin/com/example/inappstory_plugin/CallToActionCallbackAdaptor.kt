@@ -6,7 +6,7 @@ import com.inappstory.sdk.stories.outercallbacks.common.reader.CallToActionCallb
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ClickAction
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import ClickAction as ClickActionDto
+import ClickActionDto
 
 class CallToActionCallbackAdaptor(
         flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,

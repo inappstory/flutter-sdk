@@ -25,12 +25,12 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   return <Object?>[error.code, error.message, error.details];
 }
 
-enum StoryType {
+enum StoryTypeDto {
   COMMON,
   UGC,
 }
 
-enum SourceType {
+enum SourceTypeDto {
   SINGLE,
   ONBOARDING,
   LIST,
@@ -38,15 +38,15 @@ enum SourceType {
   STACK,
 }
 
-enum ClickAction {
+enum ClickActionDto {
   BUTTON,
   SWIPE,
   GAME,
   DEEPLINK,
 }
 
-class StoryAPIData {
-  StoryAPIData({
+class StoryAPIDataDto {
+  StoryAPIDataDto({
     required this.id,
     required this.storyData,
     this.imageFilePath,
@@ -61,7 +61,7 @@ class StoryAPIData {
 
   int id;
 
-  StoryData storyData;
+  StoryDataDto storyData;
 
   String? imageFilePath;
 
@@ -94,11 +94,11 @@ class StoryAPIData {
     ];
   }
 
-  static StoryAPIData decode(Object result) {
+  static StoryAPIDataDto decode(Object result) {
     result as List<Object?>;
-    return StoryAPIData(
+    return StoryAPIDataDto(
       id: result[0]! as int,
-      storyData: result[1]! as StoryData,
+      storyData: result[1]! as StoryDataDto,
       imageFilePath: result[2] as String?,
       videoFilePath: result[3] as String?,
       hasAudio: result[4]! as bool,
@@ -111,8 +111,8 @@ class StoryAPIData {
   }
 }
 
-class StoryData {
-  StoryData({
+class StoryDataDto {
+  StoryDataDto({
     required this.id,
     required this.title,
     required this.tags,
@@ -130,11 +130,11 @@ class StoryData {
 
   String feed;
 
-  SourceType sourceType;
+  SourceTypeDto sourceType;
 
   int slidesCount;
 
-  StoryType storyType;
+  StoryTypeDto storyType;
 
   Object encode() {
     return <Object?>[
@@ -148,28 +148,28 @@ class StoryData {
     ];
   }
 
-  static StoryData decode(Object result) {
+  static StoryDataDto decode(Object result) {
     result as List<Object?>;
-    return StoryData(
+    return StoryDataDto(
       id: result[0]! as int,
       title: result[1]! as String,
       tags: result[2]! as String,
       feed: result[3]! as String,
-      sourceType: result[4]! as SourceType,
+      sourceType: result[4]! as SourceTypeDto,
       slidesCount: result[5]! as int,
-      storyType: result[6]! as StoryType,
+      storyType: result[6]! as StoryTypeDto,
     );
   }
 }
 
-class SlideData {
-  SlideData({
+class SlideDataDto {
+  SlideDataDto({
     required this.story,
     required this.index,
     required this.payload,
   });
 
-  StoryData story;
+  StoryDataDto story;
 
   int index;
 
@@ -183,10 +183,10 @@ class SlideData {
     ];
   }
 
-  static SlideData decode(Object result) {
+  static SlideDataDto decode(Object result) {
     result as List<Object?>;
-    return SlideData(
-      story: result[0]! as StoryData,
+    return SlideDataDto(
+      story: result[0]! as StoryDataDto,
       index: result[1]! as int,
       payload: result[2]! as String,
     );
@@ -201,22 +201,22 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is StoryType) {
+    }    else if (value is StoryTypeDto) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is SourceType) {
+    }    else if (value is SourceTypeDto) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    }    else if (value is ClickAction) {
+    }    else if (value is ClickActionDto) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is StoryAPIData) {
+    }    else if (value is StoryAPIDataDto) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryData) {
+    }    else if (value is StoryDataDto) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is SlideData) {
+    }    else if (value is SlideDataDto) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else {
@@ -229,19 +229,19 @@ class _PigeonCodec extends StandardMessageCodec {
     switch (type) {
       case 129: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : StoryType.values[value];
+        return value == null ? null : StoryTypeDto.values[value];
       case 130: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : SourceType.values[value];
+        return value == null ? null : SourceTypeDto.values[value];
       case 131: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : ClickAction.values[value];
+        return value == null ? null : ClickActionDto.values[value];
       case 132: 
-        return StoryAPIData.decode(readValue(buffer)!);
+        return StoryAPIDataDto.decode(readValue(buffer)!);
       case 133: 
-        return StoryData.decode(readValue(buffer)!);
+        return StoryDataDto.decode(readValue(buffer)!);
       case 134: 
-        return SlideData.decode(readValue(buffer)!);
+        return SlideDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -487,9 +487,9 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void storyIsOpened(int var1);
 
-  void updateStoryData(StoryAPIData var1);
+  void updateStoryData(StoryAPIDataDto var1);
 
-  void updateStoriesData(List<StoryAPIData?> list);
+  void updateStoriesData(List<StoryAPIDataDto?> list);
 
   void readerIsOpened();
 
@@ -533,9 +533,9 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final StoryAPIData? arg_var1 = (args[0] as StoryAPIData?);
+          final StoryAPIDataDto? arg_var1 = (args[0] as StoryAPIDataDto?);
           assert(arg_var1 != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData was null, expected non-null StoryAPIData.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData was null, expected non-null StoryAPIDataDto.');
           try {
             api.updateStoryData(arg_var1!);
             return wrapResponse(empty: true);
@@ -558,9 +558,9 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final List<StoryAPIData?>? arg_list = (args[0] as List<Object?>?)?.cast<StoryAPIData?>();
+          final List<StoryAPIDataDto?>? arg_list = (args[0] as List<Object?>?)?.cast<StoryAPIDataDto?>();
           assert(arg_list != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData was null, expected non-null List<StoryAPIData?>.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData was null, expected non-null List<StoryAPIDataDto?>.');
           try {
             api.updateStoriesData(arg_list!);
             return wrapResponse(empty: true);
@@ -804,7 +804,7 @@ abstract class ErrorCallbackFlutterApi {
 abstract class CallToActionCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void callToAction(SlideData? slideData, String? url, ClickAction? clickAction);
+  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
 
   static void setUp(CallToActionCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -819,9 +819,9 @@ abstract class CallToActionCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.CallToActionCallbackFlutterApi.callToAction was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final SlideData? arg_slideData = (args[0] as SlideData?);
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
           final String? arg_url = (args[1] as String?);
-          final ClickAction? arg_clickAction = (args[2] as ClickAction?);
+          final ClickActionDto? arg_clickAction = (args[2] as ClickActionDto?);
           try {
             api.callToAction(arg_slideData, arg_url, arg_clickAction);
             return wrapResponse(empty: true);

@@ -6,6 +6,7 @@ public class InappstoryPlugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "inappstory_plugin", binaryMessenger: registrar.messenger())
     let instance = InappstoryPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+    InappstorySdkModuleAdaptor(binaryMessenger: registrar.messenger())
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

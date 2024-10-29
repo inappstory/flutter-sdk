@@ -74,14 +74,14 @@ class _MyAppState extends State<MyApp> {
 }
 
 abstract class StoryAPIDataWidget implements StatefulWidget {
-  StoryAPIData get storyAPIData;
+  StoryAPIDataDto get storyAPIData;
 }
 
 class DefaultStoryAPIDataWidget extends StatefulWidget implements StoryAPIDataWidget {
   const DefaultStoryAPIDataWidget(this.storyAPIData, {super.key});
 
   @override
-  final StoryAPIData storyAPIData;
+  final StoryAPIDataDto storyAPIData;
 
   @override
   State<DefaultStoryAPIDataWidget> createState() => _DefaultStoryAPIDataWidgetState();
@@ -90,7 +90,7 @@ class DefaultStoryAPIDataWidget extends StatefulWidget implements StoryAPIDataWi
 class _DefaultStoryAPIDataWidgetState extends State<DefaultStoryAPIDataWidget> {
   get api => IASStoryListHostApi();
 
-  StoryAPIData get storyAPIData => widget.storyAPIData;
+  StoryAPIDataDto get storyAPIData => widget.storyAPIData;
 
   void onTap() => api.openStoryReader(storyAPIData.id);
 

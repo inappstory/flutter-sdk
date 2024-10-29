@@ -8,7 +8,7 @@ import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import com.inappstory.sdk.stories.api.models.CachedSessionData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
-import StoryAPIData as StoryAPIDataDto
+import StoryAPIDataDto
 
 class InAppStoryAPIListSubscriberAdaptor(
         private val flutterPluginBinding: FlutterPluginBinding,
