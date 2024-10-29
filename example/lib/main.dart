@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
 void main() {
@@ -16,35 +13,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final _inappstoryPlugin = InappstoryPlugin();
+
+  final defaultFeedStoriesStream = StoriesStream.feed('default');
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _inappstoryPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    _inappstoryPlugin.initWith('test-key', 'testUserId', true, false);
   }
 
   @override
@@ -54,10 +30,125 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
+        backgroundColor: Colors.black,
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              SizedBox(
+                height: 100,
+                child: StreamBuilder(
+                  stream: defaultFeedStoriesStream,
+                  builder: (_, snap) {
+                    if (snap.hasData) {
+                      return ListView.separated(
+                        itemCount: snap.requireData.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (_, index) {
+                          final story = snap.requireData.elementAt(index);
+                          return DefaultStoryAPIDataWidget(story);
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(width: 16);
+                        },
+                      );
+                    }
+
+                    if (snap.hasError) {
+                      return Text(
+                        '${snap.error}',
+                        style: const TextStyle(color: Colors.red),
+                      );
+                    }
+
+                    return const CircularProgressIndicator();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+abstract class StoryAPIDataWidget implements StatefulWidget {
+  StoryAPIData get storyAPIData;
+}
+
+class DefaultStoryAPIDataWidget extends StatefulWidget implements StoryAPIDataWidget {
+  const DefaultStoryAPIDataWidget(this.storyAPIData, {super.key});
+
+  @override
+  final StoryAPIData storyAPIData;
+
+  @override
+  State<DefaultStoryAPIDataWidget> createState() => _DefaultStoryAPIDataWidgetState();
+}
+
+class _DefaultStoryAPIDataWidgetState extends State<DefaultStoryAPIDataWidget> {
+  get api => IASStoryListHostApi();
+
+  StoryAPIData get storyAPIData => widget.storyAPIData;
+
+  void onTap() => api.openStoryReader(storyAPIData.id);
+
+  @override
+  Widget build(BuildContext context) {
+    final imageFilePath = storyAPIData.imageFilePath;
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      child: AspectRatio(
+        aspectRatio: storyAPIData.aspectRatio,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: imageFilePath != null
+                    ? Image.network(
+                        imageFilePath,
+                        fit: BoxFit.cover,
+                      )
+                    : ColoredBox(color: colorFromString(storyAPIData.backgroundColor)),
+              ),
+              const Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black87,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    storyAPIData.title,
+                    style: TextStyle(color: colorFromString(storyAPIData.titleColor)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Color colorFromString(String string) {
+  return Color(
+    int.parse(
+      string.replaceAll(RegExp('^#'), '0xff'),
+    ),
+  );
 }

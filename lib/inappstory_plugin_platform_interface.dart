@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:inappstory_plugin/inappstory_sdk_module.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappstory_plugin_method_channel.dart';
+import 'src/pigeon_generated.g.dart';
 
-abstract class InappstoryPluginPlatform extends PlatformInterface {
+abstract class InappstoryPluginPlatform extends PlatformInterface implements InappstorySdkModule {
   /// Constructs a InappstoryPluginPlatform.
   InappstoryPluginPlatform() : super(token: _token);
 
@@ -26,4 +30,7 @@ abstract class InappstoryPluginPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  @override
+  Future<void> initWith(String apiKey, String userID, bool sandbox, bool sendStatistics);
 }

@@ -76,7 +76,17 @@ rootProject.allprojects {
     }
 }
 
+def ugc_version = "bcd5bb710c16dd84441a0dbd95f7d9bfa590f80a"
 dependencies {
-    // find releases versions https://github.com/inappstory/android-sdk/releases
-    implementation 'com.github.inappstory:android-sdk:1.20.1' // github README
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'com.github.inappstory:android-sdk:1.20.1'
+    implementation ("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
+        transitive=true
+        exclude group: 'com.github.inappstory', module: 'android-sdk' //exclude to prevent libraries overriding
+    }
+    implementation("com.github.inappstory:ugc-android-sdk:$ugc_version") {
+        transitive=true
+        exclude group: 'com.github.inappstory', module: 'android-sdk' //exclude to prevent libraries overriding
+    }
 }
