@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
+import 'package:inappstory_plugin_example/simple_feed_exmaple.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +14,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get navigatorState =>
+      navigatorKey.currentState ?? (throw Exception('navigatorKey is not set to MaterialApp'));
+
   final _inappstoryPlugin = InappstoryPlugin();
 
   final defaultFeedStoriesStream = StoriesStream.feed('default');
@@ -25,140 +29,27 @@ class _MyAppState extends State<MyApp> {
     _inappstoryPlugin.initWith('test-key', 'testUserId', true, false);
   }
 
+  void onSimpleExampleTap() {
+    navigatorState.push(MaterialPageRoute(builder: (_) => const SimpleFeedExampleWidget()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        backgroundColor: Colors.black,
         body: Center(
           child: Column(
             children: [
               const SizedBox(height: 24),
-              SizedBox(
-                height: 100,
-                child: StreamBuilder(
-                  stream: defaultFeedStoriesStream,
-                  builder: (_, snap) {
-                    if (snap.hasData) {
-                      return ListView.separated(
-                        itemCount: snap.requireData.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (_, index) {
-                          final story = snap.requireData.elementAt(index);
-                          return DefaultStoryAPIDataWidget(story);
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(width: 16);
-                        },
-                      );
-                    }
-
-                    if (snap.hasError) {
-                      return Text(
-                        '${snap.error}',
-                        style: const TextStyle(color: Colors.red),
-                      );
-                    }
-
-                    return const CircularProgressIndicator();
-                  },
-                ),
-              ),
+              ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-abstract class StoryAPIDataWidget implements StatefulWidget {
-  StoryAPIDataDto get storyAPIData;
-}
-
-class DefaultStoryAPIDataWidget extends StatefulWidget implements StoryAPIDataWidget {
-  const DefaultStoryAPIDataWidget(this.storyAPIData, {super.key});
-
-  @override
-  final StoryAPIDataDto storyAPIData;
-
-  @override
-  State<DefaultStoryAPIDataWidget> createState() => _DefaultStoryAPIDataWidgetState();
-}
-
-class _DefaultStoryAPIDataWidgetState extends State<DefaultStoryAPIDataWidget> {
-  get api => IASStoryListHostApi();
-
-  StoryAPIDataDto get storyAPIData => widget.storyAPIData;
-
-  void onTap() => api.openStoryReader(storyAPIData.id);
-
-  Image? get image {
-    final imageFilePath = storyAPIData.imageFilePath;
-
-    if (imageFilePath == null || imageFilePath.trim().isEmpty) return null;
-
-    final uri = Uri.parse(imageFilePath);
-
-    return switch (uri.scheme) {
-      'http' => Image.network(uri.path),
-      'file' || '' => Image.file(File(uri.path)),
-      _ => null,
-    };
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(10)),
-      child: AspectRatio(
-        aspectRatio: storyAPIData.aspectRatio,
-        child: GestureDetector(
-          onTap: onTap,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: image ?? ColoredBox(color: colorFromString(storyAPIData.backgroundColor)),
-              ),
-              const Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black87,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    storyAPIData.title,
-                    style: TextStyle(color: colorFromString(storyAPIData.titleColor)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-Color colorFromString(String string) {
-  return Color(
-    int.parse(
-      string.replaceAll(RegExp('^#'), '0xff'),
-    ),
-  );
 }
