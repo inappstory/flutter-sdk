@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
@@ -94,9 +96,22 @@ class _DefaultStoryAPIDataWidgetState extends State<DefaultStoryAPIDataWidget> {
 
   void onTap() => api.openStoryReader(storyAPIData.id);
 
+  Image? get image {
+    final imageFilePath = storyAPIData.imageFilePath;
+
+    if (imageFilePath == null || imageFilePath.trim().isEmpty) return null;
+
+    final uri = Uri.parse(imageFilePath);
+
+    return switch (uri.scheme) {
+      'http' => Image.network(uri.path),
+      'file' || '' => Image.file(File(uri.path)),
+      _ => null,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageFilePath = storyAPIData.imageFilePath;
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: AspectRatio(
@@ -106,12 +121,7 @@ class _DefaultStoryAPIDataWidgetState extends State<DefaultStoryAPIDataWidget> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: imageFilePath != null
-                    ? Image.network(
-                        imageFilePath,
-                        fit: BoxFit.cover,
-                      )
-                    : ColoredBox(color: colorFromString(storyAPIData.backgroundColor)),
+                child: image ?? ColoredBox(color: colorFromString(storyAPIData.backgroundColor)),
               ),
               const Positioned.fill(
                 child: DecoratedBox(

@@ -10,24 +10,32 @@ import Flutter
 @_spi(IAS_API) import InAppStorySDK
 
 class StoriesListUpdateHandlerAdaptor {
-    init(binaryMessenger: FlutterBinaryMessenger, storiesAPI: StoryListAPI) {
+    init(binaryMessenger: FlutterBinaryMessenger, storyListAPI: StoryListAPI) {
         self.binaryMessenger = binaryMessenger
         
         self.flutter = InAppStoryAPIListSubscriberFlutterApi(binaryMessenger: binaryMessenger)
         
-        self.storiesAPI = storiesAPI
+        self.storyListAPI = storyListAPI
         
-        storiesAPI.storyListUpdate = storiesListUpdateHandler
+        storyListAPI.storyListUpdate = storiesListUpdateHandler
+        
+        storyListAPI.storyUpdate = storyUpdateHandler
     }
     
     private var binaryMessenger: FlutterBinaryMessenger
     
-    private var storiesAPI: StoryListAPI
+    private var storyListAPI: StoryListAPI
     
     private var flutter: InAppStoryAPIListSubscriberFlutterApi
     
     private lazy var storiesListUpdateHandler: StoriesListUpdateHandler = { storiesList, isFavorite, feed in
+        self.storyListAPI.setVisibleWith(storyIDs: storiesList.map{ $0.storyID })
+        
         self.flutter.updateStoriesData(list: storiesList.map(self.mapStoryAPIData), completion: {_ in })
+    }
+    
+    private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in
+        self.flutter.updateStoryData(var1: self.mapStoryAPIData(arg: storyCellData), completion: {_ in })
     }
     
     private func mapStoryAPIData(arg: StoryCellData) -> StoryAPIDataDto {
@@ -41,7 +49,7 @@ class StoriesListUpdateHandlerAdaptor {
             titleColor: arg.titleColor,
             backgroundColor: arg.backgroundColor,
             opened: arg.opened,
-            aspectRatio: Double(storiesAPI.cellRatio)
+            aspectRatio: Double(storyListAPI.cellRatio)
         )
     }
     

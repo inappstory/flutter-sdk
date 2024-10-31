@@ -1,6 +1,7 @@
 package com.example.inappstory_plugin
 
 import InappstorySdkModuleHostApi
+import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import com.inappstorysdk.InappstorySdkModule
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
@@ -22,9 +23,11 @@ class InappstorySdkModuleAdaptor(
                 sendStatistics = sendStatistics
         )
 
-        IASStoryListAdaptor(flutterPluginBinding, adapted.appearanceManager!!, uniqueId = "feed")
+        val iasStoryList = IASStoryList()
 
-        adapted.api?.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding))
+        IASStoryListAdaptor(flutterPluginBinding, adapted.appearanceManager!!, iasStoryList, uniqueId = "feed")
+
+        adapted.api?.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding, iasStoryList))
 
         adapted.ias?.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
 

@@ -1,17 +1,19 @@
 package com.example.inappstory_plugin
 
 import InAppStoryAPIListSubscriberFlutterApi
+import StoryAPIDataDto
 import android.os.Handler
 import com.inappstory.sdk.InAppStoryService
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
+import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import com.inappstory.sdk.stories.api.models.CachedSessionData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
-import StoryAPIDataDto
 
 class InAppStoryAPIListSubscriberAdaptor(
         private val flutterPluginBinding: FlutterPluginBinding,
+        private val iASStoryList: IASStoryList,
 ) :
         InAppStoryAPIListSubscriber("feed") {
     private val storyListSubscriber = InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger)
@@ -24,11 +26,7 @@ class InAppStoryAPIListSubscriberAdaptor(
     }
 
     override fun updateStoriesData(list: MutableList<StoryAPIData>) {
-
-        list.forEach {
-            val story = storyDownloadManager.getStoryById(it.id, it.storyData.storyType)
-            it.imageFilePath = story?.image?.firstOrNull()?.url
-        }
+        iASStoryList.updateVisiblePreviews(list.map { it.id }, uniqueId)
 
         Handler(flutterPluginBinding.applicationContext.mainLooper).post {
             storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, getAspectRatio()) }) {}

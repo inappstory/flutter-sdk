@@ -9,6 +9,7 @@ import kotlinx.coroutines.DisposableHandle
 class IASStoryListAdaptor(
         private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
         private val appearanceManager: AppearanceManager,
+        private val iASStoryList: IASStoryList,
         private val uniqueId: String,
 ) : IASStoryListHostApi, DisposableHandle {
     init {
@@ -19,13 +20,12 @@ class IASStoryListAdaptor(
         IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
     }
 
-    private val adapted = IASStoryList()
     override fun load(feed: String, hasFavorite: Boolean, isFavorite: Boolean) {
-        adapted.load(feed, uniqueId, hasFavorite, isFavorite, mutableListOf())
+        iASStoryList.load(feed, uniqueId, hasFavorite, isFavorite, mutableListOf())
     }
 
     override fun openStoryReader(storyId: Long) {
-        adapted.openStoryReader(
+        iASStoryList.openStoryReader(
                 flutterPluginBinding.applicationContext,
                 uniqueId,
                 storyId.toInt(),
@@ -38,7 +38,7 @@ class IASStoryListAdaptor(
     }
 
     override fun updateVisiblePreviews(storyIds: List<Long>) {
-        TODO("Not yet implemented")
+        iASStoryList.updateVisiblePreviews(storyIds.map { it.toInt() }, uniqueId)
     }
 
 

@@ -19,7 +19,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     
     var binaryMessenger: FlutterBinaryMessenger
     
-    var storiesAPI = StoryListAPI()
+    var storyListAPI = StoryListAPI()
     
     func initWith(apiKey: String, userID: String, sandbox: Bool, sendStatistics: Bool) throws {
         // the parameter is responsible for logging to the XCode console
@@ -40,11 +40,11 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         InAppStory.shared.initWith(serviceKey: apiKey, settings: Settings(userID: userID))
         
-        StoriesListUpdateHandlerAdaptor(binaryMessenger: binaryMessenger, storiesAPI: storiesAPI)
+        StoriesListUpdateHandlerAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI)
     }
     
     func getStories(feed: String) throws {
-        self.storiesAPI.setNewFeed(feed)
+        self.storyListAPI.setNewFeed(feed)
     }
     
     func setPlaceholders(newPlaceholders: [String : String]) throws {
