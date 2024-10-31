@@ -166,14 +166,14 @@ class SlideDataDto {
   SlideDataDto({
     required this.story,
     required this.index,
-    required this.payload,
+    this.payload,
   });
 
   StoryDataDto story;
 
   int index;
 
-  String payload;
+  String? payload;
 
   Object encode() {
     return <Object?>[
@@ -188,7 +188,7 @@ class SlideDataDto {
     return SlideDataDto(
       story: result[0]! as StoryDataDto,
       index: result[1]! as int,
-      payload: result[2]! as String,
+      payload: result[2] as String?,
     );
   }
 }

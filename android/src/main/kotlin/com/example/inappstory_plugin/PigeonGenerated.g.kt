@@ -169,14 +169,14 @@ data class StoryDataDto (
 data class SlideDataDto (
   val story: StoryDataDto,
   val index: Long,
-  val payload: String
+  val payload: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): SlideDataDto {
       val story = pigeonVar_list[0] as StoryDataDto
       val index = pigeonVar_list[1] as Long
-      val payload = pigeonVar_list[2] as String
+      val payload = pigeonVar_list[2] as String?
       return SlideDataDto(story, index, payload)
     }
   }

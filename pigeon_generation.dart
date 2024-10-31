@@ -120,7 +120,7 @@ abstract class CallToActionCallbackFlutterApi {
 class SlideDataDto {
   late StoryDataDto story;
   late int index;
-  late String payload;
+  late String? payload;
 }
 
 enum ClickActionDto {

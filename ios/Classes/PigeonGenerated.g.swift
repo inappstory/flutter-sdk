@@ -194,7 +194,7 @@ struct StoryDataDto {
 struct SlideDataDto {
   var story: StoryDataDto
   var index: Int64
-  var payload: String
+  var payload: String? = nil
 
 
 
@@ -202,7 +202,7 @@ struct SlideDataDto {
   static func fromList(_ pigeonVar_list: [Any?]) -> SlideDataDto? {
     let story = pigeonVar_list[0] as! StoryDataDto
     let index = pigeonVar_list[1] as! Int64
-    let payload = pigeonVar_list[2] as! String
+    let payload: String? = nilOrValue(pigeonVar_list[2])
 
     return SlideDataDto(
       story: story,

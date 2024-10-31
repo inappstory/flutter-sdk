@@ -40,7 +40,11 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         InAppStory.shared.initWith(serviceKey: apiKey, settings: Settings(userID: userID))
         
+        StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI)
+        
         StoriesListUpdateHandlerAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI)
+        
+        CallToActionCallbackAdaptor(binaryMessenger:  binaryMessenger)
     }
     
     func getStories(feed: String) throws {

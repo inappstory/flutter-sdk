@@ -164,7 +164,7 @@ class InappstorySdkModule(var reactContext: ReactApplicationContext) :
         this.createManager(apiKey, userID, sandbox, sendStatistics, this.api as InAppStoryAPI)
 //        this.subscribeLists(this.api as InAppStoryAPI, "feed")
 //        this.subscribeLists(this.favoritesApi as InAppStoryAPI, "favorites")
-        setupListeners()
+//        setupListeners()
     }
 
     @ReactMethod
