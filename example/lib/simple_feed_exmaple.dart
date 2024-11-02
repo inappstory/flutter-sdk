@@ -9,7 +9,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
-  final defaultStoriesFuture = InappstoryPlugin().getStories2('default');
+  final defaultStoriesFuture = InappstoryPlugin().getStories2('flutter');
 
   @override
   void initState() {
