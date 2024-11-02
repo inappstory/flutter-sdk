@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _inappstoryPlugin.initWith('test-key', 'testUserId', true, false);
+    _inappstoryPlugin.initWith('test-key', 'testUserId', false);
   }
 
   void onSimpleExampleTap() {

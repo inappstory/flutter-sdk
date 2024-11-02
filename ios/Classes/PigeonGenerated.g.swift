@@ -294,7 +294,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, sandbox: Bool, sendStatistics: Bool) throws
+  func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws
   func getStories(feed: String) throws
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
@@ -312,10 +312,9 @@ class InappstorySdkModuleHostApiSetup {
         let args = message as! [Any?]
         let apiKeyArg = args[0] as! String
         let userIDArg = args[1] as! String
-        let sandboxArg = args[2] as! Bool
-        let sendStatisticsArg = args[3] as! Bool
+        let sendStatisticsArg = args[2] as! Bool
         do {
-          try api.initWith(apiKey: apiKeyArg, userID: userIDArg, sandbox: sandboxArg, sendStatistics: sendStatisticsArg)
+          try api.initWith(apiKey: apiKeyArg, userID: userIDArg, sendStatistics: sendStatisticsArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))

@@ -32,5 +32,5 @@ abstract class InappstoryPluginPlatform extends PlatformInterface implements Ina
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID, bool sandbox, bool sendStatistics);
+  Future<void> initWith(String apiKey, String userID, bool sendStatistics);
 }

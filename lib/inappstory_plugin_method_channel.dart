@@ -20,8 +20,8 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID, bool sandbox, bool sendStatistics) async {
-    await inappstorySdkModuleHostApi.initWith(apiKey, userID, sandbox, sendStatistics);
+  Future<void> initWith(String apiKey, String userID, bool sendStatistics) async {
+    await inappstorySdkModuleHostApi.initWith(apiKey, userID, sendStatistics);
   }
 
   @override

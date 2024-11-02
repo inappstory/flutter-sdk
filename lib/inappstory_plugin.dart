@@ -19,8 +19,8 @@ class InappstoryPlugin implements InappstorySdkModule {
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID, bool sandbox, bool sendStatistics) {
-    return InappstoryPluginPlatform.instance.initWith(apiKey, userID, sandbox, sendStatistics);
+  Future<void> initWith(String apiKey, String userID, bool sendStatistics) {
+    return InappstoryPluginPlatform.instance.initWith(apiKey, userID, sendStatistics);
   }
 
   @override

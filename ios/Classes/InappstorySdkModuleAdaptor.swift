@@ -21,7 +21,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     
     var storyListAPI = StoryListAPI()
     
-    func initWith(apiKey: String, userID: String, sandbox: Bool, sendStatistics: Bool) throws {
+    func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws {
         // the parameter is responsible for logging to the XCode console
         InAppStory.shared.isLoggingEnabled = true
         // the parameter is responsible for displaying the shading under cell headers
@@ -34,7 +34,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         // the parameter is responsible for animation of the reader display when you tap on a story cell
         InAppStory.shared.presentationStyle = .zoom
         
-        InAppStory.shared.sandBox = sandbox;
+        InAppStory.shared.sandBox = false; // Deprecated
         
         InAppStory.shared.isStatisticDisabled = !sendStatistics
         

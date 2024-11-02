@@ -13,13 +13,12 @@ class InappstorySdkModuleAdaptor(
     override fun initWith(
             apiKey: String,
             userID: String,
-            sandbox: Boolean,
             sendStatistics: Boolean
     ) {
         adapted.initWith(
                 apiKey = apiKey,
                 userID = userID,
-                sandbox = sandbox,
+                sandbox = false, // Deprecated
                 sendStatistics = sendStatistics
         )
 
