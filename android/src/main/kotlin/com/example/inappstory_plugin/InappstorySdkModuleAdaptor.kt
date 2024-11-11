@@ -26,7 +26,7 @@ class InappstorySdkModuleAdaptor(
 
         IASStoryListAdaptor(flutterPluginBinding, adapted.appearanceManager!!, iasStoryList, uniqueId = "feed")
 
-        adapted.api?.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding, iasStoryList))
+        adapted.api?.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding))
 
         adapted.ias?.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
 

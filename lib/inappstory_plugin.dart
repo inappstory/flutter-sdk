@@ -1,19 +1,30 @@
 import 'dart:async';
 
-import 'package:inappstory_plugin/inappstory_sdk_module.dart';
-import 'package:inappstory_plugin/src/stories_stream.dart';
-import 'package:inappstory_plugin/src/story_from_pigeon_dto.dart';
-
+import 'inappstory_plugin.dart';
 import 'inappstory_plugin_platform_interface.dart';
-import 'src/story.dart';
+import 'inappstory_sdk_module.dart';
+import 'src/base_story_widget.dart';
+import 'src/feed_stories_stream.dart';
+import 'src/ias_story_list_host_api_decorator.dart';
+import 'src/in_app_story_api_list_subscriber_flutter_api_observable.dart';
+import 'src/story_from_pigeon_dto.dart';
 
-export 'package:inappstory_plugin/src/pigeon_generated.g.dart';
-
-export 'src/default_story_widget.dart';
-export 'src/stories_stream.dart';
+export 'src/pigeon_generated.g.dart';
 export 'src/story.dart';
+export 'src/story_widget.dart';
 
 class InappstoryPlugin implements InappstorySdkModule {
+  factory InappstoryPlugin() => _singleton ??= InappstoryPlugin._private();
+
+  InappstoryPlugin._private();
+
+  static InappstoryPlugin? _singleton;
+
+  late final IASStoryListHostApi _iasStoryListHostApi = IASStoryListHostApiDecorator(IASStoryListHostApi());
+
+  late final InAppStoryAPIListSubscriberFlutterApiObservable _inAppStoryAPIListSubscriberFlutterApiObservable =
+      InAppStoryAPIListSubscriberFlutterApiObservable();
+
   Future<String?> getPlatformVersion() {
     return InappstoryPluginPlatform.instance.getPlatformVersion();
   }
@@ -28,9 +39,15 @@ class InappstoryPlugin implements InappstorySdkModule {
     return InappstoryPluginPlatform.instance.getStories(feed);
   }
 
-  Future<Iterable<Story>> getStories2(String feed) async {
-    final dtos = await StoriesStream.feed(feed).first;
+  Future<Iterable<StoryWidget>> getStoriesWidgets(String feed, StoryWidgetBuilder builder) async {
+    final dtos = await FeedStoriesStream(feed, _inAppStoryAPIListSubscriberFlutterApiObservable).first;
 
-    return dtos.map(StoryFromPigeonDto.new).toList();
+    BaseStoryWidget createWidget(StoryFromPigeonDto story) => BaseStoryWidget(story, builder);
+
+    return dtos.map(_createStory).map(createWidget).toList(growable: false);
+  }
+
+  StoryFromPigeonDto _createStory(StoryAPIDataDto dto) {
+    return StoryFromPigeonDto(dto, _iasStoryListHostApi, _inAppStoryAPIListSubscriberFlutterApiObservable);
   }
 }

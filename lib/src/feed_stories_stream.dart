@@ -2,14 +2,18 @@ import 'dart:async';
 
 import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
 
+import 'observable.dart';
 import 'pigeon_generated.g.dart';
-import 'stories_stream.dart';
 
 class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
-    implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi, StoriesStream {
-  FeedStoriesStream(this.feed);
+    implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
+  FeedStoriesStream(
+    this.feed,
+    this.observableStoryList,
+  );
 
   final String feed;
+  final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
 
   late final controller = StreamController<Iterable<StoryAPIDataDto>>(
     onListen: onListen,
@@ -17,13 +21,13 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
   );
 
   void onListen() {
-    InAppStoryAPIListSubscriberFlutterApi.setUp(this);
+    observableStoryList.addObserver(this);
     ErrorCallbackFlutterApi.setUp(this);
     InappstoryPluginPlatform.instance.getStories(feed);
   }
 
   void onCancel() {
-    InAppStoryAPIListSubscriberFlutterApi.setUp(null);
+    observableStoryList.removeObserver(this);
     ErrorCallbackFlutterApi.setUp(null);
   }
 
@@ -34,6 +38,7 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
 
   @override
   void loadListError(String feed) {
+    if (feed != this.feed) return;
     controller.addError(Exception('loadListError feed: $feed'));
   }
 
@@ -57,9 +62,7 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
   void storyIsOpened(int var1) {}
 
   @override
-  void updateStoryData(StoryAPIDataDto var1) {
-    print(var1.imageFilePath);
-  }
+  void updateStoryData(StoryAPIDataDto var1) {}
 
   @override
   void cacheError() {}

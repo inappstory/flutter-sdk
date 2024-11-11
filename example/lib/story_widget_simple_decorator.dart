@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:inappstory_plugin/inappstory_plugin.dart';
 
-import 'story.dart';
+class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget {
+  const StoryWidgetSimpleDecorator(this.story, {super.key});
 
-class DefaultStoryWidget extends StatelessWidget {
-  const DefaultStoryWidget(this.story, {super.key});
-
+  @override
   final Story story;
 
-  Image? get image {
+  Image? get imageNullable {
     final imageFile = story.imageFile;
 
     if (imageFile == null) return null;
@@ -29,7 +29,7 @@ class DefaultStoryWidget extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: image ?? ColoredBox(color: story.backgroundColor),
+                    child: imageNullable ?? ColoredBox(color: story.backgroundColor),
                   ),
                   const Positioned.fill(
                     child: DecoratedBox(

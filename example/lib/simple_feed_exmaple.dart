@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
+import 'story_widget_simple_decorator.dart';
+
 class SimpleFeedExampleWidget extends StatefulWidget {
   const SimpleFeedExampleWidget({super.key});
 
@@ -9,7 +11,10 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
-  final defaultStoriesFuture = InappstoryPlugin().getStories2('flutter');
+  final flutterFeedStoriesWidgetsFuture = InappstoryPlugin().getStoriesWidgets(
+    'flutter',
+    StoryWidgetSimpleDecorator.new,
+  );
 
   @override
   void initState() {
@@ -46,18 +51,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
           SizedBox(
             height: 100,
             child: FutureBuilder(
-              future: defaultStoriesFuture,
+              future: flutterFeedStoriesWidgetsFuture,
               builder: (_, storiesSnapshot) {
                 if (storiesSnapshot.hasData) {
                   return ListView.separated(
                     itemCount: storiesSnapshot.requireData.length,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) {
-                      return DefaultStoryWidget(storiesSnapshot.requireData.elementAt(index));
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(width: 16);
-                    },
+                    itemBuilder: (_, index) => storiesSnapshot.requireData.elementAt(index),
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
                   );
                 }
 

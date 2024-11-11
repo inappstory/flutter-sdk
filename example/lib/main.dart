@@ -24,8 +24,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   final _inappstoryPlugin = InappstoryPlugin();
 
-  final defaultFeedStoriesStream = StoriesStream.feed('default');
-
   @override
   void initState() {
     super.initState();

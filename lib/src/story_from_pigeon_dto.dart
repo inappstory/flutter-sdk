@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:inappstory_plugin/inappstory_plugin.dart';
+import 'observable.dart';
+import 'pigeon_generated.g.dart';
+import 'story.dart';
 
 class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi {
-  StoryFromPigeonDto(this.dto);
+  StoryFromPigeonDto(this.dto, this.iasStoryListHostApi, this.observable);
 
   StoryAPIDataDto dto;
 
-  final iasStoryListHostApi = IASStoryListHostApi();
+  final IASStoryListHostApi iasStoryListHostApi;
+
+  final Observable<InAppStoryAPIListSubscriberFlutterApi> observable;
 
   late final controller = StreamController.broadcast(
     onListen: onListen,
@@ -17,11 +21,11 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   );
 
   void onListen() {
-    InAppStoryAPIListSubscriberFlutterApi.setUp(this);
+    observable.addObserver(this);
   }
 
   void onCancel() {
-    InAppStoryAPIListSubscriberFlutterApi.setUp(null);
+    observable.removeObserver(this);
   }
 
   File? nullableFileFromString(String? filePath) {
@@ -65,6 +69,10 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   @override
   void tap() => iasStoryListHostApi.openStoryReader(dto.id);
 
+  void wasViewed() {
+    iasStoryListHostApi.updateVisiblePreviews([dto.id]);
+  }
+
   @override
   void readerIsClosed() {}
 
@@ -78,8 +86,19 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   void updateStoriesData(List<StoryAPIDataDto?> list) {}
 
   @override
-  void updateStoryData(StoryAPIDataDto newDto) => controller.add(dto = newDto);
+  void updateStoryData(StoryAPIDataDto newDto) {
+    if (newDto.id != dto.id) return;
+    controller.add(dto = newDto);
+  }
 
   @override
   Stream<void> get updates => controller.stream;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StoryFromPigeonDto && runtimeType == other.runtimeType && dto.id == other.dto.id;
+
+  @override
+  int get hashCode => dto.id;
 }
