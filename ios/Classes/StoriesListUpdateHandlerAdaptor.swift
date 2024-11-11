@@ -28,9 +28,7 @@ class StoriesListUpdateHandlerAdaptor {
     
     private var flutter: InAppStoryAPIListSubscriberFlutterApi
     
-    private lazy var storiesListUpdateHandler: StoriesListUpdateHandler = { storiesList, isFavorite, feed in
-        self.storyListAPI.setVisibleWith(storyIDs: storiesList.map{ $0.storyID })
-        
+    private lazy var storiesListUpdateHandler: StoriesListUpdateHandler = { storiesList, isFavorite, feed in        
         self.flutter.updateStoriesData(list: storiesList.map(self.mapStoryAPIData), completion: {_ in })
     }
     

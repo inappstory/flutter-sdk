@@ -13,7 +13,6 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 class InAppStoryAPIListSubscriberAdaptor(
         private val flutterPluginBinding: FlutterPluginBinding,
-        private val iASStoryList: IASStoryList,
 ) :
         InAppStoryAPIListSubscriber("feed") {
     private val storyListSubscriber = InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger)
@@ -26,8 +25,6 @@ class InAppStoryAPIListSubscriberAdaptor(
     }
 
     override fun updateStoriesData(list: MutableList<StoryAPIData>) {
-        iASStoryList.updateVisiblePreviews(list.map { it.id }, uniqueId)
-
         Handler(flutterPluginBinding.applicationContext.mainLooper).post {
             storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, getAspectRatio()) }) {}
         }
