@@ -33,5 +33,6 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
     
     func updateVisiblePreviews(storyIds: [Int64]) throws {
+        self.storyListAPI.setVisibleWith(storyIDs: storyIds.map{ String($0) })
     }
 }
