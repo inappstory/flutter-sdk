@@ -129,3 +129,12 @@ enum ClickActionDto {
   GAME,
   DEEPLINK;
 }
+
+@HostApi()
+abstract class AppearanceManagerHostApi {
+  void setHasLike(bool value);
+
+  void setHasFavorites(bool value);
+
+  void setHasShare(bool value);
+}

@@ -1,6 +1,7 @@
 package com.example.inappstory_plugin
 
 import InappstorySdkModuleHostApi
+import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import com.inappstorysdk.InappstorySdkModule
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -9,6 +10,9 @@ class InappstorySdkModuleAdaptor(
         private val adapted: InappstorySdkModule,
         private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 ) : InappstorySdkModuleHostApi {
+
+    private val appearanceManager = AppearanceManager()
+    private val appearanceManagerAdaptor = AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
 
     override fun initWith(
             apiKey: String,
@@ -24,7 +28,7 @@ class InappstorySdkModuleAdaptor(
 
         val iasStoryList = IASStoryList()
 
-        IASStoryListAdaptor(flutterPluginBinding, adapted.appearanceManager!!, iasStoryList, uniqueId = "feed")
+        IASStoryListAdaptor(flutterPluginBinding, appearanceManager, iasStoryList, uniqueId = "feed")
 
         adapted.api?.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding))
 

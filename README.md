@@ -165,3 +165,20 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
   }
 }
 ```
+
+## AppearanceManager
+
+# Story Reader appearance
+
+Show/hide buttons for:
+
+- likes/dislikes
+- favorite
+- share
+
+```dart
+AppearanceManagerHostApi().setHasLike(true);
+AppearanceManagerHostApi().setHasFavorites(true);
+AppearanceManagerHostApi().setHasShare(true);
+
+```

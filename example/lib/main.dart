@@ -23,11 +23,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       navigatorKey.currentState ?? (throw Exception('navigatorKey is not set to MaterialApp'));
 
   final _inappstoryPlugin = InappstoryPlugin();
+  final appearanceManager = AppearanceManagerHostApi();
 
   @override
   void initState() {
     super.initState();
-    _inappstoryPlugin.initWith('test-key', 'testUserId', false);
+
+    initSdk();
+  }
+
+  Future<void> initSdk() async {
+    await appearanceManager.setHasLike(true);
+    await appearanceManager.setHasFavorites(true);
+    await appearanceManager.setHasShare(true);
+    await _inappstoryPlugin.initWith('test-key', 'testUserId', false);
   }
 
   void onSimpleExampleTap() {

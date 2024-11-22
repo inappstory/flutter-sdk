@@ -151,7 +151,7 @@ class InappstorySdkModule(var reactContext: ReactApplicationContext) :
     fun initWith(apiKey: String, userID: String, sandbox: Boolean, sendStatistics: Boolean) {
         Log.d("InappstorySdkModule", "initWith")
         //this.ias = this.createInAppStoryManager(apiKey, userID)
-        this.appearanceManager = AppearanceManager()
+//        this.appearanceManager = AppearanceManager()
         this.api = InAppStoryAPI()
         this.favoritesApi = InAppStoryAPI()
         this.createManager(

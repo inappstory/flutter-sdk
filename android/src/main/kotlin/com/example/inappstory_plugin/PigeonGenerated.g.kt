@@ -734,3 +734,75 @@ class CallToActionCallbackFlutterApi(private val binaryMessenger: BinaryMessenge
     }
   }
 }
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface AppearanceManagerHostApi {
+  fun setHasLike(value: Boolean)
+  fun setHasFavorites(value: Boolean)
+  fun setHasShare(value: Boolean)
+
+  companion object {
+    /** The codec used by AppearanceManagerHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+    /** Sets up an instance of `AppearanceManagerHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: AppearanceManagerHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasLike$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val valueArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setHasLike(valueArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasFavorites$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val valueArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setHasFavorites(valueArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasShare$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val valueArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setHasShare(valueArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}

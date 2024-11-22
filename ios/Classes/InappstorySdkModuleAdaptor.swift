@@ -14,6 +14,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     init(binaryMessenger: FlutterBinaryMessenger) {
         self.binaryMessenger = binaryMessenger
         
+        self.appearanceManagerAdaptor = AppearanceManagerAdaptor(binaryMessenger: binaryMessenger)
+        
         InappstorySdkModuleHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
     }
     
@@ -21,6 +23,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     
     var storyListAPI = StoryListAPI()
     
+    var appearanceManagerAdaptor: AppearanceManagerAdaptor
+        
     func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws {
         // the parameter is responsible for logging to the XCode console
         InAppStory.shared.isLoggingEnabled = true

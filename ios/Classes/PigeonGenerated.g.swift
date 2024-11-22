@@ -778,3 +778,63 @@ class CallToActionCallbackFlutterApi: CallToActionCallbackFlutterApiProtocol {
     }
   }
 }
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol AppearanceManagerHostApi {
+  func setHasLike(value: Bool) throws
+  func setHasFavorites(value: Bool) throws
+  func setHasShare(value: Bool) throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class AppearanceManagerHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `AppearanceManagerHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: AppearanceManagerHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let setHasLikeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasLike\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setHasLikeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let valueArg = args[0] as! Bool
+        do {
+          try api.setHasLike(value: valueArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setHasLikeChannel.setMessageHandler(nil)
+    }
+    let setHasFavoritesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasFavorites\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setHasFavoritesChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let valueArg = args[0] as! Bool
+        do {
+          try api.setHasFavorites(value: valueArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setHasFavoritesChannel.setMessageHandler(nil)
+    }
+    let setHasShareChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setHasShare\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setHasShareChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let valueArg = args[0] as! Bool
+        do {
+          try api.setHasShare(value: valueArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setHasShareChannel.setMessageHandler(nil)
+    }
+  }
+}
