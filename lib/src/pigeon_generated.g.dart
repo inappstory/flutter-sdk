@@ -193,6 +193,37 @@ class SlideDataDto {
   }
 }
 
+class StoryFavoriteItemAPIDataDto {
+  StoryFavoriteItemAPIDataDto({
+    required this.id,
+    this.imageFilePath,
+    required this.backgroundColor,
+  });
+
+  int id;
+
+  String? imageFilePath;
+
+  String backgroundColor;
+
+  Object encode() {
+    return <Object?>[
+      id,
+      imageFilePath,
+      backgroundColor,
+    ];
+  }
+
+  static StoryFavoriteItemAPIDataDto decode(Object result) {
+    result as List<Object?>;
+    return StoryFavoriteItemAPIDataDto(
+      id: result[0]! as int,
+      imageFilePath: result[1] as String?,
+      backgroundColor: result[2]! as String,
+    );
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -219,6 +250,9 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is SlideDataDto) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
+      buffer.putUint8(135);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -242,6 +276,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return StoryDataDto.decode(readValue(buffer)!);
       case 134: 
         return SlideDataDto.decode(readValue(buffer)!);
+      case 135: 
+        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -491,6 +527,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void updateStoriesData(List<StoryAPIDataDto?> list);
 
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list);
+
   void readerIsOpened();
 
   void readerIsClosed();
@@ -563,6 +601,31 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData was null, expected non-null List<StoryAPIDataDto?>.');
           try {
             api.updateStoriesData(arg_list!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final List<StoryFavoriteItemAPIDataDto?>? arg_list = (args[0] as List<Object?>?)?.cast<StoryFavoriteItemAPIDataDto?>();
+          assert(arg_list != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData was null, expected non-null List<StoryFavoriteItemAPIDataDto?>.');
+          try {
+            api.updateFavoriteStoriesData(arg_list!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

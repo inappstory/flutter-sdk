@@ -188,6 +188,30 @@ data class SlideDataDto (
     )
   }
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class StoryFavoriteItemAPIDataDto (
+  val id: Long,
+  val imageFilePath: String? = null,
+  val backgroundColor: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): StoryFavoriteItemAPIDataDto {
+      val id = pigeonVar_list[0] as Long
+      val imageFilePath = pigeonVar_list[1] as String?
+      val backgroundColor = pigeonVar_list[2] as String
+      return StoryFavoriteItemAPIDataDto(id, imageFilePath, backgroundColor)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      imageFilePath,
+      backgroundColor,
+    )
+  }
+}
 private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -221,6 +245,11 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
           SlideDataDto.fromList(it)
         }
       }
+      135.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          StoryFavoriteItemAPIDataDto.fromList(it)
+        }
+      }
       else -> super.readValueOfType(type, buffer)
     }
   }
@@ -248,6 +277,10 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       is SlideDataDto -> {
         stream.write(134)
+        writeValue(stream, value.toList())
+      }
+      is StoryFavoriteItemAPIDataDto -> {
+        stream.write(135)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -515,6 +548,23 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(listArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(createConnectionError(channelName)))
+      } 
+    }
+  }
+  fun updateFavoriteStoriesData(listArg: List<StoryFavoriteItemAPIDataDto>, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(listArg)) {
       if (it is List<*>) {

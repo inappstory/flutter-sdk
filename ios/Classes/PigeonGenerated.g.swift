@@ -219,6 +219,35 @@ struct SlideDataDto {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct StoryFavoriteItemAPIDataDto {
+  var id: Int64
+  var imageFilePath: String? = nil
+  var backgroundColor: String
+
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> StoryFavoriteItemAPIDataDto? {
+    let id = pigeonVar_list[0] as! Int64
+    let imageFilePath: String? = nilOrValue(pigeonVar_list[1])
+    let backgroundColor = pigeonVar_list[2] as! String
+
+    return StoryFavoriteItemAPIDataDto(
+      id: id,
+      imageFilePath: imageFilePath,
+      backgroundColor: backgroundColor
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+      imageFilePath,
+      backgroundColor,
+    ]
+  }
+}
+
 private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -246,6 +275,8 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
       return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 134:
       return SlideDataDto.fromList(self.readValue() as! [Any?])
+    case 135:
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -271,6 +302,9 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? SlideDataDto {
       super.writeByte(134)
+      super.writeValue(value.toList())
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+      super.writeByte(135)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -475,6 +509,7 @@ protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
   func storyIsOpened(var1 var1Arg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func readerIsOpened(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func readerIsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
@@ -526,6 +561,24 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
   }
   func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoriesData\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([listArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+  func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([listArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {

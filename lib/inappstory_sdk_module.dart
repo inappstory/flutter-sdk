@@ -2,8 +2,6 @@ import 'dart:async';
 
 abstract class InappstorySdkModule {
   FutureOr<void> initWith(String apiKey, String userID, bool sendStatistics);
-
-  FutureOr<void> getStories(String feed);
 }
 
 abstract class InAppStoryAPI {

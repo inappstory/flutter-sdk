@@ -25,12 +25,9 @@ class InappstoryPlugin : FlutterPlugin, MethodCallHandler {
 
         InAppStory.initSDK(flutterPluginBinding.applicationContext)
 
-        val module =
-            InappstorySdkModule(ReactApplicationContext(flutterPluginBinding.applicationContext))
-
         InappstorySdkModuleHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
-            api = InappstorySdkModuleAdaptor(module, flutterPluginBinding)
+            api = InappstorySdkModuleAdaptor(flutterPluginBinding)
         )
     }
 

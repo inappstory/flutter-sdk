@@ -2,20 +2,21 @@ package com.example.inappstory_plugin
 
 import InAppStoryAPIListSubscriberFlutterApi
 import StoryAPIDataDto
+import StoryFavoriteItemAPIDataDto
 import android.os.Handler
 import com.inappstory.sdk.InAppStoryService
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
-import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import com.inappstory.sdk.stories.api.models.CachedSessionData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 class InAppStoryAPIListSubscriberAdaptor(
         private val flutterPluginBinding: FlutterPluginBinding,
+        uniqueId: String,
 ) :
-        InAppStoryAPIListSubscriber("feed") {
-    private val storyListSubscriber = InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger)
+        InAppStoryAPIListSubscriber(uniqueId) {
+    private val storyListSubscriber = InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
     private val storyDownloadManager = InAppStoryService.getInstance().storyDownloadManager
     private val sessionData = CachedSessionData.getInstance(flutterPluginBinding.applicationContext)
     override fun updateStoryData(storyAPIData: StoryAPIData) {
@@ -30,8 +31,10 @@ class InAppStoryAPIListSubscriberAdaptor(
         }
     }
 
-    override fun updateFavoriteItemData(p0: MutableList<StoryFavoriteItemAPIData>) {
-        TODO("Not yet implemented")
+    override fun updateFavoriteItemData(list: MutableList<StoryFavoriteItemAPIData>) {
+        Handler(flutterPluginBinding.applicationContext.mainLooper).post {
+            storyListSubscriber.updateFavoriteStoriesData(list.map { mapFavorite(it) }) {}
+        }
     }
 
     private fun getAspectRatio(): Float {
@@ -54,6 +57,14 @@ class InAppStoryAPIListSubscriberAdaptor(
                 opened = p0.opened,
                 storyData = mapStoryData(p0.storyData),
                 aspectRatio = aspectRatio.toDouble(),
+        )
+    }
+
+    private fun mapFavorite(arg: StoryFavoriteItemAPIData): StoryFavoriteItemAPIDataDto {
+        return StoryFavoriteItemAPIDataDto(
+                id = arg.id.toLong(),
+                imageFilePath = arg.imageFilePath,
+                backgroundColor = arg.backgroundColor,
         )
     }
 }

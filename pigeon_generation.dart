@@ -52,6 +52,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void updateStoriesData(List<StoryAPIDataDto> list);
 
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
+
   void readerIsOpened();
 
   void readerIsClosed();
@@ -137,4 +139,10 @@ abstract class AppearanceManagerHostApi {
   void setHasFavorites(bool value);
 
   void setHasShare(bool value);
+}
+
+class StoryFavoriteItemAPIDataDto {
+  late int id;
+  late String? imageFilePath;
+  late String backgroundColor;
 }

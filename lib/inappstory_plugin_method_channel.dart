@@ -23,9 +23,4 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
   Future<void> initWith(String apiKey, String userID, bool sendStatistics) async {
     await inappstorySdkModuleHostApi.initWith(apiKey, userID, sendStatistics);
   }
-
-  @override
-  Future<void> getStories(String feed) {
-    return inappstorySdkModuleHostApi.getStories(feed);
-  }
 }

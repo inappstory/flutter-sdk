@@ -3,9 +3,13 @@ import 'pigeon_generated.g.dart';
 
 class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppStoryAPIListSubscriberFlutterApi>
     implements InAppStoryAPIListSubscriberFlutterApi {
+  InAppStoryAPIListSubscriberFlutterApiObservable(this.uniqueId);
+
+  final String uniqueId;
+
   @override
   void addObserver(InAppStoryAPIListSubscriberFlutterApi observer) {
-    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(this);
+    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(this, messageChannelSuffix: uniqueId);
 
     super.addObserver(observer);
   }
@@ -14,7 +18,7 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   void removeObserver(InAppStoryAPIListSubscriberFlutterApi observer) {
     super.removeObserver(observer);
 
-    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(null);
+    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(null, messageChannelSuffix: uniqueId);
   }
 
   @override
@@ -49,6 +53,13 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   void updateStoryData(StoryAPIDataDto var1) {
     for (var it in observers) {
       it.updateStoryData(var1);
+    }
+  }
+
+  @override
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+    for (var it in observers) {
+      it.updateFavoriteStoriesData(list);
     }
   }
 }

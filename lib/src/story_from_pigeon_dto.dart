@@ -28,20 +28,6 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
     observable.removeObserver(this);
   }
 
-  File? nullableFileFromString(String? filePath) {
-    if (filePath == null || filePath.trim().isEmpty) return null;
-
-    return File(filePath);
-  }
-
-  Color colorFromString(String string) {
-    return Color(
-      int.parse(
-        string.replaceAll(RegExp('^#'), '0xff'),
-      ),
-    );
-  }
-
   @override
   File? get imageFile => nullableFileFromString(dto.imageFilePath);
 
@@ -92,6 +78,9 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   }
 
   @override
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {}
+
+  @override
   Stream<void> get updates => controller.stream;
 
   @override
@@ -101,4 +90,18 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
 
   @override
   int get hashCode => dto.id;
+}
+
+File? nullableFileFromString(String? filePath) {
+  if (filePath == null || filePath.trim().isEmpty) return null;
+
+  return File(filePath);
+}
+
+Color colorFromString(String string) {
+  return Color(
+    int.parse(
+      string.replaceAll(RegExp('^#'), '0xff'),
+    ),
+  );
 }

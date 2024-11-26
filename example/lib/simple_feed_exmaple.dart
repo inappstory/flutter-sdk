@@ -11,7 +11,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
-  final flutterFeedStoriesWidgetsFuture = InappstoryPlugin().getStoriesWidgets(
+  final flutterFeedStoriesWidgetsStream = InappstoryPlugin().getStoriesWidgets(
     'flutter',
     StoryWidgetSimpleDecorator.new,
   );
@@ -50,8 +50,8 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
         children: [
           SizedBox(
             height: 100,
-            child: FutureBuilder(
-              future: flutterFeedStoriesWidgetsFuture,
+            child: StreamBuilder(
+              stream: flutterFeedStoriesWidgetsStream,
               builder: (_, storiesSnapshot) {
                 if (storiesSnapshot.hasData) {
                   return ListView.separated(

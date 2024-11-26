@@ -1,21 +1,43 @@
 import 'dart:async';
 
-import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
+import 'package:flutter/widgets.dart';
+import 'package:inappstory_plugin/src/favorite_from_dto.dart';
+import 'package:inappstory_plugin/src/feed_favorites_widget.dart';
 
-import 'observable.dart';
+import 'base_story_widget.dart';
+import 'ias_story_list_host_api_decorator.dart';
+import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import 'pigeon_generated.g.dart';
+import 'story_from_pigeon_dto.dart';
 
-class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
+class FeedStoriesStream extends Stream<Iterable<Widget>>
     implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
   FeedStoriesStream(
     this.feed,
-    this.observableStoryList,
+    this.uniqueId,
+    this.storyWidgetBuilder,
+    this.addLastFavoritesItem,
   );
 
+  final String uniqueId;
+  final bool addLastFavoritesItem;
   final String feed;
-  final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
+  late final observableStoryList = InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId);
+  final StoryWidgetBuilder storyWidgetBuilder;
+  late final IASStoryListHostApi iasStoryListHostApi =
+      IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: uniqueId));
 
-  late final controller = StreamController<Iterable<StoryAPIDataDto>>(
+  Iterable<StoryFromPigeonDto> stories = [];
+  Iterable<FavoriteFromDto> favorites = [];
+
+  Iterable<Widget> combineStoriesAndFavorites() {
+    return [
+      ...stories.map(createWidgetFromStory),
+      if (addLastFavoritesItem && favorites.isNotEmpty) createFeedFavoritesWidget(),
+    ];
+  }
+
+  late final controller = StreamController<Iterable<Widget>>(
     onListen: onListen,
     onCancel: onCancel,
   );
@@ -23,7 +45,7 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
   void onListen() {
     observableStoryList.addObserver(this);
     ErrorCallbackFlutterApi.setUp(this);
-    InappstoryPluginPlatform.instance.getStories(feed);
+    iasStoryListHostApi.load(feed, true, false);
   }
 
   void onCancel() {
@@ -33,7 +55,25 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
-    controller.add(list.whereType<StoryAPIDataDto>());
+    stories = list.whereType<StoryAPIDataDto>().map(createStoryFromDto).toList(growable: false);
+
+    controller.add(combineStoriesAndFavorites());
+  }
+
+  StoryFromPigeonDto createStoryFromDto(StoryAPIDataDto dto) {
+    return StoryFromPigeonDto(dto, iasStoryListHostApi, observableStoryList);
+  }
+
+  BaseStoryWidget createWidgetFromStory(StoryFromPigeonDto story) {
+    return BaseStoryWidget(
+      story,
+      storyWidgetBuilder,
+      key: ValueKey(story.hashCode),
+    );
+  }
+
+  Widget createFeedFavoritesWidget() {
+    return FeedFavoritesWidget(favorites, iasStoryListHostApi);
   }
 
   @override
@@ -43,8 +83,15 @@ class FeedStoriesStream extends Stream<Iterable<StoryAPIDataDto>>
   }
 
   @override
-  StreamSubscription<Iterable<StoryAPIDataDto>> listen(
-    void Function(Iterable<StoryAPIDataDto> event)? onData, {
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+    favorites = list.whereType<StoryFavoriteItemAPIDataDto>().map(FavoriteFromDto.new).toList(growable: false);
+
+    controller.add(combineStoriesAndFavorites());
+  }
+
+  @override
+  StreamSubscription<Iterable<Widget>> listen(
+    void Function(Iterable<Widget> event)? onData, {
     Function? onError,
     void Function()? onDone,
     bool? cancelOnError,
