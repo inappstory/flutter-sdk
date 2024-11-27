@@ -291,7 +291,6 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
   fun initWith(apiKey: String, userID: String, sendStatistics: Boolean)
-  fun getStories(feed: String)
   fun setPlaceholders(newPlaceholders: Map<String, String>)
   fun setTags(tags: List<String>)
 
@@ -314,24 +313,6 @@ interface InappstorySdkModuleHostApi {
             val sendStatisticsArg = args[2] as Boolean
             val wrapped: List<Any?> = try {
               api.initWith(apiKeyArg, userIDArg, sendStatisticsArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.getStories$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val feedArg = args[0] as String
-            val wrapped: List<Any?> = try {
-              api.getStories(feedArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)
@@ -413,7 +394,7 @@ interface InAppStoryAPI {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASStoryListHostApi {
-  fun load(feed: String, hasFavorite: Boolean, isFavorite: Boolean)
+  fun load(feed: String)
   fun openStoryReader(storyId: Long)
   fun showFavoriteItem()
   fun updateVisiblePreviews(storyIds: List<Long>)
@@ -433,10 +414,8 @@ interface IASStoryListHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val feedArg = args[0] as String
-            val hasFavoriteArg = args[1] as Boolean
-            val isFavoriteArg = args[2] as Boolean
             val wrapped: List<Any?> = try {
-              api.load(feedArg, hasFavoriteArg, isFavoriteArg)
+              api.load(feedArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)
@@ -510,23 +489,6 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       PigeonGeneratedPigeonCodec()
     }
   }
-  fun storyIsOpened(var1Arg: Long, callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storyIsOpened$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(var1Arg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(createConnectionError(channelName)))
-      } 
-    }
-  }
   fun updateStoryData(var1Arg: StoryAPIDataDto, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
@@ -567,40 +529,6 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
     val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(listArg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(createConnectionError(channelName)))
-      } 
-    }
-  }
-  fun readerIsOpened(callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsOpened$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(null) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(createConnectionError(channelName)))
-      } 
-    }
-  }
-  fun readerIsClosed(callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsClosed$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(null) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))

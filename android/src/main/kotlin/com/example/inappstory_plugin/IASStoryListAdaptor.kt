@@ -24,8 +24,8 @@ class IASStoryListAdaptor(
         IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, null, uniqueId)
     }
 
-    override fun load(feed: String, hasFavorite: Boolean, isFavorite: Boolean) {
-        iASStoryList.load(feed, uniqueId, hasFavorite, isFavorite, mutableListOf())
+    override fun load(feed: String) {
+        iASStoryList.load(feed, uniqueId, true, false, mutableListOf())
     }
 
     override fun openStoryReader(storyId: Long) {
@@ -45,6 +45,4 @@ class IASStoryListAdaptor(
         iASStoryList.showFavoriteItem(uniqueId)
         iASStoryList.updateVisiblePreviews(storyIds.map { it.toInt() }, uniqueId)
     }
-
-
 }

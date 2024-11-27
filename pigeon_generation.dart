@@ -19,9 +19,6 @@ abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
   @override
   void initWith(String apiKey, String userID, bool sendStatistics);
 
-  @override
-  void getStories(String feed);
-
   void setPlaceholders(Map<String, String> newPlaceholders);
 
   void setTags(List<String> tags);
@@ -35,7 +32,7 @@ abstract class InAppStoryAPI {}
 
 @HostApi()
 abstract class IASStoryListHostApi {
-  void load(String feed, bool hasFavorite, bool isFavorite);
+  void load(String feed);
 
   void openStoryReader(int storyId);
 
@@ -46,17 +43,11 @@ abstract class IASStoryListHostApi {
 
 @FlutterApi()
 abstract class InAppStoryAPIListSubscriberFlutterApi {
-  void storyIsOpened(int var1);
-
   void updateStoryData(StoryAPIDataDto var1);
 
   void updateStoriesData(List<StoryAPIDataDto> list);
 
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
-
-  void readerIsOpened();
-
-  void readerIsClosed();
 }
 
 @FlutterApi()

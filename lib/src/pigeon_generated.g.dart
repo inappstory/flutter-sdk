@@ -319,28 +319,6 @@ class InappstorySdkModuleHostApi {
     }
   }
 
-  Future<void> getStories(String feed) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.getStories$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(<Object?>[feed]) as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
-      throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
   Future<void> setPlaceholders(Map<String?, String?> newPlaceholders) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setPlaceholders$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -429,7 +407,7 @@ class IASStoryListHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> load(String feed, bool hasFavorite, bool isFavorite) async {
+  Future<void> load(String feed) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASStoryListHostApi.load$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -437,7 +415,7 @@ class IASStoryListHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(<Object?>[feed, hasFavorite, isFavorite]) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[feed]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {
@@ -521,45 +499,14 @@ class IASStoryListHostApi {
 abstract class InAppStoryAPIListSubscriberFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void storyIsOpened(int var1);
-
   void updateStoryData(StoryAPIDataDto var1);
 
   void updateStoriesData(List<StoryAPIDataDto?> list);
 
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list);
 
-  void readerIsOpened();
-
-  void readerIsClosed();
-
   static void setUp(InAppStoryAPIListSubscriberFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storyIsOpened$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storyIsOpened was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_var1 = (args[0] as int?);
-          assert(arg_var1 != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storyIsOpened was null, expected non-null int.');
-          try {
-            api.storyIsOpened(arg_var1!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData$messageChannelSuffix', pigeonChannelCodec,
@@ -626,44 +573,6 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData was null, expected non-null List<StoryFavoriteItemAPIDataDto?>.');
           try {
             api.updateFavoriteStoriesData(arg_list!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsOpened$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.readerIsOpened();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsClosed$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.readerIsClosed();
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

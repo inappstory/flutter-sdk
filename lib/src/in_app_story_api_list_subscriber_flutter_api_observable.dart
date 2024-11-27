@@ -22,27 +22,6 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   }
 
   @override
-  void readerIsClosed() {
-    for (var it in observers) {
-      it.readerIsClosed();
-    }
-  }
-
-  @override
-  void readerIsOpened() {
-    for (var it in observers) {
-      it.readerIsOpened();
-    }
-  }
-
-  @override
-  void storyIsOpened(int var1) {
-    for (var it in observers) {
-      it.storyIsOpened(var1);
-    }
-  }
-
-  @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
     for (var it in observers) {
       it.updateStoriesData(list);

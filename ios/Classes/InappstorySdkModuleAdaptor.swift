@@ -53,9 +53,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         CallToActionCallbackAdaptor(binaryMessenger:  binaryMessenger)
     }
     
-    func getStories(feed: String) throws {
-    }
-    
     func setPlaceholders(newPlaceholders: [String : String]) throws {
         InAppStory.shared.placeholders = newPlaceholders
     }

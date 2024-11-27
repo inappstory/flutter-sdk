@@ -25,8 +25,8 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
   }
 
   @override
-  Future<void> load(String feed, bool hasFavorite, bool isFavorite) {
-    return decorated.load(feed, hasFavorite, isFavorite);
+  Future<void> load(String feed) {
+    return decorated.load(feed);
   }
 
   @override

@@ -329,7 +329,6 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
   func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws
-  func getStories(feed: String) throws
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
 }
@@ -356,21 +355,6 @@ class InappstorySdkModuleHostApiSetup {
       }
     } else {
       initWithChannel.setMessageHandler(nil)
-    }
-    let getStoriesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.getStories\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      getStoriesChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let feedArg = args[0] as! String
-        do {
-          try api.getStories(feed: feedArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      getStoriesChannel.setMessageHandler(nil)
     }
     let setPlaceholdersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setPlaceholders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -430,7 +414,7 @@ class InAppStoryAPISetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASStoryListHostApi {
-  func load(feed: String, hasFavorite: Bool, isFavorite: Bool) throws
+  func load(feed: String) throws
   func openStoryReader(storyId: Int64) throws
   func showFavoriteItem() throws
   func updateVisiblePreviews(storyIds: [Int64]) throws
@@ -447,10 +431,8 @@ class IASStoryListHostApiSetup {
       loadChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let feedArg = args[0] as! String
-        let hasFavoriteArg = args[1] as! Bool
-        let isFavoriteArg = args[2] as! Bool
         do {
-          try api.load(feed: feedArg, hasFavorite: hasFavoriteArg, isFavorite: isFavoriteArg)
+          try api.load(feed: feedArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -506,12 +488,9 @@ class IASStoryListHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
-  func storyIsOpened(var1 var1Arg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func readerIsOpened(completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func readerIsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -522,24 +501,6 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
   }
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
-  }
-  func storyIsOpened(var1 var1Arg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storyIsOpened\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([var1Arg] as [Any?]) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
   }
   func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateStoryData\(messageChannelSuffix)"
@@ -581,42 +542,6 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([listArg] as [Any?]) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
-  func readerIsOpened(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsOpened\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
-  func readerIsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.readerIsClosed\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

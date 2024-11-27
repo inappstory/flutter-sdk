@@ -64,10 +64,6 @@ class InappstorySdkModuleAdaptor(
         inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
     }
 
-    override fun getStories(feed: String) {
-        // Use feed IASStoryListAdaptor.load()
-    }
-
     override fun setPlaceholders(newPlaceholders: Map<String, String>) {
         inAppStoryManager.placeholders = newPlaceholders
     }

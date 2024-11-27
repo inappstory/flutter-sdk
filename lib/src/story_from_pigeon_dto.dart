@@ -60,15 +60,6 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   }
 
   @override
-  void readerIsClosed() {}
-
-  @override
-  void readerIsOpened() {}
-
-  @override
-  void storyIsOpened(int var1) {}
-
-  @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {}
 
   @override

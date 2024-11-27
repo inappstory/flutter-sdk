@@ -45,7 +45,7 @@ class FeedStoriesStream extends Stream<Iterable<Widget>>
   void onListen() {
     observableStoryList.addObserver(this);
     ErrorCallbackFlutterApi.setUp(this);
-    iasStoryListHostApi.load(feed, true, false);
+    iasStoryListHostApi.load(feed);
   }
 
   void onCancel() {
@@ -98,15 +98,6 @@ class FeedStoriesStream extends Stream<Iterable<Widget>>
   }) {
     return controller.stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
-
-  @override
-  void readerIsClosed() {}
-
-  @override
-  void readerIsOpened() {}
-
-  @override
-  void storyIsOpened(int var1) {}
 
   @override
   void updateStoryData(StoryAPIDataDto var1) {}

@@ -28,7 +28,7 @@ class StoryListAdaptor: IASStoryListHostApi {
     
     private var storyListAPI: StoryListAPI
     
-    func load(feed: String, hasFavorite: Bool, isFavorite: Bool) throws {
+    func load(feed: String) throws {
         storyListAPI.setNewFeed(feed)
     }
     
