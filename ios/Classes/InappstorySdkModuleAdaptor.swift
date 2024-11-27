@@ -16,12 +16,18 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         self.appearanceManagerAdaptor = AppearanceManagerAdaptor(binaryMessenger: binaryMessenger)
         
+        self.storyListAdaptor = StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: StoryListAPI(), uniqueId: "feed")
+        
+        self.storyListAdaptorFavorite = StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: StoryListAPI(isFavorite: true), uniqueId: "favorites")
+        
         InappstorySdkModuleHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
     }
     
     var binaryMessenger: FlutterBinaryMessenger
     
-    var storyListAPI = StoryListAPI()
+    var storyListAdaptor: StoryListAdaptor
+
+    var storyListAdaptorFavorite: StoryListAdaptor
     
     var appearanceManagerAdaptor: AppearanceManagerAdaptor
         
@@ -44,15 +50,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         InAppStory.shared.initWith(serviceKey: apiKey, settings: Settings(userID: userID))
         
-        StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI)
-        
-        StoriesListUpdateHandlerAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI)
-        
         CallToActionCallbackAdaptor(binaryMessenger:  binaryMessenger)
     }
     
     func getStories(feed: String) throws {
-        self.storyListAPI.setNewFeed(feed)
     }
     
     func setPlaceholders(newPlaceholders: [String : String]) throws {

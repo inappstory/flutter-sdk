@@ -10,19 +10,25 @@ import Flutter
 @_spi(IAS_API) import InAppStorySDK
 
 class StoriesListUpdateHandlerAdaptor {
-    init(binaryMessenger: FlutterBinaryMessenger, storyListAPI: StoryListAPI) {
+    init(binaryMessenger: FlutterBinaryMessenger, storyListAPI: StoryListAPI, uniqueId: String) {
         self.binaryMessenger = binaryMessenger
         
-        self.flutter = InAppStoryAPIListSubscriberFlutterApi(binaryMessenger: binaryMessenger)
+        self.uniqueId = uniqueId
+        
+        self.flutter = InAppStoryAPIListSubscriberFlutterApi(binaryMessenger: binaryMessenger, messageChannelSuffix: uniqueId)
         
         self.storyListAPI = storyListAPI
         
         storyListAPI.storyListUpdate = storiesListUpdateHandler
         
         storyListAPI.storyUpdate = storyUpdateHandler
+        
+        storyListAPI.favoritesUpdate = favoriteUpdateHandler
     }
     
     private var binaryMessenger: FlutterBinaryMessenger
+
+    private var uniqueId: String
     
     private var storyListAPI: StoryListAPI
     
@@ -30,10 +36,20 @@ class StoriesListUpdateHandlerAdaptor {
     
     private lazy var storiesListUpdateHandler: StoriesListUpdateHandler = { storiesList, isFavorite, feed in        
         self.flutter.updateStoriesData(list: storiesList.map(self.mapStoryAPIData), completion: {_ in })
+        
+        self.favoriteUpdateHandler(isFavorite)
     }
     
     private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in
         self.flutter.updateStoryData(var1: self.mapStoryAPIData(arg: storyCellData), completion: {_ in })
+    }
+    
+    func favoriteUpdateHandler(_ data: [InAppStorySDK.SimpleFavoriteData]?) {
+        if let favorites = data {
+            if (!favorites.isEmpty) {
+                self.flutter.updateFavoriteStoriesData(list: favorites.map(self.mapFavorite), completion: {_ in })
+            }
+        }
     }
     
     private func mapStoryAPIData(arg: StoryCellData) -> StoryAPIDataDto {
@@ -78,5 +94,13 @@ class StoriesListUpdateHandlerAdaptor {
         case .single: return SourceTypeDto.sINGLE
     //    case FIXME NO stack: return SourceTypeDto.sTACK
         }
+    }
+    
+    private func mapFavorite(arg: SimpleFavoriteData) -> StoryFavoriteItemAPIDataDto {
+        return StoryFavoriteItemAPIDataDto(
+            id: Int64(arg.serverID)!,
+            imageFilePath: arg.image,
+            backgroundColor: arg.backgroundColor
+        )
     }
 }

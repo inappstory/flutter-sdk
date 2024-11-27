@@ -10,19 +10,26 @@ import Flutter
 @_spi(IAS_API) import InAppStorySDK
 
 class StoryListAdaptor: IASStoryListHostApi {
-    init(binaryMessenger: FlutterBinaryMessenger, storyListAPI: StoryListAPI) {
+    init(binaryMessenger: FlutterBinaryMessenger, storyListAPI: StoryListAPI, uniqueId: String) {
         self.binaryMessenger = binaryMessenger
+        
+        self.uniqueId = uniqueId
         
         self.storyListAPI = storyListAPI
         
-        IASStoryListHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
+        StoriesListUpdateHandlerAdaptor(binaryMessenger: binaryMessenger, storyListAPI: storyListAPI, uniqueId:  uniqueId)
+        
+        IASStoryListHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self, messageChannelSuffix: uniqueId)
     }
+    
+    private var uniqueId: String
     
     private var binaryMessenger: FlutterBinaryMessenger
     
     private var storyListAPI: StoryListAPI
     
     func load(feed: String, hasFavorite: Bool, isFavorite: Bool) throws {
+        storyListAPI.setNewFeed(feed)
     }
     
     func openStoryReader(storyId: Int64) throws {
@@ -30,6 +37,7 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
     
     func showFavoriteItem() throws {
+        storyListAPI.setVisibleFavorite()
     }
     
     func updateVisiblePreviews(storyIds: [Int64]) throws {
