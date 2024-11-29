@@ -1,7 +1,7 @@
 name: inappstory_plugin
 description: "InAppStory SDK Plugin"
 version: 0.0.1
-homepage:
+homepage: https://inappstory.com/
 
 environment:
   sdk: ^3.5.3
