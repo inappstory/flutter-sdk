@@ -11,12 +11,12 @@ export 'src/pigeon_generated.g.dart';
 export 'src/story.dart';
 export 'src/story_widget.dart';
 
-class InappstoryPlugin implements InappstorySdkModule {
-  factory InappstoryPlugin() => _singleton ??= InappstoryPlugin._private();
+class InAppStoryPlugin implements InAppStorySdkModule {
+  factory InAppStoryPlugin() => _singleton ??= InAppStoryPlugin._private();
 
-  InappstoryPlugin._private();
+  InAppStoryPlugin._private();
 
-  static InappstoryPlugin? _singleton;
+  static InAppStoryPlugin? _singleton;
 
   Future<String?> getPlatformVersion() {
     return InappstoryPluginPlatform.instance.getPlatformVersion();
