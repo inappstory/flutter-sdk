@@ -182,3 +182,33 @@ AppearanceManagerHostApi().setHasFavorites(true);
 AppearanceManagerHostApi().setHasShare(true);
 
 ```
+
+
+## Call To Action
+
+add/remove listener for CTA
+
+1. Implement interface CallToActionCallbackFlutterApi
+2. Setup this listener
+
+```
+class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    CallToActionCallbackFlutterApi.setUp(this); // add listener
+  }
+
+  @override
+  void dispose() {
+    CallToActionCallbackFlutterApi.setUp(null); // remove listener
+    super.dispose();
+  }
+
+  final callsToAction = <String>[];
+
+  @override
+  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+    // Do anything related
+  }
+``` 
