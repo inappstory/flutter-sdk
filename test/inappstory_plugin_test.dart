@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/inappstory_plugin_method_channel.dart';
 import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -19,13 +18,5 @@ void main() {
 
   test('$MethodChannelInappstoryPlugin is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelInappstoryPlugin>());
-  });
-
-  test('getPlatformVersion', () async {
-    InAppStoryPlugin inappstoryPlugin = InAppStoryPlugin();
-    MockInappstoryPluginPlatform fakePlatform = MockInappstoryPluginPlatform();
-    InappstoryPluginPlatform.instance = fakePlatform;
-
-    expect(await inappstoryPlugin.getPlatformVersion(), '42');
   });
 }

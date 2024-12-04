@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:inappstory_plugin/inappstory_plugin.dart';
-import 'package:inappstory_plugin/src/story_from_pigeon_dto.dart';
+import 'feed_favorite.dart';
+import 'pigeon_generated.g.dart';
+import 'story_from_pigeon_dto.dart';
 
-class FavoriteFromDto {
+class FavoriteFromDto implements FeedFavorite {
   FavoriteFromDto(this.dto);
 
   final StoryFavoriteItemAPIDataDto dto;
 
+  @override
   File? get imageFile => nullableFileFromString(dto.imageFilePath);
 
+  @override
   Color get backgroundColor => colorFromString(dto.backgroundColor);
 
   @override

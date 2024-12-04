@@ -11,8 +11,7 @@ Add dependency in your app pubspec.yaml
 ```yaml
 dependencies:
   ...
-  inappstory_plugin:
-    path: ../inappstory_plugin
+  inappstory_plugin: ^0.0.3
   ...
 ```
 
@@ -45,7 +44,20 @@ class YourStoryWidget extends StatelessWidget implements StoryWidget {
 Get story widgets for specific feed
 
 ```dart
-InappstoryPlugin().getStoriesWidgets('<your feed>', YourStoryWidget.new);
+InAppStoryPlugin().getStoriesWidgets(
+  feed: '<your feed>',
+  storyBuilder: <function returns Widget for Story>,
+);
+```
+
+Get story widgets for specific feed with Favorites item
+
+```dart
+InAppStoryPlugin().getStoriesWidgets(
+  feed: '<your feed>',
+  storyBuilder: <function returns Widget for Story>,
+  favoritesBuilder: <function returns Widget for in feed Favorites>,
+);
 ```
 
 Full example
@@ -63,8 +75,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final initialization = InappstoryPlugin().initWith('<your api key>', '<user id>', false);
 
-  late final futureStoriesWidgets =
-      initialization.then((_) => InappstoryPlugin().getStoriesWidgets('<your feed>', StoryWidgetSimpleDecorator.new));
+  final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
+    feed: 'flutter',
+    storyBuilder: StoryWidgetSimpleDecorator.new,
+    favoritesBuilder: GridFeedFavoritesWidget.new, // Can be null
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SizedBox(
             height: 150,
-            child: FutureBuilder(
-              future: futureStoriesWidgets,
+            child: StreamBuilder(
+              stream: flutterFeedStoriesWidgetsStream,
               builder: (_, snapshot) {
                 if (snapshot.hasError) return Text('${snapshot.error}');
 

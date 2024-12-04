@@ -12,8 +12,9 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
   final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
-    'flutter',
-    StoryWidgetSimpleDecorator.new,
+    feed: 'flutter',
+    storyBuilder: StoryWidgetSimpleDecorator.new,
+    favoritesBuilder: GridFeedFavoritesWidget.new,
   );
 
   @override

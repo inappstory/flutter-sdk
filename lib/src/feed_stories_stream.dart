@@ -1,14 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:inappstory_plugin/src/favorite_from_dto.dart';
-import 'package:inappstory_plugin/src/feed_favorites_widget.dart';
 
+import 'base_feed_favorites_widget.dart';
 import 'base_story_widget.dart';
+import 'favorite_from_dto.dart';
+import 'feed_favorite.dart';
 import 'ias_story_list_host_api_decorator.dart';
 import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import 'pigeon_generated.g.dart';
 import 'story_from_pigeon_dto.dart';
+
+typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(Iterable<FeedFavorite>);
+
+typedef FeedFavoriteWidgetBuilder = Widget Function(FeedFavorite);
+
+abstract class FeedFavoritesWidget implements Widget {
+  Iterable<FeedFavorite> get favorites;
+
+  FeedFavoriteWidgetBuilder get feedFavoriteWidgetBuilder;
+}
 
 class FeedStoriesStream extends Stream<Iterable<Widget>>
     implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
@@ -16,14 +27,14 @@ class FeedStoriesStream extends Stream<Iterable<Widget>>
     this.feed,
     this.uniqueId,
     this.storyWidgetBuilder,
-    this.addLastFavoritesItem,
+    this.feedFavoritesWidgetBuilder,
   );
 
   final String uniqueId;
-  final bool addLastFavoritesItem;
   final String feed;
   late final observableStoryList = InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId);
   final StoryWidgetBuilder storyWidgetBuilder;
+  final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
   late final IASStoryListHostApi iasStoryListHostApi =
       IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: uniqueId));
 
@@ -31,9 +42,12 @@ class FeedStoriesStream extends Stream<Iterable<Widget>>
   Iterable<FavoriteFromDto> favorites = [];
 
   Iterable<Widget> combineStoriesAndFavorites() {
+    final feedFavoritesWidgetBuilder = this.feedFavoritesWidgetBuilder;
+
     return [
       ...stories.map(createWidgetFromStory),
-      if (addLastFavoritesItem && favorites.isNotEmpty) createFeedFavoritesWidget(),
+      if (feedFavoritesWidgetBuilder != null && favorites.isNotEmpty)
+        BaseFeedFavoritesWidget(favorites, iasStoryListHostApi, feedFavoritesWidgetBuilder),
     ];
   }
 
@@ -70,10 +84,6 @@ class FeedStoriesStream extends Stream<Iterable<Widget>>
       storyWidgetBuilder,
       key: ValueKey(story.hashCode),
     );
-  }
-
-  Widget createFeedFavoritesWidget() {
-    return FeedFavoritesWidget(favorites, iasStoryListHostApi);
   }
 
   @override
