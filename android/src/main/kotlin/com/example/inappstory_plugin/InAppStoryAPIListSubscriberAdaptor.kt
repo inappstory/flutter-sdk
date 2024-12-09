@@ -3,21 +3,18 @@ package com.example.inappstory_plugin
 import InAppStoryAPIListSubscriberFlutterApi
 import StoryAPIDataDto
 import StoryFavoriteItemAPIDataDto
-import android.os.Handler
-import com.inappstory.sdk.InAppStoryService
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import com.inappstory.sdk.stories.api.models.CachedSessionData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
-class InAppStoryAPIListSubscriberAdaptor(
+open class InAppStoryAPIListSubscriberAdaptor(
         private val flutterPluginBinding: FlutterPluginBinding,
         uniqueId: String,
 ) :
         InAppStoryAPIListSubscriber(uniqueId) {
     private val storyListSubscriber = InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
-    private val storyDownloadManager = InAppStoryService.getInstance().storyDownloadManager
     private val sessionData = CachedSessionData.getInstance(flutterPluginBinding.applicationContext)
     override fun updateStoryData(storyAPIData: StoryAPIData) {
         flutterPluginBinding.runOnMainThread {
@@ -26,13 +23,13 @@ class InAppStoryAPIListSubscriberAdaptor(
     }
 
     override fun updateStoriesData(list: MutableList<StoryAPIData>) {
-        Handler(flutterPluginBinding.applicationContext.mainLooper).post {
+        flutterPluginBinding.runOnMainThread {
             storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, getAspectRatio()) }) {}
         }
     }
 
     override fun updateFavoriteItemData(list: MutableList<StoryFavoriteItemAPIData>) {
-        Handler(flutterPluginBinding.applicationContext.mainLooper).post {
+        flutterPluginBinding.runOnMainThread {
             storyListSubscriber.updateFavoriteStoriesData(list.map { mapFavorite(it) }) {}
         }
     }

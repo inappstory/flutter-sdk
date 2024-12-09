@@ -8,10 +8,10 @@ Currently under development & not published
 
 Add dependency in your app pubspec.yaml
 
-```yaml
+```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.3
+  inappstory_plugin: ^0.0.4
   ...
 ```
 
@@ -27,7 +27,7 @@ targetSdkVersion = 34
 
 ## Initialize with your api key
 
-```dart
+```
     InappstoryPlugin().initWith('<your api key>', '<user id>', false);
 ```
 
@@ -35,7 +35,7 @@ targetSdkVersion = 34
 
 To use the library, create YourStoryWidget & implement StoryWidget
 
-```dart
+```
 class YourStoryWidget extends StatelessWidget implements StoryWidget {
   const YourStoryWidget(this.story, {super.key});
   ...
@@ -43,7 +43,7 @@ class YourStoryWidget extends StatelessWidget implements StoryWidget {
 
 Get story widgets for specific feed
 
-```dart
+```
 InAppStoryPlugin().getStoriesWidgets(
   feed: '<your feed>',
   storyBuilder: <function returns Widget for Story>,
@@ -52,7 +52,7 @@ InAppStoryPlugin().getStoriesWidgets(
 
 Get story widgets for specific feed with Favorites item
 
-```dart
+```
 InAppStoryPlugin().getStoriesWidgets(
   feed: '<your feed>',
   storyBuilder: <function returns Widget for Story>,
@@ -62,7 +62,7 @@ InAppStoryPlugin().getStoriesWidgets(
 
 Full example
 
-```dart
+```
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -181,6 +181,16 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
 }
 ```
 
+## Get Favorites Stories
+
+```
+final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
+      feed: 'flutter',
+      storyBuilder: StoryWidgetSimpleDecorator.new,
+    ).asBroadcastStream();
+```
+
+
 ## AppearanceManager
 
 # Story Reader appearance
@@ -191,7 +201,7 @@ Show/hide buttons for:
 - favorite
 - share
 
-```dart
+```
 AppearanceManagerHostApi().setHasLike(true);
 AppearanceManagerHostApi().setHasFavorites(true);
 AppearanceManagerHostApi().setHasShare(true);

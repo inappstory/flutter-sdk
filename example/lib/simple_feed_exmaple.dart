@@ -11,11 +11,20 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
-  final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
+  late final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
     feed: 'flutter',
     storyBuilder: StoryWidgetSimpleDecorator.new,
-    favoritesBuilder: GridFeedFavoritesWidget.new,
+    favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
   );
+
+  void onFeedFavoritesTap() {
+    final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
+      feed: 'flutter',
+      storyBuilder: StoryWidgetSimpleDecorator.new,
+    ).asBroadcastStream();
+
+    showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget(favorites));
+  }
 
   @override
   void initState() {
@@ -82,6 +91,59 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
+  CustomGridFeedFavoritesWidget(super.favorites, {required this.onTap, super.key});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: super.build(context),
+    );
+  }
+}
+
+class FavoritesBottomSheetWidget extends StatefulWidget {
+  const FavoritesBottomSheetWidget(this.favorites, {super.key});
+
+  final Stream<Iterable<Widget>> favorites;
+
+  @override
+  State<FavoritesBottomSheetWidget> createState() => _FavoritesBottomSheetWidgetState();
+}
+
+class _FavoritesBottomSheetWidgetState extends State<FavoritesBottomSheetWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: SizedBox(
+        height: 250,
+        child: StreamBuilder(
+          stream: widget.favorites,
+          builder: (_, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.requireData.length,
+                itemBuilder: (_, index) => snapshot.requireData.elementAt(index),
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+              );
+            }
+
+            if (snapshot.hasError) return Text('${snapshot.error}');
+
+            return const CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }

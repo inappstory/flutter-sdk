@@ -16,18 +16,18 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         self.appearanceManagerAdaptor = AppearanceManagerAdaptor(binaryMessenger: binaryMessenger)
         
-        self.storyListAdaptor = StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: StoryListAPI(), uniqueId: "feed")
+        self.feedStoryListAdaptor = FeedStoryListAdaptor(binaryMessenger: binaryMessenger)
         
-        self.storyListAdaptorFavorite = StoryListAdaptor(binaryMessenger: binaryMessenger, storyListAPI: StoryListAPI(isFavorite: true), uniqueId: "favorites")
+        self.favoriteStoryListAdaptor = FavoritesStoryListAdaptor(binaryMessenger: binaryMessenger)
         
         InappstorySdkModuleHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
     }
     
     var binaryMessenger: FlutterBinaryMessenger
     
-    var storyListAdaptor: StoryListAdaptor
+    var feedStoryListAdaptor: StoryListAdaptor
 
-    var storyListAdaptorFavorite: StoryListAdaptor
+    var favoriteStoryListAdaptor: StoryListAdaptor
     
     var appearanceManagerAdaptor: AppearanceManagerAdaptor
         

@@ -50,14 +50,14 @@ class InappstorySdkModuleAdaptor(
                 appearanceManager,
                 iasStoryList,
                 inAppStoryAPI,
-                uniqueId = "feed")
+        )
 
-        favorites = IASStoryListAdaptor(
+        favorites = IASFavoritesListAdaptor(
                 flutterPluginBinding,
                 appearanceManager,
                 iasStoryList,
                 inAppStoryAPI,
-                uniqueId = "favorites")
+        )
 
         inAppStoryManager.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
 

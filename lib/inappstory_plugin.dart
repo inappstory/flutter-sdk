@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
 import 'inappstory_sdk_module.dart';
-import 'src/base_feed_favorites_widget.dart';
 import 'src/base_story_widget.dart';
+import 'src/favorites_stories_stream.dart';
 import 'src/feed_stories_stream.dart';
 
 export 'src/base_feed_favorites_widget.dart';
-export 'src/feed_favorites_widget.dart';
+export 'src/feed_favorite_widget.dart';
+export 'src/feed_stories_stream.dart';
 export 'src/grid_feed_favorites_widget.dart';
 export 'src/pigeon_generated.g.dart';
 export 'src/story.dart';
@@ -32,6 +33,17 @@ class InAppStoryPlugin implements InAppStorySdkModule {
     required StoryWidgetBuilder storyBuilder,
     FeedFavoritesWidgetBuilder? favoritesBuilder,
   }) {
-    return FeedStoriesStream(feed, "feed", storyBuilder, favoritesBuilder);
+    return FeedStoriesStream(
+      feed: feed,
+      storyWidgetBuilder: storyBuilder,
+      feedFavoritesWidgetBuilder: favoritesBuilder,
+    );
+  }
+
+  Stream<Iterable<Widget>> getFavoritesStoriesWidgets({
+    required String feed,
+    required StoryWidgetBuilder storyBuilder,
+  }) {
+    return FavoritesStoriesStream(feed: feed, storyWidgetBuilder: storyBuilder);
   }
 }
