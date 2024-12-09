@@ -1,11 +1,11 @@
 name: inappstory_plugin
 description: "InAppStory SDK Plugin"
-version: 0.0.4
+version: 0.0.5
 homepage: https://inappstory.com/
 repository: https://github.com/inappstory/flutter-sdk
 
 environment:
-  sdk: '>=2.14.0 <4.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:

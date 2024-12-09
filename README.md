@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.4
+  inappstory_plugin: ^0.0.5
   ...
 ```
 
@@ -191,9 +191,9 @@ final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
 ```
 
 
-## AppearanceManager
+# AppearanceManager
 
-# Story Reader appearance
+## Story Reader appearance
 
 Show/hide buttons for:
 
@@ -208,6 +208,17 @@ AppearanceManagerHostApi().setHasShare(true);
 
 ```
 
+## Story Reader close button position
+
+- Position.topLeft
+- Position.topRight
+- Position.bottomLeft
+- Position.bottomRight
+
+
+```
+AppearanceManagerHostApi().setClosePosition(position)
+```
 
 ## Call To Action
 

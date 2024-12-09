@@ -29,4 +29,8 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
         panelSettings.share = value
         InAppStory.shared.panelSettings = panelSettings
     }
+    
+    func setClosePosition(position: Position) throws {
+        InAppStory.shared.closeButtonPosition = ClosePosition.init(rawValue: position.rawValue)!
+    }
 }

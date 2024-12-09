@@ -120,7 +120,14 @@ enum ClickActionDto {
   BUTTON,
   SWIPE,
   GAME,
-  DEEPLINK;
+  DEEPLINK,
+}
+
+enum Position {
+  topLeft,
+  topRight,
+  bottomLeft,
+  bottomRight,
 }
 
 @HostApi()
@@ -130,6 +137,8 @@ abstract class AppearanceManagerHostApi {
   void setHasFavorites(bool value);
 
   void setHasShare(bool value);
+
+  void setClosePosition(Position position);
 }
 
 class StoryFavoriteItemAPIDataDto {

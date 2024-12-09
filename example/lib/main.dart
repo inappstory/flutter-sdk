@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
-import 'package:inappstory_plugin_example/simple_feed_exmaple.dart';
 
+import 'appearance_manager_widget.dart';
 import 'localization_delegates.dart';
+import 'simple_feed_exmaple.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +44,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     navigatorState.push(MaterialPageRoute(builder: (_) => const SimpleFeedExampleWidget()));
   }
 
+  void onAppearanceManagerTap() {
+    navigatorState.push(MaterialPageRoute(builder: (_) => const AppearanceManagerWidget()));
+  }
+
   TextDirection textDirection = TextDirection.ltr;
 
   void toggleRtl() {
@@ -73,6 +78,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               const SizedBox(height: 24),
               ElevatedButton(onPressed: toggleRtl, child: Text('toggleRtl ${textDirection.name}')),
               ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
+              ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
             ],
           ),
         ),

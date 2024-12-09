@@ -88,6 +88,13 @@ enum ClickActionDto: Int {
   case dEEPLINK = 3
 }
 
+enum Position: Int {
+  case topLeft = 0
+  case topRight = 1
+  case bottomLeft = 2
+  case bottomRight = 3
+}
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct StoryAPIDataDto {
   var id: Int64
@@ -270,12 +277,18 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
       }
       return nil
     case 132:
-      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return Position(rawValue: enumResultAsInt)
+      }
+      return nil
     case 133:
-      return StoryDataDto.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 134:
-      return SlideDataDto.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 135:
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
+    case 136:
       return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -294,17 +307,20 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? ClickActionDto {
       super.writeByte(131)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIDataDto {
+    } else if let value = value as? Position {
       super.writeByte(132)
-      super.writeValue(value.toList())
-    } else if let value = value as? StoryDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(133)
       super.writeValue(value.toList())
-    } else if let value = value as? SlideDataDto {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(134)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(135)
+      super.writeValue(value.toList())
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+      super.writeByte(136)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -761,6 +777,7 @@ protocol AppearanceManagerHostApi {
   func setHasLike(value: Bool) throws
   func setHasFavorites(value: Bool) throws
   func setHasShare(value: Bool) throws
+  func setClosePosition(position: Position) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -813,6 +830,21 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setHasShareChannel.setMessageHandler(nil)
+    }
+    let setClosePositionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setClosePosition\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setClosePositionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let positionArg = args[0] as! Position
+        do {
+          try api.setClosePosition(position: positionArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setClosePositionChannel.setMessageHandler(nil)
     }
   }
 }

@@ -45,6 +45,13 @@ enum ClickActionDto {
   DEEPLINK,
 }
 
+enum Position {
+  topLeft,
+  topRight,
+  bottomLeft,
+  bottomRight,
+}
+
 class StoryAPIDataDto {
   StoryAPIDataDto({
     required this.id,
@@ -241,17 +248,20 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is ClickActionDto) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    }    else if (value is StoryAPIDataDto) {
+    }    else if (value is Position) {
       buffer.putUint8(132);
-      writeValue(buffer, value.encode());
-    }    else if (value is StoryDataDto) {
+      writeValue(buffer, value.index);
+    }    else if (value is StoryAPIDataDto) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is SlideDataDto) {
+    }    else if (value is StoryDataDto) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is SlideDataDto) {
       buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -271,12 +281,15 @@ class _PigeonCodec extends StandardMessageCodec {
         final int? value = readValue(buffer) as int?;
         return value == null ? null : ClickActionDto.values[value];
       case 132: 
-        return StoryAPIDataDto.decode(readValue(buffer)!);
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : Position.values[value];
       case 133: 
-        return StoryDataDto.decode(readValue(buffer)!);
+        return StoryAPIDataDto.decode(readValue(buffer)!);
       case 134: 
-        return SlideDataDto.decode(readValue(buffer)!);
+        return StoryDataDto.decode(readValue(buffer)!);
       case 135: 
+        return SlideDataDto.decode(readValue(buffer)!);
+      case 136: 
         return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -874,6 +887,28 @@ class AppearanceManagerHostApi {
     );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_channel.send(<Object?>[value]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setClosePosition(Position position) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setClosePosition$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[position]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {

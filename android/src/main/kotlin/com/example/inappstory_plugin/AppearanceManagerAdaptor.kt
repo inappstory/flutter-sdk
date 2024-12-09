@@ -1,6 +1,7 @@
 package com.example.inappstory_plugin
 
 import AppearanceManagerHostApi
+import Position
 import com.inappstory.sdk.AppearanceManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
@@ -22,5 +23,9 @@ class AppearanceManagerAdaptor(
 
     override fun setHasShare(value: Boolean) {
         appearanceManager.csHasShare(value)
+    }
+
+    override fun setClosePosition(position: Position) {
+        appearanceManager.csClosePosition(position.raw + 1)
     }
 }

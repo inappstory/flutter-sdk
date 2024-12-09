@@ -84,6 +84,19 @@ enum class ClickActionDto(val raw: Int) {
   }
 }
 
+enum class Position(val raw: Int) {
+  TOP_LEFT(0),
+  TOP_RIGHT(1),
+  BOTTOM_LEFT(2),
+  BOTTOM_RIGHT(3);
+
+  companion object {
+    fun ofRaw(raw: Int): Position? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class StoryAPIDataDto (
   val id: Long,
@@ -231,21 +244,26 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          StoryAPIDataDto.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          Position.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryDataDto.fromList(it)
+          StoryAPIDataDto.fromList(it)
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SlideDataDto.fromList(it)
+          StoryDataDto.fromList(it)
         }
       }
       135.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          SlideDataDto.fromList(it)
+        }
+      }
+      136.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           StoryFavoriteItemAPIDataDto.fromList(it)
         }
@@ -267,20 +285,24 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(131)
         writeValue(stream, value.raw)
       }
-      is StoryAPIDataDto -> {
+      is Position -> {
         stream.write(132)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is StoryDataDto -> {
+      is StoryAPIDataDto -> {
         stream.write(133)
         writeValue(stream, value.toList())
       }
-      is SlideDataDto -> {
+      is StoryDataDto -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is SlideDataDto -> {
         stream.write(135)
+        writeValue(stream, value.toList())
+      }
+      is StoryFavoriteItemAPIDataDto -> {
+        stream.write(136)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -717,6 +739,7 @@ interface AppearanceManagerHostApi {
   fun setHasLike(value: Boolean)
   fun setHasFavorites(value: Boolean)
   fun setHasShare(value: Boolean)
+  fun setClosePosition(position: Position)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -771,6 +794,24 @@ interface AppearanceManagerHostApi {
             val valueArg = args[0] as Boolean
             val wrapped: List<Any?> = try {
               api.setHasShare(valueArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setClosePosition$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val positionArg = args[0] as Position
+            val wrapped: List<Any?> = try {
+              api.setClosePosition(positionArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)
