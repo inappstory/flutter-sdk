@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.5
+  inappstory_plugin: ^0.0.6
   ...
 ```
 
@@ -218,6 +218,29 @@ AppearanceManagerHostApi().setHasShare(true);
 
 ```
 AppearanceManagerHostApi().setClosePosition(position)
+```
+
+## Story Reader Timer Gradient
+
+set state enable/disable
+```
+AppearanceManagerHostApi().setTimerGradientEnable(true)
+```
+
+get state
+```
+final Future<bool> timerGradientEnabledFuture= AppearanceManagerHostApi().getTimerGradientEnable();
+```
+
+set Gradient with Colors & locations
+
+```
+const gradient = LinearGradient(colors: [Colors.purple, Colors.amber], stops: [0.1, 0.3]);
+
+AppearanceManagerHostApi().setTimerGradient(
+                        colors: gradient.colors.map((it) => it.value).toList(),
+                        locations: gradient.stops ?? [],
+                      );
 ```
 
 ## Call To Action

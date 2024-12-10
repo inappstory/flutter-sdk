@@ -740,6 +740,9 @@ interface AppearanceManagerHostApi {
   fun setHasFavorites(value: Boolean)
   fun setHasShare(value: Boolean)
   fun setClosePosition(position: Position)
+  fun setTimerGradientEnable(isEnabled: Boolean)
+  fun getTimerGradientEnable(): Boolean
+  fun setTimerGradient(colors: List<Long>, locations: List<Double>)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -812,6 +815,58 @@ interface AppearanceManagerHostApi {
             val positionArg = args[0] as Position
             val wrapped: List<Any?> = try {
               api.setClosePosition(positionArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setTimerGradientEnable$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val isEnabledArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setTimerGradientEnable(isEnabledArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.getTimerGradientEnable$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getTimerGradientEnable())
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setTimerGradient$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val colorsArg = args[0] as List<Long>
+            val locationsArg = args[1] as List<Double>
+            val wrapped: List<Any?> = try {
+              api.setTimerGradient(colorsArg, locationsArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

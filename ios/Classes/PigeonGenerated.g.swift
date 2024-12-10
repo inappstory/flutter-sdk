@@ -778,6 +778,9 @@ protocol AppearanceManagerHostApi {
   func setHasFavorites(value: Bool) throws
   func setHasShare(value: Bool) throws
   func setClosePosition(position: Position) throws
+  func setTimerGradientEnable(isEnabled: Bool) throws
+  func getTimerGradientEnable() throws -> Bool
+  func setTimerGradient(colors: [Int64], locations: [Double]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -845,6 +848,50 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setClosePositionChannel.setMessageHandler(nil)
+    }
+    let setTimerGradientEnableChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setTimerGradientEnable\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setTimerGradientEnableChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let isEnabledArg = args[0] as! Bool
+        do {
+          try api.setTimerGradientEnable(isEnabled: isEnabledArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setTimerGradientEnableChannel.setMessageHandler(nil)
+    }
+    let getTimerGradientEnableChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.getTimerGradientEnable\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getTimerGradientEnableChannel.setMessageHandler { _, reply in
+        do {
+          let result = try api.getTimerGradientEnable()
+          reply(wrapResult(result))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      getTimerGradientEnableChannel.setMessageHandler(nil)
+    }
+    let setTimerGradientChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setTimerGradient\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setTimerGradientChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let colorsArg = args[0] as! [Int64]
+        let locationsArg = args[1] as! [Double]
+        do {
+          try api.setTimerGradient(colors: colorsArg, locations: locationsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setTimerGradientChannel.setMessageHandler(nil)
     }
   }
 }

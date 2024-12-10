@@ -11,6 +11,8 @@ class AppearanceManagerWidget extends StatefulWidget {
 class _AppearanceManagerWidgetState extends State<AppearanceManagerWidget> {
   Position position = Position.bottomRight;
 
+  final Future<bool> hasGradientFuture = AppearanceManagerHostApi().getTimerGradientEnable();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +37,86 @@ class _AppearanceManagerWidgetState extends State<AppearanceManagerWidget> {
               ],
             ),
           ),
+          FutureBuilder(
+            future: hasGradientFuture,
+            builder: (_, snapshot) {
+              if (snapshot.hasData) return GradientWidget(snapshot.requireData);
+              if (snapshot.hasError) return Text('${snapshot.error}');
+              return const LinearProgressIndicator();
+            },
+          ),
         ],
       ),
+    );
+  }
+}
+
+class GradientWidget extends StatefulWidget {
+  const GradientWidget(this.hasGradient, {super.key});
+
+  final bool hasGradient;
+
+  @override
+  State<GradientWidget> createState() => _GradientWidgetState();
+}
+
+class _GradientWidgetState extends State<GradientWidget> {
+  late bool hasGradient = widget.hasGradient;
+
+  final gradients = [
+    LinearGradient(colors: [Colors.red.withOpacity(.5), Colors.lightGreenAccent]),
+    const LinearGradient(colors: [Colors.red, Colors.black], stops: [0.2, 0.8]),
+    const LinearGradient(colors: [Colors.purple, Colors.amber], stops: [0.1, 0.3]),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final gradients = this.gradients.map(
+          (it) => LinearGradient(
+            colors: it.colors,
+            stops: it.stops,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        );
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Text('setTimerGradientEnable'),
+            Switch(
+              value: hasGradient,
+              onChanged: (isEnabled) {
+                setState(() {
+                  hasGradient = isEnabled;
+                  AppearanceManagerHostApi().setTimerGradientEnable(hasGradient);
+                });
+              },
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            for (final gradient in gradients)
+              Expanded(
+                flex: 1,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(gradient: gradient),
+                  child: TextButton(
+                    onPressed: () {
+                      AppearanceManagerHostApi().setTimerGradient(
+                        colors: gradient.colors.map((it) => it.value).toList(),
+                        locations: gradient.stops ?? [],
+                      );
+                    },
+                    child: const Text('setTimerGradient'),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

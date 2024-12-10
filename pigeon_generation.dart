@@ -139,6 +139,13 @@ abstract class AppearanceManagerHostApi {
   void setHasShare(bool value);
 
   void setClosePosition(Position position);
+
+  void setTimerGradientEnable(bool isEnabled);
+
+  bool getTimerGradientEnable();
+
+  void setTimerGradient({required List<int> colors, List<double> locations = const []});
+
 }
 
 class StoryFavoriteItemAPIDataDto {
