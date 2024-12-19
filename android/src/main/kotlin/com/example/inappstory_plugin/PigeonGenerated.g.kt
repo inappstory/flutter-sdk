@@ -743,6 +743,8 @@ interface AppearanceManagerHostApi {
   fun setTimerGradientEnable(isEnabled: Boolean)
   fun getTimerGradientEnable(): Boolean
   fun setTimerGradient(colors: List<Long>, locations: List<Double>)
+  fun setReaderBackgroundColor(color: Long)
+  fun setReaderCornerRadius(radius: Long)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -867,6 +869,42 @@ interface AppearanceManagerHostApi {
             val locationsArg = args[1] as List<Double>
             val wrapped: List<Any?> = try {
               api.setTimerGradient(colorsArg, locationsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderBackgroundColor$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val colorArg = args[0] as Long
+            val wrapped: List<Any?> = try {
+              api.setReaderBackgroundColor(colorArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderCornerRadius$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val radiusArg = args[0] as Long
+            val wrapped: List<Any?> = try {
+              api.setReaderCornerRadius(radiusArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

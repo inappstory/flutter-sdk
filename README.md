@@ -243,6 +243,18 @@ AppearanceManagerHostApi().setTimerGradient(
                       );
 ```
 
+## Story Reader Background
+
+```
+AppearanceManagerHostApi().setReaderBackgroundColor(Colors.green.value)
+```
+
+## Story Reader Corner Radius
+
+```
+AppearanceManagerHostApi().setReaderCornerRadius(16); // int
+```
+
 ## Call To Action
 
 add/remove listener for CTA

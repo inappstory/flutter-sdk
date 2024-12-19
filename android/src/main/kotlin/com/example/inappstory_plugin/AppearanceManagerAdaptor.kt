@@ -46,4 +46,12 @@ class AppearanceManagerAdaptor(
         }
         appearanceManager.csTimerGradient(gradient)
     }
+
+    override fun setReaderBackgroundColor(color: Long) {
+        appearanceManager.csReaderBackgroundColor(color.toInt())
+    }
+
+    override fun setReaderCornerRadius(radius: Long) {
+        appearanceManager.csReaderRadius(radius.toInt())
+    }
 }

@@ -781,6 +781,8 @@ protocol AppearanceManagerHostApi {
   func setTimerGradientEnable(isEnabled: Bool) throws
   func getTimerGradientEnable() throws -> Bool
   func setTimerGradient(colors: [Int64], locations: [Double]) throws
+  func setReaderBackgroundColor(color: Int64) throws
+  func setReaderCornerRadius(radius: Int64) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -892,6 +894,36 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setTimerGradientChannel.setMessageHandler(nil)
+    }
+    let setReaderBackgroundColorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderBackgroundColor\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setReaderBackgroundColorChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let colorArg = args[0] as! Int64
+        do {
+          try api.setReaderBackgroundColor(color: colorArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setReaderBackgroundColorChannel.setMessageHandler(nil)
+    }
+    let setReaderCornerRadiusChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderCornerRadius\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setReaderCornerRadiusChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let radiusArg = args[0] as! Int64
+        do {
+          try api.setReaderCornerRadius(radius: radiusArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setReaderCornerRadiusChannel.setMessageHandler(nil)
     }
   }
 }

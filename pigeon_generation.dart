@@ -146,6 +146,9 @@ abstract class AppearanceManagerHostApi {
 
   void setTimerGradient({required List<int> colors, List<double> locations = const []});
 
+  void setReaderBackgroundColor(int color);
+
+  void setReaderCornerRadius(int radius);
 }
 
 class StoryFavoriteItemAPIDataDto {

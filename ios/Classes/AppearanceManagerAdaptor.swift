@@ -3,6 +3,14 @@ import Flutter
 @_spi(IAS_API) import InAppStorySDK
 
 class AppearanceManagerAdaptor: AppearanceManagerHostApi {
+    func setReaderBackgroundColor(color: Int64) throws {
+        InAppStory.shared.readerBackgroundColor = uiColorFromInt64(hexValue: color)
+    }
+    
+    func setReaderCornerRadius(radius: Int64) throws {
+        InAppStory.shared.readerCornerRadius = CGFloat(radius)
+    }
+    
     init(binaryMessenger: FlutterBinaryMessenger) {
         self.binaryMessenger = binaryMessenger
         
