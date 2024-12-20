@@ -21,8 +21,8 @@ fun mapStoryData(storyData: StoryData): StoryDataDto {
             tags = storyData.tags,
             feed = storyData.feed,
             slidesCount = storyData.slidesCount.toLong(),
-            storyType = StoryTypeDto.ofRaw(storyData.storyType.ordinal)!!,
-            sourceType = SourceTypeDto.ofRaw(storyData.sourceType.ordinal)!!,
+            storyType = StoryTypeDto.ofRaw(storyData.storyType.ordinal),
+            sourceType = SourceTypeDto.ofRaw(storyData.sourceType.ordinal),
     )
 }
 

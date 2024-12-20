@@ -121,27 +121,27 @@ class StoryAPIDataDto {
 class StoryDataDto {
   StoryDataDto({
     required this.id,
-    required this.title,
-    required this.tags,
-    required this.feed,
-    required this.sourceType,
+    this.title,
+    this.tags,
+    this.feed,
+    this.sourceType,
     required this.slidesCount,
-    required this.storyType,
+    this.storyType,
   });
 
   int id;
 
-  String title;
+  String? title;
 
-  String tags;
+  String? tags;
 
-  String feed;
+  String? feed;
 
-  SourceTypeDto sourceType;
+  SourceTypeDto? sourceType;
 
   int slidesCount;
 
-  StoryTypeDto storyType;
+  StoryTypeDto? storyType;
 
   Object encode() {
     return <Object?>[
@@ -159,12 +159,12 @@ class StoryDataDto {
     result as List<Object?>;
     return StoryDataDto(
       id: result[0]! as int,
-      title: result[1]! as String,
-      tags: result[2]! as String,
-      feed: result[3]! as String,
-      sourceType: result[4]! as SourceTypeDto,
+      title: result[1] as String?,
+      tags: result[2] as String?,
+      feed: result[3] as String?,
+      sourceType: result[4] as SourceTypeDto?,
       slidesCount: result[5]! as int,
-      storyType: result[6]! as StoryTypeDto,
+      storyType: result[6] as StoryTypeDto?,
     );
   }
 }
@@ -375,36 +375,6 @@ class InappstorySdkModuleHostApi {
       return;
     }
   }
-}
-
-class IASManager {
-  /// Constructor for [IASManager].  The [binaryMessenger] named argument is
-  /// available for dependency injection.  If it is left null, the default
-  /// BinaryMessenger will be used which routes to the host platform.
-  IASManager({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-  final BinaryMessenger? pigeonVar_binaryMessenger;
-
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
-
-  final String pigeonVar_messageChannelSuffix;
-
-}
-
-class InAppStoryAPI {
-  /// Constructor for [InAppStoryAPI].  The [binaryMessenger] named argument is
-  /// available for dependency injection.  If it is left null, the default
-  /// BinaryMessenger will be used which routes to the host platform.
-  InAppStoryAPI({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-  final BinaryMessenger? pigeonVar_binaryMessenger;
-
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
-
-  final String pigeonVar_messageChannelSuffix;
-
 }
 
 class IASStoryListHostApi {
@@ -1034,6 +1004,170 @@ class AppearanceManagerHostApi {
       );
     } else {
       return;
+    }
+  }
+}
+
+class IASSingleStoryHostApi {
+  /// Constructor for [IASSingleStoryHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  IASSingleStoryHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> showOnce({required int storyId}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.showOnce$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[storyId]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> show({required int storyId, required int slide}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[storyId, slide]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+}
+
+abstract class IShowStoryOnceCallbackFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void onShow();
+
+  void onError();
+
+  void alreadyShown();
+
+  static void setUp(IShowStoryOnceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onShow$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            api.onShow();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            api.onError();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.alreadyShown$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          try {
+            api.alreadyShown();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+  }
+}
+
+abstract class SingleLoadCallbackFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void singleLoad(StoryDataDto storyData);
+
+  static void setUp(SingleLoadCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final StoryDataDto? arg_storyData = (args[0] as StoryDataDto?);
+          assert(arg_storyData != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad was null, expected non-null StoryDataDto.');
+          try {
+            api.singleLoad(arg_storyData!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
     }
   }
 }

@@ -155,24 +155,24 @@ struct StoryAPIDataDto {
 /// Generated class from Pigeon that represents data sent in messages.
 struct StoryDataDto {
   var id: Int64
-  var title: String
-  var tags: String
-  var feed: String
-  var sourceType: SourceTypeDto
+  var title: String? = nil
+  var tags: String? = nil
+  var feed: String? = nil
+  var sourceType: SourceTypeDto? = nil
   var slidesCount: Int64
-  var storyType: StoryTypeDto
+  var storyType: StoryTypeDto? = nil
 
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> StoryDataDto? {
     let id = pigeonVar_list[0] as! Int64
-    let title = pigeonVar_list[1] as! String
-    let tags = pigeonVar_list[2] as! String
-    let feed = pigeonVar_list[3] as! String
-    let sourceType = pigeonVar_list[4] as! SourceTypeDto
+    let title: String? = nilOrValue(pigeonVar_list[1])
+    let tags: String? = nilOrValue(pigeonVar_list[2])
+    let feed: String? = nilOrValue(pigeonVar_list[3])
+    let sourceType: SourceTypeDto? = nilOrValue(pigeonVar_list[4])
     let slidesCount = pigeonVar_list[5] as! Int64
-    let storyType = pigeonVar_list[6] as! StoryTypeDto
+    let storyType: StoryTypeDto? = nilOrValue(pigeonVar_list[6])
 
     return StoryDataDto(
       id: id,
@@ -402,30 +402,6 @@ class InappstorySdkModuleHostApiSetup {
     } else {
       setTagsChannel.setMessageHandler(nil)
     }
-  }
-}
-/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
-protocol IASManager {
-}
-
-/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
-class IASManagerSetup {
-  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
-  /// Sets up an instance of `IASManager` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASManager?, messageChannelSuffix: String = "") {
-    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-  }
-}
-/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
-protocol InAppStoryAPI {
-}
-
-/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
-class InAppStoryAPISetup {
-  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
-  /// Sets up an instance of `InAppStoryAPI` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: InAppStoryAPI?, messageChannelSuffix: String = "") {
-    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
   }
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
@@ -924,6 +900,155 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setReaderCornerRadiusChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol IASSingleStoryHostApi {
+  func showOnce(storyId: Int64) throws
+  func show(storyId: Int64, slide: Int64) throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class IASSingleStoryHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `IASSingleStoryHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASSingleStoryHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let showOnceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.showOnce\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showOnceChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let storyIdArg = args[0] as! Int64
+        do {
+          try api.showOnce(storyId: storyIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showOnceChannel.setMessageHandler(nil)
+    }
+    let showChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let storyIdArg = args[0] as! Int64
+        let slideArg = args[1] as! Int64
+        do {
+          try api.show(storyId: storyIdArg, slide: slideArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol IShowStoryOnceCallbackFlutterApiProtocol {
+  func onShow(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onError(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func alreadyShown(completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func onShow(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onShow\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+  func onError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+  func alreadyShown(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.alreadyShown\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol SingleLoadCallbackFlutterApiProtocol {
+  func singleLoad(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func singleLoad(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([storyDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
     }
   }
 }

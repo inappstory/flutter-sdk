@@ -70,7 +70,7 @@ class StoriesListUpdateHandlerAdaptor {
     private func mapStoryData(arg: StoryData) -> StoryDataDto {
         return StoryDataDto(
             id: Int64(arg.id ?? "-1")!,
-            title: arg.title ?? "",
+            title: arg.title,
             tags: "", // TODO map array of tags to string
             feed: arg.feed,
             sourceType: mapStorySource(arg: arg.source),

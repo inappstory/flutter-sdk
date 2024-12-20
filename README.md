@@ -255,6 +255,21 @@ AppearanceManagerHostApi().setReaderBackgroundColor(Colors.green.value)
 AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 ```
 
+## SingleStoryAPI
+
+To show single story in reader by id
+
+```
+IASSingleStoryHostApi().show(storyId: story.id, slide: 1);
+```
+
+To show single story in reader by id if wasn't show already for current user
+
+```agsl
+IASSingleStoryHostApi().showOnce(storyId: story.id);
+```
+
+
 ## Call To Action
 
 add/remove listener for CTA

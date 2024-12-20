@@ -3,6 +3,7 @@ package com.example.inappstory_plugin
 import IASStoryListHostApi
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
+import com.inappstory.sdk.externalapi.single.IASSingleStory
 import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import kotlinx.coroutines.DisposableHandle

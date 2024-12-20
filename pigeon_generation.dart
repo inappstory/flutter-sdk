@@ -25,12 +25,6 @@ abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
 }
 
 @HostApi()
-abstract class IASManager {}
-
-@HostApi()
-abstract class InAppStoryAPI {}
-
-@HostApi()
 abstract class IASStoryListHostApi {
   void load(String feed);
 
@@ -84,12 +78,12 @@ class StoryAPIDataDto {
 
 class StoryDataDto {
   late int id;
-  late String title;
-  late String tags;
-  late String feed;
-  late SourceTypeDto sourceType;
+  late String? title;
+  late String? tags;
+  late String? feed;
+  late SourceTypeDto? sourceType;
   late int slidesCount;
-  late StoryTypeDto storyType;
+  late StoryTypeDto? storyType;
 }
 
 enum StoryTypeDto {
@@ -155,4 +149,25 @@ class StoryFavoriteItemAPIDataDto {
   late int id;
   late String? imageFilePath;
   late String backgroundColor;
+}
+
+@HostApi()
+abstract class IASSingleStoryHostApi {
+  void showOnce({required int storyId});
+
+  void show({required int storyId, required int slide});
+}
+
+@FlutterApi()
+abstract class IShowStoryOnceCallbackFlutterApi {
+  void onShow();
+
+  void onError();
+
+  void alreadyShown();
+}
+
+@FlutterApi()
+abstract class SingleLoadCallbackFlutterApi {
+  void singleLoad(StoryDataDto storyData);
 }

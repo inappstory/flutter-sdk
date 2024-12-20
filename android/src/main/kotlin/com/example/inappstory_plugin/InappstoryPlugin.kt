@@ -1,10 +1,7 @@
 package com.example.inappstory_plugin
 
-import InAppStoryAPI
 import InappstorySdkModuleHostApi
 import com.inappstorysdk.InAppStory
-import com.inappstorysdk.InappstorySdkModule
-import com.inappstorysdk.ReactApplicationContext
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -42,6 +39,5 @@ class InappstoryPlugin : FlutterPlugin, MethodCallHandler {
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
         InappstorySdkModuleHostApi.setUp(binding.binaryMessenger, api = null)
-        InAppStoryAPI.setUp(binding.binaryMessenger, api = null)
     }
 }

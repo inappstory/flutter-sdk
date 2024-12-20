@@ -22,4 +22,7 @@ class FavoriteFromDto implements FeedFavorite {
 
   @override
   int get hashCode => dto.id;
+
+  @override
+  int get id => dto.id;
 }

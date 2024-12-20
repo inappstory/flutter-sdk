@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 
 abstract class Story {
+  int get id;
+
   Stream<void> get updates;
 
   String get title;
@@ -20,5 +22,5 @@ abstract class Story {
 
   Color get titleColor;
 
-  void tap();
+  void showReader();
 }

@@ -15,6 +15,8 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
     return Image.file(imageFile);
   }
 
+  void onTap() => story.showReader();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -25,7 +27,7 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
           child: AspectRatio(
             aspectRatio: story.aspectRatio,
             child: GestureDetector(
-              onTap: story.tap,
+              onTap: onTap,
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -62,5 +64,14 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
         );
       },
     );
+  }
+}
+
+class StoryWidgetSingleReader extends StoryWidgetSimpleDecorator {
+  const StoryWidgetSingleReader(super.story, {super.key});
+
+  @override
+  void onTap() {
+    IASSingleStoryHostApi().showOnce(storyId: story.id);
   }
 }

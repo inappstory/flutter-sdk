@@ -53,7 +53,7 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   Color get titleColor => colorFromString(dto.titleColor);
 
   @override
-  void tap() => iasStoryListHostApi.openStoryReader(dto.id);
+  void showReader() => iasStoryListHostApi.openStoryReader(dto.id);
 
   void wasViewed() {
     iasStoryListHostApi.updateVisiblePreviews([dto.id]);
@@ -81,6 +81,9 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
 
   @override
   int get hashCode => dto.id;
+
+  @override
+  int get id => dto.id;
 }
 
 File? nullableFileFromString(String? filePath) {

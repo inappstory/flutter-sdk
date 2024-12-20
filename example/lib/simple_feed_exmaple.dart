@@ -10,7 +10,8 @@ class SimpleFeedExampleWidget extends StatefulWidget {
   State<SimpleFeedExampleWidget> createState() => _SimpleFeedExampleState();
 }
 
-class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
+class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
+    implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
   late final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
     feed: 'flutter',
     storyBuilder: StoryWidgetSimpleDecorator.new,
@@ -18,10 +19,12 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
   );
 
   void onFeedFavoritesTap() {
-    final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
-      feed: 'flutter',
-      storyBuilder: StoryWidgetSimpleDecorator.new,
-    ).asBroadcastStream();
+    final favorites = InAppStoryPlugin()
+        .getFavoritesStoriesWidgets(
+          feed: 'flutter',
+          storyBuilder: StoryWidgetSingleReader.new,
+        )
+        .asBroadcastStream();
 
     showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget(favorites));
   }
@@ -30,11 +33,13 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
   void initState() {
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
+    IShowStoryOnceCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
+    IShowStoryOnceCallbackFlutterApi.setUp(null);
     super.dispose();
   }
 
@@ -94,6 +99,29 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
       ),
     );
   }
+
+  void showBanner(String text) {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        content: Text(text),
+        actions: [
+          TextButton(
+            onPressed: ScaffoldMessenger.of(context).clearMaterialBanners,
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void alreadyShown() => showBanner('IShowStoryOnceCallback.alreadyShown()');
+
+  @override
+  void onError() => showBanner('IShowStoryOnceCallback.onError()');
+
+  @override
+  void onShow() => showBanner('IShowStoryOnceCallback.onShow()');
 }
 
 class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
