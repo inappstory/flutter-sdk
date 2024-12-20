@@ -1,9 +1,9 @@
 PODS:
   - Flutter (1.0.0)
-  - InAppStory (1.24.6)
+  - InAppStory (1.24.11)
   - inappstory_plugin (0.0.1):
     - Flutter
-    - InAppStory
+    - InAppStory (= 1.24.11)
   - integration_test (0.0.1):
     - Flutter
 
@@ -26,8 +26,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  InAppStory: 3286e029477c334fc78ccb27b2f93962efd1299c
-  inappstory_plugin: a087a447b270af9e7a02db1a20ee2696c70dc048
+  InAppStory: 8ab47c0c150b73e95d2c2cea57412a281686b401
+  inappstory_plugin: 2b171cc26639ce4746afaf613458e5c0e2f9e785
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
