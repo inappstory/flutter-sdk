@@ -265,8 +265,35 @@ IASSingleStoryHostApi().show(storyId: story.id, slide: 1);
 
 To show single story in reader by id if wasn't show already for current user
 
-```agsl
+```
 IASSingleStoryHostApi().showOnce(storyId: story.id);
+```
+
+To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp your listener
+
+```
+class _WidgetState extends State<...> implements IShowStoryOnceCallbackFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    IShowStoryOnceCallbackFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    IShowStoryOnceCallbackFlutterApi.setUp(null);
+    super.dispose();
+  }
+  
+  @override
+  void alreadyShown() => print('IShowStoryOnceCallback.alreadyShown()');
+
+  @override
+  void onError() => print('IShowStoryOnceCallback.onError()');
+
+  @override
+  void onShow() => print('IShowStoryOnceCallback.onShow()');
+}
 ```
 
 
