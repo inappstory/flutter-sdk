@@ -324,4 +324,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
   void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
     // Do anything related
   }
-``` 
+```
+
+## Onboardings
+
+The library supports work with onboarding stories.
+
+```dart
+void onOnboardingsTap() {
+  IASOnboardingsHostApi().show(limit: 10);
+}
+```
