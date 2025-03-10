@@ -1028,3 +1028,69 @@ class SingleLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger,
     }
   }
 }
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface IASOnboardingsHostApi {
+  /**
+   * [feed] by default == "onboarding"
+   * [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
+   */
+  fun show(limit: Long, feed: String, tags: List<String>)
+
+  companion object {
+    /** The codec used by IASOnboardingsHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+    /** Sets up an instance of `IASOnboardingsHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: IASOnboardingsHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.show$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val limitArg = args[0] as Long
+            val feedArg = args[1] as String
+            val tagsArg = args[2] as List<String>
+            val wrapped: List<Any?> = try {
+              api.show(limitArg, feedArg, tagsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class OnboardingLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by OnboardingLoadCallbackFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  fun onboardingLoad(countArg: Long, feedArg: String, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(countArg, feedArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(createConnectionError(channelName)))
+      } 
+    }
+  }
+}

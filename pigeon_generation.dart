@@ -171,3 +171,19 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 abstract class SingleLoadCallbackFlutterApi {
   void singleLoad(StoryDataDto storyData);
 }
+
+@HostApi()
+abstract class IASOnboardingsHostApi {
+  /// [feed] by default == "onboarding"
+  /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
+  void show({
+    required int limit,
+    String feed = "onboarding",
+    List<String> tags = const [],
+  });
+}
+
+@FlutterApi()
+abstract class OnboardingLoadCallbackFlutterApi {
+  void onboardingLoad(int count, String feed);
+}

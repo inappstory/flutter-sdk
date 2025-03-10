@@ -1052,3 +1052,70 @@ class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
     }
   }
 }
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol IASOnboardingsHostApi {
+  /// [feed] by default == "onboarding"
+  /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
+  func show(limit: Int64, feed: String, tags: [String]) throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class IASOnboardingsHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `IASOnboardingsHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASOnboardingsHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    /// [feed] by default == "onboarding"
+    /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
+    let showChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.show\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let limitArg = args[0] as! Int64
+        let feedArg = args[1] as! String
+        let tagsArg = args[2] as! [String]
+        do {
+          try api.show(limit: limitArg, feed: feedArg, tags: tagsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol OnboardingLoadCallbackFlutterApiProtocol {
+  func onboardingLoad(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class OnboardingLoadCallbackFlutterApi: OnboardingLoadCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func onboardingLoad(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([countArg, feedArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+}

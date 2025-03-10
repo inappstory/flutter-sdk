@@ -22,6 +22,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         
         self.iasSingleStoryAdaptor = IASSingleStoryAdaptor(binaryMessenger: binaryMessenger, singleStoryAPI: InAppStoryAPI.shared.singleStoryAPI)
         
+        self.iasOnboardingsAdaptor = IASOnboardingsAdaptor(binaryMessenger: binaryMessenger, onboardingsAPI: InAppStoryAPI.shared.onboardingsAPI)
+        
         InappstorySdkModuleHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
     }
     
@@ -34,6 +36,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     var appearanceManagerAdaptor: AppearanceManagerAdaptor
     
     var iasSingleStoryAdaptor: IASSingleStoryAdaptor
+    
+    var iasOnboardingsAdaptor: IASOnboardingsAdaptor
         
     func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws {
         // the parameter is responsible for logging to the XCode console

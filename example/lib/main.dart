@@ -48,6 +48,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     navigatorState.push(MaterialPageRoute(builder: (_) => const AppearanceManagerWidget()));
   }
 
+  void onOnboardingsTap() {
+    IASOnboardingsHostApi().show(limit: 10);
+  }
+
   TextDirection textDirection = TextDirection.ltr;
 
   void toggleRtl() {
@@ -79,6 +83,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ElevatedButton(onPressed: toggleRtl, child: Text('toggleRtl ${textDirection.name}')),
               ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
               ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
+              ElevatedButton(onPressed: onOnboardingsTap, child: const Text('Onboardings (shown only if any)')),
             ],
           ),
         ),

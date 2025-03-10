@@ -9,34 +9,36 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.lang.reflect.Field
 
 class InappstorySdkModuleAdaptor(
-        private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
+    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 ) : InappstorySdkModuleHostApi {
 
     private val inAppStoryAPI = InAppStoryAPI()
     private val appearanceManager = AppearanceManager()
-    private val appearanceManagerAdaptor = AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
+    private val appearanceManagerAdaptor =
+        AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
     private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var feed: IASStoryListAdaptor
     private lateinit var favorites: IASStoryListAdaptor
-    private val singleStoryApi= IASSingleStoryAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.singleStory)
+    private val singleStoryApi =
+        IASSingleStoryAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.singleStory)
+    private val iasOnboardings =
+        IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
 
     override fun initWith(
-            apiKey: String,
-            userID: String,
-            sendStatistics: Boolean
+        apiKey: String, userID: String, sendStatistics: Boolean
     ) {
         inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
-                apiKey,
-                userID,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                true,
-                null,
-                false,
+            apiKey,
+            userID,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true,
+            null,
+            false,
         )
         inAppStoryManager.let {
             val f1: Field = it.javaClass.getDeclaredField("sendStatistic")
@@ -47,17 +49,17 @@ class InappstorySdkModuleAdaptor(
         val iasStoryList = IASStoryList()
 
         feed = IASStoryListAdaptor(
-                flutterPluginBinding,
-                appearanceManager,
-                iasStoryList,
-                inAppStoryAPI,
+            flutterPluginBinding,
+            appearanceManager,
+            iasStoryList,
+            inAppStoryAPI,
         )
 
         favorites = IASFavoritesListAdaptor(
-                flutterPluginBinding,
-                appearanceManager,
-                iasStoryList,
-                inAppStoryAPI,
+            flutterPluginBinding,
+            appearanceManager,
+            iasStoryList,
+            inAppStoryAPI,
         )
 
         inAppStoryManager.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
