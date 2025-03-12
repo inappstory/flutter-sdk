@@ -335,3 +335,26 @@ void onOnboardingsTap() {
   IASOnboardingsHostApi().show(limit: 10);
 }
 ```
+
+To listen success callback
+
+```dart
+class _MyAppState extends State<MyApp> implements OnboardingLoadCallbackFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    OnboardingLoadCallbackFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    OnboardingLoadCallbackFlutterApi.setUp(null);
+    super.dispose();
+  }
+
+  @override
+  void onboardingLoad(int count, String feed) {
+    print('$runtimeType.onboardingLoad($count, $feed)');
+  }
+}  
+```

@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements OnboardingLoadCallbackFlutterApi {
   final navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get navigatorState =>
@@ -31,6 +31,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
 
     initSdk();
+
+    OnboardingLoadCallbackFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    OnboardingLoadCallbackFlutterApi.setUp(null);
+    super.dispose();
   }
 
   Future<void> initSdk() async {
@@ -50,6 +58,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void onOnboardingsTap() {
     IASOnboardingsHostApi().show(limit: 10);
+  }
+
+  @override
+  void onboardingLoad(int count, String feed) {
+    print('$runtimeType.onboardingLoad($count, $feed)');
   }
 
   TextDirection textDirection = TextDirection.ltr;
