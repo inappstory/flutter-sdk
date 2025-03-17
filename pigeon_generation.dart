@@ -17,6 +17,7 @@ import 'package:pigeon/pigeon.dart';
 @HostApi()
 abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
   @override
+  @async
   void initWith(String apiKey, String userID, bool sendStatistics);
 
   void setPlaceholders(Map<String, String> newPlaceholders);

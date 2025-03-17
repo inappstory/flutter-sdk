@@ -25,7 +25,8 @@ class InappstorySdkModuleAdaptor(
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
 
     override fun initWith(
-        apiKey: String, userID: String, sendStatistics: Boolean
+        apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
+
     ) {
         inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
             apiKey,
@@ -65,6 +66,8 @@ class InappstorySdkModuleAdaptor(
         inAppStoryManager.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
 
         inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+
+        callback(Result.success(Unit))
     }
 
     override fun setPlaceholders(newPlaceholders: Map<String, String>) {

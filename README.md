@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.11
+  inappstory_plugin: ^0.0.12
   ...
 ```
 
@@ -27,8 +27,12 @@ targetSdkVersion = 34
 
 ## Initialize with your api key
 
-```
-    InappstoryPlugin().initWith('<your api key>', '<user id>', false);
+Should await returned future first before use of other API
+
+``` dart
+    await InappstoryPlugin().initWith('<your api key>', '<user id>', false);
+    
+    // ... any other calls to API
 ```
 
 ## Usage

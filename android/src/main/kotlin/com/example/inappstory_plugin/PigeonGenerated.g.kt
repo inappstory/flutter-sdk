@@ -310,9 +310,10 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   }
 }
 
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
-  fun initWith(apiKey: String, userID: String, sendStatistics: Boolean)
+  fun initWith(apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit)
   fun setPlaceholders(newPlaceholders: Map<String, String>)
   fun setTags(tags: List<String>)
 
@@ -333,13 +334,14 @@ interface InappstorySdkModuleHostApi {
             val apiKeyArg = args[0] as String
             val userIDArg = args[1] as String
             val sendStatisticsArg = args[2] as Boolean
-            val wrapped: List<Any?> = try {
-              api.initWith(apiKeyArg, userIDArg, sendStatisticsArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
+            api.initWith(apiKeyArg, userIDArg, sendStatisticsArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

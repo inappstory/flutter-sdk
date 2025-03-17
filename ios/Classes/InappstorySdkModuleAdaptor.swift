@@ -39,7 +39,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     
     var iasOnboardingsAdaptor: IASOnboardingsAdaptor
         
-    func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws {
+    func initWith(apiKey: String, userID: String, sendStatistics: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         // the parameter is responsible for logging to the XCode console
         InAppStory.shared.isLoggingEnabled = true
         // the parameter is responsible for displaying the shading under cell headers
@@ -59,6 +59,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         InAppStory.shared.initWith(serviceKey: apiKey, settings: Settings(userID: userID))
         
         CallToActionCallbackAdaptor(binaryMessenger:  binaryMessenger)
+        
+        completion(.success(()))
     }
     
     func setPlaceholders(newPlaceholders: [String : String]) throws {

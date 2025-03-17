@@ -26,12 +26,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
   final _inAppStoryPlugin = InAppStoryPlugin();
   final appearanceManager = AppearanceManagerHostApi();
 
+  late final initialization = initSdk();
+
   @override
   void initState() {
     super.initState();
-
-    initSdk();
-
     OnboardingLoadCallbackFlutterApi.setUp(this);
   }
 
@@ -42,10 +41,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
   }
 
   Future<void> initSdk() async {
+    await _inAppStoryPlugin.initWith('test-key', 'testUserId', false);
     await appearanceManager.setHasLike(true);
     await appearanceManager.setHasFavorites(true);
     await appearanceManager.setHasShare(true);
-    await _inAppStoryPlugin.initWith('test-key', 'testUserId', false);
   }
 
   void onSimpleExampleTap() {
@@ -90,14 +89,27 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              ElevatedButton(onPressed: toggleRtl, child: Text('toggleRtl ${textDirection.name}')),
-              ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
-              ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
-              ElevatedButton(onPressed: onOnboardingsTap, child: const Text('Onboardings (shown only if any)')),
-            ],
+          child: FutureBuilder(
+            future: initialization,
+            builder: (context, initializationSnapshot) {
+              if (initializationSnapshot.connectionState == ConnectionState.done) {
+                if (initializationSnapshot.hasError) {
+                  return const Text('SDK was not initialized');
+                } else {
+                  return Column(
+                    children: [
+                      const SizedBox(height: 24),
+                      ElevatedButton(onPressed: toggleRtl, child: Text('toggleRtl ${textDirection.name}')),
+                      ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
+                      ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
+                      ElevatedButton(onPressed: onOnboardingsTap, child: const Text('Onboardings (shown only if any)')),
+                    ],
+                  );
+                }
+              }
+
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),

@@ -27,9 +27,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   InAppStory: 8ab47c0c150b73e95d2c2cea57412a281686b401
-  inappstory_plugin: 2b171cc26639ce4746afaf613458e5c0e2f9e785
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  inappstory_plugin: c40dc609b30ab34e197faccbdbfdc9bd9503c1ff
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

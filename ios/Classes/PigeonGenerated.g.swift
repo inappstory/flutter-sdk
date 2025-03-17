@@ -342,9 +342,10 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
   static let shared = PigeonGeneratedPigeonCodec(readerWriter: PigeonGeneratedPigeonCodecReaderWriter())
 }
 
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, sendStatistics: Bool) throws
+  func initWith(apiKey: String, userID: String, sendStatistics: Bool, completion: @escaping (Result<Void, Error>) -> Void)
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
 }
@@ -362,11 +363,13 @@ class InappstorySdkModuleHostApiSetup {
         let apiKeyArg = args[0] as! String
         let userIDArg = args[1] as! String
         let sendStatisticsArg = args[2] as! Bool
-        do {
-          try api.initWith(apiKey: apiKeyArg, userID: userIDArg, sendStatistics: sendStatisticsArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, sendStatistics: sendStatisticsArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
