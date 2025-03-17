@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import 'base_story_widget.dart';
-import 'ias_story_list_host_api_decorator.dart';
-import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
+import 'observable.dart';
 import 'pigeon_generated.g.dart';
 import 'story_from_pigeon_dto.dart';
 
@@ -14,14 +13,17 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     required this.feed,
     required this.uniqueId,
     required this.storyWidgetBuilder,
+    required this.observableStoryList,
+    required this.observableErrorCallback,
+    required this.iasStoryListHostApi,
   });
 
   final String uniqueId;
   final String feed;
-  late final observableStoryList = InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId);
+  final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
+  final Observable<ErrorCallbackFlutterApi> observableErrorCallback;
   final StoryWidgetBuilder storyWidgetBuilder;
-  late final IASStoryListHostApi iasStoryListHostApi =
-      IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: uniqueId));
+  final IASStoryListHostApi iasStoryListHostApi;
 
   Iterable<StoryFromPigeonDto> stories = [];
 
@@ -32,13 +34,13 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   void onListen() {
     observableStoryList.addObserver(this);
-    ErrorCallbackFlutterApi.setUp(this);
+    observableErrorCallback.addObserver(this);
     iasStoryListHostApi.load(feed);
   }
 
   void onCancel() {
     observableStoryList.removeObserver(this);
-    ErrorCallbackFlutterApi.setUp(null);
+    observableErrorCallback.removeObserver(this);
   }
 
   StoryFromPigeonDto createStoryFromDto(StoryAPIDataDto dto) {

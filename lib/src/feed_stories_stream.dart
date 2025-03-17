@@ -3,6 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'base_feed_favorites_widget.dart';
 import 'favorite_from_dto.dart';
 import 'feed_favorite.dart';
+import 'ias_story_list_host_api_decorator.dart';
+import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
+import 'observable_error_callback_flutter_api.dart';
 import 'pigeon_generated.g.dart';
 import 'stories_stream.dart';
 
@@ -17,11 +20,18 @@ abstract class FeedFavoritesWidget implements Widget {
 }
 
 class FeedStoriesStream extends StoriesStream {
+  static const _uniqueId = "feed";
+
   FeedStoriesStream({
     required super.feed,
     required super.storyWidgetBuilder,
     this.feedFavoritesWidgetBuilder,
-  }) : super(uniqueId: "feed");
+  }) : super(
+          uniqueId: _uniqueId,
+          observableStoryList: InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
+          observableErrorCallback: ObservableErrorCallbackFlutterApi(),
+          iasStoryListHostApi: IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
+        );
 
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
 
