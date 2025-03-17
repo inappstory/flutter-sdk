@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
   }
 
   Future<void> initSdk() async {
-    await _inAppStoryPlugin.initWith('test-key', 'testUserId', false);
+    await _inAppStoryPlugin.initWith('<your key>', '<some user id>', false);
     await appearanceManager.setHasLike(true);
     await appearanceManager.setHasFavorites(true);
     await appearanceManager.setHasShare(true);

@@ -12,8 +12,10 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
+  static const feed = '<your feed id>';
+
   late final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
-    feed: 'flutter',
+    feed: feed,
     storyBuilder: StoryWidgetSimpleDecorator.new,
     favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
   );
@@ -21,7 +23,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   void onFeedFavoritesTap() {
     final favorites = InAppStoryPlugin()
         .getFavoritesStoriesWidgets(
-          feed: 'flutter',
+          feed: feed,
           storyBuilder: StoryWidgetSimpleDecorator.new,
         )
         .asBroadcastStream();
