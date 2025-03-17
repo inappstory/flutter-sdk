@@ -22,7 +22,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     final favorites = InAppStoryPlugin()
         .getFavoritesStoriesWidgets(
           feed: 'flutter',
-          storyBuilder: StoryWidgetSingleReader.new,
+          storyBuilder: StoryWidgetSimpleDecorator.new,
         )
         .asBroadcastStream();
 
@@ -101,6 +101,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   void showBanner(String text) {
+    ScaffoldMessenger.of(context).clearMaterialBanners();
     ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         content: Text(text),
@@ -114,14 +115,20 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     );
   }
 
-  @override
-  void alreadyShown() => showBanner('IShowStoryOnceCallback.alreadyShown()');
+  int alreadyShownCounter = 0;
 
   @override
-  void onError() => showBanner('IShowStoryOnceCallback.onError()');
+  void alreadyShown() => showBanner('IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})');
+
+  int onErrorCounter = 0;
 
   @override
-  void onShow() => showBanner('IShowStoryOnceCallback.onShow()');
+  void onError() => showBanner('IShowStoryOnceCallback.onError(${++onErrorCounter})');
+
+  int onShowCounter = 0;
+
+  @override
+  void onShow() => showBanner('IShowStoryOnceCallback.onShow(${++onShowCounter})');
 }
 
 class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
