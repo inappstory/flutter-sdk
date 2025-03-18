@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.12
+  inappstory_plugin: ^0.0.13
   ...
 ```
 
@@ -258,6 +258,18 @@ AppearanceManagerHostApi().setReaderBackgroundColor(Colors.green.value)
 ```
 AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 ```
+
+# User Settings
+
+## Change user id
+
+It may be necessary to replace the user in the application. For example - during registration or re-authorization.
+
+To get this - you can use the `InAppStoryManagerHostApi().changeUser(<your new user>)` method.
+
+UserId can't be longer than 255 characters.
+
+Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)`
 
 ## SingleStoryAPI
 

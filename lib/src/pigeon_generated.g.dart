@@ -331,9 +331,23 @@ class InappstorySdkModuleHostApi {
       return;
     }
   }
+}
+
+class InAppStoryManagerHostApi {
+  /// Constructor for [InAppStoryManagerHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  InAppStoryManagerHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
 
   Future<void> setPlaceholders(Map<String?, String?> newPlaceholders) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setPlaceholders$pigeonVar_messageChannelSuffix';
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setPlaceholders$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -355,7 +369,7 @@ class InappstorySdkModuleHostApi {
   }
 
   Future<void> setTags(List<String?> tags) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setTags$pigeonVar_messageChannelSuffix';
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTags$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -363,6 +377,28 @@ class InappstorySdkModuleHostApi {
     );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_channel.send(<Object?>[tags]) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> changeUser(String userId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeUser$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(<Object?>[userId]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {

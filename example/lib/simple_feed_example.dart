@@ -14,11 +14,15 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
   static const feed = '<your feed id>';
 
-  late final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
-    feed: feed,
-    storyBuilder: StoryWidgetSimpleDecorator.new,
-    favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
-  );
+  late var flutterFeedStoriesWidgetsStream = getStoriesWidgets();
+
+  Stream<Iterable<Widget>> getStoriesWidgets() {
+    return InAppStoryPlugin().getStoriesWidgets(
+      feed: feed,
+      storyBuilder: StoryWidgetSimpleDecorator.new,
+      favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
+    );
+  }
 
   void onFeedFavoritesTap() {
     final favorites = InAppStoryPlugin()
@@ -56,6 +60,16 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     });
   }
 
+  final inputController = TextEditingController();
+
+  void changeUser() async {
+    await InAppStoryManagerHostApi().changeUser(inputController.text);
+
+    flutterFeedStoriesWidgetsStream = getStoriesWidgets();
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +101,21 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
                 }
                 return const LinearProgressIndicator();
               },
+            ),
+          ),
+          const Divider(),
+          SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(label: Text('Input user id string')),
+                    controller: inputController,
+                  ),
+                ),
+                ElevatedButton(onPressed: changeUser, child: const Text('Change userId')),
+              ],
             ),
           ),
           const Divider(),

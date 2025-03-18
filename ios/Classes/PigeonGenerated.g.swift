@@ -346,8 +346,6 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
   func initWith(apiKey: String, userID: String, sendStatistics: Bool, completion: @escaping (Result<Void, Error>) -> Void)
-  func setPlaceholders(newPlaceholders: [String: String]) throws
-  func setTags(tags: [String]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -375,7 +373,22 @@ class InappstorySdkModuleHostApiSetup {
     } else {
       initWithChannel.setMessageHandler(nil)
     }
-    let setPlaceholdersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setPlaceholders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+  }
+}
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol InAppStoryManagerHostApi {
+  func setPlaceholders(newPlaceholders: [String: String]) throws
+  func setTags(tags: [String]) throws
+  func changeUser(userId: String, completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class InAppStoryManagerHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `InAppStoryManagerHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: InAppStoryManagerHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let setPlaceholdersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setPlaceholders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       setPlaceholdersChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -390,7 +403,7 @@ class InappstorySdkModuleHostApiSetup {
     } else {
       setPlaceholdersChannel.setMessageHandler(nil)
     }
-    let setTagsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.setTags\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let setTagsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTags\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       setTagsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -404,6 +417,23 @@ class InappstorySdkModuleHostApiSetup {
       }
     } else {
       setTagsChannel.setMessageHandler(nil)
+    }
+    let changeUserChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeUser\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      changeUserChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let userIdArg = args[0] as! String
+        api.changeUser(userId: userIdArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      changeUserChannel.setMessageHandler(nil)
     }
   }
 }

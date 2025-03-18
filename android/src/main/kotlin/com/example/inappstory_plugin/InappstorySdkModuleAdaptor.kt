@@ -23,6 +23,7 @@ class InappstorySdkModuleAdaptor(
         IASSingleStoryAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.singleStory)
     private val iasOnboardings =
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
+    private lateinit var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
 
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
@@ -67,16 +68,8 @@ class InappstorySdkModuleAdaptor(
 
         inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
+        inAppStoryManagerAdaptor = InAppStoryManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+
         callback(Result.success(Unit))
-    }
-
-    override fun setPlaceholders(newPlaceholders: Map<String, String>) {
-        inAppStoryManager.placeholders = newPlaceholders
-    }
-
-    override fun setTags(tags: List<String>) {
-        val arrayList = ArrayList<String>()
-        arrayList.addAll(tags)
-        inAppStoryManager.tags = arrayList
     }
 }

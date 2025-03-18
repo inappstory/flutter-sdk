@@ -4,7 +4,7 @@ import 'package:inappstory_plugin/inappstory_plugin.dart';
 
 import 'appearance_manager_widget.dart';
 import 'localization_delegates.dart';
-import 'simple_feed_exmaple.dart';
+import 'simple_feed_example.dart';
 
 void main() {
   runApp(const MyApp());
