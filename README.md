@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final initialization = InappstoryPlugin().initWith('<your api key>', '<user id>', false);
 
   final flutterFeedStoriesWidgetsStream = InAppStoryPlugin().getStoriesWidgets(
-    feed: 'flutter',
+    feed: '<your feed>',
     storyBuilder: StoryWidgetSimpleDecorator.new,
     favoritesBuilder: GridFeedFavoritesWidget.new, // Can be null
   );
@@ -189,7 +189,7 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
 
 ```
 final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
-      feed: 'flutter',
+      feed: '<your feed>',
       storyBuilder: StoryWidgetSimpleDecorator.new,
     ).asBroadcastStream();
 ```
