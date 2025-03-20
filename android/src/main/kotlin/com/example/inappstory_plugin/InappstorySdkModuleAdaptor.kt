@@ -27,49 +27,56 @@ class InappstorySdkModuleAdaptor(
 
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
-
     ) {
-        inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
-            apiKey,
-            userID,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            true,
-            null,
-            false,
-        )
-        inAppStoryManager.let {
-            val f1: Field = it.javaClass.getDeclaredField("sendStatistic")
-            f1.isAccessible = true
-            f1.set(it, sendStatistics)
+        try {
+            inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
+                apiKey,
+                userID,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                true,
+                null,
+                false,
+            )
+            inAppStoryManager.let {
+                val f1: Field = it.javaClass.getDeclaredField("sendStatistic")
+                f1.isAccessible = true
+                f1.set(it, sendStatistics)
+            }
+
+            val iasStoryList = IASStoryList()
+
+            feed = IASStoryListAdaptor(
+                flutterPluginBinding,
+                appearanceManager,
+                iasStoryList,
+                inAppStoryAPI,
+            )
+
+            favorites = IASFavoritesListAdaptor(
+                flutterPluginBinding,
+                appearanceManager,
+                iasStoryList,
+                inAppStoryAPI,
+            )
+
+            inAppStoryManager.setCallToActionCallback(
+                CallToActionCallbackAdaptor(
+                    flutterPluginBinding
+                )
+            )
+
+            inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+
+            inAppStoryManagerAdaptor =
+                InAppStoryManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            callback(Result.success(Unit))
+        } catch (throwable: Throwable) {
+            callback(Result.failure(throwable))
         }
-
-        val iasStoryList = IASStoryList()
-
-        feed = IASStoryListAdaptor(
-            flutterPluginBinding,
-            appearanceManager,
-            iasStoryList,
-            inAppStoryAPI,
-        )
-
-        favorites = IASFavoritesListAdaptor(
-            flutterPluginBinding,
-            appearanceManager,
-            iasStoryList,
-            inAppStoryAPI,
-        )
-
-        inAppStoryManager.setCallToActionCallback(CallToActionCallbackAdaptor(flutterPluginBinding))
-
-        inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
-
-        inAppStoryManagerAdaptor = InAppStoryManagerAdaptor(flutterPluginBinding, inAppStoryManager)
-
-        callback(Result.success(Unit))
     }
 }
