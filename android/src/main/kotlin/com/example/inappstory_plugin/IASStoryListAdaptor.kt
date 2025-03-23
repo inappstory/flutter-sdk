@@ -1,18 +1,19 @@
 package com.example.inappstory_plugin
 
 import IASStoryListHostApi
+import android.app.Activity
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
-import com.inappstory.sdk.externalapi.single.IASSingleStory
 import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import kotlinx.coroutines.DisposableHandle
 
 open class IASStoryListAdaptor(
-        private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-        private val appearanceManager: AppearanceManager,
-        internal val iASStoryList: IASStoryList,
-        private val inAppStoryAPI: InAppStoryAPI,
+    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    private val appearanceManager: AppearanceManager,
+    internal val iASStoryList: IASStoryList,
+    private val inAppStoryAPI: InAppStoryAPI,
+    private val activityHolder: ActivityHolder,
 ) : IASStoryListHostApi, DisposableHandle {
     open fun uniqueId(): String {
         return "feed"
@@ -34,10 +35,10 @@ open class IASStoryListAdaptor(
 
     override fun openStoryReader(storyId: Long) {
         iASStoryList.openStoryReader(
-                flutterPluginBinding.applicationContext,
-                uniqueId(),
-                storyId.toInt(),
-                appearanceManager,
+            activityHolder.activity,
+            uniqueId(),
+            storyId.toInt(),
+            appearanceManager,
         )
     }
 
@@ -52,11 +53,18 @@ open class IASStoryListAdaptor(
 }
 
 class IASFavoritesListAdaptor(
-        flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-        appearanceManager: AppearanceManager,
-        iASStoryList: IASStoryList,
-        inAppStoryAPI: InAppStoryAPI,
-) : IASStoryListAdaptor(flutterPluginBinding, appearanceManager, iASStoryList, inAppStoryAPI) {
+    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    appearanceManager: AppearanceManager,
+    iASStoryList: IASStoryList,
+    inAppStoryAPI: InAppStoryAPI,
+    activityHolder: ActivityHolder,
+) : IASStoryListAdaptor(
+    flutterPluginBinding,
+    appearanceManager,
+    iASStoryList,
+    inAppStoryAPI,
+    activityHolder,
+) {
     override fun uniqueId(): String {
         return "favorites"
     }
@@ -64,4 +72,8 @@ class IASFavoritesListAdaptor(
     override fun load(feed: String) {
         iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
     }
+}
+
+interface ActivityHolder {
+    val activity: Activity?
 }

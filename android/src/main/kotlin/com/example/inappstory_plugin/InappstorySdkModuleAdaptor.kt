@@ -9,7 +9,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.lang.reflect.Field
 
 class InappstorySdkModuleAdaptor(
-    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
+    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    private val activityHolder: ActivityHolder,
 ) : InappstorySdkModuleHostApi {
 
     private val inAppStoryAPI = InAppStoryAPI()
@@ -55,6 +56,7 @@ class InappstorySdkModuleAdaptor(
                 appearanceManager,
                 iasStoryList,
                 inAppStoryAPI,
+                activityHolder,
             )
 
             favorites = IASFavoritesListAdaptor(
@@ -62,6 +64,7 @@ class InappstorySdkModuleAdaptor(
                 appearanceManager,
                 iasStoryList,
                 inAppStoryAPI,
+                activityHolder,
             )
 
             inAppStoryManager.setCallToActionCallback(

@@ -1,3 +1,4 @@
-## 0.0.1
+## 0.0.16
 
-* TODO: Describe initial release.
+### Fixed
+* open Android story reader with Activity Context (Application Context leads to new Task)
