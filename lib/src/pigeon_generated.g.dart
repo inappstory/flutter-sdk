@@ -1057,7 +1057,7 @@ class IASSingleStoryHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> showOnce({required int storyId}) async {
+  Future<void> showOnce({required String storyId}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.showOnce$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1079,7 +1079,7 @@ class IASSingleStoryHostApi {
     }
   }
 
-  Future<void> show({required int storyId, required int slide}) async {
+  Future<void> show({required String storyId}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1087,7 +1087,7 @@ class IASSingleStoryHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_channel.send(<Object?>[storyId, slide]) as List<Object?>?;
+        await pigeonVar_channel.send(<Object?>[storyId]) as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
     } else if (pigeonVar_replyList.length > 1) {

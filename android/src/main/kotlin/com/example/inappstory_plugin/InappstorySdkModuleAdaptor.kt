@@ -21,7 +21,12 @@ class InappstorySdkModuleAdaptor(
     private lateinit var feed: IASStoryListAdaptor
     private lateinit var favorites: IASStoryListAdaptor
     private val singleStoryApi =
-        IASSingleStoryAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.singleStory)
+        IASSingleStoryAdaptor(
+            flutterPluginBinding,
+            appearanceManager,
+            inAppStoryAPI.singleStory,
+            activityHolder,
+        )
     private val iasOnboardings =
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
     private lateinit var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor

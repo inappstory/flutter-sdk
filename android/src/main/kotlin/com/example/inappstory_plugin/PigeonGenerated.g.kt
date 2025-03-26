@@ -927,8 +927,8 @@ interface AppearanceManagerHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASSingleStoryHostApi {
-  fun showOnce(storyId: Long)
-  fun show(storyId: Long, slide: Long)
+  fun showOnce(storyId: String)
+  fun show(storyId: String)
 
   companion object {
     /** The codec used by IASSingleStoryHostApi. */
@@ -944,7 +944,7 @@ interface IASSingleStoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val storyIdArg = args[0] as Long
+            val storyIdArg = args[0] as String
             val wrapped: List<Any?> = try {
               api.showOnce(storyIdArg)
               listOf(null)
@@ -962,10 +962,9 @@ interface IASSingleStoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val storyIdArg = args[0] as Long
-            val slideArg = args[1] as Long
+            val storyIdArg = args[0] as String
             val wrapped: List<Any?> = try {
-              api.show(storyIdArg, slideArg)
+              api.show(storyIdArg)
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

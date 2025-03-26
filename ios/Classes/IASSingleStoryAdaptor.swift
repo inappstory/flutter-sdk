@@ -20,12 +20,12 @@ class IASSingleStoryAdaptor : IASSingleStoryHostApi {
     
     private var showStoryCallback: IShowStoryOnceCallbackFlutterApi
     
-    func showOnce(storyId: Int64) throws {
-        singleStoryAPI.showStoryOnce(with: String(storyId), complete: showOnceComplete)
+    func showOnce(storyId: String) throws {
+        singleStoryAPI.showStoryOnce(with: storyId, complete: showOnceComplete)
     }
     
-    func show(storyId: Int64, slide: Int64) throws {
-        singleStoryAPI.showStory(with: String(storyId), complete: showComplete)
+    func show(storyId: String) throws {
+        singleStoryAPI.showStory(with: storyId, complete: showComplete)
     }
     
     private func showOnceComplete(show: Bool) {

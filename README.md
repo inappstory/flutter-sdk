@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.16
+  inappstory_plugin: ^0.0.17
   ...
 ```
 
@@ -276,7 +276,7 @@ Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)`
 To show single story in reader by id
 
 ```
-IASSingleStoryHostApi().show(storyId: story.id, slide: 1);
+IASSingleStoryHostApi().show(storyId: story.id);
 ```
 
 To show single story in reader by id if wasn't show already for current user

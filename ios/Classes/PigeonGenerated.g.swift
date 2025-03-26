@@ -938,8 +938,8 @@ class AppearanceManagerHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASSingleStoryHostApi {
-  func showOnce(storyId: Int64) throws
-  func show(storyId: Int64, slide: Int64) throws
+  func showOnce(storyId: String) throws
+  func show(storyId: String) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -952,7 +952,7 @@ class IASSingleStoryHostApiSetup {
     if let api = api {
       showOnceChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let storyIdArg = args[0] as! Int64
+        let storyIdArg = args[0] as! String
         do {
           try api.showOnce(storyId: storyIdArg)
           reply(wrapResult(nil))
@@ -967,10 +967,9 @@ class IASSingleStoryHostApiSetup {
     if let api = api {
       showChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let storyIdArg = args[0] as! Int64
-        let slideArg = args[1] as! Int64
+        let storyIdArg = args[0] as! String
         do {
-          try api.show(storyId: storyIdArg, slide: slideArg)
+          try api.show(storyId: storyIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
