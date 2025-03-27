@@ -11,7 +11,7 @@ Add dependency in your app pubspec.yaml
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.17
+  inappstory_plugin: ^0.0.18
   ...
 ```
 
@@ -194,7 +194,6 @@ final favorites = InAppStoryPlugin().getFavoritesStoriesWidgets(
     ).asBroadcastStream();
 ```
 
-
 # AppearanceManager
 
 ## Story Reader appearance
@@ -219,7 +218,6 @@ AppearanceManagerHostApi().setHasShare(true);
 - Position.bottomLeft
 - Position.bottomRight
 
-
 ```
 AppearanceManagerHostApi().setClosePosition(position)
 ```
@@ -227,11 +225,13 @@ AppearanceManagerHostApi().setClosePosition(position)
 ## Story Reader Timer Gradient
 
 set state enable/disable
+
 ```
 AppearanceManagerHostApi().setTimerGradientEnable(true)
 ```
 
 get state
+
 ```
 final Future<bool> timerGradientEnabledFuture= AppearanceManagerHostApi().getTimerGradientEnable();
 ```
@@ -259,11 +259,26 @@ AppearanceManagerHostApi().setReaderBackgroundColor(Colors.green.value)
 AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 ```
 
+# InAppStoryManagerHostApi
+
+## Methods
+
+`void setPlaceholders(Map<String, String> newPlaceholders);` - change Placeholders
+
+`void setTags(List<String> tags);` - replacing all tags
+
+`void changeUser(String userId)` - replace the user in the application
+
+`void closeReaders();` - closing any story reader that showing
+
+##
+
 # User Settings
 
 ## Change user id
 
-It may be necessary to replace the user in the application. For example - during registration or re-authorization.
+It may be necessary to replace the user in the application. For example - during registration or
+re-authorization.
 
 To get this - you can use the `InAppStoryManagerHostApi().changeUser(<your new user>)` method.
 
@@ -285,7 +300,8 @@ To show single story in reader by id if wasn't show already for current user
 IASSingleStoryHostApi().showOnce(storyId: story.id);
 ```
 
-To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp your listener
+To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp
+your listener
 
 ```
 class _WidgetState extends State<...> implements IShowStoryOnceCallbackFlutterApi {
@@ -311,7 +327,6 @@ class _WidgetState extends State<...> implements IShowStoryOnceCallbackFlutterAp
   void onShow() => print('IShowStoryOnceCallback.onShow()');
 }
 ```
-
 
 ## Call To Action
 

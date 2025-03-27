@@ -1,3 +1,9 @@
+## 0.0.18
+
+### Added
+
+* InAppStoryManagerHostApi.closeReaders() close all readers
+
 ## 0.0.17
 
 ### Changed

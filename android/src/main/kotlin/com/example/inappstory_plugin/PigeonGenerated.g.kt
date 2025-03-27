@@ -353,6 +353,7 @@ interface InAppStoryManagerHostApi {
   fun setPlaceholders(newPlaceholders: Map<String, String>)
   fun setTags(tags: List<String>)
   fun changeUser(userId: String, callback: (Result<Unit>) -> Unit)
+  fun closeReaders()
 
   companion object {
     /** The codec used by InAppStoryManagerHostApi. */
@@ -413,6 +414,22 @@ interface InAppStoryManagerHostApi {
                 reply.reply(wrapResult(null))
               }
             }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.closeReaders$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.closeReaders()
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

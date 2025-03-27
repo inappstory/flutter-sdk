@@ -380,6 +380,7 @@ protocol InAppStoryManagerHostApi {
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
   func changeUser(userId: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func closeReaders() throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -434,6 +435,19 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       changeUserChannel.setMessageHandler(nil)
+    }
+    let closeReadersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.closeReaders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      closeReadersChannel.setMessageHandler { _, reply in
+        do {
+          try api.closeReaders()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      closeReadersChannel.setMessageHandler(nil)
     }
   }
 }

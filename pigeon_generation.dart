@@ -14,7 +14,6 @@ import 'package:pigeon/pigeon.dart';
 ))
 // ConfigurePigeon
 
-
 @HostApi()
 abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
   @override
@@ -30,6 +29,8 @@ abstract class InAppStoryManagerHostApi {
 
   @async
   void changeUser(String userId);
+
+  void closeReaders();
 }
 
 @HostApi()

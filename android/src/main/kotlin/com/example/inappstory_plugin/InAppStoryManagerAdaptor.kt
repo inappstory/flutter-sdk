@@ -28,4 +28,8 @@ class InAppStoryManagerAdaptor(
 
         callback(Result.success(Unit))
     }
+
+    override fun closeReaders() {
+        InAppStoryManager.closeStoryReader(true, null)
+    }
 }

@@ -21,4 +21,8 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         
         completion(.success(()))
     }
+    
+    func closeReaders() throws {
+        InAppStory.shared.closeReader() {}
+    }
 }
