@@ -18,13 +18,17 @@ class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, Activ
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
+    companion object {
+        fun initSDK(application: Application) {
+            InAppStoryManager.initSDK(application)
+        }
+    }
+
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "inappstory_plugin")
         channel.setMethodCallHandler(this)
-
-        InAppStoryManager.initSDK(flutterPluginBinding.applicationContext, true)
 
         InappstorySdkModuleHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
