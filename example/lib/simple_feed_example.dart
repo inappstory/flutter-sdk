@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
@@ -20,6 +22,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     return InAppStoryPlugin().getStoriesWidgets(
       feed: feed,
       storyBuilder: StoryWidgetSimpleDecorator.new,
+      storiesController: feedStoriesController,
       favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
     );
   }
@@ -61,13 +64,12 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   final inputController = TextEditingController();
+  final feedStoriesController = FeedStoriesController();
 
   void changeUser() async {
     await InAppStoryManagerHostApi().changeUser(inputController.text);
 
-    flutterFeedStoriesWidgetsStream = getStoriesWidgets();
-
-    setState(() {});
+    feedStoriesController.fetchFeedStories();
   }
 
   @override
@@ -103,7 +105,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
               },
             ),
           ),
-          const Divider(),
+          const Divider(indent: 4),
+          ElevatedButton(
+            onPressed: () async {
+              await feedStoriesController.fetchFeedStories();
+            },
+            child: const Text('Refresh'),
+          ),
+          const Divider(indent: 4),
           SizedBox(
             height: 40,
             child: Row(
@@ -118,7 +127,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
               ],
             ),
           ),
-          const Divider(),
+          const Divider(indent: 4),
           const Text('Calls To Actions'),
           Expanded(
             child: ListView.builder(

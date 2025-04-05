@@ -6,10 +6,12 @@ import 'inappstory_plugin_platform_interface.dart';
 import 'inappstory_sdk_module.dart';
 import 'src/base_story_widget.dart';
 import 'src/favorites_stories_stream.dart';
+import 'src/feed_stories_controller.dart';
 import 'src/feed_stories_stream.dart';
 
 export 'src/base_feed_favorites_widget.dart';
 export 'src/feed_favorite_widget.dart';
+export 'src/feed_stories_controller.dart';
 export 'src/feed_stories_stream.dart';
 export 'src/grid_feed_favorites_widget.dart';
 export 'src/pigeon_generated.g.dart';
@@ -32,10 +34,12 @@ class InAppStoryPlugin implements InAppStorySdkModule {
     required String feed,
     required StoryWidgetBuilder storyBuilder,
     FeedFavoritesWidgetBuilder? favoritesBuilder,
+    FeedStoriesController? storiesController,
   }) {
     return FeedStoriesStream(
       feed: feed,
       storyWidgetBuilder: storyBuilder,
+      feedController: storiesController,
       feedFavoritesWidgetBuilder: favoritesBuilder,
     );
   }
@@ -43,7 +47,12 @@ class InAppStoryPlugin implements InAppStorySdkModule {
   Stream<Iterable<Widget>> getFavoritesStoriesWidgets({
     required String feed,
     required StoryWidgetBuilder storyBuilder,
+    FeedStoriesController? storiesController,
   }) {
-    return FavoritesStoriesStream(feed: feed, storyWidgetBuilder: storyBuilder);
+    return FavoritesStoriesStream(
+      feed: feed,
+      storyWidgetBuilder: storyBuilder,
+      feedController: storiesController,
+    );
   }
 }

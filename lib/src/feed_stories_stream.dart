@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'base_feed_favorites_widget.dart';
 import 'favorite_from_dto.dart';
 import 'feed_favorite.dart';
+import 'feed_stories_controller.dart';
 import 'ias_story_list_host_api_decorator.dart';
 import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import 'observable_error_callback_flutter_api.dart';
@@ -25,15 +26,22 @@ class FeedStoriesStream extends StoriesStream {
   FeedStoriesStream({
     required super.feed,
     required super.storyWidgetBuilder,
+    this.feedController,
     this.feedFavoritesWidgetBuilder,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList: InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
           observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
-        );
+        ) {
+    feedController
+      ?..feed = feed
+      ..iasStoryListHostApi = iasStoryListHostApi;
+  }
 
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
+
+  final FeedStoriesController? feedController;
 
   Iterable<FavoriteFromDto> favorites = [];
 

@@ -64,6 +64,19 @@ InAppStoryPlugin().getStoriesWidgets(
 );
 ```
 
+You can use FeedStoriesController to force reload the feed stories
+
+```
+  final feedStoriesController = FeedStoriesController();
+
+  InAppStoryPlugin().getStoriesWidgets(
+    feedController: feedStoriesController,
+    ...
+  );
+   
+  feedStoriesController.fetchFeedStories();
+```
+
 Full example
 
 ```
@@ -303,8 +316,8 @@ IASSingleStoryHostApi().showOnce(storyId: story.id);
 To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp
 your listener
 
-```
-class _WidgetState extends State<...> implements IShowStoryOnceCallbackFlutterApi {
+```dart
+class _WidgetState extends State<T> implements IShowStoryOnceCallbackFlutterApi {
   @override
   void initState() {
     super.initState();
@@ -335,7 +348,7 @@ add/remove listener for CTA
 1. Implement interface CallToActionCallbackFlutterApi
 2. Setup this listener
 
-```
+```dart
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
   @override
   void initState() {
@@ -355,6 +368,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
   void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
     // Do anything related
   }
+}
 ```
 
 ## Onboardings
