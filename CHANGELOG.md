@@ -1,3 +1,9 @@
+## 0.0.19
+
+### Added
+
+* FeedStoriesController to force reload the feed stories
+
 ## 0.0.18
 
 ### Added
