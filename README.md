@@ -67,14 +67,14 @@ InAppStoryPlugin().getStoriesWidgets(
 You can use FeedStoriesController to force reload the feed stories
 
 ```
-  final feedStoriesController = FeedStoriesController();
-
-  InAppStoryPlugin().getStoriesWidgets(
-    feedController: feedStoriesController,
-    ...
-  );
-   
-  feedStoriesController.fetchFeedStories();
+final feedStoriesController = FeedStoriesController();
+  
+InAppStoryPlugin().getStoriesWidgets(
+  feedController: feedStoriesController,
+...
+);   
+// reload feed
+await feedStoriesController.fetchFeedStories();
 ```
 
 Full example

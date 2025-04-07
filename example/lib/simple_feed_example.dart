@@ -14,7 +14,12 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
-  static const feed = '<your feed id>';
+  static const feed = 'test';
+
+  final inputController = TextEditingController();
+  final feedStoriesController = FeedStoriesController();
+
+  final callsToAction = <String>[];
 
   late var flutterFeedStoriesWidgetsStream = getStoriesWidgets();
 
@@ -52,26 +57,6 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     super.dispose();
   }
 
-  final callsToAction = <String>[];
-
-  @override
-  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
-    setState(() {
-      final content = 'slideData:$slideData url:$url clickAction:${clickAction?.name}';
-
-      callsToAction.add(content);
-    });
-  }
-
-  final inputController = TextEditingController();
-  final feedStoriesController = FeedStoriesController();
-
-  void changeUser() async {
-    await InAppStoryManagerHostApi().changeUser(inputController.text);
-
-    feedStoriesController.fetchFeedStories();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,9 +92,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
           ),
           const Divider(indent: 4),
           ElevatedButton(
-            onPressed: () async {
-              await feedStoriesController.fetchFeedStories();
-            },
+            onPressed: () async => await feedStoriesController.fetchFeedStories(),
             child: const Text('Refresh'),
           ),
           const Divider(indent: 4),
@@ -153,6 +136,21 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
         ],
       ),
     );
+  }
+
+  @override
+  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+    setState(() {
+      final content = 'slideData:$slideData url:$url clickAction:${clickAction?.name}';
+
+      callsToAction.add(content);
+    });
+  }
+
+  Future<void> changeUser() async {
+    await InAppStoryManagerHostApi().changeUser(inputController.text);
+
+    await feedStoriesController.fetchFeedStories();
   }
 
   int alreadyShownCounter = 0;
