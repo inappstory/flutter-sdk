@@ -14,7 +14,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
-  static const feed = 'test';
+  static const feed = '<your feed id>';
 
   final inputController = TextEditingController();
   final feedStoriesController = FeedStoriesController();
