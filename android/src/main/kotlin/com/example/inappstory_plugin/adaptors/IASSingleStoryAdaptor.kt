@@ -1,8 +1,9 @@
-package com.example.inappstory_plugin
+package com.example.inappstory_plugin.adaptors
 
 import IASSingleStoryHostApi
+import com.example.inappstory_plugin.callbacks.IShowStoryOnceCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.externalapi.single.IASSingleStory
+import com.inappstory.sdk.core.api.IASSingleStory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASSingleStoryAdaptor(

@@ -1,6 +1,7 @@
-package com.example.inappstory_plugin
+package com.example.inappstory_plugin.callbacks
 
 import ErrorCallbackFlutterApi
+import com.example.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.stories.outercallbacks.common.errors.ErrorCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
@@ -14,27 +15,9 @@ class ErrorCallbackAdaptor(private val flutterPluginBinding: FlutterPluginBindin
         }
     }
 
-    override fun loadOnboardingError(feed: String) {
-        flutterPluginBinding.runOnMainThread {
-            errorCallbackFlutterApi.loadOnboardingError(feed) {}
-        }
-    }
-
-    override fun loadSingleError() {
-        flutterPluginBinding.runOnMainThread {
-            errorCallbackFlutterApi.loadSingleError {}
-        }
-    }
-
     override fun cacheError() {
         flutterPluginBinding.runOnMainThread {
             errorCallbackFlutterApi.cacheError {}
-        }
-    }
-
-    override fun readerError() {
-        flutterPluginBinding.runOnMainThread {
-            errorCallbackFlutterApi.readerError {}
         }
     }
 

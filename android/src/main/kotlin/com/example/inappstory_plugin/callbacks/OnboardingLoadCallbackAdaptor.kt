@@ -1,6 +1,7 @@
-package com.example.inappstory_plugin
+package com.example.inappstory_plugin.callbacks
 
 import OnboardingLoadCallbackFlutterApi
+import com.example.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.stories.outercallbacks.common.onboarding.OnboardingLoadCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
@@ -9,9 +10,15 @@ class OnboardingLoadCallbackAdaptor(
 ) : OnboardingLoadCallback {
     private val flutterApi = OnboardingLoadCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
 
-    override fun onboardingLoad(count: Int, feed: String?) {
+    override fun onboardingLoadSuccess(count: Int, feed: String?) {
         flutterPluginBinding.runOnMainThread {
-            flutterApi.onboardingLoad(count.toLong(), feed!!) {}
+            flutterApi.onboardingLoadSuccess(count.toLong(), feed!!) {}
+        }
+    }
+
+    override fun onboardingLoadError(feed: String?, reason: String?) {
+        flutterPluginBinding.runOnMainThread {
+            flutterApi.onboardingLoadError(feed!!, reason) {}
         }
     }
 }
