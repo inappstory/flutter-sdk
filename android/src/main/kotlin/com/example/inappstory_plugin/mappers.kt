@@ -18,11 +18,12 @@ fun mapStoryData(storyData: StoryData): StoryDataDto {
     return StoryDataDto(
             id = storyData.id.toLong(),
             title = storyData.title,
-            tags = storyData.tags,
-            feed = storyData.feed,
-            slidesCount = storyData.slidesCount.toLong(),
-            storyType = StoryTypeDto.ofRaw(storyData.storyType.ordinal),
-            sourceType = SourceTypeDto.ofRaw(storyData.sourceType.ordinal),
+            // TODO: Add tags
+            // tags = storyData.tags,
+            feed = storyData.feed(),
+            slidesCount = storyData.slidesCount().toLong(),
+            storyType = StoryTypeDto.ofRaw(storyData.contentType().ordinal),
+            sourceType = SourceTypeDto.ofRaw(storyData.sourceType().ordinal),
     )
 }
 

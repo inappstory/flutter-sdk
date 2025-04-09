@@ -1,10 +1,12 @@
-package com.example.inappstory_plugin
+package com.example.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
+import com.example.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
+import com.example.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
-import com.inappstory.sdk.externalapi.storylist.IASStoryList
+import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.lang.reflect.Field
 
@@ -46,6 +48,7 @@ class InappstorySdkModuleAdaptor(
                 null,
                 true,
                 null,
+                CacheSize.MEDIUM,
                 false,
             )
             inAppStoryManager.let {
@@ -54,7 +57,7 @@ class InappstorySdkModuleAdaptor(
                 f1.set(it, sendStatistics)
             }
 
-            val iasStoryList = IASStoryList()
+            val iasStoryList = inAppStoryAPI.storyList
 
             feed = IASStoryListAdaptor(
                 flutterPluginBinding,

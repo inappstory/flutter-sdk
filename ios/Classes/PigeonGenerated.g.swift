@@ -599,10 +599,7 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol ErrorCallbackFlutterApiProtocol {
   func loadListError(feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func loadOnboardingError(feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func loadSingleError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func cacheError(completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func readerError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func emptyLinkError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func sessionError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func noConnection(completion: @escaping (Result<Void, PigeonError>) -> Void)
@@ -635,62 +632,8 @@ class ErrorCallbackFlutterApi: ErrorCallbackFlutterApiProtocol {
       }
     }
   }
-  func loadOnboardingError(feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadOnboardingError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([feedArg] as [Any?]) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
-  func loadSingleError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadSingleError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
   func cacheError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.cacheError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
-  func readerError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.readerError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
@@ -1067,7 +1010,8 @@ class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol SingleLoadCallbackFlutterApiProtocol {
-  func singleLoad(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func singleLoadSuccess(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func singleLoadError(storyId storyIdArg: String?, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1079,10 +1023,28 @@ class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
   }
-  func singleLoad(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad\(messageChannelSuffix)"
+  func singleLoadSuccess(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadSuccess\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([storyDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+  func singleLoadError(storyId storyIdArg: String?, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([storyIdArg, reasonArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -1134,7 +1096,8 @@ class IASOnboardingsHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol OnboardingLoadCallbackFlutterApiProtocol {
-  func onboardingLoad(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onboardingLoadSuccess(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onboardingLoadError(feed feedArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class OnboardingLoadCallbackFlutterApi: OnboardingLoadCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1146,10 +1109,28 @@ class OnboardingLoadCallbackFlutterApi: OnboardingLoadCallbackFlutterApiProtocol
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
   }
-  func onboardingLoad(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad\(messageChannelSuffix)"
+  func onboardingLoadSuccess(count countArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadSuccess\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([countArg, feedArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+  func onboardingLoadError(feed feedArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([feedArg, reasonArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

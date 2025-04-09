@@ -38,30 +38,9 @@ class ObservableErrorCallbackFlutterApi extends Observable<ErrorCallbackFlutterA
   }
 
   @override
-  void loadOnboardingError(String feed) {
-    for (var it in observers) {
-      it.loadOnboardingError(feed);
-    }
-  }
-
-  @override
-  void loadSingleError() {
-    for (var it in observers) {
-      it.loadSingleError();
-    }
-  }
-
-  @override
   void noConnection() {
     for (var it in observers) {
       it.noConnection();
-    }
-  }
-
-  @override
-  void readerError() {
-    for (var it in observers) {
-      it.readerError();
     }
   }
 

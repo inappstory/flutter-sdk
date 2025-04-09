@@ -57,13 +57,7 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 abstract class ErrorCallbackFlutterApi {
   void loadListError(String feed);
 
-  void loadOnboardingError(String feed);
-
-  void loadSingleError();
-
   void cacheError();
-
-  void readerError();
 
   void emptyLinkError();
 
@@ -178,7 +172,9 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 
 @FlutterApi()
 abstract class SingleLoadCallbackFlutterApi {
-  void singleLoad(StoryDataDto storyData);
+  void singleLoadSuccess(StoryDataDto storyData);
+
+  void singleLoadError(String? storyId, String? reason);
 }
 
 @HostApi()
@@ -194,5 +190,7 @@ abstract class IASOnboardingsHostApi {
 
 @FlutterApi()
 abstract class OnboardingLoadCallbackFlutterApi {
-  void onboardingLoad(int count, String feed);
+  void onboardingLoadSuccess(int count, String feed);
+
+  void onboardingLoadError(String feed, String? reason);
 }

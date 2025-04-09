@@ -631,13 +631,7 @@ abstract class ErrorCallbackFlutterApi {
 
   void loadListError(String feed);
 
-  void loadOnboardingError(String feed);
-
-  void loadSingleError();
-
   void cacheError();
-
-  void readerError();
 
   void emptyLinkError();
 
@@ -674,50 +668,6 @@ abstract class ErrorCallbackFlutterApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadOnboardingError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadOnboardingError was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_feed = (args[0] as String?);
-          assert(arg_feed != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadOnboardingError was null, expected non-null String.');
-          try {
-            api.loadOnboardingError(arg_feed!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadSingleError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.loadSingleError();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.cacheError$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
@@ -726,25 +676,6 @@ abstract class ErrorCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           try {
             api.cacheError();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.readerError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.readerError();
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -1198,26 +1129,52 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 abstract class SingleLoadCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void singleLoad(StoryDataDto storyData);
+  void singleLoadSuccess(StoryDataDto storyData);
+
+  void singleLoadError(String? storyId, String? reason);
 
   static void setUp(SingleLoadCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadSuccess$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad was null.');
+          'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadSuccess was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final StoryDataDto? arg_storyData = (args[0] as StoryDataDto?);
           assert(arg_storyData != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoad was null, expected non-null StoryDataDto.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadSuccess was null, expected non-null StoryDataDto.');
           try {
-            api.singleLoad(arg_storyData!);
+            api.singleLoadSuccess(arg_storyData!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_storyId = (args[0] as String?);
+          final String? arg_reason = (args[1] as String?);
+          try {
+            api.singleLoadError(arg_storyId, arg_reason);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -1271,29 +1228,57 @@ class IASOnboardingsHostApi {
 abstract class OnboardingLoadCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void onboardingLoad(int count, String feed);
+  void onboardingLoadSuccess(int count, String feed);
+
+  void onboardingLoadError(String feed, String? reason);
 
   static void setUp(OnboardingLoadCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadSuccess$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad was null.');
+          'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadSuccess was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final int? arg_count = (args[0] as int?);
           assert(arg_count != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad was null, expected non-null int.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadSuccess was null, expected non-null int.');
           final String? arg_feed = (args[1] as String?);
           assert(arg_feed != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoad was null, expected non-null String.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadSuccess was null, expected non-null String.');
           try {
-            api.onboardingLoad(arg_count!, arg_feed!);
+            api.onboardingLoadSuccess(arg_count!, arg_feed!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadError was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_feed = (args[0] as String?);
+          assert(arg_feed != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadError was null, expected non-null String.');
+          final String? arg_reason = (args[1] as String?);
+          try {
+            api.onboardingLoadError(arg_feed!, arg_reason);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

@@ -24,10 +24,12 @@ class IASOnboardingsAdaptor : IASOnboardingsHostApi {
     func show(limit: Int64, feed: String, tags: [String]) throws {
         func complete(show: Bool) {
             if (show) {
-                onboardingLoadCallbackFlutterApi.onboardingLoad(count: limit, feed: feed) { _ in }
+                onboardingLoadCallbackFlutterApi.onboardingLoadSuccess(count: limit, feed: feed) { _ in }
+            } else {
+                onboardingLoadCallbackFlutterApi.onboardingLoadError(feed: feed, reason: "Onboarding load error") { _ in }
             }
         }
         
-        onboardingsAPI.showOnboarding(feed: feed, limit: Int(limit), with:tags, with:InAppStory.shared.panelSettings ,complete: complete)
+        onboardingsAPI.showOnboarding(feed: feed, limit: Int(limit), with:tags, with:InAppStory.shared.panelSettings, complete: complete)
     }
 }

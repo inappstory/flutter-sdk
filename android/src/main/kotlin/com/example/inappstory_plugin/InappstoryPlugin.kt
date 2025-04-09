@@ -3,6 +3,8 @@ package com.example.inappstory_plugin
 import InappstorySdkModuleHostApi
 import android.app.Activity
 import android.app.Application
+import com.example.inappstory_plugin.adaptors.ActivityHolder
+import com.example.inappstory_plugin.adaptors.InappstorySdkModuleAdaptor
 import com.inappstory.sdk.InAppStoryManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware

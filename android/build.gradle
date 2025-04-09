@@ -80,7 +80,7 @@ def ugc_version = "bcd5bb710c16dd84441a0dbd95f7d9bfa590f80a"
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.webkit:webkit:1.4.0'
-    implementation 'com.github.inappstory:android-sdk:1.20.10'
+    implementation 'com.github.inappstory:android-sdk:8aeb7ca1807f2423e6331ba3fd8bfe5fc8597917'
     implementation ("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
         transitive=true
         exclude group: 'com.github.inappstory', module: 'android-sdk' //exclude to prevent libraries overriding
