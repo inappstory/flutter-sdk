@@ -297,7 +297,7 @@ To get this - you can use the `InAppStoryManagerHostApi().changeUser(<your new u
 
 UserId can't be longer than 255 characters.
 
-Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)`
+Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)` or `await FeedStoriesController().fetchFeedStories()`.
 
 ## SingleStoryAPI
 
@@ -400,6 +400,11 @@ class _MyAppState extends State<MyApp> implements OnboardingLoadCallbackFlutterA
   @override
   void onboardingLoad(int count, String feed) {
     print('$runtimeType.onboardingLoad($count, $feed)');
+  }
+
+  @override
+  void onboardingLoadError(String feed, String? reason) {
+    print('$runtimeType.onboardingLoad($feed, $reason)');
   }
 }  
 ```
