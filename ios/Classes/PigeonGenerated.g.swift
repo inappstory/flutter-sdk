@@ -1011,7 +1011,7 @@ class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol SingleLoadCallbackFlutterApiProtocol {
   func singleLoadSuccess(storyData storyDataArg: StoryDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func singleLoadError(storyId storyIdArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func singleLoadError(storyId storyIdArg: String?, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1041,7 +1041,7 @@ class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
       }
     }
   }
-  func singleLoadError(storyId storyIdArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func singleLoadError(storyId storyIdArg: String?, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([storyIdArg, reasonArg] as [Any?]) { response in

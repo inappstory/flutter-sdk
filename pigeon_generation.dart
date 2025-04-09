@@ -174,7 +174,7 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 abstract class SingleLoadCallbackFlutterApi {
   void singleLoadSuccess(StoryDataDto storyData);
 
-  void singleLoadError(String storyId, String? reason);
+  void singleLoadError(String? storyId, String? reason);
 }
 
 @HostApi()

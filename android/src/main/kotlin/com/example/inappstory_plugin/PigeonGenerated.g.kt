@@ -1029,7 +1029,7 @@ class SingleLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger,
       } 
     }
   }
-  fun singleLoadError(storyIdArg: String, reasonArg: String?, callback: (Result<Unit>) -> Unit)
+  fun singleLoadError(storyIdArg: String?, reasonArg: String?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError$separatedMessageChannelSuffix"

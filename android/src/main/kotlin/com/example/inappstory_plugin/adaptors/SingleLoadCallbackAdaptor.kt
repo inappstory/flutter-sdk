@@ -23,7 +23,7 @@ class SingleLoadCallbackAdaptor(
 
     override fun singleLoadError(p0: String?, p1: String?) {
         flutterPluginBinding.runOnMainThread {
-            flutterApi.singleLoadError(p0!!, p1) {}
+            flutterApi.singleLoadError(p0, p1) {}
         }
     }
 }

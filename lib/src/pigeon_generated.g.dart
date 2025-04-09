@@ -1131,7 +1131,7 @@ abstract class SingleLoadCallbackFlutterApi {
 
   void singleLoadSuccess(StoryDataDto storyData);
 
-  void singleLoadError(String storyId, String? reason);
+  void singleLoadError(String? storyId, String? reason);
 
   static void setUp(SingleLoadCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -1172,11 +1172,9 @@ abstract class SingleLoadCallbackFlutterApi {
           'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_storyId = (args[0] as String?);
-          assert(arg_storyId != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.SingleLoadCallbackFlutterApi.singleLoadError was null, expected non-null String.');
           final String? arg_reason = (args[1] as String?);
           try {
-            api.singleLoadError(arg_storyId!, arg_reason);
+            api.singleLoadError(arg_storyId, arg_reason);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
