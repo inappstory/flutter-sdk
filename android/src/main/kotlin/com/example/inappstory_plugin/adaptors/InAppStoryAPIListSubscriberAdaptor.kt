@@ -8,6 +8,7 @@ import com.example.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
+import com.inappstory.sdk.externalapi.storylist.IASStoryListSessionData
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
@@ -20,15 +21,15 @@ open class InAppStoryAPIListSubscriberAdaptor(
         InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
     private val sessionData = InAppStoryManager.getInstance()?.iasCore()?.sessionManager()?.session?.sessionData()
 
-    override fun updateStoryData(storyAPIData: StoryAPIData) {
+    override fun updateStoryData(storyAPIData: StoryAPIData, storySessionData: IASStoryListSessionData?) {
         flutterPluginBinding.runOnMainThread {
-            storyListSubscriber.updateStoryData(mapStoryAPIData(storyAPIData, getAspectRatio())) {}
+            storyListSubscriber.updateStoryData(mapStoryAPIData(storyAPIData, storySessionData?.previewAspectRatio() ?: getAspectRatio())) {}
         }
     }
 
-    override fun updateStoriesData(list: MutableList<StoryAPIData>) {
+    override fun updateStoriesData(list: MutableList<StoryAPIData>, storySessionData: IASStoryListSessionData?) {
         flutterPluginBinding.runOnMainThread {
-            storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, getAspectRatio()) }) {}
+            storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, storySessionData?.previewAspectRatio() ?: getAspectRatio()) }) {}
         }
     }
 
