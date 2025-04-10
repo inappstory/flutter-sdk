@@ -1,4 +1,4 @@
-group = "com.example.inappstory_plugin"
+group = "com.inappstory.inappstory_plugin"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -27,7 +27,7 @@ apply plugin: "kotlin-android"
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace = "com.example.inappstory_plugin"
+        namespace = "com.inappstory.inappstory_plugin"
     }
 
     compileSdk = 34

@@ -1,4 +1,4 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin
 
 import android.os.Handler
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData

@@ -1,10 +1,10 @@
-package com.example.inappstory_plugin.callbacks
+package com.inappstory.inappstory_plugin.callbacks
 
 import CallToActionCallbackFlutterApi
 import ClickActionDto
 import android.content.Context
-import com.example.inappstory_plugin.mapSlideDataDto
-import com.example.inappstory_plugin.runOnMainThread
+import com.inappstory.inappstory_plugin.mapSlideDataDto
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.stories.outercallbacks.common.reader.CallToActionCallback
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ClickAction
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ContentData
