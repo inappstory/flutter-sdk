@@ -1,4 +1,4 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

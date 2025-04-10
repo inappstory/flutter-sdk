@@ -1,7 +1,7 @@
-package com.example.inappstory_plugin.callbacks
+package com.inappstory.inappstory_plugin.callbacks
 
 import OnboardingLoadCallbackFlutterApi
-import com.example.inappstory_plugin.runOnMainThread
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.stories.outercallbacks.common.onboarding.OnboardingLoadCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 

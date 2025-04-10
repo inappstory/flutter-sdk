@@ -1,3 +1,9 @@
+## [0.1.0-rc.1] - 2025-04-10
+
+### Changed 
+
+* Initializing Android native SDK, please watch README for details
+
 ## [0.0.20] - 2025-04-09
 
 ### Added

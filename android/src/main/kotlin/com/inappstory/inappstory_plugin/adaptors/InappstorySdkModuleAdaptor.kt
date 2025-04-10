@@ -1,8 +1,8 @@
-package com.example.inappstory_plugin.adaptors
+package com.inappstory.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
-import com.example.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
-import com.example.inappstory_plugin.callbacks.ErrorCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI

@@ -6,23 +6,67 @@ InAppStory SDK Flutter Plugin
 
 Currently under development & not published
 
-Add dependency in your app pubspec.yaml
+Add dependency in your app `pubspec.yaml`
 
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.18
+  inappstory_plugin: ^0.0.20
   ...
 ```
 
 ## Android Requirements
 
-Make sure you update your Android SDK versions in build.gradle
+1. Make sure you update your Android SDK versions in `app/build.gradle`
 
 ```
 minSdkVersion = 23
 compileSdkVersion = 34
 targetSdkVersion = 34
+```
+
+2. Init Android SDK in your `Application` class in Android project
+
+> **IMPORTANT:**
+> Without this, the library will not work
+
+```kotlin
+import android.app.Application
+import com.inappstory.inappstory_plugin.InappstoryPlugin
+
+class ExampleApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // init SKD
+        InappstoryPlugin.initSDK(this)
+    }
+}
+```
+
+```java
+import android.app.Application;
+import com.inappstory.inappstory_plugin.InappstoryPlugin;
+
+public class ExampleApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // init SKD
+        InappstoryPlugin.initSDK(this);
+    }
+}
+```
+
+3. Add manifestPlaceholders to your `app/build.gradle` file
+
+```
+android {
+    ...
+    defaultConfig {
+        ...
+        manifestPlaceholders['applicationName'] = '<name of your custom application class>'
+    }
+}
 ```
 
 ## Initialize with your api key
@@ -37,7 +81,7 @@ Should await returned future first before use of other API
 
 ## Usage
 
-To use the library, create YourStoryWidget & implement StoryWidget
+To use the library, create `YourStoryWidget` & implement `StoryWidget`
 
 ```
 class YourStoryWidget extends StatelessWidget implements StoryWidget {

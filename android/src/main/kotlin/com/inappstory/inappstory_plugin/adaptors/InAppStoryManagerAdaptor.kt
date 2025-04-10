@@ -1,4 +1,4 @@
-package com.example.inappstory_plugin.adaptors
+package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
 import com.inappstory.sdk.InAppStoryManager

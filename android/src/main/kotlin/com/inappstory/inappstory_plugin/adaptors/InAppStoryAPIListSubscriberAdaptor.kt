@@ -1,10 +1,10 @@
-package com.example.inappstory_plugin.adaptors
+package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryAPIListSubscriberFlutterApi
 import StoryAPIDataDto
 import StoryFavoriteItemAPIDataDto
-import com.example.inappstory_plugin.mapStoryData
-import com.example.inappstory_plugin.runOnMainThread
+import com.inappstory.inappstory_plugin.mapStoryData
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
