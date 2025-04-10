@@ -31,6 +31,7 @@ targetSdkVersion = 34
 > Without this, the library will not work
 
 ```kotlin
+// Kotlin
 import android.app.Application
 import com.inappstory.inappstory_plugin.InappstoryPlugin
 
@@ -44,6 +45,7 @@ class ExampleApplication : Application() {
 ```
 
 ```java
+// Java
 import android.app.Application;
 import com.inappstory.inappstory_plugin.InappstoryPlugin;
 
