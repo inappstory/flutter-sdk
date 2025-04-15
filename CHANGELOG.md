@@ -1,3 +1,13 @@
+## [0.2.0-rc.1] - 2025-04-15
+
+### Added
+
+* Added ability to launch games
+
+### Fixed
+
+* error when initializing plugin in Java application class
+
 ## [0.1.0-rc.1] - 2025-04-10
 
 ### Changed 

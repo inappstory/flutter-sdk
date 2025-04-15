@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
+import 'package:inappstory_plugin_example/games_widget.dart';
 
 import 'appearance_manager_widget.dart';
 import 'localization_delegates.dart';
@@ -59,6 +60,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
     IASOnboardingsHostApi().show(limit: 10);
   }
 
+  void onGamesTap() {
+    navigatorState.push(MaterialPageRoute(builder: (_) => const GamesWidget()));
+  }
+
   @override
   void onboardingLoadSuccess(int count, String feed) {
     print('$runtimeType.onboardingLoad($count, $feed)');
@@ -108,6 +113,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
                       ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
                       ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
                       ElevatedButton(onPressed: onOnboardingsTap, child: const Text('Onboardings (shown only if any)')),
+                      ElevatedButton(onPressed: onGamesTap, child: const Text('Games')),
                     ],
                   );
                 }

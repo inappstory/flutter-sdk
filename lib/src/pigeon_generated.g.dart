@@ -66,6 +66,12 @@ enum Position {
   bottomRight,
 }
 
+enum ContentTypeDto {
+  STORY,
+  UGC,
+  IN_APP_MESSAGE,
+}
+
 class StoryAPIDataDto {
   StoryAPIDataDto({
     required this.id,
@@ -325,6 +331,52 @@ class StoryFavoriteItemAPIDataDto {
 ;
 }
 
+class ContentDataDto {
+  ContentDataDto({
+    this.contentType,
+    this.sourceType,
+  });
+
+  ContentTypeDto? contentType;
+
+  SourceTypeDto? sourceType;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      contentType,
+      sourceType,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static ContentDataDto decode(Object result) {
+    result as List<Object?>;
+    return ContentDataDto(
+      contentType: result[0] as ContentTypeDto?,
+      sourceType: result[1] as SourceTypeDto?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! ContentDataDto || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -345,17 +397,23 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is Position) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    }    else if (value is StoryAPIDataDto) {
+    }    else if (value is ContentTypeDto) {
       buffer.putUint8(133);
-      writeValue(buffer, value.encode());
-    }    else if (value is StoryDataDto) {
+      writeValue(buffer, value.index);
+    }    else if (value is StoryAPIDataDto) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is SlideDataDto) {
+    }    else if (value is StoryDataDto) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is SlideDataDto) {
       buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    }    else if (value is ContentDataDto) {
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -378,13 +436,18 @@ class _PigeonCodec extends StandardMessageCodec {
         final int? value = readValue(buffer) as int?;
         return value == null ? null : Position.values[value];
       case 133: 
-        return StoryAPIDataDto.decode(readValue(buffer)!);
+        final int? value = readValue(buffer) as int?;
+        return value == null ? null : ContentTypeDto.values[value];
       case 134: 
-        return StoryDataDto.decode(readValue(buffer)!);
+        return StoryAPIDataDto.decode(readValue(buffer)!);
       case 135: 
-        return SlideDataDto.decode(readValue(buffer)!);
+        return StoryDataDto.decode(readValue(buffer)!);
       case 136: 
+        return SlideDataDto.decode(readValue(buffer)!);
+      case 137: 
         return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+      case 138: 
+        return ContentDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1394,6 +1457,227 @@ abstract class OnboardingLoadCallbackFlutterApi {
           final String? arg_reason = (args[1] as String?);
           try {
             api.onboardingLoadError(arg_feed!, arg_reason);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+  }
+}
+
+class IASGamesHostApi {
+  /// Constructor for [IASGamesHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  IASGamesHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> openGame(String gameId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.openGame$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[gameId]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> closeGame() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.closeGame$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> preloadGames() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.preloadGames$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+}
+
+abstract class GameReaderCallbackFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void startGame(ContentDataDto? contentData);
+
+  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+
+  void closeGame(ContentDataDto? contentData);
+
+  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
+
+  void gameError(ContentDataDto? contentData, String? message);
+
+  static void setUp(GameReaderCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.startGame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.startGame was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
+          try {
+            api.startGame(arg_contentData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
+          final Map<String?, Object?>? arg_result = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            api.finishGame(arg_contentData, arg_result);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.closeGame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.closeGame was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
+          try {
+            api.closeGame(arg_contentData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.eventGame$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.eventGame was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
+          final String? arg_gameId = (args[1] as String?);
+          final String? arg_eventName = (args[2] as String?);
+          final Map<String?, Object?>? arg_payload = (args[3] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            api.eventGame(arg_contentData, arg_gameId, arg_eventName, arg_payload);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.gameError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.gameError was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
+          final String? arg_message = (args[1] as String?);
+          try {
+            api.gameError(arg_contentData, arg_message);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

@@ -2,6 +2,7 @@ package com.inappstory.inappstory_plugin.adaptors
 
 import IASSingleStoryHostApi
 import com.inappstory.inappstory_plugin.callbacks.IShowStoryOnceCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.core.api.IASSingleStory
 import io.flutter.embedding.engine.plugins.FlutterPlugin

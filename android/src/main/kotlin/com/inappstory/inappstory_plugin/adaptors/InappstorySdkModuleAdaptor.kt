@@ -33,6 +33,9 @@ class InappstorySdkModuleAdaptor(
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
     private lateinit var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
 
+    private val iasGames =
+        IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
     ) {

@@ -194,3 +194,36 @@ abstract class OnboardingLoadCallbackFlutterApi {
 
   void onboardingLoadError(String feed, String? reason);
 }
+
+enum ContentTypeDto {
+  STORY,
+  UGC,
+  IN_APP_MESSAGE,
+}
+
+class ContentDataDto {
+  late ContentTypeDto? contentType;
+  late SourceTypeDto? sourceType;
+}
+
+@HostApi()
+abstract class IASGamesHostApi {
+  void openGame(String gameId);
+
+  void closeGame();
+
+  void preloadGames();
+}
+
+@FlutterApi()
+abstract class GameReaderCallbackFlutterApi {
+  void startGame(ContentDataDto? contentData);
+
+  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+
+  void closeGame(ContentDataDto? contentData);
+
+  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
+
+  void gameError(ContentDataDto? contentData, String? message);
+}

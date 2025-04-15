@@ -18,7 +18,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, ActivityAware {
 
     companion object {
-        fun initSDK(application: Application) {
+        @JvmStatic fun initSDK(application: Application) {
             InAppStoryManager.initSDK(application, false)
         }
     }

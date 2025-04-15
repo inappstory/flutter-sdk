@@ -32,6 +32,8 @@ targetSdkVersion = 34
 
 ```kotlin
 // Kotlin
+package com.example.yourapp
+
 import android.app.Application
 import com.inappstory.inappstory_plugin.InappstoryPlugin
 
@@ -46,14 +48,17 @@ class ExampleApplication : Application() {
 
 ```java
 // Java
+package com.example.yourapp;
+
 import android.app.Application;
+
 import com.inappstory.inappstory_plugin.InappstoryPlugin;
 
-public class ExampleApplication extends Application {
+
+class ExampleApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // init SKD
         InappstoryPlugin.initSDK(this);
     }
 }
@@ -343,7 +348,8 @@ To get this - you can use the `InAppStoryManagerHostApi().changeUser(<your new u
 
 UserId can't be longer than 255 characters.
 
-Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)` or `await FeedStoriesController().fetchFeedStories()`.
+Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)` or
+`await FeedStoriesController().fetchFeedStories()`.
 
 ## SingleStoryAPI
 
@@ -375,7 +381,7 @@ class _WidgetState extends State<T> implements IShowStoryOnceCallbackFlutterApi 
     IShowStoryOnceCallbackFlutterApi.setUp(null);
     super.dispose();
   }
-  
+
   @override
   void alreadyShown() => print('IShowStoryOnceCallback.alreadyShown()');
 
@@ -454,3 +460,70 @@ class _MyAppState extends State<MyApp> implements OnboardingLoadCallbackFlutterA
   }
 }  
 ```
+
+## Games
+
+The library supports run games.
+
+```dart
+// To run game
+void openGame() async {
+  await IASGamesHostApi().open('<game id>');
+}
+// To close game
+void closeGame() async {
+  await IASGamesHostApi().closeGame();
+}
+```
+
+If you want to preload games by yourself (f.e. in case if your app doesn't use any stories), you can call next method:
+
+```dart
+void preloadGames() async {
+  await IASGamesHostApi().preloadGames();
+}
+```
+
+To listen callbacks from game you can implement `GameCallbackFlutterApi` and setup your listener
+
+```dart
+class _MyAppState extends State<MyApp> implements GameCallbackFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    GameReaderCallbackFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    GameReaderCallbackFlutterApi.setUp(null);
+    super.dispose();
+  }
+
+  @override
+  void startGame(ContentDataDto? gameData) {
+    print('startGame ${gameData?.contentType.toString()}');
+  }
+
+  @override
+  void closeGame(ContentDataDto? gameData) {
+    print('closeGame');
+  }
+
+  @override
+  void eventGame(ContentDataDto? gameData, String? id, String? eventName, Map<String?, Object?>? payload) {
+    print('eventGame');
+  }
+
+  @override
+  void finishGame(ContentDataDto? gameData, Map<String?, Object?>? result) {
+    print('finishGame');
+  }
+
+  @override
+  void gameError(ContentDataDto? gameData, String? message) {
+    print('gameError');
+  }
+}
+```
+

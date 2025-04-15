@@ -27,7 +27,7 @@ class CallToActionCallbackAdaptor(
 
             flutterPluginBinding.runOnMainThread {
                 api.callToAction(
-                    slideDataArg = content?.let { mapSlideDataDto(it) },
+                    slideDataArg = content?.let { mapSlideDataDto(content) },
                     urlArg = url,
                     clickActionArg = action?.let { ClickActionDto.ofRaw(it.ordinal) }
                 ) {}
