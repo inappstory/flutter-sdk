@@ -1067,12 +1067,12 @@ class IASSingleStoryHostApiSetup {
   }
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
-protocol IShowStoryOnceCallbackFlutterApiProtocol {
+protocol IShowStoryCallbackFlutterApiProtocol {
   func onShow(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func alreadyShown(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
-class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol {
+class IShowStoryCallbackFlutterApi: IShowStoryCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
   private let messageChannelSuffix: String
   init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
@@ -1083,7 +1083,7 @@ class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol
     return PigeonGeneratedPigeonCodec.shared
   }
   func onShow(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onShow\(messageChannelSuffix)"
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onShow\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
@@ -1101,7 +1101,7 @@ class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol
     }
   }
   func onError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onError\(messageChannelSuffix)"
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
@@ -1119,7 +1119,7 @@ class IShowStoryOnceCallbackFlutterApi: IShowStoryOnceCallbackFlutterApiProtocol
     }
   }
   func alreadyShown(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.alreadyShown\(messageChannelSuffix)"
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.alreadyShown\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {

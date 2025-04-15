@@ -1,3 +1,9 @@
+## [0.2.0-rc.2] - 2025-04-15
+
+### Changed
+
+* Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
+
 ## [0.2.0-rc.1] - 2025-04-15
 
 ### Added

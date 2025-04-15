@@ -1232,7 +1232,7 @@ class IASSingleStoryHostApi {
   }
 }
 
-abstract class IShowStoryOnceCallbackFlutterApi {
+abstract class IShowStoryCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   void onShow();
@@ -1241,11 +1241,11 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 
   void alreadyShown();
 
-  static void setUp(IShowStoryOnceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+  static void setUp(IShowStoryCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onShow$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onShow$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
@@ -1264,7 +1264,7 @@ abstract class IShowStoryOnceCallbackFlutterApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onError$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onError$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
@@ -1283,7 +1283,7 @@ abstract class IShowStoryOnceCallbackFlutterApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.alreadyShown$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.alreadyShown$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);

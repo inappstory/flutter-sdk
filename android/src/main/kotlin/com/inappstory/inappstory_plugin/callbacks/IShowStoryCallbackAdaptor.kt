@@ -1,28 +1,28 @@
 package com.inappstory.inappstory_plugin.callbacks
 
-import IShowStoryOnceCallbackFlutterApi
+import IShowStoryCallbackFlutterApi
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.stories.callbacks.IShowStoryOnceCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
-class IShowStoryOnceCallbackAdaptor(
+class IShowStoryCallbackAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
 ) : IShowStoryOnceCallback {
     override fun onShow() {
         flutterPluginBinding.runOnMainThread {
-            IShowStoryOnceCallbackFlutterApi(flutterPluginBinding.binaryMessenger).onShow { }
+            IShowStoryCallbackFlutterApi(flutterPluginBinding.binaryMessenger).onShow { }
         }
     }
 
     override fun onError() {
         flutterPluginBinding.runOnMainThread {
-            IShowStoryOnceCallbackFlutterApi(flutterPluginBinding.binaryMessenger).onError { }
+            IShowStoryCallbackFlutterApi(flutterPluginBinding.binaryMessenger).onError { }
         }
     }
 
     override fun alreadyShown() {
         flutterPluginBinding.runOnMainThread {
-            IShowStoryOnceCallbackFlutterApi(flutterPluginBinding.binaryMessenger).alreadyShown { }
+            IShowStoryCallbackFlutterApi(flutterPluginBinding.binaryMessenger).alreadyShown { }
         }
     }
 }

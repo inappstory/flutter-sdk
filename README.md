@@ -365,31 +365,31 @@ To show single story in reader by id if wasn't show already for current user
 IASSingleStoryHostApi().showOnce(storyId: story.id);
 ```
 
-To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp
+To listen callbacks of result show()/showOnce() implement IShowStoryCallbackFlutterApi and setUp
 your listener
 
 ```dart
-class _WidgetState extends State<T> implements IShowStoryOnceCallbackFlutterApi {
+class _WidgetState extends State<T> implements IShowStoryCallbackFlutterApi {
   @override
   void initState() {
     super.initState();
-    IShowStoryOnceCallbackFlutterApi.setUp(this);
+    IShowStoryCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
-    IShowStoryOnceCallbackFlutterApi.setUp(null);
+    IShowStoryCallbackFlutterApi.setUp(null);
     super.dispose();
   }
 
   @override
-  void alreadyShown() => print('IShowStoryOnceCallback.alreadyShown()');
+  void alreadyShown() => print('IShowStoryCallback.alreadyShown()');
 
   @override
-  void onError() => print('IShowStoryOnceCallback.onError()');
+  void onError() => print('IShowStoryCallback.onError()');
 
   @override
-  void onShow() => print('IShowStoryOnceCallback.onShow()');
+  void onShow() => print('IShowStoryCallback.onShow()');
 }
 ```
 

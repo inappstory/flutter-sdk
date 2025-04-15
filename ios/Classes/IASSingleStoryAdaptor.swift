@@ -12,7 +12,7 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
 
         self.singleStoryAPI = singleStoryAPI
 
-        self.showStoryCallback = IShowStoryOnceCallbackFlutterApi(
+        self.showStoryCallback = IShowStoryCallbackFlutterApi(
             binaryMessenger: binaryMessenger
         )
 
@@ -26,7 +26,7 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
 
     private var singleStoryAPI: SingleStoryAPI
 
-    private var showStoryCallback: IShowStoryOnceCallbackFlutterApi
+    private var showStoryCallback: IShowStoryCallbackFlutterApi
 
     func showOnce(storyId: String) throws {
         singleStoryAPI.showStoryOnce(with: storyId, complete: showOnceComplete)

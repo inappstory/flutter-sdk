@@ -1078,9 +1078,9 @@ interface IASSingleStoryHostApi {
   }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
-class IShowStoryOnceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+class IShowStoryCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
   companion object {
-    /** The codec used by IShowStoryOnceCallbackFlutterApi. */
+    /** The codec used by IShowStoryCallbackFlutterApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
     }
@@ -1088,7 +1088,7 @@ class IShowStoryOnceCallbackFlutterApi(private val binaryMessenger: BinaryMessen
   fun onShow(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onShow$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onShow$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -1105,7 +1105,7 @@ class IShowStoryOnceCallbackFlutterApi(private val binaryMessenger: BinaryMessen
   fun onError(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.onError$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.onError$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -1122,7 +1122,7 @@ class IShowStoryOnceCallbackFlutterApi(private val binaryMessenger: BinaryMessen
   fun alreadyShown(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryOnceCallbackFlutterApi.alreadyShown$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.IShowStoryCallbackFlutterApi.alreadyShown$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {

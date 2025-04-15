@@ -162,7 +162,7 @@ abstract class IASSingleStoryHostApi {
 }
 
 @FlutterApi()
-abstract class IShowStoryOnceCallbackFlutterApi {
+abstract class IShowStoryCallbackFlutterApi {
   void onShow();
 
   void onError();

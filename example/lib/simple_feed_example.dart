@@ -13,7 +13,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
-    implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
+    implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
   static const feed = '<your feed id>';
 
   final inputController = TextEditingController();
@@ -47,13 +47,13 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   void initState() {
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
-    IShowStoryOnceCallbackFlutterApi.setUp(this);
+    IShowStoryCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
-    IShowStoryOnceCallbackFlutterApi.setUp(null);
+    IShowStoryCallbackFlutterApi.setUp(null);
     super.dispose();
   }
 
