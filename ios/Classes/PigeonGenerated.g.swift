@@ -159,6 +159,12 @@ enum Position: Int {
   case bottomRight = 3
 }
 
+enum ContentTypeDto: Int {
+  case sTORY = 0
+  case uGC = 1
+  case iNAPPMESSAGE = 2
+}
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct StoryAPIDataDto: Hashable {
   var id: Int64
@@ -335,6 +341,35 @@ struct StoryFavoriteItemAPIDataDto: Hashable {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct ContentDataDto: Hashable {
+  var contentType: ContentTypeDto? = nil
+  var sourceType: SourceTypeDto? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> ContentDataDto? {
+    let contentType: ContentTypeDto? = nilOrValue(pigeonVar_list[0])
+    let sourceType: SourceTypeDto? = nilOrValue(pigeonVar_list[1])
+
+    return ContentDataDto(
+      contentType: contentType,
+      sourceType: sourceType
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      contentType,
+      sourceType,
+    ]
+  }
+  static func == (lhs: ContentDataDto, rhs: ContentDataDto) -> Bool {
+    return deepEqualsPigeonGenerated(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashPigeonGenerated(value: toList(), hasher: &hasher)
+  }
+}
+
 private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -363,13 +398,21 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
       }
       return nil
     case 133:
-      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return ContentTypeDto(rawValue: enumResultAsInt)
+      }
+      return nil
     case 134:
-      return StoryDataDto.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 135:
-      return SlideDataDto.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 136:
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
+    case 137:
       return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+    case 138:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -390,17 +433,23 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? Position {
       super.writeByte(132)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIDataDto {
+    } else if let value = value as? ContentTypeDto {
       super.writeByte(133)
-      super.writeValue(value.toList())
-    } else if let value = value as? StoryDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(134)
       super.writeValue(value.toList())
-    } else if let value = value as? SlideDataDto {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(135)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(136)
+      super.writeValue(value.toList())
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+      super.writeByte(137)
+      super.writeValue(value.toList())
+    } else if let value = value as? ContentDataDto {
+      super.writeByte(138)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1211,6 +1260,171 @@ class OnboardingLoadCallbackFlutterApi: OnboardingLoadCallbackFlutterApiProtocol
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.OnboardingLoadCallbackFlutterApi.onboardingLoadError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([feedArg, reasonArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol IASGamesHostApi {
+  func openGame(gameId: String) throws
+  func closeGame() throws
+  func preloadGames() throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class IASGamesHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `IASGamesHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASGamesHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let openGameChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.openGame\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      openGameChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let gameIdArg = args[0] as! String
+        do {
+          try api.openGame(gameId: gameIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      openGameChannel.setMessageHandler(nil)
+    }
+    let closeGameChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.closeGame\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      closeGameChannel.setMessageHandler { _, reply in
+        do {
+          try api.closeGame()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      closeGameChannel.setMessageHandler(nil)
+    }
+    let preloadGamesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASGamesHostApi.preloadGames\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      preloadGamesChannel.setMessageHandler { _, reply in
+        do {
+          try api.preloadGames()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      preloadGamesChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol GameReaderCallbackFlutterApiProtocol {
+  func startGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func closeGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func eventGame(contentData contentDataArg: ContentDataDto?, gameId gameIdArg: String?, eventName eventNameArg: String?, payload payloadArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func gameError(contentData contentDataArg: ContentDataDto?, message messageArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class GameReaderCallbackFlutterApi: GameReaderCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func startGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.startGame\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([contentDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([contentDataArg, resultArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func closeGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.closeGame\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([contentDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func eventGame(contentData contentDataArg: ContentDataDto?, gameId gameIdArg: String?, eventName eventNameArg: String?, payload payloadArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.eventGame\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([contentDataArg, gameIdArg, eventNameArg, payloadArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func gameError(contentData contentDataArg: ContentDataDto?, message messageArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.gameError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([contentDataArg, messageArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
