@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+class FeedStoryDecorator {
+  final BorderRadiusGeometry borderRadius;
+  final EdgeInsetsGeometry feedPadding;
+  final double storyPadding;
+
+  final BoxDecoration foregroundDecoration;
+
+  final EdgeInsetsGeometry textPadding;
+  final double textFontSize;
+
+  final LoaderDecorator loaderDecorator;
+
+  const FeedStoryDecorator({
+    this.borderRadius = BorderRadius.zero,
+    this.feedPadding = const EdgeInsets.all(10.0),
+    this.textPadding = const EdgeInsets.all(8.0),
+    this.storyPadding = 8.0,
+    this.textFontSize = 14,
+    this.loaderDecorator = const LoaderDecorator(),
+    this.foregroundDecoration = const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.transparent,
+          Colors.black87,
+        ],
+      ),
+    ),
+  });
+}
+
+class LoaderDecorator {
+  final Color? baseColor;
+  final Color? highlightColor;
+
+  const LoaderDecorator({
+    this.baseColor,
+    this.highlightColor,
+  });
+}

@@ -6,6 +6,7 @@ import 'base_story_widget.dart';
 import 'observable.dart';
 import 'pigeon_generated.g.dart';
 import 'story_from_pigeon_dto.dart';
+import 'widgets/decorators/feed_decorator.dart';
 
 abstract class StoriesStream extends Stream<Iterable<Widget>>
     implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
@@ -16,6 +17,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     required this.observableStoryList,
     required this.observableErrorCallback,
     required this.iasStoryListHostApi,
+    this.storyDecorator,
   });
 
   final String uniqueId;
@@ -24,6 +26,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   final Observable<ErrorCallbackFlutterApi> observableErrorCallback;
   final StoryWidgetBuilder storyWidgetBuilder;
   final IASStoryListHostApi iasStoryListHostApi;
+  final FeedStoryDecorator? storyDecorator;
 
   Iterable<StoryFromPigeonDto> stories = [];
 
@@ -51,6 +54,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     return BaseStoryWidget(
       story,
       storyWidgetBuilder,
+      storyDecorator: storyDecorator,
       key: ValueKey(story.hashCode),
     );
   }
