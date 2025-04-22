@@ -1,3 +1,9 @@
+## [0.2.0-rc.3] - 2025-04-22
+
+### Fixed
+
+* Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
+
 ## [0.2.0-rc.2] - 2025-04-15
 
 ### Changed
