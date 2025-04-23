@@ -487,6 +487,7 @@ interface InAppStoryManagerHostApi {
   fun setTags(tags: List<String>)
   fun changeUser(userId: String, callback: (Result<Unit>) -> Unit)
   fun closeReaders()
+  fun setTransparentStatusBar()
 
   companion object {
     /** The codec used by InAppStoryManagerHostApi. */
@@ -558,6 +559,22 @@ interface InAppStoryManagerHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.closeReaders()
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTransparentStatusBar$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.setTransparentStatusBar()
               listOf(null)
             } catch (exception: Throwable) {
               wrapError(exception)

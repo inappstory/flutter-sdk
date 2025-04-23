@@ -1,6 +1,7 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
+import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -33,5 +34,9 @@ class InAppStoryManagerAdaptor(
     override fun closeReaders() {
         InAppStoryManager.closeStoryReader(
             true, ForceCloseReaderCallback {})
+    }
+
+    override fun setTransparentStatusBar() {
+        inAppStoryManager.setOpenStoriesReader(CustomOpenStoriesReader())
     }
 }
