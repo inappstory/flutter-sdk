@@ -44,4 +44,9 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
 
   @override
   String get pigeonVar_messageChannelSuffix => decorated.pigeonVar_messageChannelSuffix;
+
+  @override
+  Future<void> reloadFeed(String feed) {
+    return decorated.reloadFeed(feed);
+  }
 }

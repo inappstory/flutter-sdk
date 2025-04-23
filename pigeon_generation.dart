@@ -40,6 +40,8 @@ abstract class InAppStoryManagerHostApi {
 abstract class IASStoryListHostApi {
   void load(String feed);
 
+  void reloadFeed(String feed);
+
   void openStoryReader(int storyId);
 
   void showFavoriteItem();
