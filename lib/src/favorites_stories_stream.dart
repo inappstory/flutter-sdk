@@ -31,4 +31,14 @@ class FavoritesStoriesStream extends StoriesStream {
 
     controller.add(stories.map(createWidgetFromStory).toList());
   }
+
+  @override
+  void updateStoryData(StoryAPIDataDto storyData) {
+    try {
+      final story = stories.firstWhere((element) => element.dto.id == storyData.id);
+      story.updateStoryData(storyData);
+
+      controller.add(stories.map(createWidgetFromStory).toList());
+    } catch (e) {}
+  }
 }
