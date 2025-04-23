@@ -335,6 +335,8 @@ AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 
 `void closeReaders();` - closing any story reader that showing
 
+`void setTransparentStatusBar();` - sets a transparent status bar for story reader in Android.
+
 ##
 
 # User Settings
