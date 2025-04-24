@@ -79,9 +79,6 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   }
 
   @override
-  void updateStoryData(StoryAPIDataDto storyData) {}
-
-  @override
   void cacheError() {}
 
   @override

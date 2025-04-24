@@ -43,6 +43,10 @@ class StoryListAdaptor: IASStoryListHostApi {
     func load(feed: String) throws {
         // Noop use impls for Feed & Favorites
     }
+    
+    func reloadFeed(feed: String) throws {
+        storyListAPI.refresh(feed)
+    }
 
     func openStoryReader(storyId: Int64) throws {
         storyListAPI.selectStoryCellWith(id: String(storyId))

@@ -68,6 +68,16 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
+  void updateStoryData(StoryAPIDataDto storyData) {
+    try {
+      final story = stories.firstWhere((element) => element.dto.id == storyData.id);
+      story.updateStoryData(storyData);
+
+      controller.add(combineStoriesAndFavorites());
+    } catch (e) {}
+  }
+
+  @override
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
     favorites = list.whereType<StoryFavoriteItemAPIDataDto>().map(FavoriteFromDto.new).toList(growable: false);
 

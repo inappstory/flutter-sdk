@@ -24,6 +24,6 @@ class FeedStoriesController {
     if (_iasStoryListHostApi == null) {
       throw Exception('Add controller to feed stream before calling fetchFeedStories');
     }
-    _iasStoryListHostApi?.load(_feed!);
+    _iasStoryListHostApi?.reloadFeed(_feed!);
   }
 }

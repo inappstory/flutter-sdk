@@ -33,6 +33,10 @@ open class IASStoryListAdaptor(
         iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
     }
 
+    override fun reloadFeed(feed: String) {
+        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
+    }
+
     override fun openStoryReader(storyId: Long) {
         iASStoryList.openStoryReader(
             activityHolder.activity,
@@ -70,6 +74,10 @@ class IASFavoritesListAdaptor(
     }
 
     override fun load(feed: String) {
+        iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
+    }
+
+    override fun reloadFeed(feed: String) {
         iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
     }
 }

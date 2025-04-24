@@ -11,7 +11,7 @@ Add dependency in your app `pubspec.yaml`
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.2.0-rc.1
+  inappstory_plugin: ^0.2.0-rc.5
   ...
 ```
 
@@ -334,6 +334,8 @@ AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 `void changeUser(String userId)` - replace the user in the application
 
 `void closeReaders();` - closing any story reader that showing
+
+`void setTransparentStatusBar();` - sets a transparent status bar for story reader in Android.
 
 ##
 

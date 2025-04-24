@@ -1,3 +1,27 @@
+## [0.2.0-rc.5] - 2025-04-24
+
+### Fixed
+
+* Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
+
+## [0.2.0-rc.4] - 2025-04-23
+
+### Added
+
+* Added the ability to set the status bar to transparent for the story reader.
+* Updated Android SDK to 1.21.2
+* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of your Flutter project.
+
+### Fixed
+
+* Fixed a issue where cover images were lost after refreshing the story feed.
+
+## [0.2.0-rc.3] - 2025-04-22
+
+### Fixed
+
+* Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
+
 ## [0.2.0-rc.2] - 2025-04-15
 
 ### Changed
@@ -16,7 +40,7 @@
 
 ## [0.1.0-rc.1] - 2025-04-10
 
-### Changed 
+### Changed
 
 * Initializing Android native SDK, please watch README for details
 
@@ -24,12 +48,14 @@
 
 ### Added
 
-* Updated Android native sdk to 1.21.0 
+* Updated Android native sdk to 1.21.0
 
 ### Changed
 
-* OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and `onboardingLoadError(String feed, String? reason)` methods
-* SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and `singleLoadError(String feed, String? reason)` methods
+* OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and
+  `onboardingLoadError(String feed, String? reason)` methods
+* SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and
+  `singleLoadError(String feed, String? reason)` methods
 
 ### Removed
 

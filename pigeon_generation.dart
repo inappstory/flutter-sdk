@@ -31,11 +31,16 @@ abstract class InAppStoryManagerHostApi {
   void changeUser(String userId);
 
   void closeReaders();
+
+  /// Sets a transparent status bar for story reader in Android.
+  void setTransparentStatusBar();
 }
 
 @HostApi()
 abstract class IASStoryListHostApi {
   void load(String feed);
+
+  void reloadFeed(String feed);
 
   void openStoryReader(int storyId);
 
