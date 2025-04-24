@@ -44,9 +44,22 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
     }
 
     func setClosePosition(position: Position) throws {
-        InAppStory.shared.closeButtonPosition = ClosePosition.init(
-            rawValue: position.rawValue
-        )!
+        let newPosition: ClosePosition = {
+            switch position {
+            case .topLeft:
+                return .leading
+            case .topRight:
+                return .trailing
+            case .bottomLeft:
+                return .leadingBottom
+            case .bottomRight:
+                return .trailingBottom
+            default:
+                return .leading
+            }
+        }()
+    
+        InAppStory.shared.closeButtonPosition = newPosition
     }
 
     func setTimerGradientEnable(isEnabled: Bool) throws {

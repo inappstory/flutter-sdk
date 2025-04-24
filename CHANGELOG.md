@@ -1,3 +1,9 @@
+## [0.2.0-rc.5] - 2025-04-24
+
+### Fixed
+
+* Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
+
 ## [0.2.0-rc.4] - 2025-04-23
 
 ### Added
