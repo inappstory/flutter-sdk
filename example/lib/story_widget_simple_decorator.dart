@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
+import 'package:video_player/video_player.dart';
 
 class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget {
   const StoryWidgetSimpleDecorator(this.story, {super.key});
 
   @override
   final Story story;
-
-  Image? get imageNullable {
-    final imageFile = story.imageFile;
-
-    if (imageFile == null) return null;
-
-    return Image.file(imageFile);
-  }
 
   void onTap() => story.showReader();
 
@@ -31,7 +24,7 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: imageNullable ?? ColoredBox(color: story.backgroundColor),
+                    child: StoryWidgetSimple(story: story),
                   ),
                   const Positioned.fill(
                     child: DecoratedBox(
@@ -64,6 +57,73 @@ class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget 
         );
       },
     );
+  }
+}
+
+class StoryWidgetSimple extends StatefulWidget {
+  const StoryWidgetSimple({super.key, required this.story});
+
+  final Story story;
+
+  @override
+  State<StoryWidgetSimple> createState() => _StoryWidgetSimpleState();
+}
+
+class _StoryWidgetSimpleState extends State<StoryWidgetSimple> {
+  VideoPlayerController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('build');
+    final story = widget.story;
+    final videoFile = widget.story.videoFile;
+    final imageFile = widget.story.imageFile;
+
+    if (videoFile != null) {
+      controller = VideoPlayerController.file(
+        videoFile,
+        videoPlayerOptions: VideoPlayerOptions(
+          allowBackgroundPlayback: false,
+          mixWithOthers: true,
+        ),
+      );
+      return FutureBuilder(
+        future: controller
+            ?.initialize()
+            .then(
+              (value) => controller?.setVolume(0.0),
+            )
+            .then(
+              (value) => controller?.setLooping(true),
+            )
+            .then(
+              (value) => controller?.play(),
+            ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return VideoPlayer(controller!);
+          } else {
+            return ColoredBox(color: widget.story.backgroundColor);
+          }
+        },
+      );
+    }
+    if (imageFile != null) {
+      return Image.file(imageFile);
+    }
+
+    return ColoredBox(color: story.backgroundColor);
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }
 

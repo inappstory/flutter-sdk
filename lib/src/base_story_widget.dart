@@ -3,12 +3,14 @@ import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/story_from_pigeon_dto.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-typedef StoryWidgetBuilder = StoryWidget Function(Story);
+typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator decorator);
 
 class BaseStoryWidget extends StatefulWidget implements StoryWidget {
-  const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key});
+  const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key, required this.storyDecorator});
 
   final StoryWidgetBuilder storyWidgetBuilder;
+
+  final FeedStoryDecorator storyDecorator;
 
   @override
   final StoryFromPigeonDto story;
@@ -22,7 +24,9 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
 
   StoryWidgetBuilder get storyWidgetBuilder => widget.storyWidgetBuilder;
 
-  void onVisibilityChanged(VisibilityInfo info) {
+  FeedStoryDecorator get storyDecorator => widget.storyDecorator;
+
+  void _onVisibilityChanged(VisibilityInfo info) {
     story.wasViewed();
   }
 
@@ -30,8 +34,19 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
   Widget build(BuildContext context) {
     return VisibilityDetector(
       key: ObjectKey(story),
-      onVisibilityChanged: onVisibilityChanged,
-      child: storyWidgetBuilder(story),
+      onVisibilityChanged: _onVisibilityChanged,
+      child: StreamBuilder(
+        stream: story.updates,
+        builder: (_, __) {
+          return ClipRRect(
+            borderRadius: storyDecorator.borderRadius,
+            child: AspectRatio(
+              aspectRatio: story.aspectRatio,
+              child: storyWidgetBuilder(story, storyDecorator),
+            ),
+          );
+        },
+      ),
     );
   }
 
