@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/base_story_widget.dart';
+import 'package:inappstory_plugin/src/widgets/decorators/custom_grid_feed_favorites_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'builders/feed_builders.dart';
@@ -15,6 +16,7 @@ class FeedStoriesWidget extends StatefulWidget {
     this.errorBuilder,
     this.decorator,
     this.storyBuilder,
+    this.favoritesBuilder,
   });
 
   final String feed;
@@ -25,39 +27,47 @@ class FeedStoriesWidget extends StatefulWidget {
   final FeedLoaderWidgetBuilder? loaderBuilder;
   final FeedErrorWidgetBuilder? errorBuilder;
   final StoryWidgetBuilder? storyBuilder;
+  final FeedFavoritesWidgetBuilder? favoritesBuilder;
 
   @override
-  State<FeedStoriesWidget> createState() => _FeedStoriesWidgetState();
+  State<FeedStoriesWidget> createState() => FeedStoriesWidgetState();
 }
 
-class _FeedStoriesWidgetState extends State<FeedStoriesWidget> {
+class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   late final _feedStoriesWidgetsStream = _getStoriesWidgets();
 
   late FeedStoriesController _feedController;
 
-  late FeedLoaderWidgetBuilder _loaderWidgetBuilder;
+  late FeedLoaderWidgetBuilder loaderWidgetBuilder;
 
-  late FeedErrorWidgetBuilder _errorWidgetBuilder;
+  late FeedErrorWidgetBuilder errorWidgetBuilder;
+
+  late FeedFavoritesWidgetBuilder _favoritesBuilder;
   late StoryWidgetBuilder _storyBuilder;
-  late FeedStoryDecorator? _feedDecorator;
+  late FeedStoryDecorator? feedDecorator;
 
   @override
   initState() {
     super.initState();
     _feedController = widget.controller ?? FeedStoriesController();
-    _errorWidgetBuilder = widget.errorBuilder ?? (context, error) => Center(child: Text('Error: $error'));
-    _feedDecorator = widget.decorator ?? FeedStoryDecorator();
-    _loaderWidgetBuilder = widget.loaderBuilder ?? (context) => DefaultLoaderWidget(decorator: _feedDecorator!);
-    _storyBuilder = widget.storyBuilder ?? (story, decorator) => StorySimpleDecorator(story, decorator: _feedDecorator);
+    errorWidgetBuilder = widget.errorBuilder ?? (context, error) => Center(child: Text('Error: $error'));
+    feedDecorator = widget.decorator ?? FeedStoryDecorator();
+    loaderWidgetBuilder = widget.loaderBuilder ?? (context) => DefaultLoaderWidget(decorator: feedDecorator!);
+    _storyBuilder = widget.storyBuilder ?? (story, decorator) => StorySimpleDecorator(story, decorator: feedDecorator);
+    _favoritesBuilder = widget.favoritesBuilder ??
+        (favorites) => CustomGridFeedFavoritesWidget(
+              favorites,
+              onTap: () {},
+            );
   }
 
   Stream<Iterable<Widget>> _getStoriesWidgets() {
-    return InAppStoryPlugin().getStoriesWidgets(
+    return FeedStoriesStream(
       feed: widget.feed,
-      storyBuilder: _storyBuilder,
-      storiesController: _feedController,
-      storiesDecorator: _feedDecorator,
-      //favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
+      storyWidgetBuilder: _storyBuilder,
+      feedController: _feedController,
+      feedFavoritesWidgetBuilder: _favoritesBuilder,
+      feedDecorator: feedDecorator,
     );
   }
 
@@ -67,11 +77,11 @@ class _FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       stream: _feedStoriesWidgetsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _loaderWidgetBuilder(context);
+          return loaderWidgetBuilder(context);
         }
 
         if (snapshot.hasError) {
-          return _errorWidgetBuilder(context, snapshot.error);
+          return errorWidgetBuilder(context, snapshot.error);
         }
 
         final storiesWidgets = snapshot.data ?? [];
@@ -79,11 +89,11 @@ class _FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         return ListView.separated(
           itemCount: storiesWidgets.length,
           scrollDirection: Axis.horizontal,
-          padding: _feedDecorator?.feedPadding,
+          padding: feedDecorator?.feedPadding,
           itemBuilder: (context, index) {
             return snapshot.requireData.elementAt(index);
           },
-          separatorBuilder: (context, index) => const SizedBox(width: 12),
+          separatorBuilder: (context, index) => SizedBox(width: feedDecorator?.storyPadding ?? 12),
         );
       },
     );

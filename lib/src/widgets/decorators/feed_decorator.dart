@@ -13,7 +13,7 @@ class FeedStoryDecorator {
   final LoaderDecorator loaderDecorator;
 
   const FeedStoryDecorator({
-    this.borderRadius = BorderRadius.zero,
+    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
     this.feedPadding = const EdgeInsets.all(10.0),
     this.textPadding = const EdgeInsets.all(8.0),
     this.storyPadding = 8.0,

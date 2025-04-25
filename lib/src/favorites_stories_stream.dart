@@ -1,8 +1,7 @@
-import 'feed_stories_controller.dart';
+import '../inappstory_plugin.dart';
 import 'ias_story_list_host_api_decorator.dart';
 import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import 'observable_error_callback_flutter_api.dart';
-import 'pigeon_generated.g.dart';
 import 'stories_stream.dart';
 
 class FavoritesStoriesStream extends StoriesStream {
@@ -11,12 +10,14 @@ class FavoritesStoriesStream extends StoriesStream {
   FavoritesStoriesStream({
     required super.feed,
     required super.storyWidgetBuilder,
+    this.feedDecorator,
     this.feedController,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList: InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
           observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
+          storyDecorator: feedDecorator ?? FeedStoryDecorator(),
         ) {
     feedController
       ?..feed = feed
@@ -24,6 +25,8 @@ class FavoritesStoriesStream extends StoriesStream {
   }
 
   final FeedStoriesController? feedController;
+
+  final FeedStoryDecorator? feedDecorator;
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {

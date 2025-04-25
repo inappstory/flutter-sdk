@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'base_feed_favorites_widget.dart';
@@ -11,7 +12,7 @@ import 'pigeon_generated.g.dart';
 import 'stories_stream.dart';
 import 'widgets/decorators/feed_decorator.dart';
 
-typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(Iterable<FeedFavorite>);
+typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(Iterable<FeedFavorite> favorites);
 
 typedef FeedFavoriteWidgetBuilder = Widget Function(FeedFavorite);
 
@@ -27,15 +28,15 @@ class FeedStoriesStream extends StoriesStream {
   FeedStoriesStream({
     required super.feed,
     required super.storyWidgetBuilder,
+    this.feedDecorator,
     this.feedController,
     this.feedFavoritesWidgetBuilder,
-    this.feedDecorator,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList: InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
           observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
-          storyDecorator: feedDecorator,
+          storyDecorator: feedDecorator ?? FeedStoryDecorator(),
         ) {
     feedController
       ?..feed = feed
@@ -74,7 +75,11 @@ class FeedStoriesStream extends StoriesStream {
       story.updateStoryData(storyData);
 
       controller.add(combineStoriesAndFavorites());
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating story data: $e');
+      }
+    }
   }
 
   @override

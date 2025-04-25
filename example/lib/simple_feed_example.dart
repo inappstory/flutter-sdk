@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
-import 'story_widget_simple_decorator.dart';
-
 class SimpleFeedExampleWidget extends StatefulWidget {
   const SimpleFeedExampleWidget({super.key});
 
@@ -21,27 +19,16 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   final callsToAction = <String>[];
 
-  late var flutterFeedStoriesWidgetsStream = getStoriesWidgets();
-
-  Stream<Iterable<Widget>> getStoriesWidgets() {
-    return InAppStoryPlugin().getStoriesWidgets(
-      feed: feed,
-      storyBuilder: StoryWidgetSimpleDecorator.new,
-      storiesController: feedStoriesController,
-      favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
-    );
-  }
-
-  void onFeedFavoritesTap() {
-    final favorites = InAppStoryPlugin()
-        .getFavoritesStoriesWidgets(
-          feed: feed,
-          storyBuilder: StoryWidgetSimpleDecorator.new,
-        )
-        .asBroadcastStream();
-
-    showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget(favorites));
-  }
+  // void onFeedFavoritesTap() {
+  //   final favorites = InAppStoryPlugin()
+  //       .getFavoritesStoriesWidgets(
+  //         feed: feed,
+  //         storyBuilder: StoryWidgetSimpleDecorator.new,
+  //       )
+  //       .asBroadcastStream();
+  //
+  //   showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget(favorites));
+  // }
 
   @override
   void initState() {
@@ -66,28 +53,10 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 100,
-            child: StreamBuilder(
-              stream: flutterFeedStoriesWidgetsStream,
-              builder: (_, storiesSnapshot) {
-                if (storiesSnapshot.hasData) {
-                  return ListView.separated(
-                    itemCount: storiesSnapshot.requireData.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) => storiesSnapshot.requireData.elementAt(index),
-                    separatorBuilder: (_, __) => const SizedBox(width: 16),
-                  );
-                }
-
-                if (storiesSnapshot.hasError) {
-                  return Text(
-                    '${storiesSnapshot.error}',
-                    style: const TextStyle(color: Colors.red),
-                  );
-                }
-                return const LinearProgressIndicator();
-              },
+          const SizedBox(
+            height: 150,
+            child: FeedStoriesWidget(
+              feed: feed,
             ),
           ),
           const Divider(indent: 4),

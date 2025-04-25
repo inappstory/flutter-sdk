@@ -3,16 +3,14 @@ import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/story_from_pigeon_dto.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator? decorator);
+typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator decorator);
 
 class BaseStoryWidget extends StatefulWidget implements StoryWidget {
-  const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key, this.storyDecorator, this.onTap});
+  const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key, required this.storyDecorator});
 
   final StoryWidgetBuilder storyWidgetBuilder;
 
-  final FeedStoryDecorator? storyDecorator;
-
-  final Function(Story story)? onTap;
+  final FeedStoryDecorator storyDecorator;
 
   @override
   final StoryFromPigeonDto story;
@@ -26,13 +24,11 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
 
   StoryWidgetBuilder get storyWidgetBuilder => widget.storyWidgetBuilder;
 
-  FeedStoryDecorator? get storyDecorator => widget.storyDecorator;
+  FeedStoryDecorator get storyDecorator => widget.storyDecorator;
 
   void _onVisibilityChanged(VisibilityInfo info) {
     story.wasViewed();
   }
-
-  void _onTap() => widget.onTap ?? story.showReader();
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +39,10 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
         stream: story.updates,
         builder: (_, __) {
           return ClipRRect(
-            borderRadius: storyDecorator?.borderRadius ?? const BorderRadius.all(Radius.circular(10)),
+            borderRadius: storyDecorator.borderRadius,
             child: AspectRatio(
               aspectRatio: story.aspectRatio,
-              child: GestureDetector(
-                onTap: _onTap,
-                child: storyWidgetBuilder(story, storyDecorator),
-              ),
+              child: storyWidgetBuilder(story, storyDecorator),
             ),
           );
         },

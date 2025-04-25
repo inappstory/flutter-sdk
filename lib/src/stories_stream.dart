@@ -17,7 +17,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     required this.observableStoryList,
     required this.observableErrorCallback,
     required this.iasStoryListHostApi,
-    this.storyDecorator,
+    required this.storyDecorator,
   });
 
   final String uniqueId;
@@ -26,7 +26,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   final Observable<ErrorCallbackFlutterApi> observableErrorCallback;
   final StoryWidgetBuilder storyWidgetBuilder;
   final IASStoryListHostApi iasStoryListHostApi;
-  final FeedStoryDecorator? storyDecorator;
+  final FeedStoryDecorator storyDecorator;
 
   Iterable<StoryFromPigeonDto> stories = [];
 

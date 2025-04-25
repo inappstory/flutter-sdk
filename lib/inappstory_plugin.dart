@@ -50,15 +50,18 @@ class InAppStoryPlugin implements InAppStorySdkModule {
     );
   }
 
+  @Deprecated('Use FavoriteStoriesFeedWidget instead')
   Stream<Iterable<Widget>> getFavoritesStoriesWidgets({
     required String feed,
     required StoryWidgetBuilder storyBuilder,
     FeedStoriesController? storiesController,
+    FeedStoryDecorator? storiesDecorator,
   }) {
     return FavoritesStoriesStream(
       feed: feed,
       storyWidgetBuilder: storyBuilder,
       feedController: storiesController,
+      feedDecorator: storiesDecorator,
     );
   }
 }
