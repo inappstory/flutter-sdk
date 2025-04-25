@@ -1,10 +1,10 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin.adaptors
 
 import IASStoryListHostApi
 import android.app.Activity
 import com.inappstory.sdk.AppearanceManager
+import com.inappstory.sdk.core.api.IASStoryList
 import com.inappstory.sdk.externalapi.InAppStoryAPI
-import com.inappstory.sdk.externalapi.storylist.IASStoryList
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import kotlinx.coroutines.DisposableHandle
 
@@ -30,7 +30,11 @@ open class IASStoryListAdaptor(
     }
 
     override fun load(feed: String) {
-        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf())
+        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
+    }
+
+    override fun reloadFeed(feed: String) {
+        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
     }
 
     override fun openStoryReader(storyId: Long) {
@@ -70,6 +74,10 @@ class IASFavoritesListAdaptor(
     }
 
     override fun load(feed: String) {
+        iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
+    }
+
+    override fun reloadFeed(feed: String) {
         iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
     }
 }

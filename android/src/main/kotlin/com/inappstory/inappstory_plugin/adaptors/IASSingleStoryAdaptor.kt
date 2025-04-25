@@ -1,8 +1,10 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin.adaptors
 
 import IASSingleStoryHostApi
+import com.inappstory.inappstory_plugin.callbacks.IShowStoryCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.externalapi.single.IASSingleStory
+import com.inappstory.sdk.core.api.IASSingleStory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASSingleStoryAdaptor(
@@ -11,7 +13,7 @@ class IASSingleStoryAdaptor(
     private val iasSingleStory: IASSingleStory,
     private val activityHolder: ActivityHolder,
 ) : IASSingleStoryHostApi {
-    private val callback = IShowStoryOnceCallbackAdaptor(flutterPluginBinding)
+    private val callback = IShowStoryCallbackAdaptor(flutterPluginBinding)
 
     init {
         IASSingleStoryHostApi.setUp(flutterPluginBinding.binaryMessenger, this)

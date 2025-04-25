@@ -22,7 +22,7 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   }
 
   @override
-  void updateStoriesData(List<StoryAPIDataDto?> list) {
+  void updateStoriesData(List<StoryAPIDataDto> list) {
     for (var it in observers) {
       it.updateStoriesData(list);
     }
@@ -36,7 +36,7 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   }
 
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list) {
     for (var it in observers) {
       it.updateFavoriteStoriesData(list);
     }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
@@ -11,8 +13,13 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
-    implements CallToActionCallbackFlutterApi, IShowStoryOnceCallbackFlutterApi {
+    implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
   static const feed = '<your feed id>';
+
+  final inputController = TextEditingController();
+  final feedStoriesController = FeedStoriesController();
+
+  final callsToAction = <String>[];
 
   late var flutterFeedStoriesWidgetsStream = getStoriesWidgets();
 
@@ -20,6 +27,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     return InAppStoryPlugin().getStoriesWidgets(
       feed: feed,
       storyBuilder: StoryWidgetSimpleDecorator.new,
+      storiesController: feedStoriesController,
       favoritesBuilder: (favorites) => CustomGridFeedFavoritesWidget(favorites, onTap: onFeedFavoritesTap),
     );
   }
@@ -39,35 +47,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   void initState() {
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
-    IShowStoryOnceCallbackFlutterApi.setUp(this);
+    IShowStoryCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
-    IShowStoryOnceCallbackFlutterApi.setUp(null);
+    IShowStoryCallbackFlutterApi.setUp(null);
     super.dispose();
-  }
-
-  final callsToAction = <String>[];
-
-  @override
-  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
-    setState(() {
-      final content = 'slideData:$slideData url:$url clickAction:${clickAction?.name}';
-
-      callsToAction.add(content);
-    });
-  }
-
-  final inputController = TextEditingController();
-
-  void changeUser() async {
-    await InAppStoryManagerHostApi().changeUser(inputController.text);
-
-    flutterFeedStoriesWidgetsStream = getStoriesWidgets();
-
-    setState(() {});
   }
 
   @override
@@ -103,7 +90,12 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
               },
             ),
           ),
-          const Divider(),
+          const Divider(indent: 4),
+          ElevatedButton(
+            onPressed: () async => await feedStoriesController.fetchFeedStories(),
+            child: const Text('Refresh'),
+          ),
+          const Divider(indent: 4),
           SizedBox(
             height: 40,
             child: Row(
@@ -118,7 +110,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
               ],
             ),
           ),
-          const Divider(),
+          const Divider(indent: 4),
           const Text('Calls To Actions'),
           Expanded(
             child: ListView.builder(
@@ -144,6 +136,21 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
         ],
       ),
     );
+  }
+
+  @override
+  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+    setState(() {
+      final content = 'slideData:$slideData url:$url clickAction:${clickAction?.name}';
+
+      callsToAction.add(content);
+    });
+  }
+
+  Future<void> changeUser() async {
+    await InAppStoryManagerHostApi().changeUser(inputController.text);
+
+    await feedStoriesController.fetchFeedStories();
   }
 
   int alreadyShownCounter = 0;

@@ -6,23 +6,74 @@ InAppStory SDK Flutter Plugin
 
 Currently under development & not published
 
-Add dependency in your app pubspec.yaml
+Add dependency in your app `pubspec.yaml`
 
 ```
 dependencies:
   ...
-  inappstory_plugin: ^0.0.18
+  inappstory_plugin: ^0.2.0
   ...
 ```
 
 ## Android Requirements
 
-Make sure you update your Android SDK versions in build.gradle
+1. Make sure you update your Android SDK versions in `app/build.gradle`
 
 ```
 minSdkVersion = 23
 compileSdkVersion = 34
 targetSdkVersion = 34
+```
+
+2. Init Android SDK in your `Application` class in Android project
+
+> **IMPORTANT:**
+> Without this, the library will not work
+
+```kotlin
+// Kotlin
+package com.example.yourapp
+
+import android.app.Application
+import com.inappstory.inappstory_plugin.InappstoryPlugin
+
+class ExampleApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // init SKD
+        InappstoryPlugin.initSDK(this)
+    }
+}
+```
+
+```java
+// Java
+package com.example.yourapp;
+
+import android.app.Application;
+
+import com.inappstory.inappstory_plugin.InappstoryPlugin;
+
+
+class ExampleApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        InappstoryPlugin.initSDK(this);
+    }
+}
+```
+
+3. Add manifestPlaceholders to your `app/build.gradle` file
+
+```
+android {
+    ...
+    defaultConfig {
+        ...
+        manifestPlaceholders['applicationName'] = '<name of your custom application class>'
+    }
+}
 ```
 
 ## Initialize with your api key
@@ -37,7 +88,7 @@ Should await returned future first before use of other API
 
 ## Usage
 
-To use the library, create YourStoryWidget & implement StoryWidget
+To use the library, create `YourStoryWidget` & implement `StoryWidget`
 
 ```
 class YourStoryWidget extends StatelessWidget implements StoryWidget {
@@ -62,6 +113,19 @@ InAppStoryPlugin().getStoriesWidgets(
   storyBuilder: <function returns Widget for Story>,
   favoritesBuilder: <function returns Widget for in feed Favorites>,
 );
+```
+
+You can use FeedStoriesController to force reload the feed stories
+
+```
+final feedStoriesController = FeedStoriesController();
+  
+InAppStoryPlugin().getStoriesWidgets(
+  feedController: feedStoriesController,
+...
+);   
+// reload feed
+await feedStoriesController.fetchFeedStories();
 ```
 
 Full example
@@ -271,6 +335,8 @@ AppearanceManagerHostApi().setReaderCornerRadius(16); // int
 
 `void closeReaders();` - closing any story reader that showing
 
+`void setTransparentStatusBar();` - sets a transparent status bar for story reader in Android.
+
 ##
 
 # User Settings
@@ -284,7 +350,8 @@ To get this - you can use the `InAppStoryManagerHostApi().changeUser(<your new u
 
 UserId can't be longer than 255 characters.
 
-Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)`
+Get stories for new user `InAppStoryPlugin().getStoriesWidgets(...)` or
+`await FeedStoriesController().fetchFeedStories()`.
 
 ## SingleStoryAPI
 
@@ -300,31 +367,31 @@ To show single story in reader by id if wasn't show already for current user
 IASSingleStoryHostApi().showOnce(storyId: story.id);
 ```
 
-To listen callbacks of result show()/showOnce() implement IShowStoryOnceCallbackFlutterApi and setUp
+To listen callbacks of result show()/showOnce() implement IShowStoryCallbackFlutterApi and setUp
 your listener
 
-```
-class _WidgetState extends State<...> implements IShowStoryOnceCallbackFlutterApi {
+```dart
+class _WidgetState extends State<T> implements IShowStoryCallbackFlutterApi {
   @override
   void initState() {
     super.initState();
-    IShowStoryOnceCallbackFlutterApi.setUp(this);
+    IShowStoryCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
-    IShowStoryOnceCallbackFlutterApi.setUp(null);
+    IShowStoryCallbackFlutterApi.setUp(null);
     super.dispose();
   }
-  
-  @override
-  void alreadyShown() => print('IShowStoryOnceCallback.alreadyShown()');
 
   @override
-  void onError() => print('IShowStoryOnceCallback.onError()');
+  void alreadyShown() => print('IShowStoryCallback.alreadyShown()');
 
   @override
-  void onShow() => print('IShowStoryOnceCallback.onShow()');
+  void onError() => print('IShowStoryCallback.onError()');
+
+  @override
+  void onShow() => print('IShowStoryCallback.onShow()');
 }
 ```
 
@@ -335,7 +402,7 @@ add/remove listener for CTA
 1. Implement interface CallToActionCallbackFlutterApi
 2. Setup this listener
 
-```
+```dart
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements CallToActionCallbackFlutterApi {
   @override
   void initState() {
@@ -355,6 +422,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget> implements 
   void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
     // Do anything related
   }
+}
 ```
 
 ## Onboardings
@@ -387,5 +455,77 @@ class _MyAppState extends State<MyApp> implements OnboardingLoadCallbackFlutterA
   void onboardingLoad(int count, String feed) {
     print('$runtimeType.onboardingLoad($count, $feed)');
   }
+
+  @override
+  void onboardingLoadError(String feed, String? reason) {
+    print('$runtimeType.onboardingLoad($feed, $reason)');
+  }
 }  
 ```
+
+## Games
+
+The library supports run games.
+
+```dart
+// To run game
+void openGame() async {
+  await IASGamesHostApi().open('<game id>');
+}
+// To close game
+void closeGame() async {
+  await IASGamesHostApi().closeGame();
+}
+```
+
+If you want to preload games by yourself (f.e. in case if your app doesn't use any stories), you can call next method:
+
+```dart
+void preloadGames() async {
+  await IASGamesHostApi().preloadGames();
+}
+```
+
+To listen callbacks from game you can implement `GameCallbackFlutterApi` and setup your listener
+
+```dart
+class _MyAppState extends State<MyApp> implements GameCallbackFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    GameReaderCallbackFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    GameReaderCallbackFlutterApi.setUp(null);
+    super.dispose();
+  }
+
+  @override
+  void startGame(ContentDataDto? gameData) {
+    print('startGame ${gameData?.contentType.toString()}');
+  }
+
+  @override
+  void closeGame(ContentDataDto? gameData) {
+    print('closeGame');
+  }
+
+  @override
+  void eventGame(ContentDataDto? gameData, String? id, String? eventName, Map<String?, Object?>? payload) {
+    print('eventGame');
+  }
+
+  @override
+  void finishGame(ContentDataDto? gameData, Map<String?, Object?>? result) {
+    print('finishGame');
+  }
+
+  @override
+  void gameError(ContentDataDto? gameData, String? message) {
+    print('gameError');
+  }
+}
+```
+

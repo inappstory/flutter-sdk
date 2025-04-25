@@ -1,8 +1,9 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin.adaptors
 
 import IASOnboardingsHostApi
+import com.inappstory.inappstory_plugin.callbacks.OnboardingLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.externalapi.onboardings.IASOnboardings
+import com.inappstory.sdk.core.api.IASOnboardings
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASOnboardingsAdaptor(

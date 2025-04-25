@@ -1,4 +1,4 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin.adaptors
 
 import AppearanceManagerHostApi
 import Position

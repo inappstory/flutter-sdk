@@ -1,8 +1,10 @@
-package com.example.inappstory_plugin
+package com.inappstory.inappstory_plugin
 
 import InappstorySdkModuleHostApi
 import android.app.Activity
 import android.app.Application
+import com.inappstory.inappstory_plugin.adaptors.ActivityHolder
+import com.inappstory.inappstory_plugin.adaptors.InappstorySdkModuleAdaptor
 import com.inappstory.sdk.InAppStoryManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -14,6 +16,13 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 /** InappstoryPlugin */
 class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, ActivityAware {
+
+    companion object {
+        @JvmStatic fun initSDK(application: Application) {
+            InAppStoryManager.initSDK(application, false)
+        }
+    }
+
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -23,8 +32,6 @@ class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, Activ
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "inappstory_plugin")
         channel.setMethodCallHandler(this)
-
-        InAppStoryManager.initSDK(flutterPluginBinding.applicationContext, true)
 
         InappstorySdkModuleHostApi.setUp(
             flutterPluginBinding.binaryMessenger,

@@ -7,7 +7,7 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/pigeon_generated.g.dart',
   dartOptions: DartOptions(),
-  kotlinOut: 'android/src/main/kotlin/com/example/inappstory_plugin/PigeonGenerated.g.kt',
+  kotlinOut: 'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
   kotlinOptions: KotlinOptions(),
   swiftOut: 'ios/Classes/PigeonGenerated.g.swift',
   swiftOptions: SwiftOptions(),
@@ -31,11 +31,16 @@ abstract class InAppStoryManagerHostApi {
   void changeUser(String userId);
 
   void closeReaders();
+
+  /// Sets a transparent status bar for story reader in Android.
+  void setTransparentStatusBar();
 }
 
 @HostApi()
 abstract class IASStoryListHostApi {
   void load(String feed);
+
+  void reloadFeed(String feed);
 
   void openStoryReader(int storyId);
 
@@ -57,13 +62,7 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 abstract class ErrorCallbackFlutterApi {
   void loadListError(String feed);
 
-  void loadOnboardingError(String feed);
-
-  void loadSingleError();
-
   void cacheError();
-
-  void readerError();
 
   void emptyLinkError();
 
@@ -168,7 +167,7 @@ abstract class IASSingleStoryHostApi {
 }
 
 @FlutterApi()
-abstract class IShowStoryOnceCallbackFlutterApi {
+abstract class IShowStoryCallbackFlutterApi {
   void onShow();
 
   void onError();
@@ -178,7 +177,9 @@ abstract class IShowStoryOnceCallbackFlutterApi {
 
 @FlutterApi()
 abstract class SingleLoadCallbackFlutterApi {
-  void singleLoad(StoryDataDto storyData);
+  void singleLoadSuccess(StoryDataDto storyData);
+
+  void singleLoadError(String? storyId, String? reason);
 }
 
 @HostApi()
@@ -194,5 +195,40 @@ abstract class IASOnboardingsHostApi {
 
 @FlutterApi()
 abstract class OnboardingLoadCallbackFlutterApi {
-  void onboardingLoad(int count, String feed);
+  void onboardingLoadSuccess(int count, String feed);
+
+  void onboardingLoadError(String feed, String? reason);
+}
+
+enum ContentTypeDto {
+  STORY,
+  UGC,
+  IN_APP_MESSAGE,
+}
+
+class ContentDataDto {
+  late ContentTypeDto? contentType;
+  late SourceTypeDto? sourceType;
+}
+
+@HostApi()
+abstract class IASGamesHostApi {
+  void openGame(String gameId);
+
+  void closeGame();
+
+  void preloadGames();
+}
+
+@FlutterApi()
+abstract class GameReaderCallbackFlutterApi {
+  void startGame(ContentDataDto? contentData);
+
+  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+
+  void closeGame(ContentDataDto? contentData);
+
+  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
+
+  void gameError(ContentDataDto? contentData, String? message);
 }

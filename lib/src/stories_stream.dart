@@ -75,25 +75,13 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   }
 
   @override
-  void updateStoryData(StoryAPIDataDto var1) {}
-
-  @override
   void cacheError() {}
 
   @override
   void emptyLinkError() {}
 
   @override
-  void loadOnboardingError(String feed) {}
-
-  @override
-  void loadSingleError() {}
-
-  @override
   void noConnection() {}
-
-  @override
-  void readerError() {}
 
   @override
   void sessionError() {}
