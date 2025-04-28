@@ -1,4 +1,4 @@
-import 'observable.dart';
+import 'data/observable.dart';
 import 'pigeon_generated.g.dart';
 
 class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppStoryAPIListSubscriberFlutterApi>

@@ -4,22 +4,16 @@ import 'package:flutter/cupertino.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
 import 'inappstory_sdk_module.dart';
-import 'src/base_story_widget.dart';
-import 'src/favorites_stories_stream.dart';
-import 'src/feed_stories_controller.dart';
-import 'src/feed_stories_stream.dart';
+import 'src/controllers/feed_stories_controller.dart';
+import 'src/widgets/builders/builders.dart';
 import 'src/widgets/decorators/feed_decorator.dart';
+import 'src/widgets/streams/favorites_stories_stream.dart';
+import 'src/widgets/streams/feed_stories_stream.dart';
 
-export 'src/base_feed_favorites_widget.dart';
-export 'src/feed_favorite_widget.dart';
-export 'src/feed_stories_controller.dart';
-export 'src/feed_stories_stream.dart';
-export 'src/grid_feed_favorites_widget.dart';
+export 'src/controllers/controllers.dart';
+export 'src/data/story.dart';
 export 'src/pigeon_generated.g.dart';
-export 'src/story.dart';
-export 'src/widgets/decorators/feed_decorator.dart';
-export 'src/widgets/feed_stories_widget.dart';
-export 'src/widgets/story_widget.dart';
+export 'src/widgets/widgets.dart';
 
 class InAppStoryPlugin implements InAppStorySdkModule {
   factory InAppStoryPlugin() => _singleton ??= InAppStoryPlugin._private();
@@ -28,6 +22,7 @@ class InAppStoryPlugin implements InAppStorySdkModule {
 
   static InAppStoryPlugin? _singleton;
 
+  /// The [InAppStoryPlugin] initialization method.
   @override
   Future<void> initWith(String apiKey, String userID, bool sendStatistics) {
     return InappstoryPluginPlatform.instance.initWith(apiKey, userID, sendStatistics);

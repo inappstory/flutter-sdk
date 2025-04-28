@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../grid_feed_favorites_widget.dart';
+import '../grid_feed_favorites_widget.dart';
 
 class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
   CustomGridFeedFavoritesWidget(super.favorites, {required this.onTap, super.key});

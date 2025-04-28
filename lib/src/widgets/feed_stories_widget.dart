@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
-import 'package:inappstory_plugin/src/base_story_widget.dart';
-import 'package:inappstory_plugin/src/widgets/decorators/custom_grid_feed_favorites_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'builders/feed_builders.dart';
-import 'decorators/story_widget_simple_decorator.dart';
+import '../../inappstory_plugin.dart';
+import '../controllers/feed_stories_controller.dart';
+import 'builders/builders.dart';
+import 'decorators/custom_grid_feed_favorites_widget.dart';
+import 'streams/feed_stories_stream.dart';
 
 class FeedStoriesWidget extends StatefulWidget {
   const FeedStoriesWidget({
@@ -53,7 +53,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
     errorWidgetBuilder = widget.errorBuilder ?? (context, error) => Center(child: Text('Error: $error'));
     feedDecorator = widget.decorator ?? FeedStoryDecorator();
     loaderWidgetBuilder = widget.loaderBuilder ?? (context) => DefaultLoaderWidget(decorator: feedDecorator!);
-    _storyBuilder = widget.storyBuilder ?? (story, decorator) => StorySimpleDecorator(story, decorator: feedDecorator);
+    _storyBuilder = widget.storyBuilder ?? (story, decorator) => BaseStoryBuilder(story, decorator: feedDecorator);
     _favoritesBuilder = widget.favoritesBuilder ??
         (favorites) => CustomGridFeedFavoritesWidget(
               favorites,
@@ -112,8 +112,8 @@ class DefaultLoaderWidget extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: decorator.loaderDecorator.baseColor ?? Colors.grey.shade300,
-          highlightColor: decorator.loaderDecorator.highlightColor ?? Colors.grey.shade500,
+          baseColor: decorator.loaderDecorator.baseColor,
+          highlightColor: decorator.loaderDecorator.highlightColor,
           child: Container(
             width: 100,
             height: 200,

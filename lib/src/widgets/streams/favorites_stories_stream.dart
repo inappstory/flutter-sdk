@@ -1,11 +1,12 @@
-import '../inappstory_plugin.dart';
-import 'ias_story_list_host_api_decorator.dart';
-import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
-import 'observable_error_callback_flutter_api.dart';
+import '../../../inappstory_plugin.dart';
+import '../../controllers/feed_stories_controller.dart';
+import '../../ias_story_list_host_api_decorator.dart';
+import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
+import '../../observable_error_callback_flutter_api.dart';
 import 'stories_stream.dart';
 
 class FavoritesStoriesStream extends StoriesStream {
-  static const _uniqueId = "favorites";
+  static const _uniqueId = 'favorites';
 
   FavoritesStoriesStream({
     required super.feed,

@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import 'favorite_from_dto.dart';
-import 'feed_stories_stream.dart';
-import 'pigeon_generated.g.dart';
+import '../../data/favorite_from_dto.dart';
+import '../../pigeon_generated.g.dart';
+import '../streams/feed_stories_stream.dart';
 
 class BaseFeedFavoritesWidget extends StatelessWidget {
   const BaseFeedFavoritesWidget(

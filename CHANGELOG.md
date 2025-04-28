@@ -1,3 +1,18 @@
+## [0.3.0-rc.1] - 2025-04-28
+
+* Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
+* Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
+
+### Changed
+
+* `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
+* `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget` instead
+* refactor library structure
+
+### Fixed
+
+* Fixed 'flickering' stories when an uploaded image replaced a placeholder
+
 ## [0.2.0] - 2025-04-25
 
 ### Added

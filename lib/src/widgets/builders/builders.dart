@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import '../../story.dart';
+import '../../data/story.dart';
+import '../base/story_widget.dart';
 import '../decorators/feed_decorator.dart';
-import '../story_widget.dart';
 
 typedef FeedErrorWidgetBuilder = Widget Function(
   BuildContext context,
@@ -14,3 +14,5 @@ typedef FeedStoryWidgetBuilder = StoryWidget Function(
   Story story, {
   FeedStoryDecorator? decorator,
 });
+
+typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator decorator);

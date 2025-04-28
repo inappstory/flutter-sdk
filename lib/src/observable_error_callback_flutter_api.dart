@@ -1,4 +1,4 @@
-import 'observable.dart';
+import 'data/observable.dart';
 import 'pigeon_generated.g.dart';
 
 class ObservableErrorCallbackFlutterApi extends Observable<ErrorCallbackFlutterApi> implements ErrorCallbackFlutterApi {

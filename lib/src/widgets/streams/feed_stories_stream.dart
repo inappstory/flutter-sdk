@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'base_feed_favorites_widget.dart';
-import 'favorite_from_dto.dart';
-import 'feed_favorite.dart';
-import 'feed_stories_controller.dart';
-import 'ias_story_list_host_api_decorator.dart';
-import 'in_app_story_api_list_subscriber_flutter_api_observable.dart';
-import 'observable_error_callback_flutter_api.dart';
-import 'pigeon_generated.g.dart';
+import '../../controllers/feed_stories_controller.dart';
+import '../../data/favorite_from_dto.dart';
+import '../../data/feed_favorite.dart';
+import '../../ias_story_list_host_api_decorator.dart';
+import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
+import '../../observable_error_callback_flutter_api.dart';
+import '../../pigeon_generated.g.dart';
+import '../base/base_feed_favorites_widget.dart';
+import '../decorators/feed_decorator.dart';
 import 'stories_stream.dart';
-import 'widgets/decorators/feed_decorator.dart';
 
 typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(Iterable<FeedFavorite> favorites);
 
@@ -23,7 +23,7 @@ abstract class FeedFavoritesWidget implements Widget {
 }
 
 class FeedStoriesStream extends StoriesStream {
-  static const _uniqueId = "feed";
+  static const _uniqueId = 'feed';
 
   FeedStoriesStream({
     required super.feed,

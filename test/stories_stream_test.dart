@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/src/pigeon_generated.g.dart';
-import 'package:inappstory_plugin/src/stories_stream.dart';
+import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'mocks.dart';
@@ -26,6 +26,7 @@ void main() {
         observableStoryList: observableStoryList = MockObservable(),
         observableErrorCallback: observableErrorCallback = MockObservable(),
         iasStoryListHostApi: iasStoryListHostApi = MockIASStoryListHostApi(),
+        storyDecorator: MockStoryDecorator(),
       );
 
       when(() => iasStoryListHostApi.load(feed)).thenAnswer((_) async {});
@@ -72,8 +73,12 @@ class _TestStoriesStream extends StoriesStream {
     required super.observableStoryList,
     required super.observableErrorCallback,
     required super.iasStoryListHostApi,
+    required super.storyDecorator,
   });
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {}
+
+  @override
+  void updateStoryData(StoryAPIDataDto story) {}
 }

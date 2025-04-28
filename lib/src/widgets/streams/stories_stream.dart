@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import 'base_story_widget.dart';
-import 'observable.dart';
-import 'pigeon_generated.g.dart';
-import 'story_from_pigeon_dto.dart';
-import 'widgets/decorators/feed_decorator.dart';
+import '../../data/observable.dart';
+import '../../data/story_from_pigeon_dto.dart';
+import '../../pigeon_generated.g.dart';
+import '../base/base_story_widget.dart';
+import '../builders/builders.dart';
+import '../decorators/feed_decorator.dart';
 
 abstract class StoriesStream extends Stream<Iterable<Widget>>
     implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
@@ -72,10 +73,15 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   StreamSubscription<Iterable<Widget>> listen(
     void Function(Iterable<Widget> event)? onData, {
     Function? onError,
-    void Function()? onDone,
+    VoidCallback? onDone,
     bool? cancelOnError,
   }) {
-    return controller.stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+    return controller.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 
   @override

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import '../pigeon_generated.g.dart';
 import 'observable.dart';
-import 'pigeon_generated.g.dart';
 import 'story.dart';
 
 class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi {

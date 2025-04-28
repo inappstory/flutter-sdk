@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+/// A placeholder widget for stories.
 class StoryPlaceholder extends StatelessWidget {
   const StoryPlaceholder({super.key, required this.backgroundColor});
 

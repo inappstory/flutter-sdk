@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
-import 'package:inappstory_plugin/src/favorites_stories_stream.dart';
 
-import 'decorators/story_widget_simple_decorator.dart';
+import '../../inappstory_plugin.dart';
+import 'streams/favorites_stories_stream.dart';
 
 class FavoriteStoriesFeedWidget extends FeedStoriesWidget {
   const FavoriteStoriesFeedWidget({
@@ -25,8 +24,7 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
   Stream<Iterable<Widget>> _getStoriesWidgets() {
     return FavoritesStoriesStream(
       feed: widget.feed,
-      storyWidgetBuilder:
-          widget.storyBuilder ?? (story, decorator) => StorySimpleDecorator(story, decorator: decorator),
+      storyWidgetBuilder: widget.storyBuilder ?? (story, decorator) => BaseStoryBuilder(story, decorator: decorator),
       feedController: widget.controller,
       //feedFavoritesWidgetBuilder: favoritesBuilder,
       feedDecorator: widget.decorator,

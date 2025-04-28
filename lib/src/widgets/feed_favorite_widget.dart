@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'feed_favorite.dart';
+import '../data/feed_favorite.dart';
 
 class FeedFavoriteWidget extends StatelessWidget {
   const FeedFavoriteWidget(this.favorite, {super.key});

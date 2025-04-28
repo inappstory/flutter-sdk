@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
-import 'package:inappstory_plugin/src/story_from_pigeon_dto.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator decorator);
+import '../../../inappstory_plugin.dart';
+import '../../data/story_from_pigeon_dto.dart';
+import '../builders/builders.dart';
 
 class BaseStoryWidget extends StatefulWidget implements StoryWidget {
   const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key, required this.storyDecorator});

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
 
-import '../placeholders/simple_story_placeholder.dart';
+import '../../../inappstory_plugin.dart';
 
-class StorySimpleDecorator extends StatelessWidget implements StoryWidget {
-  const StorySimpleDecorator(this.story, {super.key, this.decorator, this.onStoryTap});
+class BaseStoryBuilder extends StatelessWidget implements StoryWidget {
+  const BaseStoryBuilder(this.story, {super.key, this.decorator, this.onStoryTap});
 
   final FeedStoryDecorator? decorator;
 
   final Function(Story story)? onStoryTap;
 
-  void _onTap(Story story) => onStoryTap ?? story.showReader();
+  Future<void> onTap(Story story) async => onStoryTap ?? story.showReader();
 
   @override
   final Story story;
@@ -18,11 +17,11 @@ class StorySimpleDecorator extends StatelessWidget implements StoryWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _onTap(story),
+      onTap: () => onTap(story),
       child: Stack(
         children: [
           Positioned.fill(
-            child: SimpleStoryPlaceholderWidget(story: story),
+            child: StoryContentWidget(story: story),
           ),
           Positioned.fill(
             child: DecoratedBox(
@@ -58,10 +57,11 @@ class StorySimpleDecorator extends StatelessWidget implements StoryWidget {
   }
 }
 
-class StoryWidgetSingleReader extends StorySimpleDecorator {
+class StoryWidgetSingleReader extends BaseStoryBuilder {
   const StoryWidgetSingleReader(super.story, {super.key});
 
-  void onTap() {
+  @override
+  Future<void> onTap(story) async {
     IASSingleStoryHostApi().showOnce(storyId: '${story.id}');
   }
 }

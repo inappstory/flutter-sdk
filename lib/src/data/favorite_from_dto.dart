@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
+import '../pigeon_generated.g.dart';
 import 'feed_favorite.dart';
-import 'pigeon_generated.g.dart';
 import 'story_from_pigeon_dto.dart';
 
 class FavoriteFromDto implements FeedFavorite {

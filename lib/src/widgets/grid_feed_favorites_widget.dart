@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-import 'feed_favorite.dart';
+import '../data/feed_favorite.dart';
 import 'feed_favorite_widget.dart';
-import 'feed_stories_stream.dart';
+import 'streams/feed_stories_stream.dart';
 
 class GridFeedFavoritesWidget extends StatelessWidget implements FeedFavoritesWidget {
   GridFeedFavoritesWidget(

@@ -1,4 +1,4 @@
-import 'pigeon_generated.g.dart';
+import '../pigeon_generated.g.dart';
 
 /// A controller for managing feed stories.
 class FeedStoriesController {

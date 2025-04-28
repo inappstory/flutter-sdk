@@ -15,9 +15,9 @@ class FeedStoryDecorator {
   const FeedStoryDecorator({
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
     this.feedPadding = const EdgeInsets.all(10.0),
-    this.textPadding = const EdgeInsets.all(8.0),
+    this.textPadding = const EdgeInsets.all(4.0),
     this.storyPadding = 8.0,
-    this.textFontSize = 14,
+    this.textFontSize = 14.0,
     this.loaderDecorator = const LoaderDecorator(),
     this.foregroundDecoration = const BoxDecoration(
       gradient: LinearGradient(
@@ -33,11 +33,11 @@ class FeedStoryDecorator {
 }
 
 class LoaderDecorator {
-  final Color? baseColor;
-  final Color? highlightColor;
+  final Color baseColor;
+  final Color highlightColor;
 
   const LoaderDecorator({
-    this.baseColor,
-    this.highlightColor,
+    this.baseColor = const Color.fromARGB(255, 224, 224, 224),
+    this.highlightColor = const Color.fromARGB(255, 158, 158, 158),
   });
 }
