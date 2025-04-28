@@ -1,5 +1,7 @@
 ## [0.3.0-rc.1] - 2025-04-28
 
+### Added
+
 * Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
 * Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
 
