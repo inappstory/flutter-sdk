@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.adaptors
 import InappstorySdkModuleHostApi
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
@@ -35,6 +36,12 @@ class InappstorySdkModuleAdaptor(
 
     private val iasGames =
         IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+
+    private val inAppStoryCallbacks =
+        InAppStoryCallbacksAdaptor(
+            flutterPluginBinding,
+            inAppStoryAPI.callbacks,
+        )
 
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit

@@ -395,6 +395,41 @@ class _WidgetState extends State<T> implements IShowStoryCallbackFlutterApi {
 }
 ```
 
+## Events
+
+To listen events from Story Reader you can implement `IASCallBacksFlutterApi` and setup your listener
+
+```dart
+class _MyAppState extends State<MyApp> implements IASCallBacksFlutterApi {
+  @override
+  void initState() {
+    super.initState();
+    IASCallBacksFlutterApi.setUp(this);
+  }
+
+  @override
+  void dispose() {
+    IASCallBacksFlutterApi.setUp(null);
+    super.dispose();
+  }
+
+  @override
+  void onCloseStory(SlideDataDto? slideData) {
+    print("closeStory");
+  }
+
+  @override
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+    print("onFavoriteTap $isFavorite");
+  }
+
+  @override
+  void onShowStory(StoryDataDto? storyData) {
+    print("onShowStory $storyData");
+  }
+}
+```
+
 ## Call To Action
 
 add/remove listener for CTA

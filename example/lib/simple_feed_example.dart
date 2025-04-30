@@ -48,12 +48,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
     IShowStoryCallbackFlutterApi.setUp(this);
+    IASCallBacksFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
     IShowStoryCallbackFlutterApi.setUp(null);
+    IASCallBacksFlutterApi.setUp(this);
     super.dispose();
   }
 
@@ -167,6 +169,21 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   @override
   void onShow() => showBanner('IShowStoryOnceCallback.onShow(${++onShowCounter})');
+
+  @override
+  void onCloseStory(SlideDataDto? slideData) {
+    print("closeStory");
+  }
+
+  @override
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+    print("onFavoriteTap $isFavorite");
+  }
+
+  @override
+  void onShowStory(StoryDataDto? storyData) {
+    print("onShowStory $storyData");
+  }
 }
 
 class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {

@@ -1,3 +1,9 @@
+## [o.2.1] - 2025-03-30
+
+### Added
+
+* Added interface for listening to story reader events
+
 ## [0.2.0] - 2025-04-25
 
 ### Added
