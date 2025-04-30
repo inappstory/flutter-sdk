@@ -93,9 +93,11 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             serviceKey: apiKey,
             settings: Settings(userID: userID)
         )
-        
+
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
-        
+
+        CallbacksAdaptor(binaryMessenger: binaryMessenger)
+
         CallToActionCallbackAdaptor(binaryMessenger: binaryMessenger)
 
         completion(.success(()))

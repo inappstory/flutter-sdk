@@ -277,14 +277,14 @@ struct StoryDataDto: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct SlideDataDto: Hashable {
-  var story: StoryDataDto
+  var story: StoryDataDto? = nil
   var index: Int64
   var payload: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> SlideDataDto? {
-    let story = pigeonVar_list[0] as! StoryDataDto
+    let story: StoryDataDto? = nilOrValue(pigeonVar_list[0])
     let index = pigeonVar_list[1] as! Int64
     let payload: String? = nilOrValue(pigeonVar_list[2])
 
@@ -1457,6 +1457,77 @@ class GameReaderCallbackFlutterApi: GameReaderCallbackFlutterApiProtocol {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.gameError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([contentDataArg, messageArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol IASCallBacksFlutterApiProtocol {
+  func onShowStory(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onCloseStory(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onFavoriteTap(slideData slideDataArg: SlideDataDto?, isFavorite isFavoriteArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func onShowStory(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShowStory\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([storyDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onCloseStory(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onCloseStory\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onFavoriteTap(slideData slideDataArg: SlideDataDto?, isFavorite isFavoriteArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onFavoriteTap\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg, isFavoriteArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

@@ -113,7 +113,7 @@ abstract class CallToActionCallbackFlutterApi {
 }
 
 class SlideDataDto {
-  late StoryDataDto story;
+  late StoryDataDto? story;
   late int index;
   late String? payload;
 }
@@ -231,4 +231,13 @@ abstract class GameReaderCallbackFlutterApi {
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
 
   void gameError(ContentDataDto? contentData, String? message);
+}
+
+@FlutterApi()
+abstract class IASCallBacksFlutterApi {
+  void onShowStory(StoryDataDto? storyData);
+
+  void onCloseStory(SlideDataDto? slideData);
+
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite);
 }
