@@ -48,14 +48,12 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
     IShowStoryCallbackFlutterApi.setUp(this);
-    IASCallBacksFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
     IShowStoryCallbackFlutterApi.setUp(null);
-    IASCallBacksFlutterApi.setUp(this);
     super.dispose();
   }
 
@@ -176,13 +174,33 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   @override
-  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
-    print("onFavoriteTap $isFavorite");
+  void onShowStory(StoryDataDto? storyData) {
+    print("onShowStory $storyData");
   }
 
   @override
-  void onShowStory(StoryDataDto? storyData) {
-    print("onShowStory $storyData");
+  void onShareStory(SlideDataDto? slideData) {
+    print("onShareStory ${slideData.toString()}");
+  }
+
+  @override
+  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
+    print("onDislikeStory ${slideData.toString()}");
+  }
+
+  @override
+  void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
+    print("onLikeStory ${slideData.toString()}");
+  }
+
+  @override
+  void onShowSlide(SlideDataDto? slideData) {
+    print("onShowSlide ${slideData.toString()}");
+  }
+
+  @override
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+    print("onFavoriteTap ${slideData.toString()} $isFavorite");
   }
 }
 

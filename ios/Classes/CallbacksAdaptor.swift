@@ -46,19 +46,40 @@ class CallbacksAdaptor {
             return
         case .clickOnStory(let storyData, let index):
             return
-
         case .clickOnButton(let slideData, let link):
             return
         case .showSlide(let slideData):
+            callbackFlutterApi.onShowSlide(
+                slideData: mapSlideData(arg: slideData),
+                completion: { _ in }
+            )
             return
         case .likeStory(let slideData, let value):
+            callbackFlutterApi.onLikeStoryTap(
+                slideData: mapSlideData(arg: slideData),
+                isLike: value,
+                completion: { _ in }
+            )
             return
         case .dislikeStory(let slideData, let value):
+            callbackFlutterApi.onDislikeStoryTap(
+                slideData: mapSlideData(arg: slideData),
+                isDislike: value,
+                completion: { _ in }
+            )
             return
-
         case .clickOnShareStory(let slideData):
+            callbackFlutterApi.onShareStory(
+                slideData: mapSlideData(arg: slideData),
+                completion: { _ in }
+            )
             return
         case .storyWidgetEvent(let slideData, let name, let data):
+            callbackFlutterApi.onStoryWidgetEvent(
+                slideData: mapSlideData(arg: slideData!),
+                widgetData: data,
+                completion: { _ in }
+            )
             return
         @unknown default:
             NSLog("WARNING: unknown failureEvent")

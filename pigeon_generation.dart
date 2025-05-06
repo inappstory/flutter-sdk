@@ -240,4 +240,18 @@ abstract class IASCallBacksFlutterApi {
   void onCloseStory(SlideDataDto? slideData);
 
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite);
+
+  void onLikeStoryTap(SlideDataDto? slideData, bool isLike);
+
+  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike);
+
+  void onShareStory(SlideDataDto? slideData);
+
+  void onShowSlide(SlideDataDto? slideData);
+
+  void onStoryWidgetEvent(SlideDataDto? slideData, Map<String?, Object?>? widgetData);
+
+// void onShowInAppMessage() {}
+//
+// void onCloseInAppMessage() {}
 }

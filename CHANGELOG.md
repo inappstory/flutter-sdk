@@ -1,4 +1,14 @@
-## [0.2.1] - 2025-03-30
+## [0.2.2] - 2025-05-06
+
+### Added
+
+* Added new callbacks for listening story reader events
+
+### Changed
+
+* Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
+
+## [0.2.1] - 2025-04-30
 
 ### Added
 

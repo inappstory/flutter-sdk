@@ -30,5 +30,49 @@ class InAppStoryCallbacksAdaptor(
                 api.onFavoriteTap(slideDataDto, value) {}
             }
         }
+
+//        callbacks.likeDislikeStory(object : LikeDislikeStoryCallback {
+//            override fun likeStory(
+//                slide: SlideData?,
+//                value: Boolean
+//            ) {
+//                flutterPluginBinding.runOnMainThread {
+//                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
+//                    api.onLikeStory(slideDataDto, value) {}
+//                }
+//            }
+//
+//            override fun dislikeStory(
+//                slide: SlideData?,
+//                value: Boolean
+//            ) {
+//                flutterPluginBinding.runOnMainThread {
+//                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
+//                    api.onDislikeStory(slideDataDto, value) {}
+//                }
+//            }
+//        })
+
+        callbacks.clickOnShareStory { slide ->
+            flutterPluginBinding.runOnMainThread {
+                val slideDataDto = slide?.let { mapSlideDataDto(it) }
+                api.onShareStory(slideDataDto) {}
+            }
+        }
+
+        callbacks.showSlide { slide ->
+            flutterPluginBinding.runOnMainThread {
+                val slideDataDto = slide?.let { mapSlideDataDto(it) }
+                api.onShowSlide(slideDataDto) {}
+            }
+        }
+
+        callbacks.storyWidget { slideData, widgetEventName, widgetData ->
+            flutterPluginBinding.runOnMainThread {
+                val slideDataDto = slideData?.let { mapSlideDataDto(it) }
+                val widgetDataDto: Map<String?, Any?>? = widgetData?.toMap<String?, Any?>()
+                api.onStoryWidgetEvent(slideDataDto, widgetDataDto) {}
+            }
+        }
     }
 }

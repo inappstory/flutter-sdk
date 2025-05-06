@@ -397,35 +397,43 @@ class _WidgetState extends State<T> implements IShowStoryCallbackFlutterApi {
 
 ## Events
 
-To listen events from Story Reader you can implement `IASCallBacksFlutterApi` and setup your listener
+To listen events from Story Reader you can implement `IASCallbacks` mixin and setup your listener
 
 ```dart
-class _MyAppState extends State<MyApp> implements IASCallBacksFlutterApi {
-  @override
-  void initState() {
-    super.initState();
-    IASCallBacksFlutterApi.setUp(this);
-  }
-
-  @override
-  void dispose() {
-    IASCallBacksFlutterApi.setUp(null);
-    super.dispose();
-  }
-
+class _MyAppState extends State<MyApp> with IASCallbacks {
   @override
   void onCloseStory(SlideDataDto? slideData) {
     print("closeStory");
   }
 
   @override
-  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
-    print("onFavoriteTap $isFavorite");
+  void onShowStory(StoryDataDto? storyData) {
+    print("onShowStory");
   }
 
   @override
-  void onShowStory(StoryDataDto? storyData) {
-    print("onShowStory $storyData");
+  void onShareStory(SlideDataDto? slideData) {
+    print("onShareStory");
+  }
+
+  @override
+  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
+    print("onDislikeStory");
+  }
+
+  @override
+  void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
+    print("onLikeStory");
+  }
+
+  @override
+  void onShowSlide(SlideDataDto? slideData) {
+    print("onShowSlide");
+  }
+
+  @override
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+    print("onFavoriteTap");
   }
 }
 ```

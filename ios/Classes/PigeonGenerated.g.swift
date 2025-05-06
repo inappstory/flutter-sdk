@@ -1477,6 +1477,11 @@ protocol IASCallBacksFlutterApiProtocol {
   func onShowStory(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onCloseStory(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onFavoriteTap(slideData slideDataArg: SlideDataDto?, isFavorite isFavoriteArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onLikeStoryTap(slideData slideDataArg: SlideDataDto?, isLike isLikeArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onDislikeStoryTap(slideData slideDataArg: SlideDataDto?, isDislike isDislikeArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onShareStory(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onShowSlide(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onStoryWidgetEvent(slideData slideDataArg: SlideDataDto?, widgetData widgetDataArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1528,6 +1533,96 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onFavoriteTap\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([slideDataArg, isFavoriteArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onLikeStoryTap(slideData slideDataArg: SlideDataDto?, isLike isLikeArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onLikeStoryTap\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg, isLikeArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onDislikeStoryTap(slideData slideDataArg: SlideDataDto?, isDislike isDislikeArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onDislikeStoryTap\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg, isDislikeArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onShareStory(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShareStory\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onShowSlide(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShowSlide\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onStoryWidgetEvent(slideData slideDataArg: SlideDataDto?, widgetData widgetDataArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onStoryWidgetEvent\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg, widgetDataArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

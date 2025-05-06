@@ -1746,6 +1746,16 @@ abstract class IASCallBacksFlutterApi {
 
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite);
 
+  void onLikeStoryTap(SlideDataDto? slideData, bool isLike);
+
+  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike);
+
+  void onShareStory(SlideDataDto? slideData);
+
+  void onShowSlide(SlideDataDto? slideData);
+
+  void onStoryWidgetEvent(SlideDataDto? slideData, Map<String?, Object?>? widgetData);
+
   static void setUp(IASCallBacksFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -1811,6 +1821,128 @@ abstract class IASCallBacksFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onFavoriteTap was null, expected non-null bool.');
           try {
             api.onFavoriteTap(arg_slideData, arg_isFavorite!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onLikeStoryTap$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onLikeStoryTap was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          final bool? arg_isLike = (args[1] as bool?);
+          assert(arg_isLike != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onLikeStoryTap was null, expected non-null bool.');
+          try {
+            api.onLikeStoryTap(arg_slideData, arg_isLike!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onDislikeStoryTap$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onDislikeStoryTap was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          final bool? arg_isDislike = (args[1] as bool?);
+          assert(arg_isDislike != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onDislikeStoryTap was null, expected non-null bool.');
+          try {
+            api.onDislikeStoryTap(arg_slideData, arg_isDislike!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShareStory$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShareStory was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          try {
+            api.onShareStory(arg_slideData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShowSlide$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onShowSlide was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          try {
+            api.onShowSlide(arg_slideData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onStoryWidgetEvent$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASCallBacksFlutterApi.onStoryWidgetEvent was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          final Map<String?, Object?>? arg_widgetData = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            api.onStoryWidgetEvent(arg_slideData, arg_widgetData);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

@@ -14,11 +14,12 @@ export 'src/feed_favorite_widget.dart';
 export 'src/feed_stories_controller.dart';
 export 'src/feed_stories_stream.dart';
 export 'src/grid_feed_favorites_widget.dart';
+export 'src/ias_callback_mixin.dart';
 export 'src/pigeon_generated.g.dart';
 export 'src/story.dart';
 export 'src/story_widget.dart';
 
-class InAppStoryPlugin implements InAppStorySdkModule {
+class InAppStoryPlugin implements InAppStorySdkModule  {
   factory InAppStoryPlugin() => _singleton ??= InAppStoryPlugin._private();
 
   InAppStoryPlugin._private();
