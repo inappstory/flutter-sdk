@@ -5,6 +5,8 @@ import com.inappstory.inappstory_plugin.mapSlideDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.externalapi.callbacks.IASCallbacksExternalAPI
+import com.inappstory.sdk.stories.outercallbacks.common.reader.LikeDislikeStoryCallback
+import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 class InAppStoryCallbacksAdaptor(
@@ -31,29 +33,29 @@ class InAppStoryCallbacksAdaptor(
             }
         }
 
-//        callbacks.likeDislikeStory(object : LikeDislikeStoryCallback {
-//            override fun likeStory(
-//                slide: SlideData?,
-//                value: Boolean
-//            ) {
-//                flutterPluginBinding.runOnMainThread {
-//                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
-//                    api.onLikeStory(slideDataDto, value) {}
-//                }
-//            }
-//
-//            override fun dislikeStory(
-//                slide: SlideData?,
-//                value: Boolean
-//            ) {
-//                flutterPluginBinding.runOnMainThread {
-//                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
-//                    api.onDislikeStory(slideDataDto, value) {}
-//                }
-//            }
-//        })
+        callbacks.likeDislikeStory(object : LikeDislikeStoryCallback {
+            override fun likeStory(
+                slide: SlideData?,
+                value: Boolean
+            ) {
+                flutterPluginBinding.runOnMainThread {
+                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
+                    api.onLikeStoryTap(slideDataDto, value) {}
+                }
+            }
 
-        callbacks.clickOnShareStory { slide ->
+            override fun dislikeStory(
+                slide: SlideData?,
+                value: Boolean
+            ) {
+                flutterPluginBinding.runOnMainThread {
+                    val slideDataDto = slide?.let { mapSlideDataDto(it) }
+                    api.onDislikeStoryTap(slideDataDto, value) {}
+                }
+            }
+        })
+
+        callbacks.clickOnShareStory { slide: SlideData? ->
             flutterPluginBinding.runOnMainThread {
                 val slideDataDto = slide?.let { mapSlideDataDto(it) }
                 api.onShareStory(slideDataDto) {}

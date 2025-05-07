@@ -13,6 +13,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
+    with IASCallbacks
     implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
   static const feed = '<your feed id>';
 
@@ -175,32 +176,32 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   @override
   void onShowStory(StoryDataDto? storyData) {
-    print("onShowStory $storyData");
+    print("onShowStory");
   }
 
   @override
   void onShareStory(SlideDataDto? slideData) {
-    print("onShareStory ${slideData.toString()}");
+    print("onShareStory");
   }
 
   @override
   void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
-    print("onDislikeStory ${slideData.toString()}");
+    print("onDislikeStory $isDislike");
   }
 
   @override
   void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
-    print("onLikeStory ${slideData.toString()}");
+    print("onLikeStory $isLike");
   }
 
   @override
   void onShowSlide(SlideDataDto? slideData) {
-    print("onShowSlide ${slideData.toString()}");
+    print("onShowSlide");
   }
 
   @override
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
-    print("onFavoriteTap ${slideData.toString()} $isFavorite");
+    print("onFavoriteTap $isFavorite");
   }
 }
 

@@ -397,7 +397,7 @@ class _WidgetState extends State<T> implements IShowStoryCallbackFlutterApi {
 
 ## Events
 
-To listen events from Story Reader you can implement `IASCallbacks` mixin and setup your listener
+To listen events from Story Reader you can implement `IASCallbacks` mixin in and setup your listener
 
 ```dart
 class _MyAppState extends State<MyApp> with IASCallbacks {

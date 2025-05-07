@@ -23,6 +23,8 @@ class InappstorySdkModuleAdaptor(
     private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var feed: IASStoryListAdaptor
     private lateinit var favorites: IASStoryListAdaptor
+    private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
+
     private val singleStoryApi =
         IASSingleStoryAdaptor(
             flutterPluginBinding,
@@ -36,12 +38,6 @@ class InappstorySdkModuleAdaptor(
 
     private val iasGames =
         IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
-
-    private val inAppStoryCallbacks =
-        InAppStoryCallbacksAdaptor(
-            flutterPluginBinding,
-            inAppStoryAPI.callbacks,
-        )
 
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
@@ -92,6 +88,8 @@ class InappstorySdkModuleAdaptor(
             )
 
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+
+            inAppStoryCallbacks = InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
 
             inAppStoryManagerAdaptor =
                 InAppStoryManagerAdaptor(flutterPluginBinding, inAppStoryManager)
