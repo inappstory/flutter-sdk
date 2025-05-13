@@ -1524,3 +1524,73 @@ class IASCallBacksFlutterApi(private val binaryMessenger: BinaryMessenger, priva
     }
   }
 }
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface IASInAppMessagesHostApi {
+  fun show(messageId: String)
+  fun preloadMessages(ids: List<String>?)
+  fun close()
+
+  companion object {
+    /** The codec used by IASInAppMessagesHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+    /** Sets up an instance of `IASInAppMessagesHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: IASInAppMessagesHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val messageIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.show(messageIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.preloadMessages$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val idsArg = args[0] as List<String>?
+            val wrapped: List<Any?> = try {
+              api.preloadMessages(idsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.close$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.close()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}

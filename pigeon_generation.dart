@@ -241,3 +241,12 @@ abstract class IASCallBacksFlutterApi {
 
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite);
 }
+
+@HostApi()
+abstract class IASInAppMessagesHostApi {
+  void show(String messageId);
+
+  void preloadMessages(List<String>? ids);
+
+  void close();
+}

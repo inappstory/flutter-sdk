@@ -1543,3 +1543,61 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
     }
   }
 }
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol IASInAppMessagesHostApi {
+  func show(messageId: String) throws
+  func preloadMessages(ids: [String]?) throws
+  func close() throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class IASInAppMessagesHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `IASInAppMessagesHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASInAppMessagesHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let showChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let messageIdArg = args[0] as! String
+        do {
+          try api.show(messageId: messageIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showChannel.setMessageHandler(nil)
+    }
+    let preloadMessagesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.preloadMessages\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      preloadMessagesChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let idsArg: [String]? = nilOrValue(args[0])
+        do {
+          try api.preloadMessages(ids: idsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      preloadMessagesChannel.setMessageHandler(nil)
+    }
+    let closeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.close\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      closeChannel.setMessageHandler { _, reply in
+        do {
+          try api.close()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      closeChannel.setMessageHandler(nil)
+    }
+  }
+}

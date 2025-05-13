@@ -43,6 +43,9 @@ class InappstorySdkModuleAdaptor(
             inAppStoryAPI.callbacks,
         )
 
+    private val iasMessages =
+        IASMessagesAdaptor(flutterPluginBinding, inAppStoryAPI.inAppMessage, activityHolder)
+
     override fun initWith(
         apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
     ) {

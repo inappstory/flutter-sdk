@@ -12,7 +12,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 
 /** InappstoryPlugin */
 class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, ActivityAware {
@@ -39,7 +38,7 @@ class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, Activ
         )
     }
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (call.method == "getPlatformVersion") {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         } else {
