@@ -79,7 +79,7 @@ rootProject.allprojects {
 dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.webkit:webkit:1.4.0'
-    implementation 'com.github.inappstory:android-sdk:6817eb09d5a868be842154a53f8411f87ed4ad41'
+    implementation 'com.github.inappstory:android-sdk:1.21.4'
     implementation("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
         transitive = true
         exclude group: 'com.github.inappstory', module: 'android-sdk' //exclude to prevent libraries overriding
