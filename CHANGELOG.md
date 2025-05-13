@@ -1,4 +1,17 @@
-## [0.2.2] - 2025-05-06
+## [0.2.3]
+
+### Added
+
+* Updated Android SDK to 1.21.4
+* Updated iOS SDK to 1.25.4, make sure you run `pod install --repo-update` in the `ios` folder of your Flutter project.
+
+### Fixed
+
+* Like/Dislike buttons are not working in Android devices
+* Placeholders in story feed are not working in iOS devices
+* Fixed image caching issues in iOS devices
+
+## [0.2.2]
 
 ### Added
 
@@ -8,13 +21,13 @@
 
 * Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
 
-## [0.2.1] - 2025-04-30
+## [0.2.1]
 
 ### Added
 
 * Added interface for listening to story reader events
 
-## [0.2.0] - 2025-04-25
+## [0.2.0]
 
 ### Added
 
@@ -42,13 +55,13 @@
 * Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
 * Fixed a issue where cover images were lost after refreshing the story feed.
 
-## [0.2.0-rc.5] - 2025-04-24
+## [0.2.0-rc.5]
 
 ### Fixed
 
 * Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
 
-## [0.2.0-rc.4] - 2025-04-23
+## [0.2.0-rc.4]
 
 ### Added
 
@@ -60,19 +73,19 @@
 
 * Fixed a issue where cover images were lost after refreshing the story feed.
 
-## [0.2.0-rc.3] - 2025-04-22
+## [0.2.0-rc.3]
 
 ### Fixed
 
 * Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
 
-## [0.2.0-rc.2] - 2025-04-15
+## [0.2.0-rc.2]
 
 ### Changed
 
 * Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
 
-## [0.2.0-rc.1] - 2025-04-15
+## [0.2.0-rc.1]
 
 ### Added
 
@@ -82,13 +95,13 @@
 
 * error when initializing plugin in Java application class
 
-## [0.1.0-rc.1] - 2025-04-10
+## [0.1.0-rc.1]
 
 ### Changed
 
 * Initializing Android native SDK, please watch README for details
 
-## [0.0.20] - 2025-04-09
+## [0.0.20]
 
 ### Added
 
