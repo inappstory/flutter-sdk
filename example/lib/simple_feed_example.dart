@@ -19,16 +19,9 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   final callsToAction = <String>[];
 
-  // void onFeedFavoritesTap() {
-  //   final favorites = InAppStoryPlugin()
-  //       .getFavoritesStoriesWidgets(
-  //         feed: feed,
-  //         storyBuilder: StoryWidgetSimpleDecorator.new,
-  //       )
-  //       .asBroadcastStream();
-  //
-  //   showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget(favorites));
-  // }
+  void onFeedFavoritesTap() {
+    //showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget());
+  }
 
   @override
   void initState() {
@@ -55,10 +48,16 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(
+          SizedBox(
             height: 150,
             child: FeedStoriesWidget(
               feed: feed,
+              favoritesBuilder: (favorites) {
+                return CustomGridFeedFavoritesWidget(
+                  favorites,
+                  onTap: () => onFeedFavoritesTap(),
+                );
+              },
             ),
           ),
           const Divider(indent: 4),

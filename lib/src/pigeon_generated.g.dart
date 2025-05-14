@@ -1836,14 +1836,14 @@ class IASInAppMessagesHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> show(String messageId) async {
+  Future<void> show(String messageId, {bool onlyPreloaded = false}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, onlyPreloaded]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1859,7 +1859,7 @@ class IASInAppMessagesHostApi {
     }
   }
 
-  Future<void> preloadMessages(List<String>? ids) async {
+  Future<bool> preloadMessages({List<String>? ids}) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.preloadMessages$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -1877,31 +1877,71 @@ class IASInAppMessagesHostApi {
         message: pigeonVar_replyList[1] as String?,
         details: pigeonVar_replyList[2],
       );
-    } else {
-      return;
-    }
-  }
-
-  Future<void> close() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.close$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final List<Object?>? pigeonVar_replyList =
-        await pigeonVar_sendFuture as List<Object?>?;
-    if (pigeonVar_replyList == null) {
-      throw _createConnectionError(pigeonVar_channelName);
-    } else if (pigeonVar_replyList.length > 1) {
+    } else if (pigeonVar_replyList[0] == null) {
       throw PlatformException(
-        code: pigeonVar_replyList[0]! as String,
-        message: pigeonVar_replyList[1] as String?,
-        details: pigeonVar_replyList[2],
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return;
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+}
+
+abstract class IASInAppMessagesCallbacksFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void onShowInAppMessage(StoryDataDto? storyData);
+
+  void onCloseInAppMessage(SlideDataDto? slideData);
+
+  static void setUp(IASInAppMessagesCallbacksFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final StoryDataDto? arg_storyData = (args[0] as StoryDataDto?);
+          try {
+            api.onShowInAppMessage(arg_storyData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          try {
+            api.onCloseInAppMessage(arg_slideData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
     }
   }
 }

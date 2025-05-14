@@ -7,7 +7,8 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/pigeon_generated.g.dart',
   dartOptions: DartOptions(),
-  kotlinOut: 'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
+  kotlinOut:
+      'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
   kotlinOptions: KotlinOptions(),
   swiftOut: 'ios/Classes/PigeonGenerated.g.swift',
   swiftOptions: SwiftOptions(),
@@ -109,7 +110,8 @@ enum SourceTypeDto {
 
 @FlutterApi()
 abstract class CallToActionCallbackFlutterApi {
-  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
+  void callToAction(
+      SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
 }
 
 class SlideDataDto {
@@ -146,7 +148,8 @@ abstract class AppearanceManagerHostApi {
 
   bool getTimerGradientEnable();
 
-  void setTimerGradient({required List<int> colors, List<double> locations = const []});
+  void setTimerGradient(
+      {required List<int> colors, List<double> locations = const []});
 
   void setReaderBackgroundColor(int color);
 
@@ -228,7 +231,8 @@ abstract class GameReaderCallbackFlutterApi {
 
   void closeGame(ContentDataDto? contentData);
 
-  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
+  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName,
+      Map<String?, Object?>? payload);
 
   void gameError(ContentDataDto? contentData, String? message);
 }
@@ -244,9 +248,15 @@ abstract class IASCallBacksFlutterApi {
 
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void show(String messageId);
+  void show(String messageId, {bool onlyPreloaded = false});
 
-  void preloadMessages(List<String>? ids);
+  @async
+  bool preloadMessages({List<String>? ids});
+}
 
-  void close();
+@FlutterApi()
+abstract class IASInAppMessagesCallbacksFlutterApi {
+  void onShowInAppMessage(StoryDataDto? storyData);
+
+  void onCloseInAppMessage(SlideDataDto? slideData);
 }

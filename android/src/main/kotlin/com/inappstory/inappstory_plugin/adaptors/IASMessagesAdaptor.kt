@@ -22,7 +22,7 @@ class IASMessagesAdaptor(
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
 
-    override fun show(messageId: String) {
+    override fun show(messageId: String, onlyPreloaded: Boolean) {
         val settings = InAppMessageOpenSettings(messageId.toInt(), false, "test", listOf())
         iasMessages.show(
             settings,
@@ -45,32 +45,30 @@ class IASMessagesAdaptor(
             })
     }
 
-    override fun preloadMessages(ids: List<String>?) {
+    override fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit) {
         val preloadSettings = InAppMessagePreloadSettings();
         iasMessages.preload(preloadSettings, object : InAppMessageLoadCallback {
             override fun loaded(p0: Int) {
-                print("loaded $p0")
+                print("IAS: loaded $p0")
             }
 
             override fun allLoaded() {
-               print("allLoaded")
+                print("IAS: allLoaded")
+                callback(Result.success(true))
             }
 
             override fun loadError(p0: Int) {
-                print("loadError $p0")
+                print("IAS: loadError $p0")
             }
 
             override fun loadError() {
-                print("loadError")
+                print("IAS: loadError")
+                callback(Result.success(false))
             }
 
             override fun isEmpty() {
-                print("isEmpty")
+                print("IAS: isEmpty")
             }
         })
     }
-
-    override fun close() {
-    }
-
 }

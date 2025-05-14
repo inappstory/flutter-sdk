@@ -6,7 +6,7 @@ import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
-class InAppStoryManagerAdaptor(
+class IASManagerAdaptor(
     flutterPluginBinding: FlutterPluginBinding,
     private val inAppStoryManager: InAppStoryManager,
 ) : InAppStoryManagerHostApi {

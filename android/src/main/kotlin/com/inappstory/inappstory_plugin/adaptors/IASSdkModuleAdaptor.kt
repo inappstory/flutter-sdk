@@ -32,7 +32,7 @@ class InappstorySdkModuleAdaptor(
         )
     private val iasOnboardings =
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
-    private lateinit var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
+    private lateinit var iasManagerAdaptor: IASManagerAdaptor
 
     private val iasGames =
         IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
@@ -96,8 +96,8 @@ class InappstorySdkModuleAdaptor(
 
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
-            inAppStoryManagerAdaptor =
-                InAppStoryManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            iasManagerAdaptor =
+                IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {
             callback(Result.failure(throwable))

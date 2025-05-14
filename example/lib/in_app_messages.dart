@@ -15,40 +15,52 @@ class _InAppMessagesState extends State<InAppMessages> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("In-App-Messaging"),
+        title: const Text("In-App-Messaging"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                IASInAppMessagesHostApi().preloadMessages([]);
-              },
-              child: Text("preload"),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      label: Text('Input InAppMessage id'),
+      body: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final result =
+                      await IASInAppMessagesHostApi().preloadMessages();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text(result ? "Success" : "Error loading messages"),
+                      ),
+                    );
+                  }
+                },
+                child: const Text("preload"),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('Input InAppMessage id'),
+                      ),
+                      controller: _inputController,
                     ),
-                    controller: _inputController,
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    IASInAppMessagesHostApi().show(_inputController.text);
-                  },
-                  child: Text("Show"),
-                ),
-              ],
-            ),
-          ],
+                  ElevatedButton(
+                    onPressed: () {
+                      IASInAppMessagesHostApi().show(_inputController.text);
+                    },
+                    child: const Text("Show"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

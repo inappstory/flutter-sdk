@@ -1545,9 +1545,8 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASInAppMessagesHostApi {
-  func show(messageId: String) throws
-  func preloadMessages(ids: [String]?) throws
-  func close() throws
+  func show(messageId: String, onlyPreloaded: Bool) throws
+  func preloadMessages(ids: [String]?, completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1561,8 +1560,9 @@ class IASInAppMessagesHostApiSetup {
       showChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let messageIdArg = args[0] as! String
+        let onlyPreloadedArg = args[1] as! Bool
         do {
-          try api.show(messageId: messageIdArg)
+          try api.show(messageId: messageIdArg, onlyPreloaded: onlyPreloadedArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -1576,28 +1576,69 @@ class IASInAppMessagesHostApiSetup {
       preloadMessagesChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let idsArg: [String]? = nilOrValue(args[0])
-        do {
-          try api.preloadMessages(ids: idsArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        api.preloadMessages(ids: idsArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
       preloadMessagesChannel.setMessageHandler(nil)
     }
-    let closeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.close\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      closeChannel.setMessageHandler { _, reply in
-        do {
-          try api.close()
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol IASInAppMessagesCallbacksFlutterApiProtocol {
+  func onShowInAppMessage(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onCloseInAppMessage(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class IASInAppMessagesCallbacksFlutterApi: IASInAppMessagesCallbacksFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func onShowInAppMessage(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([storyDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
       }
-    } else {
-      closeChannel.setMessageHandler(nil)
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onCloseInAppMessage(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([slideDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
     }
   }
 }

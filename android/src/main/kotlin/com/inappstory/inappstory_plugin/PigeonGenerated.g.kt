@@ -1526,9 +1526,8 @@ class IASCallBacksFlutterApi(private val binaryMessenger: BinaryMessenger, priva
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASInAppMessagesHostApi {
-  fun show(messageId: String)
-  fun preloadMessages(ids: List<String>?)
-  fun close()
+  fun show(messageId: String, onlyPreloaded: Boolean)
+  fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit)
 
   companion object {
     /** The codec used by IASInAppMessagesHostApi. */
@@ -1545,8 +1544,9 @@ interface IASInAppMessagesHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val messageIdArg = args[0] as String
+            val onlyPreloadedArg = args[1] as Boolean
             val wrapped: List<Any?> = try {
-              api.show(messageIdArg)
+              api.show(messageIdArg, onlyPreloadedArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -1563,34 +1563,63 @@ interface IASInAppMessagesHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val idsArg = args[0] as List<String>?
-            val wrapped: List<Any?> = try {
-              api.preloadMessages(idsArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
+            api.preloadMessages(idsArg) { result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(PigeonGeneratedPigeonUtils.wrapResult(data))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
         }
       }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.close$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              api.close()
-              listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class IASInAppMessagesCallbacksFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by IASInAppMessagesCallbacksFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  fun onShowInAppMessage(storyDataArg: StoryDataDto?, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(storyDataArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
         } else {
-          channel.setMessageHandler(null)
+          callback(Result.success(Unit))
         }
-      }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  fun onCloseInAppMessage(slideDataArg: SlideDataDto?, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(slideDataArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
 }

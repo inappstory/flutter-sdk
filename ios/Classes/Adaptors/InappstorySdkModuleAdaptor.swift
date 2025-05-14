@@ -40,6 +40,11 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             binaryMessenger: binaryMessenger,
             gamesApi: InAppStoryAPI.shared.gamesAPI
         )
+        
+        self.iasMessagesAdaptor = IASMessagesAdaptor(
+            binaryMessenger: binaryMessenger,
+            inAppMessagesApi: InAppStoryAPI.shared.inappmessagesAPI
+        )
 
         self.inAppStoryManagerAdaptor = InAppStoryManagerAdaptor(
             binaryMessenger: binaryMessenger
@@ -64,6 +69,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     var iasOnboardingsAdaptor: IASOnboardingsAdaptor
 
     var iasGamesAdaptor: IASGamesAdaptor
+    
+    var iasMessagesAdaptor: IASMessagesAdaptor
 
     var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
 

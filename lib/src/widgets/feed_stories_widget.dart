@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../inappstory_plugin.dart';
-import '../controllers/feed_stories_controller.dart';
 import 'builders/builders.dart';
 import 'decorators/custom_grid_feed_favorites_widget.dart';
 import 'streams/feed_stories_stream.dart';
