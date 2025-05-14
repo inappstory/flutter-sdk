@@ -12,6 +12,7 @@ import 'src/widgets/streams/feed_stories_stream.dart';
 
 export 'src/controllers/controllers.dart';
 export 'src/data/story.dart';
+export 'src/ias_callback_mixin.dart';
 export 'src/pigeon_generated.g.dart';
 export 'src/widgets/widgets.dart';
 
@@ -25,7 +26,8 @@ class InAppStoryPlugin implements InAppStorySdkModule {
   /// The [InAppStoryPlugin] initialization method.
   @override
   Future<void> initWith(String apiKey, String userID, bool sendStatistics) {
-    return InappstoryPluginPlatform.instance.initWith(apiKey, userID, sendStatistics);
+    return InappstoryPluginPlatform.instance
+        .initWith(apiKey, userID, sendStatistics);
   }
 
   @Deprecated('Use FeedStoriesWidget instead')

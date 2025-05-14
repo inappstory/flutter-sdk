@@ -1,16 +1,18 @@
+import 'package:flutter/foundation.dart';
+
 import '../pigeon_generated.g.dart';
 
 /// A controller for managing feed stories.
 class FeedStoriesController {
   FeedStoriesController();
 
-  late IASStoryListHostApi? _iasStoryListHostApi;
+  IASStoryListHostApi? _iasStoryListHostApi;
 
   set iasStoryListHostApi(IASStoryListHostApi hostApi) {
     _iasStoryListHostApi = hostApi;
   }
 
-  late String? _feed;
+  String? _feed;
 
   set feed(String value) {
     _feed = value;
@@ -18,11 +20,21 @@ class FeedStoriesController {
 
   /// Loads stories from the current feed.
   Future<void> fetchFeedStories() async {
+    // TODO: 08.05.2025 Add Exception
     if (_feed?.isEmpty ?? true) {
-      throw Exception('Feed is not set. Please set the feed before calling fetchFeedStories');
+      if (kDebugMode) {
+        print(
+            '[InAppStory]: Feed is not set. Please set the feed before calling fetchFeedStories');
+      }
+      return;
     }
     if (_iasStoryListHostApi == null) {
-      throw Exception('Add controller to feed stream before calling fetchFeedStories');
+      // TODO: 08.05.2025 Add Exception
+      if (kDebugMode) {
+        print(
+            '[InAppStory]: Add controller to feed stream before calling fetchFeedStories');
+      }
+      return;
     }
     _iasStoryListHostApi?.reloadFeed(_feed!);
   }

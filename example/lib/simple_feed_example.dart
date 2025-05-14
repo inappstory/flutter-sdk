@@ -11,7 +11,8 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
-    implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi, IASCallBacksFlutterApi {
+    with IASCallbacks
+    implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
   static const feed = '<your feed id>';
 
   final inputController = TextEditingController();
@@ -28,14 +29,12 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     super.initState();
     CallToActionCallbackFlutterApi.setUp(this);
     IShowStoryCallbackFlutterApi.setUp(this);
-    IASCallBacksFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
     CallToActionCallbackFlutterApi.setUp(null);
     IShowStoryCallbackFlutterApi.setUp(null);
-    IASCallBacksFlutterApi.setUp(this);
     super.dispose();
   }
 
@@ -62,7 +61,8 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
           ),
           const Divider(indent: 4),
           ElevatedButton(
-            onPressed: () async => await feedStoriesController.fetchFeedStories(),
+            onPressed: () async =>
+                await feedStoriesController.fetchFeedStories(),
             child: const Text('Refresh'),
           ),
           const Divider(indent: 4),
@@ -72,11 +72,13 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
               children: [
                 Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(label: Text('Input user id string')),
+                    decoration: const InputDecoration(
+                        label: Text('Input user id string')),
                     controller: inputController,
                   ),
                 ),
-                ElevatedButton(onPressed: changeUser, child: const Text('Change userId')),
+                ElevatedButton(
+                    onPressed: changeUser, child: const Text('Change userId')),
               ],
             ),
           ),
@@ -109,9 +111,11 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   @override
-  void callToAction(SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+  void callToAction(
+      SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
     setState(() {
-      final content = 'slideData:$slideData url:$url clickAction:${clickAction?.name}';
+      final content =
+          'slideData:$slideData url:$url clickAction:${clickAction?.name}';
 
       callsToAction.add(content);
     });
@@ -126,17 +130,20 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   int alreadyShownCounter = 0;
 
   @override
-  void alreadyShown() => showBanner('IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})');
+  void alreadyShown() => showBanner(
+      'IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})');
 
   int onErrorCounter = 0;
 
   @override
-  void onError() => showBanner('IShowStoryOnceCallback.onError(${++onErrorCounter})');
+  void onError() =>
+      showBanner('IShowStoryOnceCallback.onError(${++onErrorCounter})');
 
   int onShowCounter = 0;
 
   @override
-  void onShow() => showBanner('IShowStoryOnceCallback.onShow(${++onShowCounter})');
+  void onShow() =>
+      showBanner('IShowStoryOnceCallback.onShow(${++onShowCounter})');
 
   @override
   void onCloseStory(SlideDataDto? slideData) {
@@ -144,18 +151,39 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   @override
-  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
-    print("onFavoriteTap $isFavorite");
+  void onShowStory(StoryDataDto? storyData) {
+    print("onShowStory");
   }
 
   @override
-  void onShowStory(StoryDataDto? storyData) {
-    print("onShowStory $storyData");
+  void onShareStory(SlideDataDto? slideData) {
+    print("onShareStory");
+  }
+
+  @override
+  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
+    print("onDislikeStory $isDislike");
+  }
+
+  @override
+  void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
+    print("onLikeStory $isLike");
+  }
+
+  @override
+  void onShowSlide(SlideDataDto? slideData) {
+    print("onShowSlide");
+  }
+
+  @override
+  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+    print("onFavoriteTap $isFavorite");
   }
 }
 
 class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
-  CustomGridFeedFavoritesWidget(super.favorites, {required this.onTap, super.key});
+  CustomGridFeedFavoritesWidget(super.favorites,
+      {required this.onTap, super.key});
 
   final VoidCallback onTap;
 
@@ -174,10 +202,12 @@ class FavoritesBottomSheetWidget extends StatefulWidget {
   final Stream<Iterable<Widget>> favorites;
 
   @override
-  State<FavoritesBottomSheetWidget> createState() => _FavoritesBottomSheetWidgetState();
+  State<FavoritesBottomSheetWidget> createState() =>
+      _FavoritesBottomSheetWidgetState();
 }
 
-class _FavoritesBottomSheetWidgetState extends State<FavoritesBottomSheetWidget> {
+class _FavoritesBottomSheetWidgetState
+    extends State<FavoritesBottomSheetWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -192,7 +222,8 @@ class _FavoritesBottomSheetWidgetState extends State<FavoritesBottomSheetWidget>
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.requireData.length,
-                itemBuilder: (_, index) => snapshot.requireData.elementAt(index),
+                itemBuilder: (_, index) =>
+                    snapshot.requireData.elementAt(index),
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
               );
             }

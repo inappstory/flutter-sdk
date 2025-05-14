@@ -54,19 +54,23 @@ class StoriesListUpdateHandlerAdaptor {
     }
 
     private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in
-        self.flutter.updateStoryData(
-            var1: self.mapStoryAPIData(arg: storyCellData),
-            completion: { _ in }
-        )
+        DispatchQueue.main.async {
+            self.flutter.updateStoryData(
+                var1: self.mapStoryAPIData(arg: storyCellData),
+                completion: { _ in }
+            )
+        }
     }
 
     func favoriteUpdateHandler(_ data: [InAppStorySDK.SimpleFavoriteData]?) {
         if let favorites = data {
             if !favorites.isEmpty {
-                self.flutter.updateFavoriteStoriesData(
-                    list: favorites.map(self.mapFavorite),
-                    completion: { _ in }
-                )
+                DispatchQueue.main.async {
+                    self.flutter.updateFavoriteStoriesData(
+                        list: favorites.map(self.mapFavorite),
+                        completion: { _ in }
+                    )
+                }
             }
         }
     }

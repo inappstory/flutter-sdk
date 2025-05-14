@@ -15,8 +15,7 @@ class IASMessagesAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val iasMessages: IASInAppMessage,
     private val activityHolder: ActivityHolder,
-
-    ) : IASInAppMessagesHostApi {
+) : IASInAppMessagesHostApi {
 
     init {
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -28,8 +27,7 @@ class IASMessagesAdaptor(
             settings,
             (activityHolder.activity as FragmentActivity).supportFragmentManager,
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
-            object :
-                InAppMessageScreenActions {
+            object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
                     print("readerIsOpened")
                 }
@@ -46,7 +44,7 @@ class IASMessagesAdaptor(
     }
 
     override fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit) {
-        val preloadSettings = InAppMessagePreloadSettings();
+        val preloadSettings = InAppMessagePreloadSettings()
         iasMessages.preload(preloadSettings, object : InAppMessageLoadCallback {
             override fun loaded(p0: Int) {
                 print("IAS: loaded $p0")
