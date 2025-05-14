@@ -377,6 +377,57 @@ class ContentDataDto {
 ;
 }
 
+class InAppMessageDataDto {
+  InAppMessageDataDto({
+    required this.id,
+    this.title,
+    this.event,
+  });
+
+  int id;
+
+  String? title;
+
+  String? event;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      title,
+      event,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static InAppMessageDataDto decode(Object result) {
+    result as List<Object?>;
+    return InAppMessageDataDto(
+      id: result[0]! as int,
+      title: result[1] as String?,
+      event: result[2] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! InAppMessageDataDto || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -415,6 +466,9 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is ContentDataDto) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
+    }    else if (value is InAppMessageDataDto) {
+      buffer.putUint8(139);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -448,6 +502,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       case 138: 
         return ContentDataDto.decode(readValue(buffer)!);
+      case 139: 
+        return InAppMessageDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -2023,9 +2079,11 @@ class IASInAppMessagesHostApi {
 abstract class IASInAppMessagesCallbacksFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void onShowInAppMessage(StoryDataDto? storyData);
+  void onShowInAppMessage(InAppMessageDataDto? inAppMessageData);
 
-  void onCloseInAppMessage(SlideDataDto? slideData);
+  void onCloseInAppMessage(InAppMessageDataDto? inAppMessageData);
+
+  void onInAppMessageWidgetEvent(InAppMessageDataDto? inAppMessageData, String? name, Map<String?, Object?>? data);
 
   static void setUp(IASInAppMessagesCallbacksFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -2040,9 +2098,9 @@ abstract class IASInAppMessagesCallbacksFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final StoryDataDto? arg_storyData = (args[0] as StoryDataDto?);
+          final InAppMessageDataDto? arg_inAppMessageData = (args[0] as InAppMessageDataDto?);
           try {
-            api.onShowInAppMessage(arg_storyData);
+            api.onShowInAppMessage(arg_inAppMessageData);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -2063,9 +2121,34 @@ abstract class IASInAppMessagesCallbacksFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final SlideDataDto? arg_slideData = (args[0] as SlideDataDto?);
+          final InAppMessageDataDto? arg_inAppMessageData = (args[0] as InAppMessageDataDto?);
           try {
-            api.onCloseInAppMessage(arg_slideData);
+            api.onCloseInAppMessage(arg_inAppMessageData);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onInAppMessageWidgetEvent$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onInAppMessageWidgetEvent was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final InAppMessageDataDto? arg_inAppMessageData = (args[0] as InAppMessageDataDto?);
+          final String? arg_name = (args[1] as String?);
+          final Map<String?, Object?>? arg_data = (args[2] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          try {
+            api.onInAppMessageWidgetEvent(arg_inAppMessageData, arg_name, arg_data);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

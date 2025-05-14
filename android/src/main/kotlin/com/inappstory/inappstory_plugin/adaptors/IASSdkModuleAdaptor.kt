@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.adaptors
 import InappstorySdkModuleHostApi
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
@@ -24,20 +25,19 @@ class InappstorySdkModuleAdaptor(
     private lateinit var feed: IASStoryListAdaptor
     private lateinit var favorites: IASStoryListAdaptor
     private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
+    private lateinit var inAppMessageCallbacks: InAppMessageCallbackAdaptor
 
-    private val singleStoryApi =
-        IASSingleStoryAdaptor(
-            flutterPluginBinding,
-            appearanceManager,
-            inAppStoryAPI.singleStory,
-            activityHolder,
-        )
+    private val singleStoryApi = IASSingleStoryAdaptor(
+        flutterPluginBinding,
+        appearanceManager,
+        inAppStoryAPI.singleStory,
+        activityHolder,
+    )
     private val iasOnboardings =
         IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
     private lateinit var iasManagerAdaptor: IASManagerAdaptor
 
-    private val iasGames =
-        IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+    private val iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
 
     private val iasMessages =
         IASMessagesAdaptor(flutterPluginBinding, inAppStoryAPI.inAppMessage, activityHolder)
@@ -92,10 +92,11 @@ class InappstorySdkModuleAdaptor(
 
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
-            iasManagerAdaptor =
-                IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            iasManagerAdaptor = IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
+
+            inAppMessageCallbacks = InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
 
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {

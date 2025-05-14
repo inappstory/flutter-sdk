@@ -104,6 +104,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
 
         CallbacksAdaptor(binaryMessenger: binaryMessenger)
+        
+        InAppMessageCallbacksAdaptor(binaryMessenger: binaryMessenger)
 
         CallToActionCallbackAdaptor(binaryMessenger: binaryMessenger)
 

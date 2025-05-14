@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import '../inappstory_plugin.dart';
+import '../pigeon_generated.g.dart'
+    show IASCallBacksFlutterApi, SlideDataDto, StoryDataDto;
 
 /// A mixin that provides callback methods for handling various events
 /// related to stories and slides
-mixin IASCallbacks<T extends StatefulWidget> on State<T> implements IASCallBacksFlutterApi {
+mixin IASCallbacks<T extends StatefulWidget> on State<T>
+    implements IASCallBacksFlutterApi {
   /// Sets up the callbacks by registering this mixin instance
   @override
   void initState() {
@@ -68,5 +70,6 @@ mixin IASCallbacks<T extends StatefulWidget> on State<T> implements IASCallBacks
   ///
   /// [slideData] - Data about the slide where the widget event occurred, or `null` if unavailable.
   @override
-  void onStoryWidgetEvent(SlideDataDto? slideData, Map<String?, Object?>? widgetData) {}
+  void onStoryWidgetEvent(
+      SlideDataDto? slideData, Map<String?, Object?>? widgetData) {}
 }

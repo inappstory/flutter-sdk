@@ -253,7 +253,8 @@ abstract class IASCallBacksFlutterApi {
 
   void onShowSlide(SlideDataDto? slideData);
 
-  void onStoryWidgetEvent(SlideDataDto? slideData, Map<String?, Object?>? widgetData);
+  void onStoryWidgetEvent(
+      SlideDataDto? slideData, Map<String?, Object?>? widgetData);
 
 // void onShowInAppMessage() {}
 //
@@ -268,9 +269,18 @@ abstract class IASInAppMessagesHostApi {
   bool preloadMessages({List<String>? ids});
 }
 
+class InAppMessageDataDto {
+  late int id;
+  late String? title;
+  late String? event;
+}
+
 @FlutterApi()
 abstract class IASInAppMessagesCallbacksFlutterApi {
-  void onShowInAppMessage(StoryDataDto? storyData);
+  void onShowInAppMessage(InAppMessageDataDto? inAppMessageData);
 
-  void onCloseInAppMessage(SlideDataDto? slideData);
+  void onCloseInAppMessage(InAppMessageDataDto? inAppMessageData);
+
+  void onInAppMessageWidgetEvent(InAppMessageDataDto? inAppMessageData,
+      String? name, Map<String?, Object?>? data);
 }

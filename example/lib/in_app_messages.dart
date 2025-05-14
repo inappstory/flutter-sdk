@@ -8,7 +8,8 @@ class InAppMessages extends StatefulWidget {
   State<InAppMessages> createState() => _InAppMessagesState();
 }
 
-class _InAppMessagesState extends State<InAppMessages> {
+class _InAppMessagesState extends State<InAppMessages>
+    with IASInAppMessageCallback {
   final _inputController = TextEditingController();
 
   @override
@@ -64,5 +65,21 @@ class _InAppMessagesState extends State<InAppMessages> {
         ),
       ),
     );
+  }
+
+  @override
+  void onShowInAppMessage(InAppMessageDataDto? inAppMessageData) {
+    print("IAM: onShowInAppMessage: ${inAppMessageData?.id}");
+  }
+
+  @override
+  void onCloseInAppMessage(InAppMessageDataDto? inAppMessageData) {
+    print("IAM: onCloseInAppMessage: ${inAppMessageData?.id}");
+  }
+
+  @override
+  void onInAppMessageWidgetEvent(InAppMessageDataDto? inAppMessageData,
+      String? name, Map<String?, Object?>? data) {
+    print("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
   }
 }

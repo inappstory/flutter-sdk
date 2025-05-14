@@ -370,6 +370,39 @@ struct ContentDataDto: Hashable {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct InAppMessageDataDto: Hashable {
+  var id: Int64
+  var title: String? = nil
+  var event: String? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> InAppMessageDataDto? {
+    let id = pigeonVar_list[0] as! Int64
+    let title: String? = nilOrValue(pigeonVar_list[1])
+    let event: String? = nilOrValue(pigeonVar_list[2])
+
+    return InAppMessageDataDto(
+      id: id,
+      title: title,
+      event: event
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+      title,
+      event,
+    ]
+  }
+  static func == (lhs: InAppMessageDataDto, rhs: InAppMessageDataDto) -> Bool {
+    return deepEqualsPigeonGenerated(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashPigeonGenerated(value: toList(), hasher: &hasher)
+  }
+}
+
 private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -413,6 +446,8 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
       return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     case 138:
       return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 139:
+      return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -450,6 +485,9 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? ContentDataDto {
       super.writeByte(138)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(139)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1687,8 +1725,9 @@ class IASInAppMessagesHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol IASInAppMessagesCallbacksFlutterApiProtocol {
-  func onShowInAppMessage(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onCloseInAppMessage(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onShowInAppMessage(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onCloseInAppMessage(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onInAppMessageWidgetEvent(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, name nameArg: String?, data dataArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class IASInAppMessagesCallbacksFlutterApi: IASInAppMessagesCallbacksFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1700,10 +1739,10 @@ class IASInAppMessagesCallbacksFlutterApi: IASInAppMessagesCallbacksFlutterApiPr
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
   }
-  func onShowInAppMessage(storyData storyDataArg: StoryDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onShowInAppMessage(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onShowInAppMessage\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([storyDataArg] as [Any?]) { response in
+    channel.sendMessage([inAppMessageDataArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -1718,10 +1757,28 @@ class IASInAppMessagesCallbacksFlutterApi: IASInAppMessagesCallbacksFlutterApiPr
       }
     }
   }
-  func onCloseInAppMessage(slideData slideDataArg: SlideDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onCloseInAppMessage(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onCloseInAppMessage\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([slideDataArg] as [Any?]) { response in
+    channel.sendMessage([inAppMessageDataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onInAppMessageWidgetEvent(inAppMessageData inAppMessageDataArg: InAppMessageDataDto?, name nameArg: String?, data dataArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesCallbacksFlutterApi.onInAppMessageWidgetEvent\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([inAppMessageDataArg, nameArg, dataArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

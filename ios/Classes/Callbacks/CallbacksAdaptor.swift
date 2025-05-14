@@ -1,10 +1,3 @@
-//
-//  CallbacksAdaptor.swift
-//
-//
-//  Created by Alexander Sungurov on 29.04.2025.
-//
-
 import Flutter
 import Foundation
 @_spi(QAApp) import InAppStorySDK
@@ -40,13 +33,13 @@ class CallbacksAdaptor {
                 completion: { _ in }
             )
 
-        case .storiesLoaded(let feed, let stories):
+        case .storiesLoaded(_, _):
             return
-        case .ugcStoriesLoaded(let stories):
+        case .ugcStoriesLoaded(_):
             return
-        case .clickOnStory(let storyData, let index):
+        case .clickOnStory(_, _):
             return
-        case .clickOnButton(let slideData, let link):
+        case .clickOnButton(_, _):
             return
         case .showSlide(let slideData):
             callbackFlutterApi.onShowSlide(
