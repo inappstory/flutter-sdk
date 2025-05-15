@@ -343,10 +343,20 @@ data class ContentDataDto (
   override fun hashCode(): Int = toList().hashCode()
 }
 
-/** Generated class from Pigeon that represents data sent in messages. */
+/**
+ * Represents data for an in-app message.
+ *
+ * This class contains information about an in-app message, including its
+ * unique identifier, title, and associated event.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
 data class InAppMessageDataDto (
+  /** The unique identifier of the in-app message. */
   val id: Long,
+  /** The title of the in-app message, or `null` if not available. */
   val title: String? = null,
+  /** The event associated with the in-app message, or `null` if not available. */
   val event: String? = null
 )
  {
@@ -1654,7 +1664,8 @@ class IASCallBacksFlutterApi(private val binaryMessenger: BinaryMessenger, priva
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASInAppMessagesHostApi {
-  fun show(messageId: String, onlyPreloaded: Boolean)
+  fun showById(messageId: String, onlyPreloaded: Boolean)
+  fun showByEvent(event: String, onlyPreloaded: Boolean)
   fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit)
 
   companion object {
@@ -1667,14 +1678,33 @@ interface IASInAppMessagesHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: IASInAppMessagesHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val messageIdArg = args[0] as String
             val onlyPreloadedArg = args[1] as Boolean
             val wrapped: List<Any?> = try {
-              api.show(messageIdArg, onlyPreloadedArg)
+              api.showById(messageIdArg, onlyPreloadedArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val eventArg = args[0] as String
+            val onlyPreloadedArg = args[1] as Boolean
+            val wrapped: List<Any?> = try {
+              api.showByEvent(eventArg, onlyPreloadedArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

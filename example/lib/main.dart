@@ -19,11 +19,14 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements OnboardingLoadCallbackFlutterApi {
+class _MyAppState extends State<MyApp>
+    with WidgetsBindingObserver
+    implements OnboardingLoadCallbackFlutterApi {
   final navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get navigatorState =>
-      navigatorKey.currentState ?? (throw Exception('navigatorKey is not set to MaterialApp'));
+      navigatorKey.currentState ??
+      (throw Exception('navigatorKey is not set to MaterialApp'));
 
   final _inAppStoryPlugin = InAppStoryPlugin();
   final appearanceManager = AppearanceManagerHostApi();
@@ -50,11 +53,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
   }
 
   void onSimpleExampleTap() {
-    navigatorState.push(MaterialPageRoute(builder: (_) => const SimpleFeedExampleWidget()));
+    navigatorState.push(
+        MaterialPageRoute(builder: (_) => const SimpleFeedExampleWidget()));
   }
 
   void onAppearanceManagerTap() {
-    navigatorState.push(MaterialPageRoute(builder: (_) => const AppearanceManagerWidget()));
+    navigatorState.push(
+        MaterialPageRoute(builder: (_) => const AppearanceManagerWidget()));
   }
 
   void onOnboardingsTap() {
@@ -66,7 +71,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
   }
 
   void onInAppMessagesTap() {
-    navigatorState.push(MaterialPageRoute(builder: (_) => const InAppMessages()));
+    navigatorState
+        .push(MaterialPageRoute(builder: (_) => const InAppMessages()));
   }
 
   @override
@@ -95,8 +101,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
     return MaterialApp(
       navigatorKey: navigatorKey,
       localizationsDelegates: [
-        AnyLocaleLocalizationsDelegate<MaterialLocalizations>(DefaultMaterialLocalizations.delegate),
-        AnyLocaleLocalizationsDelegate<CupertinoLocalizations>(DefaultCupertinoLocalizations.delegate),
+        AnyLocaleLocalizationsDelegate<MaterialLocalizations>(
+            DefaultMaterialLocalizations.delegate),
+        AnyLocaleLocalizationsDelegate<CupertinoLocalizations>(
+            DefaultCupertinoLocalizations.delegate),
         WidgetsLocalizationsDelegate(textDirection),
       ],
       home: Scaffold(
@@ -107,19 +115,31 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver implements On
           child: FutureBuilder(
             future: initialization,
             builder: (context, initializationSnapshot) {
-              if (initializationSnapshot.connectionState == ConnectionState.done) {
+              if (initializationSnapshot.connectionState ==
+                  ConnectionState.done) {
                 if (initializationSnapshot.hasError) {
                   return const Text('SDK was not initialized');
                 } else {
                   return Column(
                     children: [
                       const SizedBox(height: 24),
-                      ElevatedButton(onPressed: toggleRtl, child: Text('toggleRtl ${textDirection.name}')),
-                      ElevatedButton(onPressed: onSimpleExampleTap, child: const Text('SimpleExample')),
-                      ElevatedButton(onPressed: onAppearanceManagerTap, child: const Text('Appearance Manager')),
-                      ElevatedButton(onPressed: onOnboardingsTap, child: const Text('Onboardings (shown only if any)')),
-                      ElevatedButton(onPressed: onGamesTap, child: const Text('Games')),
-                      ElevatedButton(onPressed: onInAppMessagesTap, child: const Text('InAppMessages')),
+                      ElevatedButton(
+                          onPressed: toggleRtl,
+                          child: Text('toggleRtl ${textDirection.name}')),
+                      ElevatedButton(
+                          onPressed: onSimpleExampleTap,
+                          child: const Text('Simple Feed Example')),
+                      ElevatedButton(
+                          onPressed: onAppearanceManagerTap,
+                          child: const Text('Appearance Manager')),
+                      ElevatedButton(
+                          onPressed: onOnboardingsTap,
+                          child: const Text('Onboardings (shown only if any)')),
+                      ElevatedButton(
+                          onPressed: onGamesTap, child: const Text('Games')),
+                      ElevatedButton(
+                          onPressed: onInAppMessagesTap,
+                          child: const Text('InAppMessages')),
                     ],
                   );
                 }

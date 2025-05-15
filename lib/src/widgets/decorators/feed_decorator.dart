@@ -4,6 +4,7 @@ class FeedStoryDecorator {
   final BorderRadiusGeometry borderRadius;
   final EdgeInsetsGeometry feedPadding;
   final double storyPadding;
+  final double loaderAspectRatio;
 
   final BoxDecoration foregroundDecoration;
 
@@ -14,10 +15,11 @@ class FeedStoryDecorator {
 
   const FeedStoryDecorator({
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
-    this.feedPadding = const EdgeInsets.all(10.0),
+    this.feedPadding = const EdgeInsets.all(0.0),
     this.textPadding = const EdgeInsets.all(4.0),
     this.storyPadding = 8.0,
-    this.textFontSize = 14.0,
+    this.textFontSize = 12.0,
+    this.loaderAspectRatio = 1 / 1,
     this.loaderDecorator = const LoaderDecorator(),
     this.foregroundDecoration = const BoxDecoration(
       gradient: LinearGradient(

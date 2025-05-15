@@ -8,14 +8,15 @@ class GamesWidget extends StatefulWidget {
   State<GamesWidget> createState() => _GamesWidgetState();
 }
 
-class _GamesWidgetState extends State<GamesWidget> implements GameReaderCallbackFlutterApi {
+class _GamesWidgetState extends State<GamesWidget>
+    implements GameReaderCallbackFlutterApi {
   final _inputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Games reader"),
+        title: const Text("Games"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -65,7 +66,8 @@ class _GamesWidgetState extends State<GamesWidget> implements GameReaderCallback
   }
 
   @override
-  void eventGame(ContentDataDto? gameData, String? id, String? eventName, Map<String?, Object?>? payload) {
+  void eventGame(ContentDataDto? gameData, String? id, String? eventName,
+      Map<String?, Object?>? payload) {
     print('eventGame');
   }
 

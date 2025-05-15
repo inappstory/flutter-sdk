@@ -370,10 +370,18 @@ struct ContentDataDto: Hashable {
   }
 }
 
+/// Represents data for an in-app message.
+///
+/// This class contains information about an in-app message, including its
+/// unique identifier, title, and associated event.
+///
 /// Generated class from Pigeon that represents data sent in messages.
 struct InAppMessageDataDto: Hashable {
+  /// The unique identifier of the in-app message.
   var id: Int64
+  /// The title of the in-app message, or `null` if not available.
   var title: String? = nil
+  /// The event associated with the in-app message, or `null` if not available.
   var event: String? = nil
 
 
@@ -1678,7 +1686,8 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASInAppMessagesHostApi {
-  func show(messageId: String, onlyPreloaded: Bool) throws
+  func showById(messageId: String, onlyPreloaded: Bool) throws
+  func showByEvent(event: String, onlyPreloaded: Bool) throws
   func preloadMessages(ids: [String]?, completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
@@ -1688,21 +1697,37 @@ class IASInAppMessagesHostApiSetup {
   /// Sets up an instance of `IASInAppMessagesHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: IASInAppMessagesHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let showChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let showByIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      showChannel.setMessageHandler { message, reply in
+      showByIdChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let messageIdArg = args[0] as! String
         let onlyPreloadedArg = args[1] as! Bool
         do {
-          try api.show(messageId: messageIdArg, onlyPreloaded: onlyPreloadedArg)
+          try api.showById(messageId: messageIdArg, onlyPreloaded: onlyPreloadedArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
         }
       }
     } else {
-      showChannel.setMessageHandler(nil)
+      showByIdChannel.setMessageHandler(nil)
+    }
+    let showByEventChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      showByEventChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let eventArg = args[0] as! String
+        let onlyPreloadedArg = args[1] as! Bool
+        do {
+          try api.showByEvent(event: eventArg, onlyPreloaded: onlyPreloadedArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      showByEventChannel.setMessageHandler(nil)
     }
     let preloadMessagesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.preloadMessages\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

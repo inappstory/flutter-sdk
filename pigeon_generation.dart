@@ -1,6 +1,6 @@
 import 'package:pigeon/pigeon.dart';
 
-// Коментировать перед запуском
+// Comment before run
 // flutter pub run pigeon --input pigeon_generation.dart
 // import 'lib/inappstory_sdk_module.dart';
 
@@ -255,23 +255,30 @@ abstract class IASCallBacksFlutterApi {
 
   void onStoryWidgetEvent(
       SlideDataDto? slideData, Map<String?, Object?>? widgetData);
-
-// void onShowInAppMessage() {}
-//
-// void onCloseInAppMessage() {}
 }
 
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void show(String messageId, {bool onlyPreloaded = false});
+  void showById(String messageId, {bool onlyPreloaded = false});
+
+  void showByEvent(String event, {bool onlyPreloaded = false});
 
   @async
   bool preloadMessages({List<String>? ids});
 }
 
+/// Represents data for an in-app message.
+///
+/// This class contains information about an in-app message, including its
+/// unique identifier, title, and associated event.
 class InAppMessageDataDto {
+  /// The unique identifier of the in-app message.
   late int id;
+
+  /// The title of the in-app message, or `null` if not available.
   late String? title;
+
+  /// The event associated with the in-app message, or `null` if not available.
   late String? event;
 }
 

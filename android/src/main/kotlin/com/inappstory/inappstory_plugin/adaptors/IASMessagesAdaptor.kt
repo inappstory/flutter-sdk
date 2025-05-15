@@ -21,25 +21,45 @@ class IASMessagesAdaptor(
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
 
-    override fun show(messageId: String, onlyPreloaded: Boolean) {
-        val settings = InAppMessageOpenSettings(messageId.toInt(), false, "test", listOf())
+    override fun showById(messageId: String, onlyPreloaded: Boolean) {
+        val settings = InAppMessageOpenSettings(messageId.toInt(), onlyPreloaded, null, listOf())
         iasMessages.show(
             settings,
             (activityHolder.activity as FragmentActivity).supportFragmentManager,
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
             object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
-                    print("readerIsOpened")
+                    print("IAM: readerIsOpened")
                 }
 
                 override fun readerOpenError(p0: String?) {
-                    print("readerOpenError")
+                    print("IAM: readerOpenError")
                 }
 
                 override fun readerIsClosed() {
-                    print("readerIsClosed")
+                    print("IAM: readerIsClosed")
+                }
+            })
+    }
+
+    override fun showByEvent(event: String, onlyPreloaded: Boolean) {
+        val settings = InAppMessageOpenSettings(null, onlyPreloaded, event, listOf())
+        iasMessages.show(
+            settings,
+            (activityHolder.activity as FragmentActivity).supportFragmentManager,
+            FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
+            object : InAppMessageScreenActions {
+                override fun readerIsOpened() {
+                    print("IAM: readerIsOpened")
                 }
 
+                override fun readerOpenError(p0: String?) {
+                    print("IAM: readerOpenError")
+                }
+
+                override fun readerIsClosed() {
+                    print("IAM: readerIsClosed")
+                }
             })
     }
 
@@ -47,20 +67,20 @@ class IASMessagesAdaptor(
         val preloadSettings = InAppMessagePreloadSettings()
         iasMessages.preload(preloadSettings, object : InAppMessageLoadCallback {
             override fun loaded(p0: Int) {
-                print("IAS: loaded $p0")
+                print("IAM: loaded $p0")
             }
 
             override fun allLoaded() {
-                print("IAS: allLoaded")
+                print("IAM: allLoaded")
                 callback(Result.success(true))
             }
 
             override fun loadError(p0: Int) {
-                print("IAS: loadError $p0")
+                print("IAM:  loadError $p0")
             }
 
             override fun loadError() {
-                print("IAS: loadError")
+                print("IIAM: loadError")
                 callback(Result.success(false))
             }
 

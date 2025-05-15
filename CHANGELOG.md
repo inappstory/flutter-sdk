@@ -1,3 +1,13 @@
+## 0.3.0-rc.2
+
+### Added
+
+- Added `InAppMessages` feature, see documentation [here](in-app-messaging.md)
+
+### Changed
+
+- `loaderBuilder` and `errorBuilder` parameters are now optional in `FeedStoriesWidget` widget
+
 ## [0.2.3]
 
 ### Added
@@ -22,7 +32,7 @@
 
 * Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
 
-## [0.3.0-rc.1] - 2025-04-28
+## [0.3.0-rc.1]
 
 ### Added
 

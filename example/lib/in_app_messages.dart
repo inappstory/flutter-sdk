@@ -23,40 +23,49 @@ class _InAppMessagesState extends State<InAppMessages>
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            spacing: 12,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  final result =
-                      await IASInAppMessagesHostApi().preloadMessages();
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content:
-                            Text(result ? "Success" : "Error loading messages"),
-                      ),
-                    );
-                  }
-                },
-                child: const Text("preload"),
+              TextField(
+                decoration: const InputDecoration(
+                  label: Text('Input InAppMessage id or event'),
+                ),
+                controller: _inputController,
               ),
-              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        label: Text('Input InAppMessage id'),
-                      ),
-                      controller: _inputController,
-                    ),
+                  ElevatedButton(
+                    onPressed: () => IASInAppMessagesHostApi()
+                        .showById(_inputController.text, onlyPreloaded: false),
+                    child: const Text("Show by id"),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      IASInAppMessagesHostApi().show(_inputController.text);
+                    onPressed: () => IASInAppMessagesHostApi()
+                        .showByEvent(_inputController.text),
+                    child: const Text("Show by event"),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("InAppMessage preloading"),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result =
+                          await IASInAppMessagesHostApi().preloadMessages();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                result ? "Success" : "Error loading messages"),
+                          ),
+                        );
+                      }
                     },
-                    child: const Text("Show"),
+                    child: const Text("preload"),
                   ),
                 ],
               ),

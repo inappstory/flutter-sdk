@@ -27,9 +27,16 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         )
     }
 
-    func show(messageId: String, onlyPreloaded: Bool) throws {
+    func showById(messageId: String, onlyPreloaded: Bool) throws {
         inAppMessagesApi.showInAppMessageWith(
             id: messageId,
+            onlyPreloaded: onlyPreloaded
+        ) { _ in }
+    }
+    
+    func showByEvent(event: String, onlyPreloaded: Bool) throws {
+        inAppMessagesApi.showInAppMessageWith(
+            event: event,
             onlyPreloaded: onlyPreloaded
         ) { _ in }
     }

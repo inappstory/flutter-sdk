@@ -24,7 +24,8 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
   Stream<Iterable<Widget>> _getStoriesWidgets() {
     return FavoritesStoriesStream(
       feed: widget.feed,
-      storyWidgetBuilder: widget.storyBuilder ?? (story, decorator) => BaseStoryBuilder(story, decorator: decorator),
+      storyWidgetBuilder: widget.storyBuilder ??
+          (story, decorator) => BaseStoryBuilder(story, decorator: decorator),
       feedController: widget.controller,
       //feedFavoritesWidgetBuilder: favoritesBuilder,
       feedDecorator: widget.decorator,
@@ -37,11 +38,17 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
       stream: _favoritesStoriesWidgetsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return super.loaderWidgetBuilder(context);
+          if (widget.loaderBuilder == null) {
+            return const SizedBox.shrink();
+          }
+          return super.loaderBuilder!(context);
         }
 
         if (snapshot.hasError) {
-          return errorWidgetBuilder(context, snapshot.error);
+          if (widget.errorBuilder == null) {
+            return const SizedBox.shrink();
+          }
+          return super.errorBuilder!(context, snapshot.error);
         }
 
         final storiesWidgets = snapshot.data ?? [];

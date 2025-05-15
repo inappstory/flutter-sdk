@@ -377,6 +377,10 @@ class ContentDataDto {
 ;
 }
 
+/// Represents data for an in-app message.
+///
+/// This class contains information about an in-app message, including its
+/// unique identifier, title, and associated event.
 class InAppMessageDataDto {
   InAppMessageDataDto({
     required this.id,
@@ -384,10 +388,13 @@ class InAppMessageDataDto {
     this.event,
   });
 
+  /// The unique identifier of the in-app message.
   int id;
 
+  /// The title of the in-app message, or `null` if not available.
   String? title;
 
+  /// The event associated with the in-app message, or `null` if not available.
   String? event;
 
   List<Object?> _toList() {
@@ -2024,14 +2031,37 @@ class IASInAppMessagesHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> show(String messageId, {bool onlyPreloaded = false}) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.show$pigeonVar_messageChannelSuffix';
+  Future<void> showById(String messageId, {bool onlyPreloaded = false}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, onlyPreloaded]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> showByEvent(String event, {bool onlyPreloaded = false}) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[event, onlyPreloaded]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

@@ -33,17 +33,12 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
   Widget build(BuildContext context) {
     final videoFile = widget.videoFile;
 
-    print('build in main builder');
-
     return FutureBuilder(
       future: _prepareVideoController(videoFile),
       builder: (context, snapshot) {
-        print('future builder');
         if (snapshot.connectionState == ConnectionState.done) {
-          print('future builder video');
           return VideoPlayer(controller);
         } else {
-          print('future builder placeholder');
           return StoryPlaceholder(backgroundColor: widget.storyBackgroundColor);
         }
       },

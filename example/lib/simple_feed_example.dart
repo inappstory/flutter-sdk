@@ -17,6 +17,14 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   final inputController = TextEditingController();
   final feedStoriesController = FeedStoriesController();
+  final feedDecorator = const FeedStoryDecorator(
+    storyPadding: 12.0,
+    feedPadding: EdgeInsets.only(top: 4.0),
+    loaderAspectRatio: 1 / 1,
+    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    textFontSize: 14.0,
+    textPadding: EdgeInsets.all(8.0),
+  );
 
   final callsToAction = <String>[];
 
@@ -42,22 +50,17 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SimpleFeedExample'),
+        title: const Text('Simple Feed'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 150,
-            child: FeedStoriesWidget(
-              feed: feed,
-              favoritesBuilder: (favorites) {
-                return CustomGridFeedFavoritesWidget(
-                  favorites,
-                  onTap: () => onFeedFavoritesTap(),
-                );
-              },
-            ),
+          FeedStoriesWidget(
+            feed: feed,
+            controller: feedStoriesController,
+            loaderBuilder: (context) =>
+                DefaultLoaderWidget(decorator: feedDecorator),
+            decorator: feedDecorator,
           ),
           const Divider(indent: 4),
           ElevatedButton(
@@ -234,6 +237,31 @@ class _FavoritesBottomSheetWidgetState
           },
         ),
       ),
+    );
+  }
+}
+
+class FeedExample extends StatelessWidget {
+  FeedExample({super.key});
+
+  final feedController = FeedStoriesController();
+
+  @override
+  Widget build(BuildContext context) {
+    return FeedStoriesWidget(
+      feed: "<your_feed_id>",
+      controller: feedController,
+      errorBuilder: (context, error) {
+        return Column(
+          children: [
+            Text("Error loading feed: $error"),
+            ElevatedButton(
+              onPressed: () => feedController.fetchFeedStories(),
+              child: const Text("Retry"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
