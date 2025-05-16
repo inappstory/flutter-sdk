@@ -6,7 +6,8 @@ import '../../data/story_from_pigeon_dto.dart';
 import '../builders/builders.dart';
 
 class BaseStoryWidget extends StatefulWidget implements StoryWidget {
-  const BaseStoryWidget(this.story, this.storyWidgetBuilder, {super.key, required this.storyDecorator});
+  const BaseStoryWidget(this.story, this.storyWidgetBuilder,
+      {super.key, required this.storyDecorator});
 
   final StoryWidgetBuilder storyWidgetBuilder;
 
@@ -38,12 +39,9 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
       child: StreamBuilder(
         stream: story.updates,
         builder: (_, __) {
-          return ClipRRect(
-            borderRadius: storyDecorator.borderRadius,
-            child: AspectRatio(
-              aspectRatio: story.aspectRatio,
-              child: storyWidgetBuilder(story, storyDecorator),
-            ),
+          return AspectRatio(
+            aspectRatio: story.aspectRatio,
+            child: storyWidgetBuilder(story, storyDecorator),
           );
         },
       ),

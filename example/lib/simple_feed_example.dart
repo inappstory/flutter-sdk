@@ -21,11 +21,15 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   final feedStoriesController = FeedStoriesController();
   final feedDecorator = const FeedStoryDecorator(
     storyPadding: 12.0,
-    feedPadding: EdgeInsets.only(top: 4.0),
+    feedPadding: EdgeInsets.only(left: 12.0),
     loaderAspectRatio: 1 / 1,
-    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    borderRadius: BorderRadius.all(Radius.circular(12.0)),
     textFontSize: 14.0,
     textPadding: EdgeInsets.all(8.0),
+    showBorder: true,
+    borderColor: Colors.deepPurple,
+    borderWidth: 2.0,
+    borderPadding: 4.0,
   );
 
   final callsToAction = <String>[];
@@ -59,7 +63,15 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
         children: [
           FeedStoriesWidget(
             feed: feed,
+            height: 200,
             controller: feedStoriesController,
+            errorBuilder: (context, error) {
+              return const Center(
+                child: Text(
+                  "error",
+                ),
+              );
+            },
             loaderBuilder: (context) =>
                 DefaultLoaderWidget(decorator: feedDecorator),
             decorator: feedDecorator,

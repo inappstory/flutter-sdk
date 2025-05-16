@@ -6,6 +6,11 @@ class FeedStoryDecorator {
   final double storyPadding;
   final double loaderAspectRatio;
 
+  final bool showBorder;
+  final double borderWidth;
+  final double borderPadding;
+  final Color borderColor;
+
   final BoxDecoration foregroundDecoration;
 
   final EdgeInsetsGeometry textPadding;
@@ -20,6 +25,10 @@ class FeedStoryDecorator {
     this.storyPadding = 8.0,
     this.textFontSize = 12.0,
     this.loaderAspectRatio = 1 / 1,
+    this.showBorder = true,
+    this.borderWidth = 1.0,
+    this.borderPadding = 2.0,
+    this.borderColor = Colors.black87,
     this.loaderDecorator = const LoaderDecorator(),
     this.foregroundDecoration = const BoxDecoration(
       gradient: LinearGradient(

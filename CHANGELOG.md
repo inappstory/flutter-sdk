@@ -1,3 +1,9 @@
+### [0.3.0-rc.3]
+
+### Added
+
+- Added border around stories in `FeedStoryDecorator`, that indicates the story has been opened
+
 ## [0.3.0-rc.2]
 
 ### Added

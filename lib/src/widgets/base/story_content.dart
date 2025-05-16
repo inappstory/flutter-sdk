@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../data/story.dart';
-import 'story_widget.dart';
 import '../placeholders/story_placeholder.dart';
 import '../placeholders/video_story_placeholder.dart';
+import 'story_widget.dart';
 
 /// A widget that displays content of a story.
 class StoryContentWidget extends StatefulWidget implements StoryWidget {
@@ -33,6 +33,7 @@ class _StoryContentWidgetState extends State<StoryContentWidget> {
     if (imageFile != null) {
       return Image.file(
         imageFile,
+        fit: BoxFit.cover,
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) {
             return child;
