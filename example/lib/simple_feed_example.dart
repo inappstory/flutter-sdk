@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
+import 'keys.dart';
+
 class SimpleFeedExampleWidget extends StatefulWidget {
   const SimpleFeedExampleWidget({super.key});
 
@@ -13,7 +15,7 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     with IASCallbacks
     implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
-  static const feed = '<your feed id>';
+  static const feed = Keys.feedId;
 
   final inputController = TextEditingController();
   final feedStoriesController = FeedStoriesController();

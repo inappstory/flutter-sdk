@@ -5,6 +5,7 @@ import 'package:inappstory_plugin_example/games_widget.dart';
 import 'package:inappstory_plugin_example/in_app_messages.dart';
 
 import 'appearance_manager_widget.dart';
+import 'keys.dart';
 import 'localization_delegates.dart';
 import 'simple_feed_example.dart';
 
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp>
   }
 
   Future<void> initSdk() async {
-    await _inAppStoryPlugin.initWith('<your key>', '<some user id>', false);
+    await _inAppStoryPlugin.initWith(Keys.apiKey, Keys.userId, false);
     await appearanceManager.setHasLike(true);
     await appearanceManager.setHasFavorites(true);
     await appearanceManager.setHasShare(true);
