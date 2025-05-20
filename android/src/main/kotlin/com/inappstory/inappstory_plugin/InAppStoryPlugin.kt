@@ -13,11 +13,12 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 
-/** InappstoryPlugin */
-class InappstoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, ActivityAware {
+/** InAppStoryPlugin */
+class InAppStoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, ActivityAware {
 
     companion object {
-        @JvmStatic fun initSDK(application: Application) {
+        @JvmStatic
+        fun initSDK(application: Application) {
             InAppStoryManager.initSDK(application, false)
         }
     }
