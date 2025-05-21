@@ -37,7 +37,7 @@ class InAppMessageCallbacksAdaptor {
             iamCallbackFlutterApi.onInAppMessageWidgetEvent(
                 inAppMessageData: messageData,
                 name: name,
-                data: data,
+                data: data
             ) { _ in }
             return
         @unknown default:
@@ -52,7 +52,7 @@ class InAppMessageCallbacksAdaptor {
         return InAppMessageDataDto(
             id: Int64(arg.id ?? "0") ?? 0,
             title: nil,
-            event: arg.campaign,
+            event: arg.campaign
         )
     }
 }

@@ -1,3 +1,9 @@
+### [0.3.0-rc.5]
+
+### Fixed
+
+- Fixed build error in iOS
+
 ### [0.3.0-rc.4]
 
 ### Fixed
