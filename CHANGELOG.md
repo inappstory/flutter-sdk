@@ -1,16 +1,16 @@
-### [0.3.0-rc.5]
+## [0.3.0-rc.5]
 
 ### Fixed
 
 - Fixed build error in iOS
 
-### [0.3.0-rc.4]
+## [0.3.0-rc.4]
 
 ### Fixed
 
 - Fixed build error when android gradle plugin can't find main class path
 
-### [0.3.0-rc.3]
+## [0.3.0-rc.3]
 
 ### Added
 
