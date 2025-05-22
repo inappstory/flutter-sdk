@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import 'story_placeholder.dart';
 
@@ -37,7 +38,19 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
       future: _prepareVideoController(videoFile),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return VideoPlayer(controller);
+          return VisibilityDetector(
+            key: ObjectKey(videoFile),
+            onVisibilityChanged: (VisibilityInfo info) {
+              if (info.visibleFraction == 0) {
+                if (mounted) {
+                  controller.pause();
+                }
+              } else {
+                controller.play();
+              }
+            },
+            child: VideoPlayer(controller),
+          );
         } else {
           return StoryPlaceholder(backgroundColor: widget.storyBackgroundColor);
         }

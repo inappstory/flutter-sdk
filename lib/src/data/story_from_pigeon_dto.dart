@@ -6,10 +6,14 @@ import '../pigeon_generated.g.dart';
 import 'observable.dart';
 import 'story.dart';
 
-class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi {
-  StoryFromPigeonDto(this.dto, this.iasStoryListHostApi, this.observable);
+class StoryFromPigeonDto
+    implements Story, InAppStoryAPIListSubscriberFlutterApi {
+  StoryFromPigeonDto(
+      this.dto, this.feed, this.iasStoryListHostApi, this.observable);
 
   StoryAPIDataDto dto;
+
+  final String feed;
 
   final IASStoryListHostApi iasStoryListHostApi;
 
@@ -53,10 +57,10 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   Color get titleColor => colorFromString(dto.titleColor);
 
   @override
-  void showReader() => iasStoryListHostApi.openStoryReader(dto.id);
+  void showReader() => iasStoryListHostApi.openStoryReader(dto.id, feed);
 
   void wasViewed() {
-    iasStoryListHostApi.updateVisiblePreviews([dto.id]);
+    iasStoryListHostApi.updateVisiblePreviews([dto.id], feed);
   }
 
   @override
@@ -77,7 +81,9 @@ class StoryFromPigeonDto implements Story, InAppStoryAPIListSubscriberFlutterApi
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryFromPigeonDto && runtimeType == other.runtimeType && dto.id == other.dto.id;
+      other is StoryFromPigeonDto &&
+          runtimeType == other.runtimeType &&
+          dto.id == other.dto.id;
 
   @override
   int get hashCode => dto.id;

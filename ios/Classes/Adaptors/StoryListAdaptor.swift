@@ -34,7 +34,7 @@ class StoryListAdaptor: IASStoryListHostApi {
         )
     }
 
-    private var uniqueId: String
+    public var uniqueId: String
 
     private var binaryMessenger: FlutterBinaryMessenger
 
@@ -43,30 +43,34 @@ class StoryListAdaptor: IASStoryListHostApi {
     func load(feed: String) throws {
         // Noop use impls for Feed & Favorites
     }
-    
+
     func reloadFeed(feed: String) throws {
         storyListAPI.refresh(feed)
     }
 
-    func openStoryReader(storyId: Int64) throws {
+    func openStoryReader(storyId: Int64, feed: String) throws {
         storyListAPI.selectStoryCellWith(id: String(storyId))
     }
 
-    func showFavoriteItem() throws {
+    func showFavoriteItem(feed: String) throws {
         storyListAPI.setVisibleFavorite()
     }
 
-    func updateVisiblePreviews(storyIds: [Int64]) throws {
+    func updateVisiblePreviews(storyIds: [Int64], feed: String) throws {
         self.storyListAPI.setVisibleWith(storyIDs: storyIds.map { String($0) })
+    }
+
+    func removeSubscriber(feed: String) throws {
+        // not used in iOS
     }
 }
 
 class FeedStoryListAdaptor: StoryListAdaptor {
-    init(binaryMessenger: FlutterBinaryMessenger) {
+    init(binaryMessenger: FlutterBinaryMessenger, feed: String) {
         super.init(
             binaryMessenger: binaryMessenger,
-            storyListAPI: StoryListAPI(),
-            uniqueId: "feed"
+            storyListAPI: StoryListAPI(feed: feed),
+            uniqueId: feed
         )
     }
 

@@ -12,7 +12,8 @@ import '../base/base_feed_favorites_widget.dart';
 import '../decorators/feed_decorator.dart';
 import 'stories_stream.dart';
 
-typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(Iterable<FeedFavorite> favorites);
+typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(
+    Iterable<FeedFavorite> favorites);
 
 typedef FeedFavoriteWidgetBuilder = Widget Function(FeedFavorite);
 
@@ -33,9 +34,11 @@ class FeedStoriesStream extends StoriesStream {
     this.feedFavoritesWidgetBuilder,
   }) : super(
           uniqueId: _uniqueId,
-          observableStoryList: InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
+          observableStoryList:
+              InAppStoryAPIListSubscriberFlutterApiObservable(feed),
           observableErrorCallback: ObservableErrorCallbackFlutterApi(),
-          iasStoryListHostApi: IASStoryListHostApiDecorator(IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
+          iasStoryListHostApi: IASStoryListHostApiDecorator(
+              IASStoryListHostApi(messageChannelSuffix: feed)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
         ) {
     feedController
@@ -57,13 +60,22 @@ class FeedStoriesStream extends StoriesStream {
     return [
       ...stories.map(createWidgetFromStory),
       if (feedFavoritesWidgetBuilder != null && favorites.isNotEmpty)
-        BaseFeedFavoritesWidget(favorites, iasStoryListHostApi, feedFavoritesWidgetBuilder),
+        BaseFeedFavoritesWidget(
+          favorites.take(4),
+          feed,
+          iasStoryListHostApi,
+          feedFavoritesWidgetBuilder,
+          aspectRatio: feedDecorator?.favouriteAspectRatio,
+        ),
     ];
   }
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
-    stories = list.whereType<StoryAPIDataDto>().map(createStoryFromDto).toList(growable: false);
+    stories = list
+        .whereType<StoryAPIDataDto>()
+        .map(createStoryFromDto)
+        .toList(growable: false);
 
     controller.add(combineStoriesAndFavorites());
   }
@@ -71,7 +83,8 @@ class FeedStoriesStream extends StoriesStream {
   @override
   void updateStoryData(StoryAPIDataDto storyData) {
     try {
-      final story = stories.firstWhere((element) => element.dto.id == storyData.id);
+      final story =
+          stories.firstWhere((element) => element.dto.id == storyData.id);
       story.updateStoryData(storyData);
 
       controller.add(combineStoriesAndFavorites());
@@ -84,7 +97,10 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
-    favorites = list.whereType<StoryFavoriteItemAPIDataDto>().map(FavoriteFromDto.new).toList(growable: false);
+    favorites = list
+        .whereType<StoryFavoriteItemAPIDataDto>()
+        .map(FavoriteFromDto.new)
+        .toList(growable: false);
 
     controller.add(combineStoriesAndFavorites());
   }

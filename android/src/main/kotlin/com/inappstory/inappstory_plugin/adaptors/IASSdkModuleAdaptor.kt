@@ -10,7 +10,6 @@ import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import java.lang.reflect.Field
 
 class InappstorySdkModuleAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
@@ -22,7 +21,6 @@ class InappstorySdkModuleAdaptor(
     private val appearanceManagerAdaptor =
         AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
     private lateinit var inAppStoryManager: InAppStoryManager
-    private lateinit var feed: IASStoryListAdaptor
     private lateinit var favorites: IASStoryListAdaptor
     private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
     private lateinit var inAppMessageCallbacks: InAppMessageCallbackAdaptor
@@ -42,8 +40,10 @@ class InappstorySdkModuleAdaptor(
     private val iasMessages =
         IASMessagesAdaptor(flutterPluginBinding, inAppStoryAPI.inAppMessage, activityHolder)
 
+    private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
+
     override fun initWith(
-        apiKey: String, userID: String, sendStatistics: Boolean, callback: (Result<Unit>) -> Unit
+        apiKey: String, userID: String, callback: (Result<Unit>) -> Unit
     ) {
         try {
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
@@ -60,21 +60,8 @@ class InappstorySdkModuleAdaptor(
                 CacheSize.MEDIUM,
                 false,
             )
-            inAppStoryManager.let {
-                val f1: Field = it.javaClass.getDeclaredField("sendStatistic")
-                f1.isAccessible = true
-                f1.set(it, sendStatistics)
-            }
 
             val iasStoryList = inAppStoryAPI.storyList
-
-            feed = IASStoryListAdaptor(
-                flutterPluginBinding,
-                appearanceManager,
-                iasStoryList,
-                inAppStoryAPI,
-                activityHolder,
-            )
 
             favorites = IASFavoritesListAdaptor(
                 flutterPluginBinding,
@@ -96,11 +83,36 @@ class InappstorySdkModuleAdaptor(
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
 
-            inAppMessageCallbacks = InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
+            inAppMessageCallbacks =
+                InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
 
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {
             callback(Result.failure(throwable))
+        }
+    }
+
+    override fun createListAdaptor(feed: String) {
+        val iasStoryList = inAppStoryAPI.storyList
+
+        val newFeed = IASStoryListAdaptor(
+            flutterPluginBinding,
+            appearanceManager,
+            iasStoryList,
+            inAppStoryAPI,
+            activityHolder,
+            uniqueId = feed
+        )
+        feedListAdaptors.add(newFeed)
+    }
+
+
+    override fun removeListAdaptor(feed: String) {
+        val iterator = feedListAdaptors.iterator()
+        while (iterator.hasNext()) {
+            if (iterator.next().uniqueId == feed) {
+                iterator.remove()
+            }
         }
     }
 }

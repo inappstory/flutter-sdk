@@ -19,7 +19,11 @@ import 'package:pigeon/pigeon.dart';
 abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
   @override
   @async
-  void initWith(String apiKey, String userID, bool sendStatistics);
+  void initWith(String apiKey, String userID);
+
+  void createListAdaptor(String feed);
+
+  void removeListAdaptor(String feed);
 }
 
 @HostApi()
@@ -43,11 +47,13 @@ abstract class IASStoryListHostApi {
 
   void reloadFeed(String feed);
 
-  void openStoryReader(int storyId);
+  void openStoryReader(int storyId, String feed);
 
-  void showFavoriteItem();
+  void showFavoriteItem(String feed);
 
-  void updateVisiblePreviews(List<int> storyIds);
+  void updateVisiblePreviews(List<int> storyIds, String feed);
+
+  void removeSubscriber(String feed);
 }
 
 @FlutterApi()

@@ -1,7 +1,9 @@
 import 'data/observable.dart';
 import 'pigeon_generated.g.dart';
 
-class ObservableErrorCallbackFlutterApi extends Observable<ErrorCallbackFlutterApi> implements ErrorCallbackFlutterApi {
+class ObservableErrorCallbackFlutterApi
+    extends Observable<ErrorCallbackFlutterApi>
+    implements ErrorCallbackFlutterApi {
   @override
   void addObserver(ErrorCallbackFlutterApi observer) {
     if (observers.isEmpty) ErrorCallbackFlutterApi.setUp(this);

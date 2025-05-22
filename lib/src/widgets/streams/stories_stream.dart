@@ -36,19 +36,23 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     onCancel: onCancel,
   );
 
-  void onListen() {
+  void onListen() async {
+    await InappstorySdkModuleHostApi().createListAdaptor(feed);
     observableStoryList.addObserver(this);
     observableErrorCallback.addObserver(this);
     iasStoryListHostApi.load(feed);
   }
 
-  void onCancel() {
+  void onCancel() async {
+    iasStoryListHostApi.removeSubscriber(feed);
     observableStoryList.removeObserver(this);
     observableErrorCallback.removeObserver(this);
+    await InappstorySdkModuleHostApi().removeListAdaptor(feed);
   }
 
   StoryFromPigeonDto createStoryFromDto(StoryAPIDataDto dto) {
-    return StoryFromPigeonDto(dto, iasStoryListHostApi, observableStoryList);
+    return StoryFromPigeonDto(
+        dto, feed, iasStoryListHostApi, observableStoryList);
   }
 
   BaseStoryWidget createWidgetFromStory(StoryFromPigeonDto story) {

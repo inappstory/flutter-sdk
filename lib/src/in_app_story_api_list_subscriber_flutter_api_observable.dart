@@ -1,7 +1,8 @@
 import 'data/observable.dart';
 import 'pigeon_generated.g.dart';
 
-class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppStoryAPIListSubscriberFlutterApi>
+class InAppStoryAPIListSubscriberFlutterApiObservable
+    extends Observable<InAppStoryAPIListSubscriberFlutterApi>
     implements InAppStoryAPIListSubscriberFlutterApi {
   InAppStoryAPIListSubscriberFlutterApiObservable(this.uniqueId);
 
@@ -9,7 +10,10 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
 
   @override
   void addObserver(InAppStoryAPIListSubscriberFlutterApi observer) {
-    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(this, messageChannelSuffix: uniqueId);
+    if (observers.isEmpty) {
+      InAppStoryAPIListSubscriberFlutterApi.setUp(this,
+          messageChannelSuffix: uniqueId);
+    }
 
     super.addObserver(observer);
   }
@@ -18,7 +22,10 @@ class InAppStoryAPIListSubscriberFlutterApiObservable extends Observable<InAppSt
   void removeObserver(InAppStoryAPIListSubscriberFlutterApi observer) {
     super.removeObserver(observer);
 
-    if (observers.isEmpty) InAppStoryAPIListSubscriberFlutterApi.setUp(null, messageChannelSuffix: uniqueId);
+    if (observers.isEmpty) {
+      InAppStoryAPIListSubscriberFlutterApi.setUp(null,
+          messageChannelSuffix: uniqueId);
+    }
   }
 
   @override

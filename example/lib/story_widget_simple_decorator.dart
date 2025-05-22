@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:video_player/video_player.dart';
 
-class StoryWidgetSimpleDecorator extends StatelessWidget implements StoryWidget {
+class StoryWidgetSimpleDecorator extends StatelessWidget
+    implements StoryWidget {
   const StoryWidgetSimpleDecorator(this.story, {super.key});
 
   @override
@@ -79,7 +80,6 @@ class _StoryWidgetSimpleState extends State<StoryWidgetSimple> {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     final story = widget.story;
     final videoFile = widget.story.videoFile;
     final imageFile = widget.story.imageFile;
@@ -114,7 +114,10 @@ class _StoryWidgetSimpleState extends State<StoryWidgetSimple> {
       );
     }
     if (imageFile != null) {
-      return Image.file(imageFile);
+      return Image.file(
+        imageFile,
+        fit: BoxFit.cover,
+      );
     }
 
     return ColoredBox(color: story.backgroundColor);

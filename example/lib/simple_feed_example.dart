@@ -20,7 +20,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   final inputController = TextEditingController();
   final feedStoriesController = FeedStoriesController();
   final feedDecorator = const FeedStoryDecorator(
-    storyPadding: 12.0,
+    storyPadding: 8.0,
     feedPadding: EdgeInsets.only(left: 12.0),
     loaderAspectRatio: 1 / 1,
     borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -30,13 +30,10 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
     borderColor: Colors.deepPurple,
     borderWidth: 2.0,
     borderPadding: 4.0,
+    favouriteAspectRatio: 7 / 10,
   );
 
   final callsToAction = <String>[];
-
-  void onFeedFavoritesTap() {
-    //showModalBottomSheet(context: context, builder: (_) => FavoritesBottomSheetWidget());
-  }
 
   @override
   void initState() {
@@ -195,87 +192,5 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   @override
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
     print("onFavoriteTap $isFavorite");
-  }
-}
-
-class CustomGridFeedFavoritesWidget extends GridFeedFavoritesWidget {
-  CustomGridFeedFavoritesWidget(super.favorites,
-      {required this.onTap, super.key});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: super.build(context),
-    );
-  }
-}
-
-class FavoritesBottomSheetWidget extends StatefulWidget {
-  const FavoritesBottomSheetWidget(this.favorites, {super.key});
-
-  final Stream<Iterable<Widget>> favorites;
-
-  @override
-  State<FavoritesBottomSheetWidget> createState() =>
-      _FavoritesBottomSheetWidgetState();
-}
-
-class _FavoritesBottomSheetWidgetState
-    extends State<FavoritesBottomSheetWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: SizedBox(
-        height: 250,
-        child: StreamBuilder(
-          stream: widget.favorites,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.requireData.length,
-                itemBuilder: (_, index) =>
-                    snapshot.requireData.elementAt(index),
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-              );
-            }
-
-            if (snapshot.hasError) return Text('${snapshot.error}');
-
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class FeedExample extends StatelessWidget {
-  FeedExample({super.key});
-
-  final feedController = FeedStoriesController();
-
-  @override
-  Widget build(BuildContext context) {
-    return FeedStoriesWidget(
-      feed: "<your_feed_id>",
-      controller: feedController,
-      errorBuilder: (context, error) {
-        return Column(
-          children: [
-            Text("Error loading feed: $error"),
-            ElevatedButton(
-              onPressed: () => feedController.fetchFeedStories(),
-              child: const Text("Retry"),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

@@ -1,10 +1,10 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
-import '../../inappstory_plugin.dart';
 import 'streams/favorites_stories_stream.dart';
+import 'widgets.dart';
 
-class FavoriteStoriesFeedWidget extends FeedStoriesWidget {
-  const FavoriteStoriesFeedWidget({
+class GridViewFavouritesWidget extends FeedStoriesWidget {
+  const GridViewFavouritesWidget({
     super.key,
     required super.feed,
     super.controller,
@@ -15,13 +15,13 @@ class FavoriteStoriesFeedWidget extends FeedStoriesWidget {
   });
 
   @override
-  FeedStoriesWidgetState createState() => _FavoriteStoriesFeedWidgetState();
+  FeedStoriesWidgetState createState() => _GridViewFavouritesWidgetState();
 }
 
-class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
-  late final _favoritesStoriesWidgetsStream = _getStoriesWidgets();
+class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
+  late final _favoritesStoriesWidgetsStream = _getFavouritesStoriesWidgets();
 
-  Stream<Iterable<Widget>> _getStoriesWidgets() {
+  Stream<Iterable<Widget>> _getFavouritesStoriesWidgets() {
     return FavoritesStoriesStream(
       feed: widget.feed,
       storyWidgetBuilder: widget.storyBuilder ??
@@ -50,16 +50,15 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
           return super.errorBuilder!(context, snapshot.error);
         }
 
-        final storiesWidgets = snapshot.data ?? [];
-
-        return ListView.separated(
-          itemCount: storiesWidgets.length,
-          scrollDirection: Axis.horizontal,
-          padding: feedDecorator?.feedPadding,
+        return GridView.builder(
+          itemCount: snapshot.data?.length ?? 0,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: widget.decorator?.favouriteAspectRatio ?? 1.0,
+          ),
           itemBuilder: (context, index) {
             return snapshot.requireData.elementAt(index);
           },
-          separatorBuilder: (context, index) => const SizedBox(width: 12),
         );
       },
     );

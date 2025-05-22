@@ -8,16 +8,22 @@ import '../streams/feed_stories_stream.dart';
 class BaseFeedFavoritesWidget extends StatelessWidget {
   const BaseFeedFavoritesWidget(
     this.favorites,
+    this.feed,
     this.iasStoryListHostApi,
-    this.simpleFavoritesWidgetBuilder, {
+    this.favoritesWidgetBuilder, {
     super.key,
+    this.aspectRatio,
   });
+
+  final double? aspectRatio;
+  final String feed;
 
   final Iterable<FavoriteFromDto> favorites;
   final IASStoryListHostApi iasStoryListHostApi;
-  final FeedFavoritesWidgetBuilder simpleFavoritesWidgetBuilder;
+  final FeedFavoritesWidgetBuilder favoritesWidgetBuilder;
 
-  void onVisibilityChanged(VisibilityInfo info) => iasStoryListHostApi.showFavoriteItem();
+  void onVisibilityChanged(VisibilityInfo info) =>
+      iasStoryListHostApi.showFavoriteItem(feed);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +31,8 @@ class BaseFeedFavoritesWidget extends StatelessWidget {
       key: const ValueKey('inappstory_feed_favorites'),
       onVisibilityChanged: onVisibilityChanged,
       child: AspectRatio(
-        aspectRatio: 1,
-        child: simpleFavoritesWidgetBuilder(favorites),
+        aspectRatio: aspectRatio ?? 1.0,
+        child: favoritesWidgetBuilder(favorites),
       ),
     );
   }

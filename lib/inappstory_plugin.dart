@@ -25,9 +25,8 @@ class InAppStoryPlugin implements InAppStorySdkModule {
 
   /// The [InAppStoryPlugin] initialization method.
   @override
-  Future<void> initWith(String apiKey, String userID, bool sendStatistics) {
-    return InappstoryPluginPlatform.instance
-        .initWith(apiKey, userID, sendStatistics);
+  Future<void> initWith(String apiKey, String userId) {
+    return InappstoryPluginPlatform.instance.initWith(apiKey, userId);
   }
 
   @Deprecated('Use FeedStoriesWidget instead')

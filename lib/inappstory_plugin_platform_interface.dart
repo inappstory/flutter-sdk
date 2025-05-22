@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:inappstory_plugin/inappstory_sdk_module.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'inappstory_plugin_method_channel.dart';
+import 'inappstory_sdk_module.dart';
 
-abstract class InappstoryPluginPlatform extends PlatformInterface implements InAppStorySdkModule {
+abstract class InappstoryPluginPlatform extends PlatformInterface
+    implements InAppStorySdkModule {
   /// Constructs a InappstoryPluginPlatform.
   InappstoryPluginPlatform() : super(token: _token);
 
@@ -31,5 +32,5 @@ abstract class InappstoryPluginPlatform extends PlatformInterface implements InA
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID, bool sendStatistics);
+  Future<void> initWith(String apiKey, String userID);
 }

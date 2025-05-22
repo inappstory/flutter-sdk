@@ -7,7 +7,6 @@
 
 import Flutter
 import Foundation
-@_spi(QAApp) import InAppStorySDK
 @_spi(IAS_API) import InAppStorySDK
 
 class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
@@ -15,10 +14,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         self.binaryMessenger = binaryMessenger
 
         self.appearanceManagerAdaptor = AppearanceManagerAdaptor(
-            binaryMessenger: binaryMessenger
-        )
-
-        self.feedStoryListAdaptor = FeedStoryListAdaptor(
             binaryMessenger: binaryMessenger
         )
 
@@ -40,7 +35,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             binaryMessenger: binaryMessenger,
             gamesApi: InAppStoryAPI.shared.gamesAPI
         )
-        
+
         self.iasMessagesAdaptor = IASMessagesAdaptor(
             binaryMessenger: binaryMessenger,
             inAppMessagesApi: InAppStoryAPI.shared.inappmessagesAPI
@@ -58,8 +53,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
     var binaryMessenger: FlutterBinaryMessenger
 
-    var feedStoryListAdaptor: StoryListAdaptor
-
     var favoriteStoryListAdaptor: StoryListAdaptor
 
     var appearanceManagerAdaptor: AppearanceManagerAdaptor
@@ -69,15 +62,16 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     var iasOnboardingsAdaptor: IASOnboardingsAdaptor
 
     var iasGamesAdaptor: IASGamesAdaptor
-    
+
     var iasMessagesAdaptor: IASMessagesAdaptor
 
     var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
 
+    var feedStoryListAdaptors: [FeedStoryListAdaptor] = []
+
     func initWith(
         apiKey: String,
         userID: String,
-        sendStatistics: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         // the parameter is responsible for logging to the XCode console
@@ -92,10 +86,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         // the parameter is responsible for animation of the reader display when you tap on a story cell
         InAppStory.shared.presentationStyle = .zoom
 
-        InAppStory.shared.sandBox = false  // Deprecated
-
-        InAppStory.shared.isStatisticDisabled = !sendStatistics
-
         InAppStory.shared.initWith(
             serviceKey: apiKey,
             settings: Settings(userID: userID)
@@ -104,11 +94,23 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
 
         CallbacksAdaptor(binaryMessenger: binaryMessenger)
-        
+
         InAppMessageCallbacksAdaptor(binaryMessenger: binaryMessenger)
 
         CallToActionCallbackAdaptor(binaryMessenger: binaryMessenger)
 
         completion(.success(()))
+    }
+
+    func createListAdaptor(feed: String) {
+        let newAdaptor = FeedStoryListAdaptor(
+            binaryMessenger: binaryMessenger,
+            feed: feed
+        )
+        feedStoryListAdaptors.append(newAdaptor)
+    }
+
+    func removeListAdaptor(feed: String) {
+        feedStoryListAdaptors.removeAll { $0.uniqueId == feed }
     }
 }

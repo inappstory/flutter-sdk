@@ -5,6 +5,7 @@ class FeedStoryDecorator {
   final EdgeInsetsGeometry feedPadding;
   final double storyPadding;
   final double loaderAspectRatio;
+  final double favouriteAspectRatio;
 
   final bool showBorder;
   final double borderWidth;
@@ -25,6 +26,7 @@ class FeedStoryDecorator {
     this.storyPadding = 8.0,
     this.textFontSize = 12.0,
     this.loaderAspectRatio = 1 / 1,
+    this.favouriteAspectRatio = 1 / 1,
     this.showBorder = true,
     this.borderWidth = 1.0,
     this.borderPadding = 2.0,

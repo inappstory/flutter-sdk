@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../inappstory_plugin.dart';
 import 'builders/builders.dart';
-import 'decorators/custom_grid_feed_favorites_widget.dart';
+import 'decorators/default_feed_favorites_widget.dart';
 import 'streams/feed_stories_stream.dart';
 
 /// A widget that displays a feed of stories in a horizontal list.
@@ -98,10 +98,8 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
     _storyBuilder = widget.storyBuilder ??
         (story, decorator) => BaseStoryBuilder(story, decorator: feedDecorator);
     _favoritesBuilder = widget.favoritesBuilder ??
-        (favorites) => CustomGridFeedFavoritesWidget(
-              favorites,
-              onTap: () {},
-            );
+        (favorites) => DefaultGridFeedFavoritesWidget(favorites, widget.feed,
+            decorator: feedDecorator);
   }
 
   /// Fetches a stream of widgets representing the stories in the feed.

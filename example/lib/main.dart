@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp>
   }
 
   Future<void> initSdk() async {
-    await _inAppStoryPlugin.initWith(Keys.apiKey, Keys.userId, false);
+    await _inAppStoryPlugin.initWith(Keys.apiKey, Keys.userId);
     await appearanceManager.setHasLike(true);
     await appearanceManager.setHasFavorites(true);
     await appearanceManager.setHasShare(true);
