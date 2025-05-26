@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../pigeon/generated/pigeon_generated_private.g.dart';
+import '../generated/pigeon_generated_private.g.dart';
 
 @protected
 class IASStatisticsManager {

@@ -1,7 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/pigeon/generated/pigeon_generated_private.g.dart',
+  dartOut: 'lib/src/generated/pigeon_generated_private.g.dart',
   dartOptions: DartOptions(),
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGeneratedPrivate.g.kt',
