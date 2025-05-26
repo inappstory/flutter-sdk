@@ -8,7 +8,7 @@ Change your api key & user
 
 ```
 _MyAppState.initSdk() {
-    await _inAppStoryPlugin.initWith('<your key>', '<some user id>', false);
+    await _inAppStoryPlugin.initWith('<your key>', '<some user id>');
     ...
 }
 ```

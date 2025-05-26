@@ -10,49 +10,55 @@ import kotlinx.coroutines.DisposableHandle
 
 open class IASStoryListAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val appearanceManager: AppearanceManager,
+    internal val appearanceManager: AppearanceManager,
     internal val iASStoryList: IASStoryList,
     private val inAppStoryAPI: InAppStoryAPI,
-    private val activityHolder: ActivityHolder,
+    internal val activityHolder: ActivityHolder,
+    val uniqueId: String = "feed",
 ) : IASStoryListHostApi, DisposableHandle {
-    open fun uniqueId(): String {
-        return "feed"
-    }
 
     init {
-        IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, this, uniqueId())
-
-        inAppStoryAPI.addSubscriber(InAppStoryAPIListSubscriberAdaptor(flutterPluginBinding, uniqueId()))
+        IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, this, uniqueId)
+        inAppStoryAPI.addSubscriber(
+            InAppStoryAPIListSubscriberAdaptor(
+                flutterPluginBinding,
+                uniqueId
+            )
+        )
     }
 
     override fun dispose() {
-        IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, null, uniqueId())
+        IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, null, uniqueId)
     }
 
     override fun load(feed: String) {
-        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
+        iASStoryList.load(feed, feed, true, false, mutableListOf<String>())
     }
 
     override fun reloadFeed(feed: String) {
-        iASStoryList.load(feed, uniqueId(), true, false, mutableListOf<String>())
+        iASStoryList.load(feed, feed, true, false, mutableListOf<String>())
     }
 
-    override fun openStoryReader(storyId: Long) {
+    override fun openStoryReader(storyId: Long, feed: String) {
         iASStoryList.openStoryReader(
             activityHolder.activity,
-            uniqueId(),
+            feed,
             storyId.toInt(),
             appearanceManager,
         )
     }
 
-    override fun showFavoriteItem() {
-        iASStoryList.showFavoriteItem(uniqueId())
+    override fun showFavoriteItem(feed: String) {
+        iASStoryList.showFavoriteItem(feed)
     }
 
-    override fun updateVisiblePreviews(storyIds: List<Long>) {
-        iASStoryList.showFavoriteItem(uniqueId())
-        iASStoryList.updateVisiblePreviews(storyIds.map { it.toInt() }, uniqueId())
+    override fun updateVisiblePreviews(storyIds: List<Long>, feed: String) {
+        iASStoryList.showFavoriteItem(feed)
+        iASStoryList.updateVisiblePreviews(storyIds.map { it.toInt() }, feed)
+    }
+
+    override fun removeSubscriber(feed: String) {
+        inAppStoryAPI.removeSubscriber(feed)
     }
 }
 
@@ -68,17 +74,23 @@ class IASFavoritesListAdaptor(
     iASStoryList,
     inAppStoryAPI,
     activityHolder,
+    uniqueId = "favorites"
 ) {
-    override fun uniqueId(): String {
-        return "favorites"
-    }
-
     override fun load(feed: String) {
-        iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
+        iASStoryList.load(feed, uniqueId, true, true, mutableListOf())
     }
 
     override fun reloadFeed(feed: String) {
-        iASStoryList.load(feed, uniqueId(), true, true, mutableListOf())
+        iASStoryList.load(feed, uniqueId, true, true, mutableListOf())
+    }
+
+    override fun openStoryReader(storyId: Long, feed: String) {
+        iASStoryList.openStoryReader(
+            activityHolder.activity,
+            uniqueId,
+            storyId.toInt(),
+            appearanceManager,
+        )
     }
 }
 

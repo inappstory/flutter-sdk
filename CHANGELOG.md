@@ -1,9 +1,63 @@
+## [0.3.0]
+
+### Added
+
+- Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
+- Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
+- Added border around stories in `FeedStoryDecorator`, that indicates the story has been opened
+- Added `InAppMessages` feature, see documentation [here](in-app-messaging.md)
+- Added `storiesLoaded` callback in `FeedStoriesWidget` and `FavoritesStoriesWidget` to listen when
+  stories are loaded'
+
+### Changed
+
+- changed Android initialization to `InAppStoryPlugin.initSDK(this)` in `Application` class.
+- `loaderBuilder` and `errorBuilder` parameters are now optional in `FeedStoriesWidget` widget
+- `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
+- `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget`
+  instead
+
+### Fixed
+
+- Fixed build error when android gradle plugin can't find main class path
+- Fixed build error in iOS
+- Fixed 'flickering' stories when an uploaded image replaced a placeholder
+
+## [0.3.0-rc.5]
+
+### Fixed
+
+- Fixed build error in iOS
+
+## [0.3.0-rc.4]
+
+### Fixed
+
+- Fixed build error when android gradle plugin can't find main class path
+
+## [0.3.0-rc.3]
+
+### Added
+
+- Added border around stories in `FeedStoryDecorator`, that indicates the story has been opened
+
+## [0.3.0-rc.2]
+
+### Added
+
+- Added `InAppMessages` feature, see documentation [here](in-app-messaging.md)
+
+### Changed
+
+- `loaderBuilder` and `errorBuilder` parameters are now optional in `FeedStoriesWidget` widget
+
 ## [0.2.3]
 
 ### Added
 
 * Updated Android SDK to 1.21.4
-* Updated iOS SDK to 1.25.4, make sure you run `pod install --repo-update` in the `ios` folder of your Flutter project.
+* Updated iOS SDK to 1.25.4, make sure you run `pod install --repo-update` in the `ios` folder of
+  your Flutter project.
 
 ### Fixed
 
@@ -21,6 +75,24 @@
 
 * Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
 
+## [0.3.0-rc.1]
+
+### Added
+
+* Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
+* Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
+
+### Changed
+
+* `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
+* `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget`
+  instead
+* refactor library structure
+
+### Fixed
+
+* Fixed 'flickering' stories when an uploaded image replaced a placeholder
+
 ## [0.2.1]
 
 ### Added
@@ -33,7 +105,8 @@
 
 * Added the ability to set the status bar to transparent for the story reader.
 * Updated Android SDK to 1.21.2
-* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of your Flutter project.
+* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
+  your Flutter project.
 * Added the ability to launch games
 * FeedStoriesController to force reload the feed stories
 
@@ -48,7 +121,8 @@
 
 ### Removed
 
-* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from ErrorCallbackFlutterApi
+* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
+  ErrorCallbackFlutterApi
 
 ### Fixed
 
@@ -67,7 +141,8 @@
 
 * Added the ability to set the status bar to transparent for the story reader.
 * Updated Android SDK to 1.21.2
-* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of your Flutter project.
+* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
+  your Flutter project.
 
 ### Fixed
 
@@ -116,7 +191,8 @@
 
 ### Removed
 
-* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from ErrorCallbackFlutterApi
+* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
+  ErrorCallbackFlutterApi
 
 ## [0.0.19]
 

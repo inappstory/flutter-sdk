@@ -2,12 +2,14 @@ package com.inappstory.inappstory_plugin
 
 import ContentDataDto
 import ContentTypeDto
+import InAppMessageDataDto
 import SlideDataDto
 import SourceTypeDto
 import StoryDataDto
 import StoryTypeDto
 import android.os.Handler
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ContentData
+import com.inappstory.sdk.stories.outercallbacks.common.reader.InAppMessageData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.StoryData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -42,4 +44,12 @@ fun mapContentDataDto(contentData: ContentData): ContentDataDto {
         contentType = ContentTypeDto.ofRaw(contentData.contentType().ordinal),
         sourceType = SourceTypeDto.ofRaw(contentData.sourceType().ordinal),
     );
+}
+
+fun mapInAppMessageDataDto(inAppMessageData: InAppMessageData): InAppMessageDataDto {
+    return InAppMessageDataDto(
+        id = inAppMessageData.id().toLong(),
+        title = inAppMessageData.title(),
+        event = inAppMessageData.event(),
+    )
 }

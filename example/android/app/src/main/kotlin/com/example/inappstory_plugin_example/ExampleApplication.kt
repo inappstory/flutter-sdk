@@ -1,11 +1,11 @@
 package com.inappstory.inappstory_plugin_example
 
 import android.app.Application
-import com.inappstory.inappstory_plugin.InappstoryPlugin
+import com.inappstory.inappstory_plugin.InAppStoryPlugin
 
 class ExampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        InappstoryPlugin.initSDK(this)
+        InAppStoryPlugin.initSDK(this)
     }
 }

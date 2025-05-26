@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:inappstory_plugin/src/pigeon_generated.g.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
+import 'src/pigeon_generated.g.dart';
 
 /// An implementation of [InappstoryPluginPlatform] that uses method channels.
 class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
@@ -15,12 +15,13 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID, bool sendStatistics) async {
-    await inappstorySdkModuleHostApi.initWith(apiKey, userID, sendStatistics);
+  Future<void> initWith(String apiKey, String userID) async {
+    await inappstorySdkModuleHostApi.initWith(apiKey, userID);
   }
 }

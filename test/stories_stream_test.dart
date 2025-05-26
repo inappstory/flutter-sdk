@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/src/pigeon_generated.g.dart';
-import 'package:inappstory_plugin/src/stories_stream.dart';
+import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'mocks.dart';
@@ -14,7 +14,8 @@ void main() {
     const feed = 'feedID';
 
     late StoriesStream storiesStream;
-    late MockObservable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
+    late MockObservable<InAppStoryAPIListSubscriberFlutterApi>
+        observableStoryList;
     late MockObservable<ErrorCallbackFlutterApi> observableErrorCallback;
     late MockIASStoryListHostApi iasStoryListHostApi;
 
@@ -26,6 +27,7 @@ void main() {
         observableStoryList: observableStoryList = MockObservable(),
         observableErrorCallback: observableErrorCallback = MockObservable(),
         iasStoryListHostApi: iasStoryListHostApi = MockIASStoryListHostApi(),
+        storyDecorator: MockStoryDecorator(),
       );
 
       when(() => iasStoryListHostApi.load(feed)).thenAnswer((_) async {});
@@ -36,7 +38,8 @@ void main() {
 
       test('THEN api subscribed', () {
         verify(() => observableStoryList.addObserver(storiesStream)).called(1);
-        verify(() => observableErrorCallback.addObserver(storiesStream)).called(1);
+        verify(() => observableErrorCallback.addObserver(storiesStream))
+            .called(1);
         verify(() => iasStoryListHostApi.load(feed)).called(1);
       });
     });
@@ -57,7 +60,8 @@ void main() {
         setUp(() => subscription.cancel());
 
         test('THEN api unsubscribed', () {
-          verify(() => observableErrorCallback.removeObserver(storiesStream)).called(1);
+          verify(() => observableErrorCallback.removeObserver(storiesStream))
+              .called(1);
         });
       });
     });
@@ -72,8 +76,15 @@ class _TestStoriesStream extends StoriesStream {
     required super.observableStoryList,
     required super.observableErrorCallback,
     required super.iasStoryListHostApi,
+    required super.storyDecorator,
   });
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {}
+
+  @override
+  void updateStoryData(StoryAPIDataDto story) {}
+
+  @override
+  void storiesLoaded(int size, String feed) {}
 }
