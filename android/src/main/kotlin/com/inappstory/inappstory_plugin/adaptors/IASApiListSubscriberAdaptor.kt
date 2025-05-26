@@ -19,17 +19,36 @@ open class InAppStoryAPIListSubscriberAdaptor(
     InAppStoryAPIListSubscriber(uniqueId) {
     private val storyListSubscriber =
         InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
-    private val sessionData = InAppStoryManager.getInstance()?.iasCore()?.sessionManager()?.session?.sessionData()
 
-    override fun updateStoryData(storyAPIData: StoryAPIData, storySessionData: IASStoryListSessionData?) {
+    private val sessionData =
+        InAppStoryManager.getInstance()?.iasCore()?.sessionManager()?.session?.sessionData()
+
+    override fun updateStoryData(
+        storyAPIData: StoryAPIData,
+        storySessionData: IASStoryListSessionData?
+    ) {
         flutterPluginBinding.runOnMainThread {
-            storyListSubscriber.updateStoryData(mapStoryAPIData(storyAPIData, storySessionData?.previewAspectRatio() ?: getAspectRatio())) {}
+            storyListSubscriber.updateStoryData(
+                mapStoryAPIData(
+                    storyAPIData,
+                    storySessionData?.previewAspectRatio() ?: getAspectRatio()
+                )
+            ) {}
         }
     }
 
-    override fun updateStoriesData(list: MutableList<StoryAPIData>, storySessionData: IASStoryListSessionData?) {
+    override fun updateStoriesData(
+        list: MutableList<StoryAPIData>,
+        storySessionData: IASStoryListSessionData?
+    ) {
         flutterPluginBinding.runOnMainThread {
-            storyListSubscriber.updateStoriesData(list.map { mapStoryAPIData(it, storySessionData?.previewAspectRatio() ?: getAspectRatio()) }) {}
+            storyListSubscriber.updateStoriesData(list.map {
+                mapStoryAPIData(
+                    it,
+                    storySessionData?.previewAspectRatio() ?: getAspectRatio()
+                )
+            }) {}
+            storyListSubscriber.storiesLoaded(list.size.toLong(), uniqueId) {}
         }
     }
 

@@ -69,6 +69,9 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
                 ),
               );
             },
+            storiesLoaded: (size, feed) {
+              print("Stories loaded: $size");
+            },
             loaderBuilder: (context) =>
                 DefaultLoaderWidget(decorator: feedDecorator),
             decorator: feedDecorator,

@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../inappstory_plugin.dart';
+import '../controllers/feed_stories_controller.dart';
+import 'builders/base_story_builder.dart';
 import 'builders/builders.dart';
 import 'decorators/default_feed_favorites_widget.dart';
+import 'decorators/feed_decorator.dart';
 import 'streams/feed_stories_stream.dart';
 
 /// A widget that displays a feed of stories in a horizontal list.
@@ -32,6 +34,7 @@ class FeedStoriesWidget extends StatefulWidget {
     this.decorator,
     this.storyBuilder,
     this.favoritesBuilder,
+    this.storiesLoaded,
   });
 
   /// The identifier of the feed to fetch stories from.
@@ -57,6 +60,8 @@ class FeedStoriesWidget extends StatefulWidget {
 
   /// An optional builder for the favorites widget.
   final FeedFavoritesWidgetBuilder? favoritesBuilder;
+
+  final Function(int size, String feed)? storiesLoaded;
 
   @override
   State<FeedStoriesWidget> createState() => FeedStoriesWidgetState();
@@ -110,6 +115,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedController: _feedController,
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
+      onStoriesLoaded: widget.storiesLoaded,
     );
   }
 
@@ -143,6 +149,13 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         }
 
         final storiesWidgets = snapshot.data ?? [];
+
+        if (storiesWidgets.isEmpty) {
+          if (kDebugMode) {
+            print('InAppStory: no stories found in feed: ${widget.feed}');
+          }
+          return SizedBox.shrink();
+        }
 
         return SizedBox(
           height: widget.height,

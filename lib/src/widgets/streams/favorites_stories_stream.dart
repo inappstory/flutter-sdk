@@ -12,6 +12,7 @@ class FavoritesStoriesStream extends StoriesStream {
     required super.storyWidgetBuilder,
     this.feedDecorator,
     this.feedController,
+    this.onStoriesLoaded,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList:
@@ -29,6 +30,8 @@ class FavoritesStoriesStream extends StoriesStream {
   final FeedStoriesController? feedController;
 
   final FeedStoryDecorator? feedDecorator;
+
+  final Function(int size, String feed)? onStoriesLoaded;
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
@@ -62,4 +65,8 @@ class FavoritesStoriesStream extends StoriesStream {
     observableStoryList.removeObserver(this);
     observableErrorCallback.removeObserver(this);
   }
+
+  @override
+  void storiesLoaded(int size, String feed) =>
+      onStoriesLoaded?.call(size, feed);
 }

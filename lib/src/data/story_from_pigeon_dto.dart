@@ -90,6 +90,9 @@ class StoryFromPigeonDto
 
   @override
   int get id => dto.id;
+
+  @override
+  void storiesLoaded(int size, String feed) {}
 }
 
 File? nullableFileFromString(String? filePath) {

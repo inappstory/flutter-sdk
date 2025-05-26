@@ -32,6 +32,7 @@ class FeedStoriesStream extends StoriesStream {
     this.feedDecorator,
     this.feedController,
     this.feedFavoritesWidgetBuilder,
+    this.onStoriesLoaded,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList:
@@ -51,6 +52,8 @@ class FeedStoriesStream extends StoriesStream {
   final FeedStoriesController? feedController;
 
   final FeedStoryDecorator? feedDecorator;
+
+  final Function(int size, String feed)? onStoriesLoaded;
 
   Iterable<FavoriteFromDto> favorites = [];
 
@@ -104,4 +107,8 @@ class FeedStoriesStream extends StoriesStream {
 
     controller.add(combineStoriesAndFavorites());
   }
+
+  @override
+  void storiesLoaded(int size, String feed) =>
+      onStoriesLoaded?.call(size, feed);
 }

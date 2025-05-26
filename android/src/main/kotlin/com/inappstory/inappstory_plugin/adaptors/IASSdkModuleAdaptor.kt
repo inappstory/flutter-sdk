@@ -24,6 +24,7 @@ class InappstorySdkModuleAdaptor(
     private lateinit var favorites: IASStoryListAdaptor
     private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
     private lateinit var inAppMessageCallbacks: InAppMessageCallbackAdaptor
+    private lateinit var statManagerAdaptor: IASStatisticsManagerAdaptor
 
     private val singleStoryApi = IASSingleStoryAdaptor(
         flutterPluginBinding,
@@ -80,6 +81,8 @@ class InappstorySdkModuleAdaptor(
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
             iasManagerAdaptor = IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            statManagerAdaptor =
+                IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryManager)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
 

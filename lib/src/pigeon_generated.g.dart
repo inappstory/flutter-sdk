@@ -891,6 +891,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
 
+  void storiesLoaded(int size, String feed);
+
   static void setUp(InAppStoryAPIListSubscriberFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -959,6 +961,34 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData was null, expected non-null List<StoryFavoriteItemAPIDataDto>.');
           try {
             api.updateFavoriteStoriesData(arg_list!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_size = (args[0] as int?);
+          assert(arg_size != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded was null, expected non-null int.');
+          final String? arg_feed = (args[1] as String?);
+          assert(arg_feed != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded was null, expected non-null String.');
+          try {
+            api.storiesLoaded(arg_size!, arg_feed!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

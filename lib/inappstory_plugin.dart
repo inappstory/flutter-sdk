@@ -14,6 +14,7 @@ export 'src/callbacks/callbacks.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/story.dart';
 export 'src/pigeon_generated.g.dart';
+export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/widgets.dart';
 
 class InAppStoryPlugin implements InAppStorySdkModule {

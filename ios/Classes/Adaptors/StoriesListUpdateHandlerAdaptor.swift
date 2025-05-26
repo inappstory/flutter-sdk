@@ -51,6 +51,12 @@ class StoriesListUpdateHandlerAdaptor {
         )
 
         self.favoriteUpdateHandler(isFavorite)
+
+        self.flutter.storiesLoaded(
+            size: Int64(storiesList.count),
+            feed: feed,
+            completion: { _ in }
+        )
     }
 
     private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in

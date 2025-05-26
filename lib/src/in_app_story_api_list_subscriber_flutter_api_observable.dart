@@ -48,4 +48,11 @@ class InAppStoryAPIListSubscriberFlutterApiObservable
       it.updateFavoriteStoriesData(list);
     }
   }
+
+  @override
+  void storiesLoaded(int size, String feed) {
+    for (var it in observers) {
+      it.storiesLoaded(size, feed);
+    }
+  }
 }

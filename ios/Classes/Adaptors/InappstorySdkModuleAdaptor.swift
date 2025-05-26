@@ -45,6 +45,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             binaryMessenger: binaryMessenger
         )
 
+        self.statManagerAdaptor = IASStatisticsManagerAdaptor(
+            binaryMessenger: binaryMessenger
+        )
+
         InappstorySdkModuleHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: self
@@ -66,6 +70,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     var iasMessagesAdaptor: IASMessagesAdaptor
 
     var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
+
+    var statManagerAdaptor: IASStatisticsManagerAdaptor
 
     var feedStoryListAdaptors: [FeedStoryListAdaptor] = []
 

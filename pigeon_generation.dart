@@ -63,6 +63,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void updateStoriesData(List<StoryAPIDataDto> list);
 
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
+
+  void storiesLoaded(int size, String feed);
 }
 
 @FlutterApi()

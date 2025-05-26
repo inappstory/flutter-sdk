@@ -788,6 +788,7 @@ protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
   func updateStoryData(var1 var1Arg: StoryAPIDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func storiesLoaded(size sizeArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -839,6 +840,24 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.updateFavoriteStoriesData\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([listArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func storiesLoaded(size sizeArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([sizeArg, feedArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

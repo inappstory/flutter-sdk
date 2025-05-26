@@ -1,12 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../inappstory_plugin.dart';
+import 'builders/base_story_builder.dart';
+import 'feed_stories_widget.dart';
 import 'streams/favorites_stories_stream.dart';
 
 class FavoriteStoriesFeedWidget extends FeedStoriesWidget {
   const FavoriteStoriesFeedWidget({
     super.key,
     required super.feed,
+    super.height = 120.0,
     super.controller,
     super.loaderBuilder,
     super.errorBuilder,
@@ -40,26 +43,44 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
           if (widget.loaderBuilder == null) {
             return const SizedBox.shrink();
           }
-          return super.loaderBuilder!(context);
+          return SizedBox(
+            height: widget.height,
+            child: super.loaderBuilder!(context),
+          );
         }
 
         if (snapshot.hasError) {
           if (widget.errorBuilder == null) {
             return const SizedBox.shrink();
           }
-          return super.errorBuilder!(context, snapshot.error);
+          return SizedBox(
+            height: widget.height,
+            child: super.errorBuilder!(context, snapshot.error),
+          );
         }
 
         final storiesWidgets = snapshot.data ?? [];
 
-        return ListView.separated(
-          itemCount: storiesWidgets.length,
-          scrollDirection: Axis.horizontal,
-          padding: feedDecorator?.feedPadding,
-          itemBuilder: (context, index) {
-            return snapshot.requireData.elementAt(index);
-          },
-          separatorBuilder: (context, index) => const SizedBox(width: 12),
+        if (storiesWidgets.isEmpty) {
+          if (kDebugMode) {
+            print('InAppStory: no stories found in feed: ${widget.feed}');
+          }
+          return SizedBox.shrink();
+        }
+
+        return SizedBox(
+          height: widget.height,
+          child: ListView.separated(
+            itemCount: storiesWidgets.length,
+            scrollDirection: Axis.horizontal,
+            padding: feedDecorator?.feedPadding,
+            itemBuilder: (context, index) {
+              return snapshot.requireData.elementAt(index);
+            },
+            separatorBuilder: (context, index) => SizedBox(
+              width: feedDecorator?.storyPadding ?? 12.0,
+            ),
+          ),
         );
       },
     );

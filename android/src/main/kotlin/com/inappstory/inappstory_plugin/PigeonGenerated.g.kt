@@ -871,6 +871,23 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       } 
     }
   }
+  fun storiesLoaded(sizeArg: Long, feedArg: String, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(sizeArg, feedArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
 class ErrorCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
