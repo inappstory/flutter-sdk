@@ -1,3 +1,28 @@
+## [0.3.0]
+
+### Added
+
+- Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
+- Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
+- Added border around stories in `FeedStoryDecorator`, that indicates the story has been opened
+- Added `InAppMessages` feature, see documentation [here](in-app-messaging.md)
+- Added `storiesLoaded` callback in `FeedStoriesWidget` and `FavoritesStoriesWidget` to listen when
+  stories are loaded'
+
+### Changed
+
+- changed Android initialization to `InAppStoryPlugin.initSDK(this)` in `Application` class.
+- `loaderBuilder` and `errorBuilder` parameters are now optional in `FeedStoriesWidget` widget
+- `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
+- `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget`
+  instead
+
+### Fixed
+
+- Fixed build error when android gradle plugin can't find main class path
+- Fixed build error in iOS
+- Fixed 'flickering' stories when an uploaded image replaced a placeholder
+
 ## [0.3.0-rc.5]
 
 ### Fixed

@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final initialization = InappstoryPlugin().initWith('<your api key>', '<user id>', false);
+  final initialization = InAppStoryPlugin().initWith('<your api key>', '<user id>');
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 150,
-            child: FeedStoriesWidget(
-              feed: '<your feed id>',
-            ),
+          child: FeedStoriesWidget(
+            feed: '<your feed id>',
           ),
         ],
       ),
