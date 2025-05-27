@@ -7,12 +7,22 @@
     </a>
 </p>
 
-A Flutter plugin to use [InAppStory SDK](https://www.inappstory.com/). Supports Android and iOS platforms.
+A Flutter plugin to use [InAppStory SDK](https://www.inappstory.com/). Supports Android and iOS
+platforms.
 
 Currently under development & not published
 
 The full documentation for InAppStory SDK can be found
 on [docs.inappstory.com](https://docs.inappstory.com/sdk-guides/flutter/how-to-get-started.html).
+
+## Installation
+
+Add dependency in your app `pubspec.yaml`
+
+```yaml
+dependencies:
+  inappstory_plugin: ^0.3.1
+```
 
 ## Full example
 

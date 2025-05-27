@@ -1,3 +1,9 @@
+## [0.3.1]
+
+### Fixed
+
+- Fixed flickering video covers
+
 ## [0.3.0]
 
 ### Added
