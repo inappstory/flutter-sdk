@@ -52,9 +52,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Simple Feed'),
-      ),
+      appBar: AppBar(title: const Text('Simple Feed')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -63,23 +61,16 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
             height: 200,
             controller: feedStoriesController,
             errorBuilder: (context, error) {
-              return const Center(
-                child: Text(
-                  "error",
-                ),
-              );
+              return const Center(child: Text("error"));
             },
-            storiesLoaded: (size, feed) {
-              print("Stories loaded: $size");
-            },
-            loaderBuilder: (context) =>
-                DefaultLoaderWidget(decorator: feedDecorator),
+            loaderBuilder:
+                (context) => DefaultLoaderWidget(decorator: feedDecorator),
             decorator: feedDecorator,
           ),
           const Divider(indent: 4),
           ElevatedButton(
-            onPressed: () async =>
-                await feedStoriesController.fetchFeedStories(),
+            onPressed:
+                () async => await feedStoriesController.fetchFeedStories(),
             child: const Text('Refresh'),
           ),
           const Divider(indent: 4),
@@ -90,12 +81,15 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
                 Expanded(
                   child: TextField(
                     decoration: const InputDecoration(
-                        label: Text('Input user id string')),
+                      label: Text('Input user id string'),
+                    ),
                     controller: inputController,
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: changeUser, child: const Text('Change userId')),
+                  onPressed: changeUser,
+                  child: const Text('Change userId'),
+                ),
               ],
             ),
           ),
@@ -129,7 +123,10 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   @override
   void callToAction(
-      SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+    SlideDataDto? slideData,
+    String? url,
+    ClickActionDto? clickAction,
+  ) {
     setState(() {
       final content =
           'slideData:$slideData url:$url clickAction:${clickAction?.name}';
@@ -148,7 +145,8 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   @override
   void alreadyShown() => showBanner(
-      'IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})');
+    'IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})',
+  );
 
   int onErrorCounter = 0;
 

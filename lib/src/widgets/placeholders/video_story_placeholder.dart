@@ -34,6 +34,21 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
   Widget build(BuildContext context) {
     final videoFile = widget.videoFile;
 
+    if (controller.value.isInitialized) {
+      return VisibilityDetector(
+        key: ObjectKey(videoFile),
+        onVisibilityChanged: (VisibilityInfo info) {
+          if (info.visibleFraction == 0) {
+            if (mounted) {
+              controller.pause();
+            }
+          } else {
+            controller.play();
+          }
+        },
+        child: VideoPlayer(controller),
+      );
+    }
     return FutureBuilder(
       future: _prepareVideoController(videoFile),
       builder: (context, snapshot) {
