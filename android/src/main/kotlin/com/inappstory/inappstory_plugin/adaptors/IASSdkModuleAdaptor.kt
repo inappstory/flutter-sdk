@@ -81,8 +81,7 @@ class InappstorySdkModuleAdaptor(
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
             iasManagerAdaptor = IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
-            statManagerAdaptor =
-                IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
 

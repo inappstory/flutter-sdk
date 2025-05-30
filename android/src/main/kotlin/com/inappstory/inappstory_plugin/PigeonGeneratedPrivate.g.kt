@@ -43,9 +43,10 @@ private open class PigeonGeneratedPrivatePigeonCodec : StandardMessageCodec() {
   }
 }
 
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InAppStoryStatManagerHostApi {
-  fun sendStatistics(enabled: Boolean)
+  fun sendStatistics(enabled: Boolean, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by InAppStoryStatManagerHostApi. */
@@ -62,13 +63,14 @@ interface InAppStoryStatManagerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val enabledArg = args[0] as Boolean
-            val wrapped: List<Any?> = try {
-              api.sendStatistics(enabledArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPrivatePigeonUtils.wrapError(exception)
+            api.sendStatistics(enabledArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(PigeonGeneratedPrivatePigeonUtils.wrapError(error))
+              } else {
+                reply.reply(PigeonGeneratedPrivatePigeonUtils.wrapResult(null))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

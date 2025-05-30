@@ -2,22 +2,22 @@ package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryStatManagerHostApi
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.externalapi.InAppStoryAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
-import java.lang.reflect.Field
 
 class IASStatisticsManagerAdaptor(
     flutterPluginBinding: FlutterPluginBinding,
-    private val inAppStoryManager: InAppStoryManager,
+    private val inAppStoryApi: InAppStoryAPI
 ) : InAppStoryStatManagerHostApi {
     init {
         InAppStoryStatManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
 
-    override fun sendStatistics(enabled: Boolean) {
-        inAppStoryManager.let {
-            val f1: Field = it.javaClass.getDeclaredField("sendStatistic")
-            f1.isAccessible = true
-            f1.set(it, enabled)
-        }
+    override fun sendStatistics(
+        enabled: Boolean,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        inAppStoryApi.settings.sendStatistic(enabled)
+        callback.invoke(Result.success(Unit))
     }
 }

@@ -13,5 +13,6 @@ import 'package:pigeon/pigeon.dart';
 
 @HostApi()
 abstract class InAppStoryStatManagerHostApi {
+  @async
   void sendStatistics(bool enabled);
 }

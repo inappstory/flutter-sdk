@@ -67,9 +67,10 @@ class PigeonGeneratedPrivatePigeonCodec: FlutterStandardMessageCodec, @unchecked
   static let shared = PigeonGeneratedPrivatePigeonCodec(readerWriter: PigeonGeneratedPrivatePigeonCodecReaderWriter())
 }
 
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InAppStoryStatManagerHostApi {
-  func sendStatistics(enabled: Bool) throws
+  func sendStatistics(enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -83,11 +84,13 @@ class InAppStoryStatManagerHostApiSetup {
       sendStatisticsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let enabledArg = args[0] as! Bool
-        do {
-          try api.sendStatistics(enabled: enabledArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        api.sendStatistics(enabled: enabledArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
