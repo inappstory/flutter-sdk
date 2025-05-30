@@ -49,12 +49,23 @@ class _MyHomePageState extends State<MyHomePage> {
             .inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        children: [
-          child: FeedStoriesWidget(
-            feed: '<your feed id>',
-          ),
-        ],
+      body: FutureBuilder(
+        future: initialization,
+        builder: (context, initializationSnapshot) {
+          if (initializationSnapshot.connectionState ==
+              ConnectionState.done) {
+            if (initializationSnapshot.hasError) {
+              return const Text('SDK was not initialized');
+            } else {
+              return FeedStoriesWidget(
+                feed: feed,
+              );
+            }
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
