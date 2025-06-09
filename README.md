@@ -2,12 +2,12 @@
 
 <!-- markdownlint-disable MD013 -->
 <p align="center">
-    <a href="https://www.inappstory.com/">
+    <a href="https://inappstory.com/">
         <img height="210" src="https://docs.inappstory.com/images/Logo_Star.svg" width="210"/>    
     </a>
 </p>
 
-A Flutter plugin to use [InAppStory SDK](https://www.inappstory.com/). Supports Android and iOS
+A Flutter plugin to use [InAppStory SDK](https://inappstory.com/). Supports Android and iOS
 platforms.
 
 Currently under development & not published
