@@ -579,6 +579,7 @@ interface InAppStoryManagerHostApi {
   fun setTags(tags: List<String>)
   fun changeUser(userId: String, callback: (Result<Unit>) -> Unit)
   fun closeReaders()
+  fun clearCache()
   /** Sets a transparent status bar for story reader in Android. */
   fun setTransparentStatusBar()
 
@@ -652,6 +653,22 @@ interface InAppStoryManagerHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.closeReaders()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.clearCache$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.clearCache()
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

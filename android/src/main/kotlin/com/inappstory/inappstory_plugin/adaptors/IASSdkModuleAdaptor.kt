@@ -47,6 +47,7 @@ class InappstorySdkModuleAdaptor(
         apiKey: String, userID: String, callback: (Result<Unit>) -> Unit
     ) {
         try {
+            feedListAdaptors.clear()
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
                 apiKey,
                 userID,

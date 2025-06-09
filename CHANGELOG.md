@@ -1,3 +1,14 @@
+## [0.3.3]
+
+### Added
+
+- Added `clearCache()` method in InAppStoryManager
+
+### Changed
+
+- Updated Android SDK to 1.21.6, that includes internal fixes
+- Updated iOS SDK to 1.25.5, that includes internal fixes
+
 ## [0.3.2]
 
 ### Fixed

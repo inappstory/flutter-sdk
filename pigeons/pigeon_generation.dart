@@ -37,6 +37,8 @@ abstract class InAppStoryManagerHostApi {
 
   void closeReaders();
 
+  void clearCache();
+
   /// Sets a transparent status bar for story reader in Android.
   void setTransparentStatusBar();
 }

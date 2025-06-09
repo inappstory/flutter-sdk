@@ -36,6 +36,10 @@ class IASManagerAdaptor(
             true, ForceCloseReaderCallback {})
     }
 
+    override fun clearCache() {
+        inAppStoryManager.clearCache()
+    }
+
     override fun setTransparentStatusBar() {
         inAppStoryManager.setOpenStoriesReader(CustomOpenStoriesReader())
     }

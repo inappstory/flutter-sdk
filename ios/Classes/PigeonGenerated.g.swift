@@ -587,6 +587,7 @@ protocol InAppStoryManagerHostApi {
   func setTags(tags: [String]) throws
   func changeUser(userId: String, completion: @escaping (Result<Void, Error>) -> Void)
   func closeReaders() throws
+  func clearCache() throws
   /// Sets a transparent status bar for story reader in Android.
   func setTransparentStatusBar() throws
 }
@@ -656,6 +657,19 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       closeReadersChannel.setMessageHandler(nil)
+    }
+    let clearCacheChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.clearCache\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      clearCacheChannel.setMessageHandler { _, reply in
+        do {
+          try api.clearCache()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      clearCacheChannel.setMessageHandler(nil)
     }
     /// Sets a transparent status bar for story reader in Android.
     let setTransparentStatusBarChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTransparentStatusBar\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)

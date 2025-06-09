@@ -32,6 +32,10 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         InAppStory.shared.closeReader {}
     }
     
+    func clearCache() throws {
+        InAppStory.shared.clearCache()
+    }
+    
     func setTransparentStatusBar() throws {
         // runs only in Android
     }
