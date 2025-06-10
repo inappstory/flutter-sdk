@@ -16,6 +16,7 @@ class FeedStoryDecorator {
 
   final EdgeInsetsGeometry textPadding;
   final double textFontSize;
+  final TextStyle? textStyle;
 
   final LoaderDecorator loaderDecorator;
 
@@ -42,6 +43,7 @@ class FeedStoryDecorator {
         ],
       ),
     ),
+    this.textStyle,
   });
 }
 

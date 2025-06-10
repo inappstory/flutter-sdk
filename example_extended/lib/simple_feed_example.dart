@@ -136,7 +136,7 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   Future<void> changeUser() async {
-    await InAppStoryManagerHostApi().changeUser(inputController.text);
+    await InAppStoryManager.instance.changeUser(inputController.text);
 
     await feedStoriesController.fetchFeedStories();
   }

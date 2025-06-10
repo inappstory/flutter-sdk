@@ -1,3 +1,14 @@
+## [0.3.4]
+
+### Added
+
+- Added locale parameter to initialization method
+- Added method to change locale
+
+### Changed
+
+- Refactor InAppStoryManager, now you need to call `InAppStoryManager.instance` to access methods
+
 ## [0.3.3]
 
 ### Added

@@ -78,6 +78,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     func initWith(
         apiKey: String,
         userID: String,
+        languageCode: String?,
+        languageRegion: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         // the parameter is responsible for logging to the XCode console
@@ -92,9 +94,15 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         // the parameter is responsible for animation of the reader display when you tap on a story cell
         InAppStory.shared.presentationStyle = .zoom
 
+        var locale: String? = nil
+        if (languageCode != nil) && (languageRegion != nil) {
+            let str2: String = "_"
+            locale = "\(languageCode!)\(str2)\(languageRegion!)"
+        }
+
         InAppStory.shared.initWith(
             serviceKey: apiKey,
-            settings: Settings(userID: userID)
+            settings: Settings(userID: userID, lang: locale)
         )
 
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)

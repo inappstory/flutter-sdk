@@ -10,6 +10,7 @@ import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import java.util.Locale
 
 class InappstorySdkModuleAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
@@ -44,15 +45,23 @@ class InappstorySdkModuleAdaptor(
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
     override fun initWith(
-        apiKey: String, userID: String, callback: (Result<Unit>) -> Unit
+        apiKey: String,
+        userID: String,
+        languageCode: String?,
+        languageRegion: String?,
+        callback: (Result<Unit>) -> Unit
     ) {
         try {
+            var locale: Locale? = null
+            if (!languageCode.isNullOrEmpty() && !languageRegion.isNullOrEmpty()) {
+                locale = Locale(languageCode, languageRegion)
+            }
             feedListAdaptors.clear()
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
                 apiKey,
                 userID,
                 null,
-                null,
+                locale,
                 null,
                 null,
                 null,

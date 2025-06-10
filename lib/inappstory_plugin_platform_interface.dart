@@ -32,5 +32,6 @@ abstract class InappstoryPluginPlatform extends PlatformInterface
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID);
+  FutureOr<void> initWith(String apiKey, String userId,
+      {String? languageCode, String? languageRegion});
 }

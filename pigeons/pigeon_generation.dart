@@ -16,10 +16,10 @@ import 'package:pigeon/pigeon.dart';
 // ConfigurePigeon
 
 @HostApi()
-abstract class InappstorySdkModuleHostApi implements InappstorySdkModule {
-  @override
+abstract class InappstorySdkModuleHostApi {
   @async
-  void initWith(String apiKey, String userID);
+  void initWith(String apiKey, String userID,
+      {String? languageCode, String? languageRegion});
 
   void createListAdaptor(String feed);
 
@@ -38,6 +38,8 @@ abstract class InAppStoryManagerHostApi {
   void closeReaders();
 
   void clearCache();
+
+  void setLang(String languageCode, String languageRegion);
 
   /// Sets a transparent status bar for story reader in Android.
   void setTransparentStatusBar();

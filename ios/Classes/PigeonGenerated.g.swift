@@ -520,7 +520,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func initWith(apiKey: String, userID: String, languageCode: String?, languageRegion: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func createListAdaptor(feed: String) throws
   func removeListAdaptor(feed: String) throws
 }
@@ -537,7 +537,9 @@ class InappstorySdkModuleHostApiSetup {
         let args = message as! [Any?]
         let apiKeyArg = args[0] as! String
         let userIDArg = args[1] as! String
-        api.initWith(apiKey: apiKeyArg, userID: userIDArg) { result in
+        let languageCodeArg: String? = nilOrValue(args[2])
+        let languageRegionArg: String? = nilOrValue(args[3])
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, languageCode: languageCodeArg, languageRegion: languageRegionArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -588,6 +590,7 @@ protocol InAppStoryManagerHostApi {
   func changeUser(userId: String, completion: @escaping (Result<Void, Error>) -> Void)
   func closeReaders() throws
   func clearCache() throws
+  func setLang(languageCode: String, languageRegion: String) throws
   /// Sets a transparent status bar for story reader in Android.
   func setTransparentStatusBar() throws
 }
@@ -670,6 +673,22 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       clearCacheChannel.setMessageHandler(nil)
+    }
+    let setLangChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setLang\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setLangChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let languageCodeArg = args[0] as! String
+        let languageRegionArg = args[1] as! String
+        do {
+          try api.setLang(languageCode: languageCodeArg, languageRegion: languageRegionArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setLangChannel.setMessageHandler(nil)
     }
     /// Sets a transparent status bar for story reader in Android.
     let setTransparentStatusBarChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTransparentStatusBar\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)

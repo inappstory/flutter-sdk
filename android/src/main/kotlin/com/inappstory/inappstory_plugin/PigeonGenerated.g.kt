@@ -501,7 +501,7 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
-  fun initWith(apiKey: String, userID: String, callback: (Result<Unit>) -> Unit)
+  fun initWith(apiKey: String, userID: String, languageCode: String?, languageRegion: String?, callback: (Result<Unit>) -> Unit)
   fun createListAdaptor(feed: String)
   fun removeListAdaptor(feed: String)
 
@@ -521,7 +521,9 @@ interface InappstorySdkModuleHostApi {
             val args = message as List<Any?>
             val apiKeyArg = args[0] as String
             val userIDArg = args[1] as String
-            api.initWith(apiKeyArg, userIDArg) { result: Result<Unit> ->
+            val languageCodeArg = args[2] as String?
+            val languageRegionArg = args[3] as String?
+            api.initWith(apiKeyArg, userIDArg, languageCodeArg, languageRegionArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
@@ -580,6 +582,7 @@ interface InAppStoryManagerHostApi {
   fun changeUser(userId: String, callback: (Result<Unit>) -> Unit)
   fun closeReaders()
   fun clearCache()
+  fun setLang(languageCode: String, languageRegion: String)
   /** Sets a transparent status bar for story reader in Android. */
   fun setTransparentStatusBar()
 
@@ -669,6 +672,25 @@ interface InAppStoryManagerHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.clearCache()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setLang$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val languageCodeArg = args[0] as String
+            val languageRegionArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setLang(languageCodeArg, languageRegionArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

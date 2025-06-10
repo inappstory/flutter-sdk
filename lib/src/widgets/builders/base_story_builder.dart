@@ -68,10 +68,13 @@ class BaseStoryBuilder extends StatelessWidget implements StoryWidget {
                   padding: decorator?.textPadding ?? const EdgeInsets.all(8.0),
                   child: Text(
                     story.title,
-                    style: TextStyle(
-                      color: story.titleColor,
-                      fontSize: decorator?.textFontSize ?? 14,
-                    ),
+                    style: decorator?.textStyle?.copyWith(
+                            color: decorator?.textStyle?.color ??
+                                story.titleColor) ??
+                        TextStyle(
+                          color: story.titleColor,
+                          fontSize: decorator?.textFontSize ?? 14,
+                        ),
                   ),
                 ),
               ),

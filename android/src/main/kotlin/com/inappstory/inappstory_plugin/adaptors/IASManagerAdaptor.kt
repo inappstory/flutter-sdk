@@ -5,6 +5,7 @@ import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
+import java.util.Locale
 
 class IASManagerAdaptor(
     flutterPluginBinding: FlutterPluginBinding,
@@ -42,5 +43,10 @@ class IASManagerAdaptor(
 
     override fun setTransparentStatusBar() {
         inAppStoryManager.setOpenStoriesReader(CustomOpenStoriesReader())
+    }
+
+    override fun setLang(languageCode: String, languageRegion: String) {
+        val locale: Locale = Locale(languageCode, languageRegion)
+        inAppStoryManager.setLang(locale)
     }
 }

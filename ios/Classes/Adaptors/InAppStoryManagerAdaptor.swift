@@ -31,12 +31,23 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     func closeReaders() throws {
         InAppStory.shared.closeReader {}
     }
-    
+
     func clearCache() throws {
         InAppStory.shared.clearCache()
     }
-    
+
     func setTransparentStatusBar() throws {
         // runs only in Android
+    }
+
+    func setLang(languageCode: String, languageRegion: String) throws {
+
+        let settings = InAppStory.shared.settings
+        let str2: String = "_"
+        let locale = "\(languageCode)\(str2)\(languageRegion)"
+        InAppStory.shared.settings = Settings(
+            userID: settings?.userID ?? "",
+            lang: locale
+        )
     }
 }

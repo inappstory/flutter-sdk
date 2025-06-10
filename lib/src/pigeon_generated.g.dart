@@ -530,14 +530,14 @@ class InappstorySdkModuleHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> initWith(String apiKey, String userID) async {
+  Future<void> initWith(String apiKey, String userID, {String? languageCode, String? languageRegion, }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.initWith$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID, languageCode, languageRegion]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -713,6 +713,29 @@ class InAppStoryManagerHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setLang(String languageCode, String languageRegion) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setLang$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[languageCode, languageRegion]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

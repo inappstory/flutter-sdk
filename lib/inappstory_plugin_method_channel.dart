@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
@@ -21,7 +21,9 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
   }
 
   @override
-  Future<void> initWith(String apiKey, String userID) async {
-    await inappstorySdkModuleHostApi.initWith(apiKey, userID);
+  FutureOr<void> initWith(String apiKey, String userId,
+      {String? languageCode, String? languageRegion}) async {
+    await inappstorySdkModuleHostApi.initWith(apiKey, userId,
+        languageCode: languageCode, languageRegion: languageRegion);
   }
 }

@@ -10,7 +10,8 @@ class MockInappstoryPluginPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
-  Future<void> initWith(String apiKey, String userID) {
+  Future<void> initWith(String apiKey, String userId,
+      {String? languageCode, String? languageRegion}) async {
     throw UnimplementedError();
   }
 }
