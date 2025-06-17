@@ -6,8 +6,12 @@ import '../../data/story_from_pigeon_dto.dart';
 import '../builders/builders.dart';
 
 class BaseStoryWidget extends StatefulWidget implements StoryWidget {
-  const BaseStoryWidget(this.story, this.storyWidgetBuilder,
-      {super.key, required this.storyDecorator});
+  const BaseStoryWidget(
+    this.story,
+    this.storyWidgetBuilder, {
+    super.key,
+    required this.storyDecorator,
+  });
 
   final StoryWidgetBuilder storyWidgetBuilder;
 
@@ -27,9 +31,7 @@ class _BaseStoryWidgetState extends State<BaseStoryWidget> {
 
   FeedStoryDecorator get storyDecorator => widget.storyDecorator;
 
-  void _onVisibilityChanged(VisibilityInfo info) {
-    story.wasViewed();
-  }
+  void _onVisibilityChanged(VisibilityInfo info) => story.wasViewed();
 
   @override
   Widget build(BuildContext context) {
