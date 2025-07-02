@@ -1,3 +1,11 @@
+## [0.3.6]
+
+## Changed
+
+- Updated Android SDK to 1.21.10, that includes internal fixes
+- Updated iOS SDK to 1.25.8, that includes internal fixes, make sure you run `pod install` or
+  `pod install --repo update` command before building your app
+
 ## [0.3.5]
 
 ## Changed
