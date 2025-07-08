@@ -22,7 +22,8 @@ open class IASStoryListAdaptor(
         inAppStoryAPI.addSubscriber(
             InAppStoryAPIListSubscriberAdaptor(
                 flutterPluginBinding,
-                uniqueId
+                uniqueId,
+                inAppStoryAPI.callbacks,
             )
         )
     }

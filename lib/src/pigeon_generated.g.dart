@@ -280,6 +280,102 @@ class SlideDataDto {
 ;
 }
 
+class GoodsItemAppearanceDto {
+  GoodsItemAppearanceDto({
+    this.itemBackgroundColor,
+    this.itemCornerRadius,
+    this.itemMainTextColor,
+    this.itemOldPriceTextColor,
+    this.itemTitleTextSize,
+    this.itemDescriptionTextSize,
+    this.itemPriceTextSize,
+    this.itemOldPriceTextSize,
+    this.widgetBackgroundColor,
+    this.closeButtonImage,
+    this.closeButtonColor,
+    this.widgetBackgroundHeight,
+  });
+
+  int? itemBackgroundColor;
+
+  int? itemCornerRadius;
+
+  int? itemMainTextColor;
+
+  int? itemOldPriceTextColor;
+
+  int? itemTitleTextSize;
+
+  int? itemDescriptionTextSize;
+
+  int? itemPriceTextSize;
+
+  int? itemOldPriceTextSize;
+
+  int? widgetBackgroundColor;
+
+  String? closeButtonImage;
+
+  int? closeButtonColor;
+
+  int? widgetBackgroundHeight;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      itemBackgroundColor,
+      itemCornerRadius,
+      itemMainTextColor,
+      itemOldPriceTextColor,
+      itemTitleTextSize,
+      itemDescriptionTextSize,
+      itemPriceTextSize,
+      itemOldPriceTextSize,
+      widgetBackgroundColor,
+      closeButtonImage,
+      closeButtonColor,
+      widgetBackgroundHeight,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GoodsItemAppearanceDto decode(Object result) {
+    result as List<Object?>;
+    return GoodsItemAppearanceDto(
+      itemBackgroundColor: result[0] as int?,
+      itemCornerRadius: result[1] as int?,
+      itemMainTextColor: result[2] as int?,
+      itemOldPriceTextColor: result[3] as int?,
+      itemTitleTextSize: result[4] as int?,
+      itemDescriptionTextSize: result[5] as int?,
+      itemPriceTextSize: result[6] as int?,
+      itemOldPriceTextSize: result[7] as int?,
+      widgetBackgroundColor: result[8] as int?,
+      closeButtonImage: result[9] as String?,
+      closeButtonColor: result[10] as int?,
+      widgetBackgroundHeight: result[11] as int?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GoodsItemAppearanceDto || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 class StoryFavoriteItemAPIDataDto {
   StoryFavoriteItemAPIDataDto({
     required this.id,
@@ -467,14 +563,17 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is SlideDataDto) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is GoodsItemAppearanceDto) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is ContentDataDto) {
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is InAppMessageDataDto) {
+    }    else if (value is ContentDataDto) {
       buffer.putUint8(139);
+      writeValue(buffer, value.encode());
+    }    else if (value is InAppMessageDataDto) {
+      buffer.putUint8(140);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -506,10 +605,12 @@ class _PigeonCodec extends StandardMessageCodec {
       case 136: 
         return SlideDataDto.decode(readValue(buffer)!);
       case 137: 
-        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+        return GoodsItemAppearanceDto.decode(readValue(buffer)!);
       case 138: 
-        return ContentDataDto.decode(readValue(buffer)!);
+        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       case 139: 
+        return ContentDataDto.decode(readValue(buffer)!);
+      case 140: 
         return InAppMessageDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -751,7 +852,6 @@ class InAppStoryManagerHostApi {
     }
   }
 
-  /// Sets a transparent status bar for story reader in Android.
   Future<void> setTransparentStatusBar() async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTransparentStatusBar$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -760,6 +860,29 @@ class InAppStoryManagerHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> changeSound(bool value) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeSound$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[value]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -939,6 +1062,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void storiesLoaded(int size, String feed);
 
+  void scrollToStory(int index);
+
   static void setUp(InAppStoryAPIListSubscriberFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -1035,6 +1160,31 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded was null, expected non-null String.');
           try {
             api.storiesLoaded(arg_size!, arg_feed!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_index = (args[0] as int?);
+          assert(arg_index != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory was null, expected non-null int.');
+          try {
+            api.scrollToStory(arg_index!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -1411,6 +1561,190 @@ class AppearanceManagerHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[radius]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setLikeIcon(String iconPath, String selectedIconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setLikeIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath, selectedIconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setDislikeIcon(String iconPath, String selectedIconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setDislikeIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath, selectedIconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setFavoriteIcon(String iconPath, String selectedIconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setFavoriteIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath, selectedIconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setShareIcon(String iconPath, String selectedIconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setShareIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath, selectedIconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setCloseIcon(String iconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setCloseIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setRefreshIcon(String iconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setRefreshIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setSoundIcon(String iconPath, String selectedIconPath) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setSoundIcon$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[iconPath, selectedIconPath]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setUpGoods(GoodsItemAppearanceDto appearance) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setUpGoods$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appearance]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

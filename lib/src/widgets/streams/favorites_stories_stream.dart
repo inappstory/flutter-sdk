@@ -69,4 +69,9 @@ class FavoritesStoriesStream extends StoriesStream {
   @override
   void storiesLoaded(int size, String feed) =>
       onStoriesLoaded?.call(size, feed);
+
+  @override
+  void scrollToStory(int index) {
+    // TODO: implement scrollToStory
+  }
 }

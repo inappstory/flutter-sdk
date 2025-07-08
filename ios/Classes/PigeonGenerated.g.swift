@@ -309,6 +309,75 @@ struct SlideDataDto: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GoodsItemAppearanceDto: Hashable {
+  var itemBackgroundColor: Int64? = nil
+  var itemCornerRadius: Int64? = nil
+  var itemMainTextColor: Int64? = nil
+  var itemOldPriceTextColor: Int64? = nil
+  var itemTitleTextSize: Int64? = nil
+  var itemDescriptionTextSize: Int64? = nil
+  var itemPriceTextSize: Int64? = nil
+  var itemOldPriceTextSize: Int64? = nil
+  var widgetBackgroundColor: Int64? = nil
+  var closeButtonImage: String? = nil
+  var closeButtonColor: Int64? = nil
+  var widgetBackgroundHeight: Int64? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GoodsItemAppearanceDto? {
+    let itemBackgroundColor: Int64? = nilOrValue(pigeonVar_list[0])
+    let itemCornerRadius: Int64? = nilOrValue(pigeonVar_list[1])
+    let itemMainTextColor: Int64? = nilOrValue(pigeonVar_list[2])
+    let itemOldPriceTextColor: Int64? = nilOrValue(pigeonVar_list[3])
+    let itemTitleTextSize: Int64? = nilOrValue(pigeonVar_list[4])
+    let itemDescriptionTextSize: Int64? = nilOrValue(pigeonVar_list[5])
+    let itemPriceTextSize: Int64? = nilOrValue(pigeonVar_list[6])
+    let itemOldPriceTextSize: Int64? = nilOrValue(pigeonVar_list[7])
+    let widgetBackgroundColor: Int64? = nilOrValue(pigeonVar_list[8])
+    let closeButtonImage: String? = nilOrValue(pigeonVar_list[9])
+    let closeButtonColor: Int64? = nilOrValue(pigeonVar_list[10])
+    let widgetBackgroundHeight: Int64? = nilOrValue(pigeonVar_list[11])
+
+    return GoodsItemAppearanceDto(
+      itemBackgroundColor: itemBackgroundColor,
+      itemCornerRadius: itemCornerRadius,
+      itemMainTextColor: itemMainTextColor,
+      itemOldPriceTextColor: itemOldPriceTextColor,
+      itemTitleTextSize: itemTitleTextSize,
+      itemDescriptionTextSize: itemDescriptionTextSize,
+      itemPriceTextSize: itemPriceTextSize,
+      itemOldPriceTextSize: itemOldPriceTextSize,
+      widgetBackgroundColor: widgetBackgroundColor,
+      closeButtonImage: closeButtonImage,
+      closeButtonColor: closeButtonColor,
+      widgetBackgroundHeight: widgetBackgroundHeight
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      itemBackgroundColor,
+      itemCornerRadius,
+      itemMainTextColor,
+      itemOldPriceTextColor,
+      itemTitleTextSize,
+      itemDescriptionTextSize,
+      itemPriceTextSize,
+      itemOldPriceTextSize,
+      widgetBackgroundColor,
+      closeButtonImage,
+      closeButtonColor,
+      widgetBackgroundHeight,
+    ]
+  }
+  static func == (lhs: GoodsItemAppearanceDto, rhs: GoodsItemAppearanceDto) -> Bool {
+    return deepEqualsPigeonGenerated(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashPigeonGenerated(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct StoryFavoriteItemAPIDataDto: Hashable {
   var id: Int64
   var imageFilePath: String? = nil
@@ -451,10 +520,12 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
     case 136:
       return SlideDataDto.fromList(self.readValue() as! [Any?])
     case 137:
-      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
     case 138:
-      return ContentDataDto.fromList(self.readValue() as! [Any?])
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     case 139:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 140:
       return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -488,14 +559,17 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? SlideDataDto {
       super.writeByte(136)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? GoodsItemAppearanceDto {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? ContentDataDto {
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? InAppMessageDataDto {
+    } else if let value = value as? ContentDataDto {
       super.writeByte(139)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(140)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -591,8 +665,8 @@ protocol InAppStoryManagerHostApi {
   func closeReaders() throws
   func clearCache() throws
   func setLang(languageCode: String, languageRegion: String) throws
-  /// Sets a transparent status bar for story reader in Android.
   func setTransparentStatusBar() throws
+  func changeSound(value: Bool) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -690,7 +764,6 @@ class InAppStoryManagerHostApiSetup {
     } else {
       setLangChannel.setMessageHandler(nil)
     }
-    /// Sets a transparent status bar for story reader in Android.
     let setTransparentStatusBarChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTransparentStatusBar\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       setTransparentStatusBarChannel.setMessageHandler { _, reply in
@@ -703,6 +776,21 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       setTransparentStatusBarChannel.setMessageHandler(nil)
+    }
+    let changeSoundChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeSound\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      changeSoundChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let valueArg = args[0] as! Bool
+        do {
+          try api.changeSound(value: valueArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      changeSoundChannel.setMessageHandler(nil)
     }
   }
 }
@@ -822,6 +910,7 @@ protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
   func updateStoriesData(list listArg: [StoryAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func storiesLoaded(size sizeArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func scrollToStory(index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -891,6 +980,24 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesLoaded\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([sizeArg, feedArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func scrollToStory(index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([indexArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -1059,6 +1166,14 @@ protocol AppearanceManagerHostApi {
   func setTimerGradient(colors: [Int64], locations: [Double]) throws
   func setReaderBackgroundColor(color: Int64) throws
   func setReaderCornerRadius(radius: Int64) throws
+  func setLikeIcon(iconPath: String, selectedIconPath: String) throws
+  func setDislikeIcon(iconPath: String, selectedIconPath: String) throws
+  func setFavoriteIcon(iconPath: String, selectedIconPath: String) throws
+  func setShareIcon(iconPath: String, selectedIconPath: String) throws
+  func setCloseIcon(iconPath: String) throws
+  func setRefreshIcon(iconPath: String) throws
+  func setSoundIcon(iconPath: String, selectedIconPath: String) throws
+  func setUpGoods(appearance: GoodsItemAppearanceDto) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1200,6 +1315,131 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setReaderCornerRadiusChannel.setMessageHandler(nil)
+    }
+    let setLikeIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setLikeIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setLikeIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        let selectedIconPathArg = args[1] as! String
+        do {
+          try api.setLikeIcon(iconPath: iconPathArg, selectedIconPath: selectedIconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setLikeIconChannel.setMessageHandler(nil)
+    }
+    let setDislikeIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setDislikeIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setDislikeIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        let selectedIconPathArg = args[1] as! String
+        do {
+          try api.setDislikeIcon(iconPath: iconPathArg, selectedIconPath: selectedIconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setDislikeIconChannel.setMessageHandler(nil)
+    }
+    let setFavoriteIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setFavoriteIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setFavoriteIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        let selectedIconPathArg = args[1] as! String
+        do {
+          try api.setFavoriteIcon(iconPath: iconPathArg, selectedIconPath: selectedIconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setFavoriteIconChannel.setMessageHandler(nil)
+    }
+    let setShareIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setShareIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setShareIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        let selectedIconPathArg = args[1] as! String
+        do {
+          try api.setShareIcon(iconPath: iconPathArg, selectedIconPath: selectedIconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setShareIconChannel.setMessageHandler(nil)
+    }
+    let setCloseIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setCloseIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setCloseIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        do {
+          try api.setCloseIcon(iconPath: iconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setCloseIconChannel.setMessageHandler(nil)
+    }
+    let setRefreshIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setRefreshIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setRefreshIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        do {
+          try api.setRefreshIcon(iconPath: iconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setRefreshIconChannel.setMessageHandler(nil)
+    }
+    let setSoundIconChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setSoundIcon\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setSoundIconChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let iconPathArg = args[0] as! String
+        let selectedIconPathArg = args[1] as! String
+        do {
+          try api.setSoundIcon(iconPath: iconPathArg, selectedIconPath: selectedIconPathArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setSoundIconChannel.setMessageHandler(nil)
+    }
+    let setUpGoodsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setUpGoods\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setUpGoodsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appearanceArg = args[0] as! GoodsItemAppearanceDto
+        do {
+          try api.setUpGoods(appearance: appearanceArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setUpGoodsChannel.setMessageHandler(nil)
     }
   }
 }

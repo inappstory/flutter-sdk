@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       (throw Exception('navigatorKey is not set to MaterialApp'));
 
   final _inAppStoryPlugin = InAppStoryPlugin();
-  final appearanceManager = AppearanceManagerHostApi();
+  final appearanceManager = AppearanceManager.instance;
 
   late final initialization = initSdk();
 

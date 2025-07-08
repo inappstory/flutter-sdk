@@ -41,8 +41,9 @@ abstract class InAppStoryManagerHostApi {
 
   void setLang(String languageCode, String languageRegion);
 
-  /// Sets a transparent status bar for story reader in Android.
   void setTransparentStatusBar();
+
+  void changeSound(bool value);
 }
 
 @HostApi()
@@ -69,6 +70,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
 
   void storiesLoaded(int size, String feed);
+
+  void scrollToStory(int index);
 }
 
 @FlutterApi()
@@ -146,6 +149,21 @@ enum Position {
   bottomRight,
 }
 
+class GoodsItemAppearanceDto {
+  late int? itemBackgroundColor;
+  late int? itemCornerRadius;
+  late int? itemMainTextColor;
+  late int? itemOldPriceTextColor;
+  late int? itemTitleTextSize;
+  late int? itemDescriptionTextSize;
+  late int? itemPriceTextSize;
+  late int? itemOldPriceTextSize;
+  late int? widgetBackgroundColor;
+  late String? closeButtonImage;
+  late int? closeButtonColor;
+  late int? widgetBackgroundHeight;
+}
+
 @HostApi()
 abstract class AppearanceManagerHostApi {
   void setHasLike(bool value);
@@ -166,6 +184,22 @@ abstract class AppearanceManagerHostApi {
   void setReaderBackgroundColor(int color);
 
   void setReaderCornerRadius(int radius);
+
+  void setLikeIcon(String iconPath, String selectedIconPath);
+
+  void setDislikeIcon(String iconPath, String selectedIconPath);
+
+  void setFavoriteIcon(String iconPath, String selectedIconPath);
+
+  void setShareIcon(String iconPath, String selectedIconPath);
+
+  void setCloseIcon(String iconPath);
+
+  void setRefreshIcon(String iconPath);
+
+  void setSoundIcon(String iconPath, String selectedIconPath);
+
+  void setUpGoods(GoodsItemAppearanceDto appearance);
 }
 
 class StoryFavoriteItemAPIDataDto {

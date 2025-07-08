@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
-import 'src/controllers/feed_stories_controller.dart';
+import 'src/controllers/controllers.dart';
 import 'src/widgets/builders/builders.dart';
 import 'src/widgets/decorators/feed_decorator.dart';
 import 'src/widgets/streams/favorites_stories_stream.dart';
@@ -12,7 +12,11 @@ import 'src/widgets/streams/feed_stories_stream.dart';
 export 'src/callbacks/callbacks.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/story.dart';
-export 'src/pigeon_generated.g.dart' hide InAppStoryManagerHostApi;
+export 'src/pigeon_generated.g.dart'
+    hide
+        InAppStoryManagerHostApi,
+        AppearanceManagerHostApi,
+        CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/widgets.dart';
 

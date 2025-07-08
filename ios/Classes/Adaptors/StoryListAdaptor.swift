@@ -32,6 +32,7 @@ class StoryListAdaptor: IASStoryListHostApi {
             api: self,
             messageChannelSuffix: uniqueId
         )
+        
     }
 
     public var uniqueId: String

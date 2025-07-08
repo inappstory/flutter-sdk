@@ -1,0 +1,22 @@
+name: InAppStory
+
+packages:
+  - .
+scripts:
+  generate pigeons:
+    description: Generate pigeons 🕊
+    hooks:
+      pre: echo `Generating all pigeons 🕊️`
+      post: echo `Pigeons generated`
+    steps:
+      - flutter pub get
+      - dart run pigeon --input pigeons/pigeon_generation.dart
+      - dart run pigeon --input pigeons/pigeon_generation_private.dart
+
+  run pod install:
+    description: Running pod install in examples
+    steps:
+      - cd example/ios
+      - pod install --repo-update
+      - cd ../../example_extended
+      - pod install --repo-update

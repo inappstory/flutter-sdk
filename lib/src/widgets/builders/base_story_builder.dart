@@ -35,7 +35,7 @@ class BaseStoryBuilder extends StatelessWidget implements StoryWidget {
                   width: decorator?.borderWidth ?? 1.0,
                 ),
                 borderRadius: decorator?.borderRadius.add(
-                  BorderRadius.circular(4.0),
+                  BorderRadius.circular(decorator?.borderPadding ?? 0.0),
                 ),
               )
             : null,

@@ -279,6 +279,67 @@ data class SlideDataDto (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class GoodsItemAppearanceDto (
+  val itemBackgroundColor: Long? = null,
+  val itemCornerRadius: Long? = null,
+  val itemMainTextColor: Long? = null,
+  val itemOldPriceTextColor: Long? = null,
+  val itemTitleTextSize: Long? = null,
+  val itemDescriptionTextSize: Long? = null,
+  val itemPriceTextSize: Long? = null,
+  val itemOldPriceTextSize: Long? = null,
+  val widgetBackgroundColor: Long? = null,
+  val closeButtonImage: String? = null,
+  val closeButtonColor: Long? = null,
+  val widgetBackgroundHeight: Long? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GoodsItemAppearanceDto {
+      val itemBackgroundColor = pigeonVar_list[0] as Long?
+      val itemCornerRadius = pigeonVar_list[1] as Long?
+      val itemMainTextColor = pigeonVar_list[2] as Long?
+      val itemOldPriceTextColor = pigeonVar_list[3] as Long?
+      val itemTitleTextSize = pigeonVar_list[4] as Long?
+      val itemDescriptionTextSize = pigeonVar_list[5] as Long?
+      val itemPriceTextSize = pigeonVar_list[6] as Long?
+      val itemOldPriceTextSize = pigeonVar_list[7] as Long?
+      val widgetBackgroundColor = pigeonVar_list[8] as Long?
+      val closeButtonImage = pigeonVar_list[9] as String?
+      val closeButtonColor = pigeonVar_list[10] as Long?
+      val widgetBackgroundHeight = pigeonVar_list[11] as Long?
+      return GoodsItemAppearanceDto(itemBackgroundColor, itemCornerRadius, itemMainTextColor, itemOldPriceTextColor, itemTitleTextSize, itemDescriptionTextSize, itemPriceTextSize, itemOldPriceTextSize, widgetBackgroundColor, closeButtonImage, closeButtonColor, widgetBackgroundHeight)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      itemBackgroundColor,
+      itemCornerRadius,
+      itemMainTextColor,
+      itemOldPriceTextColor,
+      itemTitleTextSize,
+      itemDescriptionTextSize,
+      itemPriceTextSize,
+      itemOldPriceTextSize,
+      widgetBackgroundColor,
+      closeButtonImage,
+      closeButtonColor,
+      widgetBackgroundHeight,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GoodsItemAppearanceDto) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return PigeonGeneratedPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class StoryFavoriteItemAPIDataDto (
   val id: Long,
   val imageFilePath: String? = null,
@@ -431,15 +492,20 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryFavoriteItemAPIDataDto.fromList(it)
+          GoodsItemAppearanceDto.fromList(it)
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ContentDataDto.fromList(it)
+          StoryFavoriteItemAPIDataDto.fromList(it)
         }
       }
       139.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentDataDto.fromList(it)
+        }
+      }
+      140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           InAppMessageDataDto.fromList(it)
         }
@@ -481,16 +547,20 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(136)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is GoodsItemAppearanceDto -> {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is ContentDataDto -> {
+      is StoryFavoriteItemAPIDataDto -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is InAppMessageDataDto -> {
+      is ContentDataDto -> {
         stream.write(139)
+        writeValue(stream, value.toList())
+      }
+      is InAppMessageDataDto -> {
+        stream.write(140)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -583,8 +653,8 @@ interface InAppStoryManagerHostApi {
   fun closeReaders()
   fun clearCache()
   fun setLang(languageCode: String, languageRegion: String)
-  /** Sets a transparent status bar for story reader in Android. */
   fun setTransparentStatusBar()
+  fun changeSound(value: Boolean)
 
   companion object {
     /** The codec used by InAppStoryManagerHostApi. */
@@ -707,6 +777,24 @@ interface InAppStoryManagerHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.setTransparentStatusBar()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeSound$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val valueArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.changeSound(valueArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -927,6 +1015,23 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       } 
     }
   }
+  fun scrollToStory(indexArg: Long, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(indexArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
 class ErrorCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
@@ -1059,6 +1164,14 @@ interface AppearanceManagerHostApi {
   fun setTimerGradient(colors: List<Long>, locations: List<Double>)
   fun setReaderBackgroundColor(color: Long)
   fun setReaderCornerRadius(radius: Long)
+  fun setLikeIcon(iconPath: String, selectedIconPath: String)
+  fun setDislikeIcon(iconPath: String, selectedIconPath: String)
+  fun setFavoriteIcon(iconPath: String, selectedIconPath: String)
+  fun setShareIcon(iconPath: String, selectedIconPath: String)
+  fun setCloseIcon(iconPath: String)
+  fun setRefreshIcon(iconPath: String)
+  fun setSoundIcon(iconPath: String, selectedIconPath: String)
+  fun setUpGoods(appearance: GoodsItemAppearanceDto)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -1219,6 +1332,155 @@ interface AppearanceManagerHostApi {
             val radiusArg = args[0] as Long
             val wrapped: List<Any?> = try {
               api.setReaderCornerRadius(radiusArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setLikeIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val selectedIconPathArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setLikeIcon(iconPathArg, selectedIconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setDislikeIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val selectedIconPathArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setDislikeIcon(iconPathArg, selectedIconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setFavoriteIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val selectedIconPathArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setFavoriteIcon(iconPathArg, selectedIconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setShareIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val selectedIconPathArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setShareIcon(iconPathArg, selectedIconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setCloseIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.setCloseIcon(iconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setRefreshIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.setRefreshIcon(iconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setSoundIcon$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val iconPathArg = args[0] as String
+            val selectedIconPathArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.setSoundIcon(iconPathArg, selectedIconPathArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setUpGoods$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appearanceArg = args[0] as GoodsItemAppearanceDto
+            val wrapped: List<Any?> = try {
+              api.setUpGoods(appearanceArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

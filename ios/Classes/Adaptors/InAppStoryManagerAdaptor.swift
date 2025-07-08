@@ -3,6 +3,7 @@ import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
 class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
+
     init(binaryMessenger: FlutterBinaryMessenger) {
         InAppStoryManagerHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
@@ -49,5 +50,9 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             userID: settings?.userID ?? "",
             lang: locale
         )
+    }
+
+    func changeSound(value: Bool) throws {
+        InAppStory.shared.muted = !value
     }
 }

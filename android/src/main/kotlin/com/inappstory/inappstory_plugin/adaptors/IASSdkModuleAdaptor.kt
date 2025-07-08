@@ -20,7 +20,7 @@ class InappstorySdkModuleAdaptor(
     private val inAppStoryAPI = InAppStoryAPI()
     private val appearanceManager = AppearanceManager()
     private val appearanceManagerAdaptor =
-        AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
+        AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager, activityHolder)
     private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var favorites: IASStoryListAdaptor
     private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
@@ -66,8 +66,8 @@ class InappstorySdkModuleAdaptor(
                 null,
                 null,
                 null,
+                false,
                 true,
-                null,
                 CacheSize.MEDIUM,
                 false,
             )

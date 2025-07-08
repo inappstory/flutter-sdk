@@ -31,6 +31,8 @@ class StoriesListUpdateHandlerAdaptor {
         storyListAPI.storyUpdate = storyUpdateHandler
 
         storyListAPI.favoritesUpdate = favoriteUpdateHandler
+        
+        storyListAPI.scrollUpdate = scrollUpdateHandler
     }
 
     private var binaryMessenger: FlutterBinaryMessenger
@@ -78,6 +80,12 @@ class StoriesListUpdateHandlerAdaptor {
                     )
                 }
             }
+        }
+    }
+    
+    func scrollUpdateHandler(_ index: Int) {
+        DispatchQueue.main.async {
+            self.flutter.scrollToStory(index: Int64(index), completion: { _ in })
         }
     }
 

@@ -4,8 +4,6 @@ import IASInAppMessagesCallbacksFlutterApi
 import com.inappstory.inappstory_plugin.mapInAppMessageDataDto
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.InAppStoryManager
-import com.inappstory.sdk.inappmessage.InAppMessageWidgetCallback
-import com.inappstory.sdk.stories.outercallbacks.common.reader.InAppMessageData
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 class InAppMessageCallbackAdaptor(
@@ -36,23 +34,16 @@ class InAppMessageCallbackAdaptor(
             }
         }
 
-        inAppStoryManager.setInAppMessageWidgetCallback(object : InAppMessageWidgetCallback {
-            override fun inAppMessageWidget(
-                inAppMessageData: InAppMessageData?,
-                name: String?,
-                data: MutableMap<String, String>?
-            ) {
-                val inAppMessageDataDto = inAppMessageData?.let { mapInAppMessageDataDto(it) }
-                val dataDto: Map<String?, Any?>? = data?.toMap<String?, Any?>()
-                flutterPluginBinding.runOnMainThread {
-                    api.onInAppMessageWidgetEvent(
-                        inAppMessageDataArg = inAppMessageDataDto,
-                        nameArg = name,
-                        dataArg = dataDto
-                    ) {}
-                }
+        inAppStoryManager.setInAppMessageWidgetCallback { inAppMessageData, name, data ->
+            val inAppMessageDataDto = inAppMessageData?.let { mapInAppMessageDataDto(it) }
+            val dataDto: Map<String?, Any?>? = data?.toMap<String?, Any?>()
+            flutterPluginBinding.runOnMainThread {
+                api.onInAppMessageWidgetEvent(
+                    inAppMessageDataArg = inAppMessageDataDto,
+                    nameArg = name,
+                    dataArg = dataDto
+                ) {}
             }
-
-        })
+        }
     }
 }

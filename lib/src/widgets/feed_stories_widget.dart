@@ -93,6 +93,8 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   /// The builder for the favorites widget.
   late FeedFavoritesWidgetBuilder _favoritesBuilder;
 
+  final scrollController = ScrollController();
+
   @override
   initState() {
     super.initState();
@@ -116,6 +118,11 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
+      onScrollToStory: (index, story) {
+        final storyWidth = widget.height * story.aspectRatio;
+        scrollController.jumpTo((index * storyWidth) +
+            (index * (feedDecorator?.storyPadding ?? 8.0)));
+      },
     );
   }
 
@@ -160,6 +167,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         return SizedBox(
           height: widget.height,
           child: ListView.separated(
+            controller: scrollController,
             itemCount: storiesWidgets.length,
             scrollDirection: Axis.horizontal,
             padding: feedDecorator?.feedPadding,
@@ -167,7 +175,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
               return snapshot.requireData.elementAt(index);
             },
             separatorBuilder: (context, index) =>
-                SizedBox(width: feedDecorator?.storyPadding ?? 12),
+                SizedBox(width: feedDecorator?.storyPadding ?? 8.0),
           ),
         );
       },

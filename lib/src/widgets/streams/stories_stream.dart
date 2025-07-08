@@ -29,7 +29,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   final IASStoryListHostApi iasStoryListHostApi;
   final FeedStoryDecorator storyDecorator;
 
-  Iterable<StoryFromPigeonDto> stories = [];
+  List<StoryFromPigeonDto> stories = [];
 
   late final controller = StreamController<Iterable<Widget>>(
     onListen: onListen,

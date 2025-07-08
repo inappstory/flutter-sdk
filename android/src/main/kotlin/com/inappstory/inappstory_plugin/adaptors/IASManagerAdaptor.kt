@@ -45,8 +45,12 @@ class IASManagerAdaptor(
         inAppStoryManager.setOpenStoriesReader(CustomOpenStoriesReader())
     }
 
+    override fun changeSound(value: Boolean) {
+        inAppStoryManager.soundOn(value)
+    }
+
     override fun setLang(languageCode: String, languageRegion: String) {
-        val locale: Locale = Locale(languageCode, languageRegion)
+        val locale = Locale(languageCode, languageRegion)
         inAppStoryManager.setLang(locale)
     }
 }
