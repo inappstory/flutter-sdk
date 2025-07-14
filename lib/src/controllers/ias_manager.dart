@@ -1,11 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-import '../pigeon_generated.g.dart' show InAppStoryManagerHostApi;
+import '../callbacks/ias_skus_callback_impl.dart';
+import '../pigeon_generated.g.dart'
+    show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
 
 class InAppStoryManager {
   InAppStoryManager._private();
 
   final _iasManager = InAppStoryManagerHostApi();
+
+  final _callbackImpl = GoodsCallbackFlutterApiImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -42,5 +46,10 @@ class InAppStoryManager {
 
   Future<void> changeSound(bool enabled) async {
     await _iasManager.changeSound(enabled);
+  }
+
+  void setGetSkusCallback(SkusCallbackImpl callback) {
+    _callbackImpl.callback = callback;
+    SkusCallbackFlutterApi.setUp(_callbackImpl);
   }
 }

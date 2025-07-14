@@ -2,7 +2,10 @@ package com.inappstory.inappstory_plugin.adaptors
 
 import AppearanceManagerHostApi
 import GoodsItemAppearanceDto
+import GoodsItemDataDto
+import GoodsItemSelectedCallbackFlutterApi
 import Position
+import SkusCallbackFlutterApi
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
@@ -17,6 +20,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.inappstory.inappstory_plugin.helpers.IASCustomIcon
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.CustomCloseIconInterface
 import com.inappstory.sdk.CustomDislikeIconInterface
@@ -45,6 +49,11 @@ class AppearanceManagerAdaptor(
     init {
         AppearanceManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
+
+    private val skusCallback = SkusCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
+    private val goodsItemSelectedCallback =
+        GoodsItemSelectedCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
+
 
     private var likeIcon: Bitmap? = null
     private var selectedLikeIcon: Bitmap? = null
@@ -421,7 +430,34 @@ class AppearanceManagerAdaptor(
                 skus: ArrayList<String>,
                 callback: GetGoodsDataCallback
             ) {
-                callback.onSuccess(ArrayList())
+                flutterPluginBinding.runOnMainThread {
+                    skusCallback.getSkus(skus) { goodsItemDataDtoResult ->
+                        if (goodsItemDataDtoResult.isFailure) {
+                            callback.onError()
+                            return@getSkus
+                        }
+                        val goods = goodsItemDataDtoResult.getOrNull()
+                        if (goods != null) {
+                            val goodsItemData = arrayListOf<GoodsItemData>()
+                            skus.forEach { sku ->
+                                val item = goods.first { it.sku == sku }
+                                val data = GoodsItemData(
+                                    sku,
+                                    item.title,
+                                    item.description,
+                                    item.image,
+                                    item.price,
+                                    item.oldPrice,
+                                    item
+                                )
+                                goodsItemData.add(data)
+                            }
+                            callback.onSuccess(goodsItemData)
+                        } else {
+                            callback.onError()
+                        }
+                    }
+                }
             }
 
             override fun onItemClick(
@@ -430,6 +466,17 @@ class AppearanceManagerAdaptor(
                 goodsItemData: GoodsItemData,
                 callback: GetGoodsDataCallback
             ) {
+                val goodsItemDataDto = GoodsItemDataDto(
+                    sku = goodsItemData.sku,
+                    title = goodsItemData.title,
+                    description = goodsItemData.description,
+                    image = goodsItemData.image,
+                    price = goodsItemData.price,
+                    oldPrice = goodsItemData.oldPrice
+                )
+                flutterPluginBinding.runOnMainThread {
+                    goodsItemSelectedCallback.goodsItemSelected(goodsItemDataDto) {}
+                }
             }
         })
     }

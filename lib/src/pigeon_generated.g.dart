@@ -376,6 +376,72 @@ class GoodsItemAppearanceDto {
 ;
 }
 
+class GoodsItemDataDto {
+  GoodsItemDataDto({
+    this.sku,
+    this.title,
+    this.description,
+    this.image,
+    this.price,
+    this.oldPrice,
+  });
+
+  String? sku;
+
+  String? title;
+
+  String? description;
+
+  String? image;
+
+  String? price;
+
+  String? oldPrice;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sku,
+      title,
+      description,
+      image,
+      price,
+      oldPrice,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static GoodsItemDataDto decode(Object result) {
+    result as List<Object?>;
+    return GoodsItemDataDto(
+      sku: result[0] as String?,
+      title: result[1] as String?,
+      description: result[2] as String?,
+      image: result[3] as String?,
+      price: result[4] as String?,
+      oldPrice: result[5] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GoodsItemDataDto || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 class StoryFavoriteItemAPIDataDto {
   StoryFavoriteItemAPIDataDto({
     required this.id,
@@ -566,14 +632,17 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is GoodsItemAppearanceDto) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is GoodsItemDataDto) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is ContentDataDto) {
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is InAppMessageDataDto) {
+    }    else if (value is ContentDataDto) {
       buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    }    else if (value is InAppMessageDataDto) {
+      buffer.putUint8(141);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -607,10 +676,12 @@ class _PigeonCodec extends StandardMessageCodec {
       case 137: 
         return GoodsItemAppearanceDto.decode(readValue(buffer)!);
       case 138: 
-        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+        return GoodsItemDataDto.decode(readValue(buffer)!);
       case 139: 
-        return ContentDataDto.decode(readValue(buffer)!);
+        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       case 140: 
+        return ContentDataDto.decode(readValue(buffer)!);
+      case 141: 
         return InAppMessageDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1757,6 +1828,76 @@ class AppearanceManagerHostApi {
       );
     } else {
       return;
+    }
+  }
+}
+
+abstract class SkusCallbackFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  Future<List<GoodsItemDataDto>> getSkus(List<String> strings);
+
+  static void setUp(SkusCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.SkusCallbackFlutterApi.getSkus$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.SkusCallbackFlutterApi.getSkus was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final List<String>? arg_strings = (args[0] as List<Object?>?)?.cast<String>();
+          assert(arg_strings != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.SkusCallbackFlutterApi.getSkus was null, expected non-null List<String>.');
+          try {
+            final List<GoodsItemDataDto> output = await api.getSkus(arg_strings!);
+            return wrapResponse(result: output);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+  }
+}
+
+abstract class GoodsItemSelectedCallbackFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void goodsItemSelected(GoodsItemDataDto item);
+
+  static void setUp(GoodsItemSelectedCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.GoodsItemSelectedCallbackFlutterApi.goodsItemSelected$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.GoodsItemSelectedCallbackFlutterApi.goodsItemSelected was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final GoodsItemDataDto? arg_item = (args[0] as GoodsItemDataDto?);
+          assert(arg_item != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.GoodsItemSelectedCallbackFlutterApi.goodsItemSelected was null, expected non-null GoodsItemDataDto.');
+          try {
+            api.goodsItemSelected(arg_item!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
     }
   }
 }

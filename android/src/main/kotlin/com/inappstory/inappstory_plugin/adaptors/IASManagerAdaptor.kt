@@ -1,20 +1,25 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
+import SkusCallbackFlutterApi
 import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import java.util.Locale
 
 class IASManagerAdaptor(
     flutterPluginBinding: FlutterPluginBinding,
+    private val inAppStoryAPI: InAppStoryAPI,
     private val inAppStoryManager: InAppStoryManager,
 ) : InAppStoryManagerHostApi {
+    private val skusCallback = SkusCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
 
     init {
         InAppStoryManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
+
 
     override fun setPlaceholders(newPlaceholders: Map<String, String>) {
         inAppStoryManager.placeholders = newPlaceholders
@@ -38,7 +43,7 @@ class IASManagerAdaptor(
     }
 
     override fun clearCache() {
-        inAppStoryManager.clearCache()
+        inAppStoryAPI.clearCache()
     }
 
     override fun setTransparentStatusBar() {

@@ -18,7 +18,10 @@ class FavoriteFromDto implements FeedFavorite {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is FavoriteFromDto && runtimeType == other.runtimeType && dto.id == other.dto.id;
+      identical(this, other) ||
+      other is FavoriteFromDto &&
+          runtimeType == other.runtimeType &&
+          dto.id == other.dto.id;
 
   @override
   int get hashCode => dto.id;

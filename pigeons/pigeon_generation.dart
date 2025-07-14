@@ -202,6 +202,26 @@ abstract class AppearanceManagerHostApi {
   void setUpGoods(GoodsItemAppearanceDto appearance);
 }
 
+class GoodsItemDataDto {
+  late String? sku;
+  late String? title;
+  late String? description;
+  late String? image;
+  late String? price;
+  late String? oldPrice;
+}
+
+@FlutterApi()
+abstract class SkusCallbackFlutterApi {
+  @async
+  List<GoodsItemDataDto> getSkus(List<String> strings);
+}
+
+@FlutterApi()
+abstract class GoodsItemSelectedCallbackFlutterApi {
+  void goodsItemSelected(GoodsItemDataDto item);
+}
+
 class StoryFavoriteItemAPIDataDto {
   late int id;
   late String? imageFilePath;

@@ -340,6 +340,49 @@ data class GoodsItemAppearanceDto (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class GoodsItemDataDto (
+  val sku: String? = null,
+  val title: String? = null,
+  val description: String? = null,
+  val image: String? = null,
+  val price: String? = null,
+  val oldPrice: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GoodsItemDataDto {
+      val sku = pigeonVar_list[0] as String?
+      val title = pigeonVar_list[1] as String?
+      val description = pigeonVar_list[2] as String?
+      val image = pigeonVar_list[3] as String?
+      val price = pigeonVar_list[4] as String?
+      val oldPrice = pigeonVar_list[5] as String?
+      return GoodsItemDataDto(sku, title, description, image, price, oldPrice)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      sku,
+      title,
+      description,
+      image,
+      price,
+      oldPrice,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is GoodsItemDataDto) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return PigeonGeneratedPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class StoryFavoriteItemAPIDataDto (
   val id: Long,
   val imageFilePath: String? = null,
@@ -497,15 +540,20 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryFavoriteItemAPIDataDto.fromList(it)
+          GoodsItemDataDto.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ContentDataDto.fromList(it)
+          StoryFavoriteItemAPIDataDto.fromList(it)
         }
       }
       140.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentDataDto.fromList(it)
+        }
+      }
+      141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           InAppMessageDataDto.fromList(it)
         }
@@ -551,16 +599,20 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is GoodsItemDataDto -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is ContentDataDto -> {
+      is StoryFavoriteItemAPIDataDto -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is InAppMessageDataDto -> {
+      is ContentDataDto -> {
         stream.write(140)
+        writeValue(stream, value.toList())
+      }
+      is InAppMessageDataDto -> {
+        stream.write(141)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1491,6 +1543,61 @@ interface AppearanceManagerHostApi {
           channel.setMessageHandler(null)
         }
       }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class SkusCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by SkusCallbackFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  fun getSkus(stringsArg: List<String>, callback: (Result<List<GoodsItemDataDto>>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.SkusCallbackFlutterApi.getSkus$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(stringsArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else if (it[0] == null) {
+          callback(Result.failure(FlutterError("null-error", "Flutter api returned null value for non-null return value.", "")))
+        } else {
+          val output = it[0] as List<GoodsItemDataDto>
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class GoodsItemSelectedCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by GoodsItemSelectedCallbackFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  fun goodsItemSelected(itemArg: GoodsItemDataDto, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.GoodsItemSelectedCallbackFlutterApi.goodsItemSelected$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(itemArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
 }

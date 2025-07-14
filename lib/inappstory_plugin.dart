@@ -11,7 +11,7 @@ import 'src/widgets/streams/feed_stories_stream.dart';
 
 export 'src/callbacks/callbacks.dart';
 export 'src/controllers/controllers.dart';
-export 'src/data/story.dart';
+export 'src/data/data.dart';
 export 'src/pigeon_generated.g.dart'
     hide
         InAppStoryManagerHostApi,

@@ -232,21 +232,6 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
         }
     }
 
-    func enableCustomSharing() throws {
-        //        InAppStory.shared.customShare = { shareObject, complete in
-        //                                          // create a custom share screen
-        //                                          let newController = UIHostingController(rootView: ShareView(shareObject: shareObject, complete: complete, defaultComplete: { [weak self] in
-        //                                              let weakSelf = self else { return }
-        //                                              //call to show default screen will share
-        //                                              weakSelf.defaultShareComplete(shareObject: shareObject, complete: complete)
-        //                                          }))
-        //                                          // transparent background for the custom sharing screen
-        //                                          newController.view.backgroundColor = .clear
-        //                                          // display the custom viewing screen
-        //                                          InAppStory.shared.present(controller: newController, with: .crossDissolve)
-        //                                      }
-    }
-
     private func getUIImage(path: String) -> UIImage? {
         let key = pluginRegistrar.lookupKey(forAsset: path)
         let path = Bundle.main.path(forResource: key, ofType: nil)

@@ -378,6 +378,51 @@ struct GoodsItemAppearanceDto: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct GoodsItemDataDto: Hashable {
+  var sku: String? = nil
+  var title: String? = nil
+  var description: String? = nil
+  var image: String? = nil
+  var price: String? = nil
+  var oldPrice: String? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> GoodsItemDataDto? {
+    let sku: String? = nilOrValue(pigeonVar_list[0])
+    let title: String? = nilOrValue(pigeonVar_list[1])
+    let description: String? = nilOrValue(pigeonVar_list[2])
+    let image: String? = nilOrValue(pigeonVar_list[3])
+    let price: String? = nilOrValue(pigeonVar_list[4])
+    let oldPrice: String? = nilOrValue(pigeonVar_list[5])
+
+    return GoodsItemDataDto(
+      sku: sku,
+      title: title,
+      description: description,
+      image: image,
+      price: price,
+      oldPrice: oldPrice
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      sku,
+      title,
+      description,
+      image,
+      price,
+      oldPrice,
+    ]
+  }
+  static func == (lhs: GoodsItemDataDto, rhs: GoodsItemDataDto) -> Bool {
+    return deepEqualsPigeonGenerated(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashPigeonGenerated(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct StoryFavoriteItemAPIDataDto: Hashable {
   var id: Int64
   var imageFilePath: String? = nil
@@ -522,10 +567,12 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
     case 137:
       return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
     case 138:
-      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
     case 139:
-      return ContentDataDto.fromList(self.readValue() as! [Any?])
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     case 140:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 141:
       return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -562,14 +609,17 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? GoodsItemAppearanceDto {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? GoodsItemDataDto {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? ContentDataDto {
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? InAppMessageDataDto {
+    } else if let value = value as? ContentDataDto {
       super.writeByte(140)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(141)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1440,6 +1490,75 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setUpGoodsChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol SkusCallbackFlutterApiProtocol {
+  func getSkus(strings stringsArg: [String], completion: @escaping (Result<[GoodsItemDataDto], PigeonError>) -> Void)
+}
+class SkusCallbackFlutterApi: SkusCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func getSkus(strings stringsArg: [String], completion: @escaping (Result<[GoodsItemDataDto], PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.SkusCallbackFlutterApi.getSkus\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([stringsArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else if listResponse[0] == nil {
+        completion(.failure(PigeonError(code: "null-error", message: "Flutter api returned null value for non-null return value.", details: "")))
+      } else {
+        let result = listResponse[0] as! [GoodsItemDataDto]
+        completion(.success(result))
+      }
+    }
+  }
+}
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol GoodsItemSelectedCallbackFlutterApiProtocol {
+  func goodsItemSelected(item itemArg: GoodsItemDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class GoodsItemSelectedCallbackFlutterApi: GoodsItemSelectedCallbackFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  func goodsItemSelected(item itemArg: GoodsItemDataDto, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GoodsItemSelectedCallbackFlutterApi.goodsItemSelected\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([itemArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
     }
   }
 }
