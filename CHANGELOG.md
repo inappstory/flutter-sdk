@@ -1,3 +1,9 @@
+## [0.3.7]
+
+### Changed
+
+- Updated Android SDK to 1.21.13, that includes internal fixes
+
 ## [0.3.6]
 
 ### Changed
