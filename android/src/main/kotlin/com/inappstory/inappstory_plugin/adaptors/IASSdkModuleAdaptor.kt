@@ -7,6 +7,7 @@ import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.externalapi.ExternalPlatforms
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -49,6 +50,7 @@ class InappstorySdkModuleAdaptor(
             if (!languageCode.isNullOrEmpty() && !languageRegion.isNullOrEmpty()) {
                 locale = Locale(languageCode, languageRegion)
             }
+            inAppStoryAPI.setExternalPlatform(ExternalPlatforms.FLUTTER_SDK);
             feedListAdaptors.clear()
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
                 apiKey,
@@ -83,7 +85,8 @@ class InappstorySdkModuleAdaptor(
 
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
-            iasManagerAdaptor = IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
+            iasManagerAdaptor =
+                IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
             statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)

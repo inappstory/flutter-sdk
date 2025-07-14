@@ -1,5 +1,10 @@
 ## [0.4.0-rc.2]
 
+### Changed
+
+- Updated Android SDK to 1.21.13
+- Updated iOS SDK to 1.25.10
+
 ### Fixed
 
 - Goods v1 callbacks

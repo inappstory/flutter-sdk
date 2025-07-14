@@ -104,10 +104,12 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             let str2: String = "_"
             locale = "\(languageCode!)\(str2)\(languageRegion!)"
         }
+        
+        InAppStoryAPI.shared.plaform = ExternalPlatforms.flutter
 
         InAppStory.shared.initWith(
             serviceKey: apiKey,
-            settings: Settings(userID: userID, lang: locale)
+            settings: Settings(userID: userID, lang: locale),
         )
 
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
