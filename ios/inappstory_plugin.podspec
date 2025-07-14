@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'inappstory_plugin'
-  s.version          = '0.1.11'
+  s.version          = '0.1.12'
   s.summary          = 'InAppStory SDK Plugin'
   s.description      = <<-DESC
 InAppStory SDK Plugin

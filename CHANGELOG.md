@@ -1,3 +1,11 @@
+## [0.4.0-rc.2]
+
+### Fixed
+
+- Goods v1 callbacks
+- Bug when clearing cache on Android devices
+- Issue when can't close in-app-message using system back button on Android devices
+
 ## [0.4.0-rc.1]
 
 ### Added
