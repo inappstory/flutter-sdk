@@ -5,34 +5,34 @@ import '../pigeon_generated.g.dart' show GoodsItemDataDto;
 final class GoodsItemData {
   const GoodsItemData({
     required this.sku,
-    required this.title,
-    required this.description,
-    required this.image,
-    required this.price,
-    required this.oldPrice,
+    this.title,
+    this.description,
+    this.image,
+    this.price,
+    this.oldPrice,
   });
 
   final String sku;
 
-  final String title;
+  final String? title;
 
-  final String description;
+  final String? description;
 
-  final String image;
+  final String? image;
 
-  final String price;
+  final String? price;
 
-  final String oldPrice;
+  final String? oldPrice;
 
   @protected
   GoodsItemDataDto toDto() {
     return GoodsItemDataDto(
+      sku: sku,
       title: title,
       description: description,
       image: image,
       oldPrice: oldPrice,
       price: price,
-      sku: sku,
     );
   }
 }
