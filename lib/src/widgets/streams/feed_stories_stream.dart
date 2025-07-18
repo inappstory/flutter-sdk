@@ -94,7 +94,7 @@ class FeedStoriesStream extends StoriesStream {
       controller.add(combineStoriesAndFavorites());
     } catch (e) {
       if (kDebugMode) {
-        print('Error updating story data: $e');
+        print('InAppStory: Error updating story data: $e');
       }
     }
   }

@@ -83,9 +83,13 @@ class AppearanceManagerAdaptor(
 
     private fun setupIcons() {
         appearanceManager.csCustomIcons(
-            customFavoriteIconInterface, customLikeIconInterface, customDislikeIconInterface,
-            customShareIconInterface, customSoundIconInterface,
-            customCloseIconInterface, customRefreshIconInterface
+            customFavoriteIconInterface,
+            customLikeIconInterface,
+            customDislikeIconInterface,
+            customShareIconInterface,
+            customSoundIconInterface,
+            customCloseIconInterface,
+            customRefreshIconInterface
         )
     }
 
@@ -151,8 +155,7 @@ class AppearanceManagerAdaptor(
                                 customButton.setIconBitmap(likeIcon!!)
                             }
                             customButton.updateState(
-                                iconState.active(),
-                                iconState.enabled()
+                                iconState.active(), iconState.enabled()
                             )
                         }
                     }
@@ -368,12 +371,12 @@ class AppearanceManagerAdaptor(
     }
 
     override fun setUpGoods(appearance: GoodsItemAppearanceDto) {
-        appearanceManager.csCustomGoodsWidget(object : ICustomGoodsWidget {
+        AppearanceManager.getCommonInstance().csCustomGoodsWidget(object : ICustomGoodsWidget {
             override fun getWidgetView(contex: Context?): View? {
                 return null
             }
 
-            override fun getItem(): ICustomGoodsItem {
+            override fun getItem(): ICustomGoodsItem? {
                 var itemBackgroundColor: Int = Color.TRANSPARENT
                 var itemCornerRadius: Int = dpToPx(8F)
                 var itemMainTextColor: Int = Color.BLACK
@@ -406,8 +409,7 @@ class AppearanceManagerAdaptor(
                 if (appearance.itemOldPriceTextSize != null) {
                     itemOldPriceTextSize = spToPixels(appearance.itemOldPriceTextSize.toFloat())
                 }
-                return SimpleCustomGoodsItem()
-                    .csGoodsCellImageBackgroundColor(itemBackgroundColor)
+                return SimpleCustomGoodsItem().csGoodsCellImageBackgroundColor(itemBackgroundColor)
                     .csGoodsCellImageCornerRadius(itemCornerRadius)
                     .csGoodsCellMainTextColor(itemMainTextColor)
                     .csGoodsCellOldPriceTextColor(itemOldPriceTextColor)
@@ -417,7 +419,7 @@ class AppearanceManagerAdaptor(
                     .csGoodsCellOldPriceSize(itemOldPriceTextSize)
             }
 
-            override fun getWidgetAppearance(): IGoodsWidgetAppearance {
+            override fun getWidgetAppearance(): IGoodsWidgetAppearance? {
                 return getGoodsWidgetAppearance(appearance)
             }
 
@@ -426,9 +428,7 @@ class AppearanceManagerAdaptor(
             }
 
             override fun getSkus(
-                widgetView: View?,
-                skus: ArrayList<String>,
-                callback: GetGoodsDataCallback
+                widgetView: View?, skus: ArrayList<String>, callback: GetGoodsDataCallback
             ) {
                 flutterPluginBinding.runOnMainThread {
                     skusCallback.getSkus(skus) { goodsItemDataDtoResult ->
@@ -500,10 +500,9 @@ class AppearanceManagerAdaptor(
             override fun getCloseButtonImage(): Drawable {
                 if (appearance.closeButtonImage != null) {
                     val bitmap = createBitmapFromPath(appearance.closeButtonImage)
-                    val bitmapDrawable =
-                        bitmap?.toDrawable(
-                            flutterPluginBinding.getApplicationContext().getResources()
-                        )
+                    val bitmapDrawable = bitmap?.toDrawable(
+                        flutterPluginBinding.getApplicationContext().getResources()
+                    )
                     if (bitmapDrawable != null) {
                         return bitmapDrawable
                     }

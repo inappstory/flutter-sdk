@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../inappstory_plugin.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
@@ -23,7 +25,7 @@ class FavoritesStoriesStream extends StoriesStream {
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
         ) {
     feedController
-      ?..feed = feed
+      ?..feed = _uniqueId
       ..iasStoryListHostApi = iasStoryListHostApi;
   }
 
@@ -49,7 +51,20 @@ class FavoritesStoriesStream extends StoriesStream {
       final story =
           stories.firstWhere((element) => element.dto.id == storyData.id);
       story.updateStoryData(storyData);
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('InAppStory: Error updating story data: $e');
+      }
+    }
+  }
+
+  @override
+  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+    if (stories.length != list.length) {
+      iasStoryListHostApi.load(feed);
+    } else {
+      super.updateFavoriteStoriesData(list);
+    }
   }
 
   @override
