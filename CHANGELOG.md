@@ -1,3 +1,10 @@
+## [0.4.0-rc.3]
+
+### Fixed
+
+- goods v1 implementation on Android
+- fixed issue when items not updated in grid favorites widget
+
 ## [0.4.0-rc.2]
 
 ### Changed
