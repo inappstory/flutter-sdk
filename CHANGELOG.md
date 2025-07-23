@@ -1,3 +1,9 @@
+## [0.3.8]
+
+### Fixed
+
+- issue when onCloseStory callback always returns 0 index in SlideData on android devices
+
 ## [0.3.7]
 
 ### Changed
