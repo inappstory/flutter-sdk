@@ -1,3 +1,8 @@
+## [0.4.0-rc.4]
+
+### Fixed
+- changed 'favorites' logic implementation
+
 ## [0.4.0-rc.3]
 
 ### Fixed
