@@ -1,5 +1,5 @@
 group = "com.inappstory.inappstory_plugin"
-version = "0.1.12"
+version = "0.1.13"
 
 buildscript {
     ext.kotlin_version = "1.8.22"
@@ -82,7 +82,6 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.9.3'
     implementation "androidx.fragment:fragment-ktx:1.6.1"
     implementation "androidx.appcompat:appcompat:1.7.1"
-    //implementation 'com.github.inappstory:android-sdk:1.21.16'
     implementation 'com.github.inappstory:android-sdk:0b9889dd945b6223855fe3797f1150e4a9c6479a'
     implementation("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
         transitive = true

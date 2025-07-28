@@ -181,6 +181,12 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       },
     );
   }
+
+  @override
+  void dispose() {
+    (_feedStoriesWidgetsStream as FeedStoriesStream).dispose();
+    super.dispose();
+  }
 }
 
 /// A default widget for displaying a loading shimmer effect.

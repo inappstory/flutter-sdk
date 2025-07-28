@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../inappstory_plugin.dart';
+import '../../data/story_from_pigeon_dto.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import '../../observable_error_callback_flutter_api.dart';
@@ -35,6 +36,8 @@ class FavoritesStoriesStream extends StoriesStream {
 
   final Function(int size, String feed)? onStoriesLoaded;
 
+  final tempStories = <StoryFromPigeonDto>[];
+
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
     stories = list
@@ -42,15 +45,18 @@ class FavoritesStoriesStream extends StoriesStream {
         .map(createStoryFromDto)
         .toList(growable: false);
 
+    tempStories.clear();
+    tempStories.addAll(stories);
     controller.add(stories.map(createWidgetFromStory).toList());
   }
 
   @override
   void updateStoryData(StoryAPIDataDto storyData) {
     try {
-      final story =
-          stories.firstWhere((element) => element.dto.id == storyData.id);
-      story.updateStoryData(storyData);
+      final story = stories
+          .where((element) => element.dto.id == storyData.id)
+          .firstOrNull;
+      story?.updateStoryData(storyData);
     } catch (e) {
       if (kDebugMode) {
         print('InAppStory: Error updating story data: $e');
@@ -60,11 +66,29 @@ class FavoritesStoriesStream extends StoriesStream {
 
   @override
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
-    if (stories.length != list.length) {
-      iasStoryListHostApi.load(feed);
-    } else {
-      super.updateFavoriteStoriesData(list);
+    if (list.isEmpty) {
+      stories = <StoryFromPigeonDto>[];
+      controller.add(stories.map(createWidgetFromStory).toList());
+      return;
     }
+    final newList = <StoryFromPigeonDto>[];
+    for (final favorite in list) {
+      var item =
+          stories.where((element) => element.dto.id == favorite!.id).firstOrNull;
+      if (item != null) {
+        newList.add(item);
+        continue;
+      }
+      item = tempStories
+          .where((element) => element.dto.id == favorite!.id)
+          .firstOrNull;
+      if (item != null) {
+        newList.add(item);
+      }
+    }
+    stories = <StoryFromPigeonDto>[];
+    stories.addAll(newList);
+    controller.add(stories.map(createWidgetFromStory).toList());
   }
 
   @override
@@ -86,7 +110,7 @@ class FavoritesStoriesStream extends StoriesStream {
       onStoriesLoaded?.call(size, feed);
 
   @override
-  void scrollToStory(int index) {
+  void scrollToStory(int index, String feed) {
     // TODO: implement scrollToStory
   }
 }

@@ -16,17 +16,17 @@ class DefaultGridFeedFavoritesWidget extends FeedFavoritesItemWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showFavoritesBottomSheet(context),
+      onTap: () async => await showFavoritesBottomSheet(context),
       child: super.build(context),
     );
   }
 
-  void showFavoritesBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+  Future<void> showFavoritesBottomSheet(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => Container(
-        padding: EdgeInsets.only(top: 16),
+        padding: EdgeInsets.only(top: 16, left: 8, right: 8),
         height: MediaQuery.of(context).size.height * 0.75,
         child: GridViewFavouritesWidget(
           feed: feed,

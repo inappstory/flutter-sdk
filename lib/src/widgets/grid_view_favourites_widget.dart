@@ -50,6 +50,11 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
           return super.errorBuilder!(context, snapshot.error);
         }
 
+        if ((snapshot.data?.length ?? 0) == 0) {
+          Navigator.of(context).pop();
+          return SizedBox.shrink();
+        }
+
         return GridView.builder(
           itemCount: snapshot.data?.length ?? 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
