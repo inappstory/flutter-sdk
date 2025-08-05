@@ -1,3 +1,9 @@
+## [0.3.9]
+
+### Fixed
+
+- issue when game webhooks not working
+
 ## [0.3.8]
 
 ### Fixed
