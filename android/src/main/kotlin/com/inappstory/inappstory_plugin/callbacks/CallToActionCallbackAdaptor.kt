@@ -33,10 +33,17 @@ class CallToActionCallbackAdaptor(
                 ) {}
             }
         } else if (content is InAppMessageData) {
-            // TODO: implement InAppMessages
             val inAppMessageId: Int = content.id()
             val title: String? = content.title()
             val event: String? = content.event()
+
+            flutterPluginBinding.runOnMainThread {
+                api.callToAction(
+                    slideDataArg = null,
+                    urlArg = url,
+                    clickActionArg = null
+                ) {}
+            }
         }
 
     }

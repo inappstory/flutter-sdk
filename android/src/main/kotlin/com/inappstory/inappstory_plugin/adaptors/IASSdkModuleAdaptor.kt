@@ -66,8 +66,8 @@ class InappstorySdkModuleAdaptor(
                 null,
                 null,
                 null,
+                false,
                 true,
-                null,
                 CacheSize.MEDIUM,
                 false,
             )
