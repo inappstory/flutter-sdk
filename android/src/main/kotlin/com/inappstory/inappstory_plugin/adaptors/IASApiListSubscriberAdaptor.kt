@@ -1,6 +1,7 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryAPIListSubscriberFlutterApi
+import SlideDataDto
 import StoryAPIDataDto
 import StoryFavoriteItemAPIDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
@@ -8,7 +9,6 @@ import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
-import com.inappstory.sdk.externalapi.callbacks.IASCallbacksExternalAPI
 import com.inappstory.sdk.externalapi.storylist.IASStoryListSessionData
 import com.inappstory.sdk.externalapi.subscribers.InAppStoryAPIListSubscriber
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -16,16 +16,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 open class InAppStoryAPIListSubscriberAdaptor(
     private val flutterPluginBinding: FlutterPluginBinding,
     uniqueId: String,
-    callbacks: IASCallbacksExternalAPI,
-) :
-    InAppStoryAPIListSubscriber(uniqueId) {
-    init {
-        callbacks.closeStory { slide, action ->
-            storyListSubscriber.scrollToStory(
-                (slide?.story()?.id())?.toLong() ?: -1
-            ) {}
-        }
-    }
+) : InAppStoryAPIListSubscriber(uniqueId) {
 
     private val storyListSubscriber =
         InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
@@ -70,6 +61,13 @@ open class InAppStoryAPIListSubscriberAdaptor(
 
     override fun readerIsClosed() {
         super.readerIsClosed()
+    }
+
+    fun scrollToStory(slide: SlideDataDto?) {
+        storyListSubscriber.scrollToStory(
+            indexArg = (slide?.story?.id) ?: -1,
+            feedArg = uniqueId
+        ) {}
     }
 
     private fun getAspectRatio(): Float {

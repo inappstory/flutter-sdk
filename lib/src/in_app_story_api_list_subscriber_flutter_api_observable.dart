@@ -57,9 +57,9 @@ class InAppStoryAPIListSubscriberFlutterApiObservable
   }
 
   @override
-  void scrollToStory(int index) {
+  void scrollToStory(int index, String feed) {
     for (final it in observers) {
-      it.scrollToStory(index);
+      it.scrollToStory(index, feed);
     }
   }
 }

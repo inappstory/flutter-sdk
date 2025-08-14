@@ -71,7 +71,7 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void storiesLoaded(int size, String feed);
 
-  void scrollToStory(int index);
+  void scrollToStory(int index, String feed);
 }
 
 @FlutterApi()

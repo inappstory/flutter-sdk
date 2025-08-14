@@ -31,7 +31,7 @@ class StoriesListUpdateHandlerAdaptor {
         storyListAPI.storyUpdate = storyUpdateHandler
 
         storyListAPI.favoritesUpdate = favoriteUpdateHandler
-        
+
         storyListAPI.scrollUpdate = scrollUpdateHandler
     }
 
@@ -41,9 +41,9 @@ class StoriesListUpdateHandlerAdaptor {
 
     private var storyListAPI: StoryListAPI
 
-    private var flutter: InAppStoryAPIListSubscriberFlutterApi
+    internal var flutter: InAppStoryAPIListSubscriberFlutterApi
 
-    private lazy var storiesListUpdateHandler: StoriesListUpdateHandler = {
+    private lazy var _storiesListUpdateHandler: StoriesListUpdateHandler = {
         storiesList,
         isFavorite,
         feed in
@@ -61,6 +61,10 @@ class StoriesListUpdateHandlerAdaptor {
         )
     }
 
+    var storiesListUpdateHandler: StoriesListUpdateHandler {
+        return _storiesListUpdateHandler
+    }
+
     private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in
         DispatchQueue.main.async {
             self.flutter.updateStoryData(
@@ -71,8 +75,24 @@ class StoriesListUpdateHandlerAdaptor {
     }
 
     func favoriteUpdateHandler(_ data: [InAppStorySDK.SimpleFavoriteData]?) {
+        if data == nil {
+            DispatchQueue.main.async {
+                self.flutter.updateFavoriteStoriesData(
+                    list: [],
+                    completion: { _ in }
+                )
+            }
+            return
+        }
         if let favorites = data {
-            if !favorites.isEmpty {
+            if favorites.isEmpty {
+                DispatchQueue.main.async {
+                    self.flutter.updateFavoriteStoriesData(
+                        list: [],
+                        completion: { _ in }
+                    )
+                }
+            } else {
                 DispatchQueue.main.async {
                     self.flutter.updateFavoriteStoriesData(
                         list: favorites.map(self.mapFavorite),
@@ -82,14 +102,18 @@ class StoriesListUpdateHandlerAdaptor {
             }
         }
     }
-    
+
     func scrollUpdateHandler(_ index: Int) {
         DispatchQueue.main.async {
-            self.flutter.scrollToStory(index: Int64(index), completion: { _ in })
+            self.flutter.scrollToStory(
+                index: Int64(index),
+                feed: self.uniqueId,
+                completion: { _ in }
+            )
         }
     }
 
-    private func mapStoryAPIData(arg: StoryCellData) -> StoryAPIDataDto {
+    internal func mapStoryAPIData(arg: StoryCellData) -> StoryAPIDataDto {
         return StoryAPIDataDto(
             id: Int64(arg.storyID)!,
             storyData: mapStoryData(arg: arg.storyData),
@@ -104,7 +128,7 @@ class StoriesListUpdateHandlerAdaptor {
         )
     }
 
-    private func mapStoryData(arg: StoryData) -> StoryDataDto {
+    internal func mapStoryData(arg: StoryData) -> StoryDataDto {
         return StoryDataDto(
             id: Int64(arg.id ?? "-1")!,
             title: arg.title,
@@ -116,7 +140,7 @@ class StoriesListUpdateHandlerAdaptor {
         )
     }
 
-    private func mapStoryType(arg: StoryType) -> StoryTypeDto {
+    internal func mapStoryType(arg: StoryType) -> StoryTypeDto {
         switch arg {
         case .story: return StoryTypeDto.cOMMON
         case .storyUGC: return StoryTypeDto.uGC
@@ -145,5 +169,26 @@ class StoriesListUpdateHandlerAdaptor {
             imageFilePath: arg.image,
             backgroundColor: arg.backgroundColor
         )
+    }
+}
+
+class FavoriteStoriesListUpdateHandlerAdaptor: StoriesListUpdateHandlerAdaptor {
+
+    override var storiesListUpdateHandler: StoriesListUpdateHandler {
+        return {
+            storiesList,
+            isFavorite,
+            feed in
+            self.flutter.updateStoriesData(
+                list: storiesList.map(self.mapStoryAPIData),
+                completion: { _ in }
+            )
+
+            self.flutter.storiesLoaded(
+                size: Int64(storiesList.count),
+                feed: feed,
+                completion: { _ in }
+            )
+        }
     }
 }

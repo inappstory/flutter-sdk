@@ -14,12 +14,9 @@ class IASManagerAdaptor(
     private val inAppStoryAPI: InAppStoryAPI,
     private val inAppStoryManager: InAppStoryManager,
 ) : InAppStoryManagerHostApi {
-    private val skusCallback = SkusCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
-
     init {
         InAppStoryManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
-
 
     override fun setPlaceholders(newPlaceholders: Map<String, String>) {
         inAppStoryManager.placeholders = newPlaceholders

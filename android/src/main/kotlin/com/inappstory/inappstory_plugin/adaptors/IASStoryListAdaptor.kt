@@ -17,15 +17,15 @@ open class IASStoryListAdaptor(
     val uniqueId: String = "feed",
 ) : IASStoryListHostApi, DisposableHandle {
 
+    internal var apiSubscriber: InAppStoryAPIListSubscriberAdaptor
+
     init {
         IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, this, uniqueId)
-        inAppStoryAPI.addSubscriber(
-            InAppStoryAPIListSubscriberAdaptor(
-                flutterPluginBinding,
-                uniqueId,
-                inAppStoryAPI.callbacks,
-            )
+        apiSubscriber = InAppStoryAPIListSubscriberAdaptor(
+            flutterPluginBinding,
+            uniqueId,
         )
+        inAppStoryAPI.addSubscriber(apiSubscriber)
     }
 
     override fun dispose() {
@@ -77,6 +77,15 @@ class IASFavoritesListAdaptor(
     activityHolder,
     uniqueId = "favorites"
 ) {
+    init {
+        IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, this, "favorites")
+        apiSubscriber = InAppStoryAPIListSubscriberAdaptor(
+            flutterPluginBinding,
+            "favorites",
+        )
+        inAppStoryAPI.addSubscriber(apiSubscriber)
+    }
+
     override fun load(feed: String) {
         iASStoryList.load(feed, uniqueId, true, true, mutableListOf())
     }

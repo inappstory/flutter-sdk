@@ -89,7 +89,14 @@ class InappstorySdkModuleAdaptor(
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
             statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
             inAppStoryCallbacks =
-                InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
+                InAppStoryCallbacksAdaptor(
+                    flutterPluginBinding,
+                    inAppStoryAPI.callbacks
+                ) { slideData ->
+                    feedListAdaptors.forEach {
+                        it.apiSubscriber.scrollToStory(slideData)
+                    }
+                }
 
             inAppMessageCallbacks =
                 InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
