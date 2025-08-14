@@ -27,6 +27,24 @@
   `pod install --repo update` command before building your app
 - Various internal fixes
 
+## [0.3.9]
+
+### Fixed
+
+- issue when game webhooks not working
+
+## [0.3.8]
+
+### Fixed
+
+- issue when onCloseStory callback always returns 0 index in SlideData on android devices
+
+## [0.3.7]
+
+### Changed
+
+- Updated Android SDK to 1.21.13, that includes internal fixes
+
 ## [0.3.6]
 
 ### Changed

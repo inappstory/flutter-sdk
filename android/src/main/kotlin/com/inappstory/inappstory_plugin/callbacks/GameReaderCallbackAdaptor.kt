@@ -30,7 +30,7 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
     override fun closeGame(contentData: ContentData?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         flutterPluginBinding.runOnMainThread {
-            flutterApi.closeGame(null) {}
+            flutterApi.closeGame(contentDataDto) {}
         }
     }
 
