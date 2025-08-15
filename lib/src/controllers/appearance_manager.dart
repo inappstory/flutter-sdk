@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../data/goods_item_appearance.dart';
+import '../../inappstory_plugin.dart';
 import '../pigeon_generated.g.dart' show AppearanceManagerHostApi, Position;
 
 class AppearanceManager {
@@ -81,5 +81,9 @@ class AppearanceManager {
     GoodsItemAppearance itemAppearance,
   ) async {
     await _appearanceManager.setUpGoods(itemAppearance.toDto());
+  }
+
+  Future<void> setCoverQuality(CoverQuality coverQuality) async {
+    await _appearanceManager.setCoverQuality(coverQuality);
   }
 }

@@ -131,6 +131,17 @@ enum class Position(val raw: Int) {
   }
 }
 
+enum class CoverQuality(val raw: Int) {
+  MEDIUM(0),
+  HIGH(1);
+
+  companion object {
+    fun ofRaw(raw: Int): CoverQuality? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class ContentTypeDto(val raw: Int) {
   STORY(0),
   UGC(1),
@@ -515,45 +526,50 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       133.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          ContentTypeDto.ofRaw(it.toInt())
+          CoverQuality.ofRaw(it.toInt())
         }
       }
       134.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          StoryAPIDataDto.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          ContentTypeDto.ofRaw(it.toInt())
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryDataDto.fromList(it)
+          StoryAPIDataDto.fromList(it)
         }
       }
       136.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SlideDataDto.fromList(it)
+          StoryDataDto.fromList(it)
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemAppearanceDto.fromList(it)
+          SlideDataDto.fromList(it)
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemDataDto.fromList(it)
+          GoodsItemAppearanceDto.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryFavoriteItemAPIDataDto.fromList(it)
+          GoodsItemDataDto.fromList(it)
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ContentDataDto.fromList(it)
+          StoryFavoriteItemAPIDataDto.fromList(it)
         }
       }
       141.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentDataDto.fromList(it)
+        }
+      }
+      142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           InAppMessageDataDto.fromList(it)
         }
@@ -579,40 +595,44 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(132)
         writeValue(stream, value.raw)
       }
-      is ContentTypeDto -> {
+      is CoverQuality -> {
         stream.write(133)
         writeValue(stream, value.raw)
       }
-      is StoryAPIDataDto -> {
+      is ContentTypeDto -> {
         stream.write(134)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is StoryDataDto -> {
+      is StoryAPIDataDto -> {
         stream.write(135)
         writeValue(stream, value.toList())
       }
-      is SlideDataDto -> {
+      is StoryDataDto -> {
         stream.write(136)
         writeValue(stream, value.toList())
       }
-      is GoodsItemAppearanceDto -> {
+      is SlideDataDto -> {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is GoodsItemDataDto -> {
+      is GoodsItemAppearanceDto -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is GoodsItemDataDto -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is ContentDataDto -> {
+      is StoryFavoriteItemAPIDataDto -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is InAppMessageDataDto -> {
+      is ContentDataDto -> {
         stream.write(141)
+        writeValue(stream, value.toList())
+      }
+      is InAppMessageDataDto -> {
+        stream.write(142)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1224,6 +1244,7 @@ interface AppearanceManagerHostApi {
   fun setRefreshIcon(iconPath: String)
   fun setSoundIcon(iconPath: String, selectedIconPath: String)
   fun setUpGoods(appearance: GoodsItemAppearanceDto)
+  fun setCoverQuality(coverQuality: CoverQuality)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -1533,6 +1554,24 @@ interface AppearanceManagerHostApi {
             val appearanceArg = args[0] as GoodsItemAppearanceDto
             val wrapped: List<Any?> = try {
               api.setUpGoods(appearanceArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setCoverQuality$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val coverQualityArg = args[0] as CoverQuality
+            val wrapped: List<Any?> = try {
+              api.setCoverQuality(coverQualityArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

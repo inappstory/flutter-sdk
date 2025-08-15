@@ -34,6 +34,19 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
     func setReaderCornerRadius(radius: Int64) throws {
         InAppStory.shared.readerCornerRadius = CGFloat(radius)
     }
+    
+    func setCoverQuality(coverQuality: CoverQuality) throws {
+        DispatchQueue.main.async {
+            switch (coverQuality) {
+            case CoverQuality.medium:
+                    InAppStory.shared.coverQuality = .medium
+            case CoverQuality.high:
+                    InAppStory.shared.coverQuality = .high
+                default:
+                    InAppStory.shared.coverQuality = .medium
+            }
+        }
+    }
 
     func setHasLike(value: Bool) throws {
         panelSettings.like = value

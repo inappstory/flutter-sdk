@@ -82,7 +82,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.9.3'
     implementation "androidx.fragment:fragment-ktx:1.6.1"
     implementation "androidx.appcompat:appcompat:1.7.1"
-    implementation 'com.github.inappstory:android-sdk:0b9889dd945b6223855fe3797f1150e4a9c6479a'
+    implementation 'com.github.inappstory:android-sdk:ffedf5cecbb7eab246ca474216e1b862210df2f1'
     implementation("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
         transitive = true
         exclude group: 'com.github.inappstory', module: 'android-sdk'

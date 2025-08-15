@@ -164,6 +164,8 @@ class GoodsItemAppearanceDto {
   late int? widgetBackgroundHeight;
 }
 
+enum CoverQuality { Medium, High }
+
 @HostApi()
 abstract class AppearanceManagerHostApi {
   void setHasLike(bool value);
@@ -200,6 +202,8 @@ abstract class AppearanceManagerHostApi {
   void setSoundIcon(String iconPath, String selectedIconPath);
 
   void setUpGoods(GoodsItemAppearanceDto appearance);
+
+  void setCoverQuality(CoverQuality coverQuality);
 }
 
 class GoodsItemDataDto {

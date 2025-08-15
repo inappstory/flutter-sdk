@@ -159,6 +159,11 @@ enum Position: Int {
   case bottomRight = 3
 }
 
+enum CoverQuality: Int {
+  case medium = 0
+  case high = 1
+}
+
 enum ContentTypeDto: Int {
   case sTORY = 0
   case uGC = 1
@@ -555,24 +560,30 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
     case 133:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return ContentTypeDto(rawValue: enumResultAsInt)
+        return CoverQuality(rawValue: enumResultAsInt)
       }
       return nil
     case 134:
-      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return ContentTypeDto(rawValue: enumResultAsInt)
+      }
+      return nil
     case 135:
-      return StoryDataDto.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 136:
-      return SlideDataDto.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 137:
-      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
     case 138:
-      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
     case 139:
-      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
     case 140:
-      return ContentDataDto.fromList(self.readValue() as! [Any?])
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     case 141:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 142:
       return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -594,32 +605,35 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? Position {
       super.writeByte(132)
       super.writeValue(value.rawValue)
-    } else if let value = value as? ContentTypeDto {
+    } else if let value = value as? CoverQuality {
       super.writeByte(133)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIDataDto {
+    } else if let value = value as? ContentTypeDto {
       super.writeByte(134)
-      super.writeValue(value.toList())
-    } else if let value = value as? StoryDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(135)
       super.writeValue(value.toList())
-    } else if let value = value as? SlideDataDto {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(136)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemAppearanceDto {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemDataDto {
+    } else if let value = value as? GoodsItemAppearanceDto {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? GoodsItemDataDto {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? ContentDataDto {
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? InAppMessageDataDto {
+    } else if let value = value as? ContentDataDto {
       super.writeByte(141)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(142)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1224,6 +1238,7 @@ protocol AppearanceManagerHostApi {
   func setRefreshIcon(iconPath: String) throws
   func setSoundIcon(iconPath: String, selectedIconPath: String) throws
   func setUpGoods(appearance: GoodsItemAppearanceDto) throws
+  func setCoverQuality(coverQuality: CoverQuality) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1490,6 +1505,21 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setUpGoodsChannel.setMessageHandler(nil)
+    }
+    let setCoverQualityChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setCoverQuality\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setCoverQualityChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let coverQualityArg = args[0] as! CoverQuality
+        do {
+          try api.setCoverQuality(coverQuality: coverQualityArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setCoverQualityChannel.setMessageHandler(nil)
     }
   }
 }

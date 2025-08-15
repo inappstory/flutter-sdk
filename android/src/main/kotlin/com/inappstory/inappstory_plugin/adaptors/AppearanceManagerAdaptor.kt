@@ -1,6 +1,7 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import AppearanceManagerHostApi
+import CoverQuality
 import GoodsItemAppearanceDto
 import GoodsItemDataDto
 import GoodsItemSelectedCallbackFlutterApi
@@ -30,6 +31,8 @@ import com.inappstory.sdk.CustomRefreshIconInterface
 import com.inappstory.sdk.CustomShareIconInterface
 import com.inappstory.sdk.CustomSoundIconInterface
 import com.inappstory.sdk.ICustomIconState
+import com.inappstory.sdk.core.network.content.models.Image.QUALITY_HIGH
+import com.inappstory.sdk.core.network.content.models.Image.QUALITY_MEDIUM
 import com.inappstory.sdk.stories.ui.reader.StoriesGradientObject
 import com.inappstory.sdk.stories.ui.views.goodswidget.GetGoodsDataCallback
 import com.inappstory.sdk.stories.ui.views.goodswidget.GoodsItemData
@@ -91,6 +94,13 @@ class AppearanceManagerAdaptor(
             customCloseIconInterface,
             customRefreshIconInterface
         )
+    }
+
+    override fun setCoverQuality(coverQuality: CoverQuality) {
+        when (coverQuality) {
+            CoverQuality.MEDIUM -> appearanceManager.csCoverQuality(QUALITY_MEDIUM)
+            CoverQuality.HIGH -> appearanceManager.csCoverQuality(QUALITY_HIGH)
+        }
     }
 
     override fun setHasLike(value: Boolean) {

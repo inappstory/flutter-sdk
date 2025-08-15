@@ -1,6 +1,32 @@
+## [0.4.0]
+
+### Added
+
+- Sound control in story reader
+- Custom icon appearance
+- Ability to change cover quality is stories list
+- Goods v1
+
+### Changed
+
+- AppearanceManager is now singleton class
+- CallToAction callback is now mixin class
+- Updated Android SDK to 1.21.16, that includes internal fixes
+- Updated iOS SDK to 1.25.13, that includes internal fixes, make sure you run `pod install` or
+  `pod install --repo update` command before building your app
+- Changed 'favorites' logic implementation
+- Various internal fixes
+
+### Fixed
+
+- Fixed issue when items not updated in grid favorites widget
+- Bug when clearing cache on Android devices
+- Issue when can't close in-app-message using system back button on Android devices
+
 ## [0.4.0-rc.4]
 
 ### Fixed
+
 - changed 'favorites' logic implementation
 
 ## [0.4.0-rc.3]
