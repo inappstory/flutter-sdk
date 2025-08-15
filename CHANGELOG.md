@@ -4,7 +4,7 @@
 
 - Sound control in story reader
 - Custom icon appearance
-- Ability to change cover quality is stories list
+- Ability to change cover quality in stories list
 - Goods v1
 
 ### Changed
