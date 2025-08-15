@@ -41,8 +41,9 @@ abstract class InAppStoryManagerHostApi {
 
   void setLang(String languageCode, String languageRegion);
 
-  /// Sets a transparent status bar for story reader in Android.
   void setTransparentStatusBar();
+
+  void changeSound(bool value);
 }
 
 @HostApi()
@@ -69,6 +70,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list);
 
   void storiesLoaded(int size, String feed);
+
+  void scrollToStory(int index, String feed);
 }
 
 @FlutterApi()
@@ -146,6 +149,23 @@ enum Position {
   bottomRight,
 }
 
+class GoodsItemAppearanceDto {
+  late int? itemBackgroundColor;
+  late int? itemCornerRadius;
+  late int? itemMainTextColor;
+  late int? itemOldPriceTextColor;
+  late int? itemTitleTextSize;
+  late int? itemDescriptionTextSize;
+  late int? itemPriceTextSize;
+  late int? itemOldPriceTextSize;
+  late int? widgetBackgroundColor;
+  late String? closeButtonImage;
+  late int? closeButtonColor;
+  late int? widgetBackgroundHeight;
+}
+
+enum CoverQuality { Medium, High }
+
 @HostApi()
 abstract class AppearanceManagerHostApi {
   void setHasLike(bool value);
@@ -166,6 +186,44 @@ abstract class AppearanceManagerHostApi {
   void setReaderBackgroundColor(int color);
 
   void setReaderCornerRadius(int radius);
+
+  void setLikeIcon(String iconPath, String selectedIconPath);
+
+  void setDislikeIcon(String iconPath, String selectedIconPath);
+
+  void setFavoriteIcon(String iconPath, String selectedIconPath);
+
+  void setShareIcon(String iconPath, String selectedIconPath);
+
+  void setCloseIcon(String iconPath);
+
+  void setRefreshIcon(String iconPath);
+
+  void setSoundIcon(String iconPath, String selectedIconPath);
+
+  void setUpGoods(GoodsItemAppearanceDto appearance);
+
+  void setCoverQuality(CoverQuality coverQuality);
+}
+
+class GoodsItemDataDto {
+  late String? sku;
+  late String? title;
+  late String? description;
+  late String? image;
+  late String? price;
+  late String? oldPrice;
+}
+
+@FlutterApi()
+abstract class SkusCallbackFlutterApi {
+  @async
+  List<GoodsItemDataDto> getSkus(List<String> strings);
+}
+
+@FlutterApi()
+abstract class GoodsItemSelectedCallbackFlutterApi {
+  void goodsItemSelected(GoodsItemDataDto item);
 }
 
 class StoryFavoriteItemAPIDataDto {

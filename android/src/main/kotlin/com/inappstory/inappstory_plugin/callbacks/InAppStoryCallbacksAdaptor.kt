@@ -1,6 +1,7 @@
 package com.inappstory.inappstory_plugin.callbacks
 
 import IASCallBacksFlutterApi
+import SlideDataDto
 import com.inappstory.inappstory_plugin.mapSlideDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
 import com.inappstory.inappstory_plugin.runOnMainThread
@@ -12,6 +13,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 class InAppStoryCallbacksAdaptor(
     private val flutterPluginBinding: FlutterPluginBinding,
     callbacks: IASCallbacksExternalAPI,
+    private val slideCallback: (SlideDataDto?) -> Unit
 ) {
     private val api = IASCallBacksFlutterApi(flutterPluginBinding.binaryMessenger)
 
@@ -24,6 +26,7 @@ class InAppStoryCallbacksAdaptor(
             flutterPluginBinding.runOnMainThread {
                 val slideDataDto = slideData?.let { mapSlideDataDto(it) }
                 api.onCloseStory(slideDataDto) {}
+                slideCallback.invoke(slideDataDto)
             }
         }
         callbacks.favoriteStory { slideData, value ->

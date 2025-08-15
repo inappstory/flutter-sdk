@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'inappstory_plugin'
-  s.version          = '0.1.10'
+  s.version          = '0.1.14'
   s.summary          = 'InAppStory SDK Plugin'
   s.description      = <<-DESC
 InAppStory SDK Plugin
@@ -16,12 +16,16 @@ InAppStory SDK Plugin
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
-  s.dependency 'InAppStory', '1.25.8'
+  s.dependency 'InAppStory', '1.25.13'
 
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
   s.swift_version = '5.0'
 
+#  s.preserve_paths = 'InAppStorySDK.xcframework/**/*'
+#  s.vendored_frameworks = 'InAppStorySDK.xcframework'
+#  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
+  
   # If your plugin requires a privacy manifest, for example if it uses any
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
   # plugin's privacy impact, and then uncomment this line. For more information,

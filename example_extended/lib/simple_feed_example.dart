@@ -13,8 +13,8 @@ class SimpleFeedExampleWidget extends StatefulWidget {
 }
 
 class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
-    with IASCallbacks
-    implements CallToActionCallbackFlutterApi, IShowStoryCallbackFlutterApi {
+    with IASCallbacks, IASCallToActionCallback
+    implements IShowStoryCallbackFlutterApi {
   static const feed = Keys.feedId;
 
   final inputController = TextEditingController();
@@ -38,13 +38,11 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   @override
   void initState() {
     super.initState();
-    CallToActionCallbackFlutterApi.setUp(this);
     IShowStoryCallbackFlutterApi.setUp(this);
   }
 
   @override
   void dispose() {
-    CallToActionCallbackFlutterApi.setUp(null);
     IShowStoryCallbackFlutterApi.setUp(null);
     super.dispose();
   }

@@ -25,18 +25,18 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
   }
 
   @override
-  Future<void> load(String feed, {bool hasFavourites = false}) {
-    return decorated.load(feed);
+  Future<void> load(String feed, {bool hasFavourites = false}) async {
+    return await decorated.load(feed);
   }
 
   @override
-  Future<void> openStoryReader(int storyId, String feed) {
-    return decorated.openStoryReader(storyId, feed);
+  Future<void> openStoryReader(int storyId, String feed) async {
+    return await decorated.openStoryReader(storyId, feed);
   }
 
   @override
-  Future<void> showFavoriteItem(String feed) {
-    return decorated.showFavoriteItem(feed);
+  Future<void> showFavoriteItem(String feed) async {
+    return await decorated.showFavoriteItem(feed);
   }
 
   @override
@@ -48,12 +48,12 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
       decorated.pigeonVar_messageChannelSuffix;
 
   @override
-  Future<void> reloadFeed(String feed) {
-    return decorated.reloadFeed(feed);
+  Future<void> reloadFeed(String feed) async {
+    return await decorated.reloadFeed(feed);
   }
 
   @override
-  Future<void> removeSubscriber(String feed) {
-    return decorated.removeSubscriber(feed);
+  Future<void> removeSubscriber(String feed) async {
+    return await decorated.removeSubscriber(feed);
   }
 }

@@ -3,18 +3,19 @@ import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
 class AppearanceManagerAdaptor: AppearanceManagerHostApi {
-    func setReaderBackgroundColor(color: Int64) throws {
-        InAppStory.shared.readerBackgroundColor = uiColorFromInt64(
-            hexValue: color
-        )
-    }
+    private var binaryMessenger: FlutterBinaryMessenger
 
-    func setReaderCornerRadius(radius: Int64) throws {
-        InAppStory.shared.readerCornerRadius = CGFloat(radius)
-    }
+    private var pluginRegistrar: FlutterPluginRegistrar
 
-    init(binaryMessenger: FlutterBinaryMessenger) {
+    private var panelSettings: PanelSettings
+
+    init(
+        binaryMessenger: FlutterBinaryMessenger,
+        pluginRegistrar: FlutterPluginRegistrar
+    ) {
         self.binaryMessenger = binaryMessenger
+
+        self.pluginRegistrar = pluginRegistrar
 
         self.panelSettings = PanelSettings()
 
@@ -24,9 +25,28 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
         )
     }
 
-    private var binaryMessenger: FlutterBinaryMessenger
+    func setReaderBackgroundColor(color: Int64) throws {
+        InAppStory.shared.readerBackgroundColor = uiColorFromInt64(
+            hexValue: color
+        )
+    }
 
-    private var panelSettings: PanelSettings
+    func setReaderCornerRadius(radius: Int64) throws {
+        InAppStory.shared.readerCornerRadius = CGFloat(radius)
+    }
+    
+    func setCoverQuality(coverQuality: CoverQuality) throws {
+        DispatchQueue.main.async {
+            switch (coverQuality) {
+            case CoverQuality.medium:
+                    InAppStory.shared.coverQuality = .medium
+            case CoverQuality.high:
+                    InAppStory.shared.coverQuality = .high
+                default:
+                    InAppStory.shared.coverQuality = .medium
+            }
+        }
+    }
 
     func setHasLike(value: Bool) throws {
         panelSettings.like = value
@@ -58,7 +78,7 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
                 return .leading
             }
         }()
-    
+
         InAppStory.shared.closeButtonPosition = newPosition
     }
 
@@ -90,6 +110,155 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
             endPoint: end,
             locations: mapLocations()
         )
+    }
+
+    func setLikeIcon(iconPath: String, selectedIconPath: String) throws {
+        let likeImage = getUIImage(path: iconPath)
+
+        let likeSelectedImage = getUIImage(path: selectedIconPath)
+
+        if likeImage != nil && likeSelectedImage != nil {
+            InAppStory.shared.likeIconView = {
+                CustomIconView(
+                    unselectedImage: likeImage!,
+                    selectedImage: likeSelectedImage!
+                )
+            }
+        }
+    }
+
+    func setSoundIcon(iconPath: String, selectedIconPath: String) throws {
+        let soundImage = getUIImage(path: iconPath)
+
+        let soundSelectedImage = getUIImage(path: selectedIconPath)
+
+        if soundImage != nil && soundSelectedImage != nil {
+            InAppStory.shared.soundIconView = {
+                CustomIconView(
+                    unselectedImage: soundImage!,
+                    selectedImage: soundSelectedImage!
+                )
+            }
+        }
+    }
+
+    func setDislikeIcon(iconPath: String, selectedIconPath: String) throws {
+        let dislikeImage = getUIImage(path: iconPath)
+
+        let dislikeSelectedImage = getUIImage(path: selectedIconPath)
+
+        if dislikeImage != nil && dislikeSelectedImage != nil {
+            InAppStory.shared.dislikeIconView = {
+                CustomIconView(
+                    unselectedImage: dislikeImage!,
+                    selectedImage: dislikeSelectedImage!
+                )
+            }
+        }
+    }
+
+    func setFavoriteIcon(iconPath: String, selectedIconPath: String) throws {
+        let favoriteImage = getUIImage(path: iconPath)
+
+        let favoriteSelectedImag = getUIImage(path: selectedIconPath)
+
+        if favoriteImage != nil && favoriteSelectedImag != nil {
+            InAppStory.shared.favoriteIconView = {
+                CustomIconView(
+                    unselectedImage: favoriteImage!,
+                    selectedImage: favoriteSelectedImag!
+                )
+            }
+        }
+    }
+
+    func setShareIcon(iconPath: String, selectedIconPath: String) throws {
+        let shareImage = getUIImage(path: iconPath)
+
+        let shareSelectedImage = getUIImage(path: selectedIconPath)
+
+        if shareImage != nil && shareSelectedImage != nil {
+            InAppStory.shared.shareIconView = {
+                CustomIconView(
+                    unselectedImage: shareImage!,
+                    selectedImage: shareSelectedImage!
+                )
+            }
+        }
+    }
+
+    func setCloseIcon(iconPath: String) throws {
+        let image = getUIImage(path: iconPath)
+        InAppStory.shared.closeReaderImage = image!
+    }
+
+    func setRefreshIcon(iconPath: String) throws {
+        let refreshImage = getUIImage(path: iconPath)
+        if refreshImage != nil {
+            InAppStory.shared.refreshIconView = {
+                CustomIconView(
+                    unselectedImage: refreshImage!,
+                    selectedImage: refreshImage!
+                )
+            }
+        }
+    }
+
+    func setUpGoods(appearance: GoodsItemAppearanceDto) throws {
+        if appearance.itemMainTextColor != nil {
+            InAppStory.shared.goodsCellMainTextColor = uiColorFromInt64(
+                hexValue: appearance.itemMainTextColor!
+            )
+        }
+        if appearance.itemOldPriceTextColor != nil {
+            InAppStory.shared.goodsCellOldPriceTextColor = uiColorFromInt64(
+                hexValue: appearance.itemOldPriceTextColor!
+            )
+        }
+        if appearance.itemBackgroundColor != nil {
+            InAppStory.shared.goodsSubstrateColor = uiColorFromInt64(
+                hexValue: appearance.itemBackgroundColor!
+            )
+        }
+        if appearance.itemTitleTextSize != nil {
+            InAppStory.shared.goodCellTitleFont = UIFont.systemFont(
+                ofSize: CGFloat(appearance.itemTitleTextSize!),
+                weight: .medium
+            )
+        }
+        if appearance.itemDescriptionTextSize != nil {
+            InAppStory.shared.goodCellSubtitleFont = UIFont.systemFont(
+                ofSize: CGFloat(appearance.itemDescriptionTextSize!)
+            )
+        }
+        if appearance.itemPriceTextSize != nil {
+            InAppStory.shared.goodCellPriceFont = UIFont.systemFont(
+                ofSize: CGFloat(appearance.itemPriceTextSize!),
+                weight: .medium
+            )
+        }
+        if appearance.itemOldPriceTextSize != nil {
+            InAppStory.shared.goodCellOldPriceFont = UIFont.systemFont(
+                ofSize: CGFloat(appearance.itemOldPriceTextSize!),
+                weight: .medium
+            )
+        }
+    }
+
+    private func getUIImage(path: String) -> UIImage? {
+        let key = pluginRegistrar.lookupKey(forAsset: path)
+        let path = Bundle.main.path(forResource: key, ofType: nil)
+
+        if path == nil {
+            return nil
+        }
+
+        let image = UIImage(contentsOfFile: path!)
+        if image == nil {
+            return nil
+        }
+
+        return image
     }
 
     private func uiColorFromInt64(hexValue: Int64) -> UIColor {

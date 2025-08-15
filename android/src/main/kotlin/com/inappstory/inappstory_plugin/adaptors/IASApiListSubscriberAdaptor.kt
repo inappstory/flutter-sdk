@@ -1,6 +1,7 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryAPIListSubscriberFlutterApi
+import SlideDataDto
 import StoryAPIDataDto
 import StoryFavoriteItemAPIDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
@@ -15,8 +16,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 open class InAppStoryAPIListSubscriberAdaptor(
     private val flutterPluginBinding: FlutterPluginBinding,
     uniqueId: String,
-) :
-    InAppStoryAPIListSubscriber(uniqueId) {
+) : InAppStoryAPIListSubscriber(uniqueId) {
+
     private val storyListSubscriber =
         InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
 
@@ -56,6 +57,17 @@ open class InAppStoryAPIListSubscriberAdaptor(
         flutterPluginBinding.runOnMainThread {
             storyListSubscriber.updateFavoriteStoriesData(list.map { mapFavorite(it) }) {}
         }
+    }
+
+    override fun readerIsClosed() {
+        super.readerIsClosed()
+    }
+
+    fun scrollToStory(slide: SlideDataDto?) {
+        storyListSubscriber.scrollToStory(
+            indexArg = (slide?.story?.id) ?: -1,
+            feedArg = uniqueId
+        ) {}
     }
 
     private fun getAspectRatio(): Float {

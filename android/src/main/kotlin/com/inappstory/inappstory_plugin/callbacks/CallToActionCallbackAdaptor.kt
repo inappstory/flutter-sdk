@@ -24,7 +24,6 @@ class CallToActionCallbackAdaptor(
         action: ClickAction?
     ) {
         if (content is SlideData) {
-
             flutterPluginBinding.runOnMainThread {
                 api.callToAction(
                     slideDataArg = content?.let { mapSlideDataDto(content) },

@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 
 public class InappstoryPlugin: NSObject, FlutterPlugin {
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
             name: "inappstory_plugin",
@@ -9,7 +10,7 @@ public class InappstoryPlugin: NSObject, FlutterPlugin {
         )
         let instance = InappstoryPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-        InappstorySdkModuleAdaptor(binaryMessenger: registrar.messenger())
+        InappstorySdkModuleAdaptor(pluginRegistrar: registrar)
     }
 
     public func handle(

@@ -7,6 +7,7 @@ import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.externalapi.ExternalPlatforms
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -19,28 +20,21 @@ class InappstorySdkModuleAdaptor(
 
     private val inAppStoryAPI = InAppStoryAPI()
     private val appearanceManager = AppearanceManager()
-    private val appearanceManagerAdaptor =
-        AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager)
+    private lateinit var appearanceManagerAdaptor: AppearanceManagerAdaptor
     private lateinit var inAppStoryManager: InAppStoryManager
-    private lateinit var favorites: IASStoryListAdaptor
-    private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
-    private lateinit var inAppMessageCallbacks: InAppMessageCallbackAdaptor
+    private lateinit var iasManagerAdaptor: IASManagerAdaptor
     private lateinit var statManagerAdaptor: IASStatisticsManagerAdaptor
 
-    private val singleStoryApi = IASSingleStoryAdaptor(
-        flutterPluginBinding,
-        appearanceManager,
-        inAppStoryAPI.singleStory,
-        activityHolder,
-    )
-    private val iasOnboardings =
-        IASOnboardingsAdaptor(flutterPluginBinding, appearanceManager, inAppStoryAPI.onboardings)
-    private lateinit var iasManagerAdaptor: IASManagerAdaptor
+    private lateinit var inAppStoryCallbacks: InAppStoryCallbacksAdaptor
+    private lateinit var inAppMessageCallbacks: InAppMessageCallbackAdaptor
 
-    private val iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+    private lateinit var favorites: IASStoryListAdaptor
+    private lateinit var singleStoryApi: IASSingleStoryAdaptor
+    private lateinit var iasOnboardings: IASOnboardingsAdaptor
 
-    private val iasMessages =
-        IASMessagesAdaptor(flutterPluginBinding, inAppStoryAPI.inAppMessage, activityHolder)
+    private lateinit var iasGames: IASGamesAdaptor
+
+    private lateinit var iasMessages: IASMessagesAdaptor
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
@@ -56,6 +50,7 @@ class InappstorySdkModuleAdaptor(
             if (!languageCode.isNullOrEmpty() && !languageRegion.isNullOrEmpty()) {
                 locale = Locale(languageCode, languageRegion)
             }
+            inAppStoryAPI.setExternalPlatform(ExternalPlatforms.FLUTTER_SDK);
             feedListAdaptors.clear()
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
                 apiKey,
@@ -90,14 +85,48 @@ class InappstorySdkModuleAdaptor(
 
             inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
 
-            iasManagerAdaptor = IASManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            iasManagerAdaptor =
+                IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
             statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
             inAppStoryCallbacks =
-                InAppStoryCallbacksAdaptor(flutterPluginBinding, inAppStoryAPI.callbacks)
+                InAppStoryCallbacksAdaptor(
+                    flutterPluginBinding,
+                    inAppStoryAPI.callbacks
+                ) { slideData ->
+                    feedListAdaptors.forEach {
+                        it.apiSubscriber.scrollToStory(slideData)
+                    }
+                }
 
             inAppMessageCallbacks =
                 InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
 
+            appearanceManagerAdaptor =
+                AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager, activityHolder)
+
+            singleStoryApi = IASSingleStoryAdaptor(
+                flutterPluginBinding,
+                appearanceManager,
+                inAppStoryAPI.singleStory,
+                activityHolder,
+            )
+
+            iasOnboardings =
+                IASOnboardingsAdaptor(
+                    flutterPluginBinding,
+                    appearanceManager,
+                    inAppStoryAPI.onboardings
+                )
+
+            iasMessages = IASMessagesAdaptor(
+                flutterPluginBinding,
+                inAppStoryAPI.inAppMessage,
+                inAppStoryManager,
+                activityHolder,
+                null
+            )
+
+            iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {
             callback(Result.failure(throwable))

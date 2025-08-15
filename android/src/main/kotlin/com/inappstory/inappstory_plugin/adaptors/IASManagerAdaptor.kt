@@ -1,17 +1,19 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
+import SkusCallbackFlutterApi
 import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import java.util.Locale
 
 class IASManagerAdaptor(
     flutterPluginBinding: FlutterPluginBinding,
+    private val inAppStoryAPI: InAppStoryAPI,
     private val inAppStoryManager: InAppStoryManager,
 ) : InAppStoryManagerHostApi {
-
     init {
         InAppStoryManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
     }
@@ -38,15 +40,19 @@ class IASManagerAdaptor(
     }
 
     override fun clearCache() {
-        inAppStoryManager.clearCache()
+        inAppStoryAPI.clearCache()
     }
 
     override fun setTransparentStatusBar() {
         inAppStoryManager.setOpenStoriesReader(CustomOpenStoriesReader())
     }
 
+    override fun changeSound(value: Boolean) {
+        inAppStoryManager.soundOn(value)
+    }
+
     override fun setLang(languageCode: String, languageRegion: String) {
-        val locale: Locale = Locale(languageCode, languageRegion)
+        val locale = Locale(languageCode, languageRegion)
         inAppStoryManager.setLang(locale)
     }
 }

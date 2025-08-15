@@ -21,12 +21,15 @@ class StoryListAdaptor: IASStoryListHostApi {
 
         self.storyListAPI = storyListAPI
 
+        setupAdaptors()
+    }
+
+    internal func setupAdaptors() {
         StoriesListUpdateHandlerAdaptor(
             binaryMessenger: binaryMessenger,
             storyListAPI: storyListAPI,
             uniqueId: uniqueId
         )
-
         IASStoryListHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: self,
@@ -36,7 +39,7 @@ class StoryListAdaptor: IASStoryListHostApi {
 
     public var uniqueId: String
 
-    private var binaryMessenger: FlutterBinaryMessenger
+    internal var binaryMessenger: FlutterBinaryMessenger
 
     var storyListAPI: StoryListAPI
 
@@ -75,7 +78,8 @@ class FeedStoryListAdaptor: StoryListAdaptor {
     }
 
     override func load(feed: String) throws {
-        storyListAPI.setNewFeed(feed)
+        //        storyListAPI.setNewFeed(feed)
+        storyListAPI.getStoriesList()
     }
 }
 
@@ -88,7 +92,22 @@ class FavoritesStoryListAdaptor: StoryListAdaptor {
         )
     }
 
+    override func setupAdaptors() {
+        FavoriteStoriesListUpdateHandlerAdaptor(
+            binaryMessenger: binaryMessenger,
+            storyListAPI: storyListAPI,
+            uniqueId: uniqueId
+        )
+
+        IASStoryListHostApiSetup.setUp(
+            binaryMessenger: binaryMessenger,
+            api: self,
+            messageChannelSuffix: uniqueId
+        )
+    }
+    
     override func load(feed: String) throws {
         storyListAPI.getStoriesList()
+        //storyListAPI.setNewFeed(feed)
     }
 }

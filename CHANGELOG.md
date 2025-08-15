@@ -1,3 +1,70 @@
+## [0.4.0]
+
+### Added
+
+- Sound control in story reader
+- Custom icon appearance
+- Ability to change cover quality is stories list
+- Goods v1
+
+### Changed
+
+- AppearanceManager is now singleton class
+- CallToAction callback is now mixin class
+- Updated Android SDK to 1.21.16, that includes internal fixes
+- Updated iOS SDK to 1.25.13, that includes internal fixes, make sure you run `pod install` or
+  `pod install --repo update` command before building your app
+- Changed 'favorites' logic implementation
+- Various internal fixes
+
+### Fixed
+
+- Fixed issue when items not updated in grid favorites widget
+- Bug when clearing cache on Android devices
+- Issue when can't close in-app-message using system back button on Android devices
+
+## [0.4.0-rc.4]
+
+### Fixed
+
+- changed 'favorites' logic implementation
+
+## [0.4.0-rc.3]
+
+### Fixed
+
+- goods v1 implementation on Android
+- fixed issue when items not updated in grid favorites widget
+
+## [0.4.0-rc.2]
+
+### Changed
+
+- Updated Android SDK to 1.21.13
+- Updated iOS SDK to 1.25.10
+
+### Fixed
+
+- Goods v1 callbacks
+- Bug when clearing cache on Android devices
+- Issue when can't close in-app-message using system back button on Android devices
+
+## [0.4.0-rc.1]
+
+### Added
+
+- Sound control in story reader
+- Custom icon appearance
+
+### Changed
+
+- AppearanceManager is now singleton class
+- CallToAction callback is now mixin class
+- Updated Android SDK to 1.21.11, that includes internal fixes
+- Updated iOS SDK to 1.25.9, that includes internal fixes, make sure you run `pod install` or
+  `pod install --repo update` command before building your app
+- Various internal fixes
+
 ## [0.3.9]
 
 ### Fixed
@@ -123,171 +190,171 @@
 
 ### Added
 
-* Updated Android SDK to 1.21.4
-* Updated iOS SDK to 1.25.4, make sure you run `pod install --repo-update` in the `ios` folder of
+- Updated Android SDK to 1.21.4
+- Updated iOS SDK to 1.25.4, make sure you run `pod install --repo-update` in the `ios` folder of
   your Flutter project.
 
 ### Fixed
 
-* Like/Dislike buttons are not working in Android devices
-* Placeholders in story feed are not working in iOS devices
-* Fixed image caching issues in iOS devices
+- Like/Dislike buttons are not working in Android devices
+- Placeholders in story feed are not working in iOS devices
+- Fixed image caching issues in iOS devices
 
 ## [0.2.2]
 
 ### Added
 
-* Added new callbacks for listening story reader events
+- Added new callbacks for listening story reader events
 
 ### Changed
 
-* Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
+- Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
 
 ## [0.3.0-rc.1]
 
 ### Added
 
-* Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
-* Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
+- Added `FeedStoriesWidget`, `FavoritesStoriesWidget`, `StoryContentWidget` widgets
+- Added video support for `FeedStoriesWidget` and `FavoritesStoriesWidget`
 
 ### Changed
 
-* `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
-* `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget`
+- `InAppStoryPlugin().getStoriesWidgets()` is deprecated, use `FeedStoriesWidget` instead
+- `InAppStoryPlugin().getFavoritesStoriesWidgets()` is deprecated, use `FavoritesStoriesWidget`
   instead
-* refactor library structure
+- refactor library structure
 
 ### Fixed
 
-* Fixed 'flickering' stories when an uploaded image replaced a placeholder
+- Fixed 'flickering' stories when an uploaded image replaced a placeholder
 
 ## [0.2.1]
 
 ### Added
 
-* Added interface for listening to story reader events
+- Added interface for listening to story reader events
 
 ## [0.2.0]
 
 ### Added
 
-* Added the ability to set the status bar to transparent for the story reader.
-* Updated Android SDK to 1.21.2
-* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
+- Added the ability to set the status bar to transparent for the story reader.
+- Updated Android SDK to 1.21.2
+- Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
   your Flutter project.
-* Added the ability to launch games
-* FeedStoriesController to force reload the feed stories
+- Added the ability to launch games
+- FeedStoriesController to force reload the feed stories
 
 ### Changed
 
-* Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
-* Initializing Android native SDK, please watch README for details
-* OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and
+- Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
+- Initializing Android native SDK, please watch README for details
+- OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and
   `onboardingLoadError(String feed, String? reason)` methods
-* SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and
+- SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and
   `singleLoadError(String feed, String? reason)` methods
 
 ### Removed
 
-* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
+- Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
   ErrorCallbackFlutterApi
 
 ### Fixed
 
-* Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
-* Fixed a issue where cover images were lost after refreshing the story feed.
+- Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
+- Fixed a issue where cover images were lost after refreshing the story feed.
 
 ## [0.2.0-rc.5]
 
 ### Fixed
 
-* Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
+- Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
 
 ## [0.2.0-rc.4]
 
 ### Added
 
-* Added the ability to set the status bar to transparent for the story reader.
-* Updated Android SDK to 1.21.2
-* Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
+- Added the ability to set the status bar to transparent for the story reader.
+- Updated Android SDK to 1.21.2
+- Updated iOS SDK to 1.25.2, make sure you run `pod install --repo-update` in the `ios` folder of
   your Flutter project.
 
 ### Fixed
 
-* Fixed a issue where cover images were lost after refreshing the story feed.
+- Fixed a issue where cover images were lost after refreshing the story feed.
 
 ## [0.2.0-rc.3]
 
 ### Fixed
 
-* Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
+- Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
 
 ## [0.2.0-rc.2]
 
 ### Changed
 
-* Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
+- Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
 
 ## [0.2.0-rc.1]
 
 ### Added
 
-* Added ability to launch games
+- Added ability to launch games
 
 ### Fixed
 
-* error when initializing plugin in Java application class
+- error when initializing plugin in Java application class
 
 ## [0.1.0-rc.1]
 
 ### Changed
 
-* Initializing Android native SDK, please watch README for details
+- Initializing Android native SDK, please watch README for details
 
 ## [0.0.20]
 
 ### Added
 
-* Updated Android native sdk to 1.21.0
+- Updated Android native sdk to 1.21.0
 
 ### Changed
 
-* OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and
+- OnboardingLoadCallbackFlutterApi now has `onboardingLoadSuccess(int count, String feed)` and
   `onboardingLoadError(String feed, String? reason)` methods
-* SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and
+- SingleLoadCallbackFlutterApi now has `singleLoadSuccess(StoryDataDto storyData)` and
   `singleLoadError(String feed, String? reason)` methods
 
 ### Removed
 
-* Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
+- Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
   ErrorCallbackFlutterApi
 
 ## [0.0.19]
 
 ### Added
 
-* FeedStoriesController to force reload the feed stories
+- FeedStoriesController to force reload the feed stories
 
 ## [0.0.18]
 
 ### Added
 
-* InAppStoryManagerHostApi.closeReaders() close all readers
+- InAppStoryManagerHostApi.closeReaders() close all readers
 
 ## [0.0.17]
 
 ### Changed
 
-* IASSingleStoryHostApi storyId now `String show({required String storyId})`
-* IASSingleStoryHostApi storyId now `String showOnce({required String storyId})`
-* Android IASSingleStory opened with Activity Context
+- IASSingleStoryHostApi storyId now `String show({required String storyId})`
+- IASSingleStoryHostApi storyId now `String showOnce({required String storyId})`
+- Android IASSingleStory opened with Activity Context
 
 ### Removed
 
-* removed slide argument `IASSingleStoryHostApi.show()`
+- removed slide argument `IASSingleStoryHostApi.show()`
 
 ## [0.0.16]
 
 ### Fixed
 
-* open Android story reader with Activity Context (Application Context leads to new Task)
+- open Android story reader with Activity Context (Application Context leads to new Task)

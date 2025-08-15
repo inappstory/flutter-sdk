@@ -68,7 +68,7 @@ class StoryFromPigeonDto
 
   @override
   void updateStoryData(StoryAPIDataDto newDto) {
-    if (newDto.id != dto.id) return;
+    if (newDto.id != dto.id || !controller.hasListener) return;
     controller.add(dto = newDto);
   }
 
@@ -93,6 +93,9 @@ class StoryFromPigeonDto
 
   @override
   void storiesLoaded(int size, String feed) {}
+
+  @override
+  void scrollToStory(int index, String feed) {}
 }
 
 File? nullableFileFromString(String? filePath) {

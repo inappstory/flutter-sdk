@@ -1,37 +1,55 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-import '../pigeon_generated.g.dart' show InAppStoryManagerHostApi;
+import '../callbacks/ias_skus_callback_impl.dart';
+import '../pigeon_generated.g.dart'
+    show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
 
 class InAppStoryManager {
   InAppStoryManager._private();
 
+  final _iasManager = InAppStoryManagerHostApi();
+
+  final _callbackImpl = GoodsCallbackFlutterApiImpl();
+
   static final instance = InAppStoryManager._private();
 
   Future<void> setPlaceholders(Map<String, String> placeholders) async {
-    await InAppStoryManagerHostApi().setPlaceholders(placeholders);
+    await _iasManager.setPlaceholders(placeholders);
   }
 
   Future<void> setTags(List<String> tags) async {
-    await InAppStoryManagerHostApi().setTags(tags);
+    await _iasManager.setTags(tags);
   }
 
   Future<void> changeUser(String userId) async {
-    await InAppStoryManagerHostApi().changeUser(userId);
+    await _iasManager.changeUser(userId);
   }
 
   Future<void> closeReaders() async {
-    await InAppStoryManagerHostApi().closeReaders();
+    await _iasManager.closeReaders();
   }
 
   Future<void> clearCache() async {
-    await InAppStoryManagerHostApi().clearCache();
+    await _iasManager.clearCache();
+  }
+
+  Future<void> setTransparentStatusBar() async {
+    await _iasManager.setTransparentStatusBar();
   }
 
   Future<void> setLocale(Locale locale) async {
     if (locale.countryCode?.isEmpty ?? true) {
       return;
     }
-    await InAppStoryManagerHostApi()
-        .setLang(locale.languageCode, locale.countryCode!);
+    await _iasManager.setLang(locale.languageCode, locale.countryCode!);
+  }
+
+  Future<void> changeSound(bool enabled) async {
+    await _iasManager.changeSound(enabled);
+  }
+
+  void setGetSkusCallback(SkusCallbackImpl callback) {
+    _callbackImpl.callback = callback;
+    SkusCallbackFlutterApi.setUp(_callbackImpl);
   }
 }

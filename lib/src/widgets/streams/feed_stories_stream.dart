@@ -1,15 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../controllers/feed_stories_controller.dart';
+import '../../../inappstory_plugin.dart';
 import '../../data/favorite_from_dto.dart';
 import '../../data/feed_favorite.dart';
+import '../../data/story_from_pigeon_dto.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import '../../observable_error_callback_flutter_api.dart';
-import '../../pigeon_generated.g.dart';
-import '../base/base_feed_favorites_widget.dart';
-import '../decorators/feed_decorator.dart';
 import 'stories_stream.dart';
 
 typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(
@@ -33,6 +33,7 @@ class FeedStoriesStream extends StoriesStream {
     this.feedController,
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
+    this.onScrollToStory,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList:
@@ -56,6 +57,10 @@ class FeedStoriesStream extends StoriesStream {
   final Function(int size, String feed)? onStoriesLoaded;
 
   Iterable<FavoriteFromDto> favorites = [];
+
+  final _favoritesStreamController = StreamController<List<FavoriteFromDto>>();
+
+  final Function(int index, StoryFromPigeonDto story)? onScrollToStory;
 
   Iterable<Widget> combineStoriesAndFavorites() {
     final feedFavoritesWidgetBuilder = this.feedFavoritesWidgetBuilder;
@@ -86,14 +91,15 @@ class FeedStoriesStream extends StoriesStream {
   @override
   void updateStoryData(StoryAPIDataDto storyData) {
     try {
-      final story =
-          stories.firstWhere((element) => element.dto.id == storyData.id);
-      story.updateStoryData(storyData);
+      final story = stories
+          .where((element) => element.dto.id == storyData.id)
+          .firstOrNull;
+      story?.updateStoryData(storyData);
 
       controller.add(combineStoriesAndFavorites());
     } catch (e) {
       if (kDebugMode) {
-        print('Error updating story data: $e');
+        print('InAppStory: Error updating story data: $e');
       }
     }
   }
@@ -105,10 +111,39 @@ class FeedStoriesStream extends StoriesStream {
         .map(FavoriteFromDto.new)
         .toList(growable: false);
 
+    _favoritesStreamController.add(List.from(favorites));
     controller.add(combineStoriesAndFavorites());
   }
 
   @override
   void storiesLoaded(int size, String feed) =>
       onStoriesLoaded?.call(size, feed);
+
+  @override
+  void scrollToStory(int id, String feed) {
+    if (this.feed != feed) {
+      return;
+    }
+    try {
+      final story = stories.firstWhere(
+        (element) => element.id == id,
+        orElse: () => stories.elementAt(id),
+      );
+
+      int index = stories.indexWhere((element) => element.id == story.id);
+      if (index == -1) {
+        return;
+      }
+      Future.delayed(Duration(milliseconds: 300),
+          () => onScrollToStory?.call(index, story));
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  void dispose() {
+    _favoritesStreamController.close();
+  }
 }

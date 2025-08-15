@@ -10,11 +10,14 @@ import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
 class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
-    init(binaryMessenger: FlutterBinaryMessenger) {
-        self.binaryMessenger = binaryMessenger
+    init(pluginRegistrar: FlutterPluginRegistrar) {
+        self.pluginRegistrar = pluginRegistrar
+
+        self.binaryMessenger = pluginRegistrar.messenger()
 
         self.appearanceManagerAdaptor = AppearanceManagerAdaptor(
-            binaryMessenger: binaryMessenger
+            binaryMessenger: binaryMessenger,
+            pluginRegistrar: pluginRegistrar
         )
 
         self.favoriteStoryListAdaptor = FavoritesStoryListAdaptor(
@@ -56,6 +59,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     }
 
     var binaryMessenger: FlutterBinaryMessenger
+
+    var pluginRegistrar: FlutterPluginRegistrar
 
     var favoriteStoryListAdaptor: StoryListAdaptor
 
@@ -99,10 +104,12 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             let str2: String = "_"
             locale = "\(languageCode!)\(str2)\(languageRegion!)"
         }
+        
+        InAppStoryAPI.shared.plaform = ExternalPlatforms.flutter
 
         InAppStory.shared.initWith(
             serviceKey: apiKey,
-            settings: Settings(userID: userID, lang: locale)
+            settings: Settings(userID: userID, lang: locale),
         )
 
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
