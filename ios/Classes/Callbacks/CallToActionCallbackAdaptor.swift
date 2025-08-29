@@ -29,7 +29,7 @@ class CallToActionCallbackAdaptor {
         type: InAppStorySDK.ActionType,
         storyType: InAppStorySDK.StoriesType?
     ) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
             self.callToActionCallbackFlutterApi.callToAction(
                 slideData: nil,
                 url: target,

@@ -20,3 +20,9 @@ scripts:
       - pod install --repo-update
       - cd ../../example_extended
       - pod install --repo-update
+
+  publish plugin:
+    description: Running pod install in examples
+    steps:
+      - flutter pub get
+      - dart pub publish

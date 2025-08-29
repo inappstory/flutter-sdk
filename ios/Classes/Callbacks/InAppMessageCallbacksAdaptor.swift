@@ -17,21 +17,21 @@ class InAppMessageCallbacksAdaptor {
     private func inAppMessagesEvent(event: IASEvent.IAMessage) {
         switch event {
         case .preloaded(_):
-            return
+            break
         case .show(let iamData):
             let messageData = mapInAppMessageData(arg: iamData)
             iamCallbackFlutterApi.onShowInAppMessage(
                 inAppMessageData: messageData
             ) { _ in }
-            return
+            break
         case .close(let iamData):
             let messageData = mapInAppMessageData(arg: iamData)
             iamCallbackFlutterApi.onCloseInAppMessage(
                 inAppMessageData: messageData
             ) { _ in }
-            return
+            break
         case .clickOnButton(_, _):
-            return
+            break
         case .widgetEvent(let iamData, let name, let data):
             let messageData = mapInAppMessageData(arg: iamData)
             iamCallbackFlutterApi.onInAppMessageWidgetEvent(
