@@ -1,3 +1,9 @@
+## [0.4.1]
+
+### Fixed
+
+- refactoring of ios story reader events logic
+
 ## [0.4.0]
 
 ### Added
