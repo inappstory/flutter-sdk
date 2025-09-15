@@ -1,3 +1,15 @@
+## [0.4.2]
+
+### Added
+
+- User sign feature
+- User logout method
+- Ability to change cache size on Android devices
+
+### Changed
+
+- User change method, now it has an optional `userSign` parameter
+
 ## [0.4.1]
 
 ### Fixed

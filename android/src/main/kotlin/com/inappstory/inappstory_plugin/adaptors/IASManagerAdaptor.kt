@@ -1,7 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
-import SkusCallbackFlutterApi
 import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
@@ -28,10 +27,13 @@ class IASManagerAdaptor(
         inAppStoryManager.tags = arrayList
     }
 
-    override fun changeUser(userId: String, callback: (Result<Unit>) -> Unit) {
-        inAppStoryManager.userId = userId
-
+    override fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit) {
+        inAppStoryManager.setUserId(userId, userSign)
         callback(Result.success(Unit))
+    }
+
+    override fun userLogout() {
+        inAppStoryManager.userLogout()
     }
 
     override fun closeReaders() {

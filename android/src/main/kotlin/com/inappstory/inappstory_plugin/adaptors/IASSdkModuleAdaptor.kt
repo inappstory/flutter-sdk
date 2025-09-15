@@ -41,8 +41,10 @@ class InappstorySdkModuleAdaptor(
     override fun initWith(
         apiKey: String,
         userID: String,
+        userSign: String?,
         languageCode: String?,
         languageRegion: String?,
+        cacheSize: String?,
         callback: (Result<Unit>) -> Unit
     ) {
         try {
@@ -52,10 +54,20 @@ class InappstorySdkModuleAdaptor(
             }
             inAppStoryAPI.setExternalPlatform(ExternalPlatforms.FLUTTER_SDK);
             feedListAdaptors.clear()
+
+            val cacheSizeNative = when (cacheSize) {
+                "small" -> CacheSize.SMALL
+                "medium" -> CacheSize.MEDIUM
+                "large" -> CacheSize.LARGE
+                null -> CacheSize.MEDIUM
+                else ->
+                    CacheSize.MEDIUM
+            }
+
             inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
                 apiKey,
                 userID,
-                null,
+                userSign,
                 locale,
                 null,
                 null,
@@ -63,7 +75,7 @@ class InappstorySdkModuleAdaptor(
                 null,
                 false,
                 true,
-                CacheSize.MEDIUM,
+                cacheSizeNative,
                 false,
             )
 

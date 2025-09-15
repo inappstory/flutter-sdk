@@ -21,8 +21,12 @@ class InAppStoryManager {
     await _iasManager.setTags(tags);
   }
 
-  Future<void> changeUser(String userId) async {
-    await _iasManager.changeUser(userId);
+  Future<void> changeUser(String userId, {String? userSign}) async {
+    await _iasManager.changeUser(userId, userSign: userSign);
+  }
+
+  Future<void> userLogout() async {
+    await _iasManager.userLogout();
   }
 
   Future<void> closeReaders() async {

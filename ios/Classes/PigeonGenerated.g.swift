@@ -658,7 +658,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, languageCode: String?, languageRegion: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func initWith(apiKey: String, userID: String, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func createListAdaptor(feed: String) throws
   func removeListAdaptor(feed: String) throws
 }
@@ -675,9 +675,11 @@ class InappstorySdkModuleHostApiSetup {
         let args = message as! [Any?]
         let apiKeyArg = args[0] as! String
         let userIDArg = args[1] as! String
-        let languageCodeArg: String? = nilOrValue(args[2])
-        let languageRegionArg: String? = nilOrValue(args[3])
-        api.initWith(apiKey: apiKeyArg, userID: userIDArg, languageCode: languageCodeArg, languageRegion: languageRegionArg) { result in
+        let userSignArg: String? = nilOrValue(args[2])
+        let languageCodeArg: String? = nilOrValue(args[3])
+        let languageRegionArg: String? = nilOrValue(args[4])
+        let cacheSizeArg: String? = nilOrValue(args[5])
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -725,7 +727,8 @@ class InappstorySdkModuleHostApiSetup {
 protocol InAppStoryManagerHostApi {
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
-  func changeUser(userId: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func changeUser(userId: String, userSign: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func userLogout() throws
   func closeReaders() throws
   func clearCache() throws
   func setLang(languageCode: String, languageRegion: String) throws
@@ -774,7 +777,8 @@ class InAppStoryManagerHostApiSetup {
       changeUserChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let userIdArg = args[0] as! String
-        api.changeUser(userId: userIdArg) { result in
+        let userSignArg: String? = nilOrValue(args[1])
+        api.changeUser(userId: userIdArg, userSign: userSignArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -785,6 +789,19 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       changeUserChannel.setMessageHandler(nil)
+    }
+    let userLogoutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.userLogout\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      userLogoutChannel.setMessageHandler { _, reply in
+        do {
+          try api.userLogout()
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      userLogoutChannel.setMessageHandler(nil)
     }
     let closeReadersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.closeReaders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

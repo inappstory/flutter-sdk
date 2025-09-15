@@ -21,9 +21,18 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
   }
 
   @override
-  FutureOr<void> initWith(String apiKey, String userId,
-      {String? languageCode, String? languageRegion}) async {
+  FutureOr<void> initWith(
+    String apiKey,
+    String userId, {
+    String? userSign,
+    String? languageCode,
+    String? languageRegion,
+    String? cacheSize,
+  }) async {
     await inappstorySdkModuleHostApi.initWith(apiKey, userId,
-        languageCode: languageCode, languageRegion: languageRegion);
+        userSign: userSign,
+        languageCode: languageCode,
+        languageRegion: languageRegion,
+        cacheSize: cacheSize);
   }
 }

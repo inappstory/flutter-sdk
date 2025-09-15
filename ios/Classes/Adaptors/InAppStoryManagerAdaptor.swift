@@ -36,11 +36,16 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
 
     func changeUser(
         userId: String,
+        userSign: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        InAppStory.shared.settings = Settings(userID: userId)
+        InAppStory.shared.settings = Settings(userID: userId, sign: userSign)
 
         completion(.success(()))
+    }
+
+    func userLogout() throws {
+        InAppStory.shared.logOut {}
     }
 
     func closeReaders() throws {

@@ -83,8 +83,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     func initWith(
         apiKey: String,
         userID: String,
+        userSign: String?,
         languageCode: String?,
         languageRegion: String?,
+        cacheSize: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         // the parameter is responsible for logging to the XCode console
@@ -104,12 +106,12 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             let str2: String = "_"
             locale = "\(languageCode!)\(str2)\(languageRegion!)"
         }
-        
+
         InAppStoryAPI.shared.plaform = ExternalPlatforms.flutter
 
         InAppStory.shared.initWith(
             serviceKey: apiKey,
-            settings: Settings(userID: userID, lang: locale),
+            settings: Settings(userID: userID, sign: userSign, lang: locale)
         )
 
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
