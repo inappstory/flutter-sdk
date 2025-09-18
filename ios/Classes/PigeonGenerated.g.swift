@@ -658,7 +658,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func initWith(apiKey: String, userID: String, anonymous: Bool, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func createListAdaptor(feed: String) throws
   func removeListAdaptor(feed: String) throws
 }
@@ -675,11 +675,12 @@ class InappstorySdkModuleHostApiSetup {
         let args = message as! [Any?]
         let apiKeyArg = args[0] as! String
         let userIDArg = args[1] as! String
-        let userSignArg: String? = nilOrValue(args[2])
-        let languageCodeArg: String? = nilOrValue(args[3])
-        let languageRegionArg: String? = nilOrValue(args[4])
-        let cacheSizeArg: String? = nilOrValue(args[5])
-        api.initWith(apiKey: apiKeyArg, userID: userIDArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg) { result in
+        let anonymousArg = args[2] as! Bool
+        let userSignArg: String? = nilOrValue(args[3])
+        let languageCodeArg: String? = nilOrValue(args[4])
+        let languageRegionArg: String? = nilOrValue(args[5])
+        let cacheSizeArg: String? = nilOrValue(args[6])
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, anonymous: anonymousArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -734,6 +735,7 @@ protocol InAppStoryManagerHostApi {
   func setLang(languageCode: String, languageRegion: String) throws
   func setTransparentStatusBar() throws
   func changeSound(value: Bool) throws
+  func setUserSettings(anonymous: Bool, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -872,6 +874,27 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       changeSoundChannel.setMessageHandler(nil)
+    }
+    let setUserSettingsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setUserSettings\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setUserSettingsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let anonymousArg = args[0] as! Bool
+        let userIdArg: String? = nilOrValue(args[1])
+        let userSignArg: String? = nilOrValue(args[2])
+        let newLanguageCodeArg: String? = nilOrValue(args[3])
+        let newLanguageRegionArg: String? = nilOrValue(args[4])
+        let newTagsArg: [String]? = nilOrValue(args[5])
+        let newPlaceholdersArg: [String: String]? = nilOrValue(args[6])
+        do {
+          try api.setUserSettings(anonymous: anonymousArg, userId: userIdArg, userSign: userSignArg, newLanguageCode: newLanguageCodeArg, newLanguageRegion: newLanguageRegionArg, newTags: newTagsArg, newPlaceholders: newPlaceholdersArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setUserSettingsChannel.setMessageHandler(nil)
     }
   }
 }

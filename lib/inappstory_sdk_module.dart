@@ -5,6 +5,7 @@ abstract class InAppStorySdkModule {
   FutureOr<void> initWith(
     String apiKey,
     String userId, {
+    bool anonymous,
     String? languageCode,
     String? languageRegion,
     String? userSign,

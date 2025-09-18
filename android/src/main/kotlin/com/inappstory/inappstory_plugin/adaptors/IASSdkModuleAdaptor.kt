@@ -41,6 +41,7 @@ class InappstorySdkModuleAdaptor(
     override fun initWith(
         apiKey: String,
         userID: String,
+        anonymous: Boolean,
         userSign: String?,
         languageCode: String?,
         languageRegion: String?,
@@ -64,20 +65,28 @@ class InappstorySdkModuleAdaptor(
                     CacheSize.MEDIUM
             }
 
-            inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
-                apiKey,
-                userID,
-                userSign,
-                locale,
-                null,
-                null,
-                null,
-                null,
-                false,
-                true,
-                cacheSizeNative,
-                false,
-            )
+            if (anonymous) {
+                inAppStoryManager = createAnonymousInAppStoryManager(
+                    apiKey,
+                    locale,
+                    cacheSizeNative,
+                )
+            } else {
+                inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
+                    apiKey,
+                    userID,
+                    userSign,
+                    locale,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    true,
+                    cacheSizeNative,
+                    false,
+                )
+            }
 
             val iasStoryList = inAppStoryAPI.storyList
 
@@ -167,5 +176,26 @@ class InappstorySdkModuleAdaptor(
                 iterator.remove()
             }
         }
+    }
+
+    private fun createAnonymousInAppStoryManager(
+        apiKey: String?,
+        lang: Locale?,
+        cacheSize: Int?,
+    ): InAppStoryManager {
+        var builder = InAppStoryManager.Builder()
+        builder.lang(Locale.getDefault())
+
+        if (lang != null) {
+            builder = builder.lang(lang)
+        }
+
+        if (cacheSize != null) {
+            builder = builder.cacheSize(cacheSize)
+        }
+
+        builder = builder.gameDemoMode(false)
+
+        return builder.apiKey(apiKey).anonymous(true).create()
     }
 }

@@ -83,6 +83,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     func initWith(
         apiKey: String,
         userID: String,
+        anonymous: Bool,
         userSign: String?,
         languageCode: String?,
         languageRegion: String?,
@@ -111,7 +112,12 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
         InAppStory.shared.initWith(
             serviceKey: apiKey,
-            settings: Settings(userID: userID, sign: userSign, lang: locale)
+            settings: Settings(
+                userID: userID,
+                sign: userSign,
+                anonymous: anonymous,
+                lang: locale
+            )
         )
 
         GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)

@@ -24,15 +24,20 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
   FutureOr<void> initWith(
     String apiKey,
     String userId, {
+    bool anonymous = false,
     String? userSign,
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
   }) async {
-    await inappstorySdkModuleHostApi.initWith(apiKey, userId,
-        userSign: userSign,
-        languageCode: languageCode,
-        languageRegion: languageRegion,
-        cacheSize: cacheSize);
+    await inappstorySdkModuleHostApi.initWith(
+      apiKey,
+      userId,
+      userSign: userSign,
+      anonymous: anonymous,
+      languageCode: languageCode,
+      languageRegion: languageRegion,
+      cacheSize: cacheSize,
+    );
   }
 }

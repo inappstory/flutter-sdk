@@ -32,6 +32,7 @@ class InAppStoryPlugin {
   Future<void> initWith(
     String apiKey,
     String userId, {
+    bool anonymous = false,
     String? userSign,
     Locale? locale,
     CacheSize? cacheSize,
@@ -39,6 +40,7 @@ class InAppStoryPlugin {
     return InappstoryPluginPlatform.instance.initWith(
       apiKey,
       userId,
+      anonymous: anonymous,
       userSign: userSign,
       languageCode: locale?.languageCode,
       languageRegion: locale?.countryCode,

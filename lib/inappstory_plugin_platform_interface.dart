@@ -35,6 +35,7 @@ abstract class InappstoryPluginPlatform extends PlatformInterface
   FutureOr<void> initWith(
     String apiKey,
     String userId, {
+    bool anonymous,
     String? userSign,
     String? languageCode,
     String? languageRegion,

@@ -1,10 +1,12 @@
-## [0.4.2]
+## [0.5.0]
 
 ### Added
 
 - User sign feature
 - User logout method
 - Ability to change cache size on Android devices
+- Anonymous mode
+- Ability to change user settings
 
 ### Changed
 

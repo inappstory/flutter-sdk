@@ -21,6 +21,7 @@ abstract class InappstorySdkModuleHostApi {
   void initWith(
     String apiKey,
     String userID, {
+    bool anonymous = false,
     String? userSign,
     String? languageCode,
     String? languageRegion,
@@ -52,6 +53,16 @@ abstract class InAppStoryManagerHostApi {
   void setTransparentStatusBar();
 
   void changeSound(bool value);
+
+  void setUserSettings(
+    bool anonymous, {
+    String? userId,
+    String? userSign,
+    String? newLanguageCode,
+    String? newLanguageRegion,
+    List<String>? newTags,
+    Map<String, String>? newPlaceholders,
+  });
 }
 
 @HostApi()
