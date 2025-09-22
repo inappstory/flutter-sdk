@@ -55,7 +55,7 @@ class IASManagerAdaptor(
     }
 
     override fun setUserSettings(
-        anonymous: Boolean,
+        anonymous: Boolean?,
         userId: String?,
         userSign: String?,
         newLanguageCode: String?,
@@ -67,9 +67,12 @@ class IASManagerAdaptor(
         if (!newLanguageCode.isNullOrEmpty() && !newLanguageRegion.isNullOrEmpty()) {
             newLocale = Locale(newLanguageCode, newLanguageRegion)
         }
+        var settings = InAppStoryUserSettings()
+        if (anonymous != null) {
+            settings = settings.anonymous(anonymous)
+        }
         inAppStoryManager.userSettings(
-            InAppStoryUserSettings()
-                .anonymous(anonymous)
+            settings
                 .userId(userId, userSign)
                 .lang(newLocale)
                 .tags(newTags)

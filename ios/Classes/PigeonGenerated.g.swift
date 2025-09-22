@@ -735,7 +735,7 @@ protocol InAppStoryManagerHostApi {
   func setLang(languageCode: String, languageRegion: String) throws
   func setTransparentStatusBar() throws
   func changeSound(value: Bool) throws
-  func setUserSettings(anonymous: Bool, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
+  func setUserSettings(anonymous: Bool?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -879,7 +879,7 @@ class InAppStoryManagerHostApiSetup {
     if let api = api {
       setUserSettingsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let anonymousArg = args[0] as! Bool
+        let anonymousArg: Bool? = nilOrValue(args[0])
         let userIdArg: String? = nilOrValue(args[1])
         let userSignArg: String? = nilOrValue(args[2])
         let newLanguageCodeArg: String? = nilOrValue(args[3])

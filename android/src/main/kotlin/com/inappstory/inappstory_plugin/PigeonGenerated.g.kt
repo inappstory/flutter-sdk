@@ -731,7 +731,7 @@ interface InAppStoryManagerHostApi {
   fun setLang(languageCode: String, languageRegion: String)
   fun setTransparentStatusBar()
   fun changeSound(value: Boolean)
-  fun setUserSettings(anonymous: Boolean, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: List<String>?, newPlaceholders: Map<String, String>?)
+  fun setUserSettings(anonymous: Boolean?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: List<String>?, newPlaceholders: Map<String, String>?)
 
   companion object {
     /** The codec used by InAppStoryManagerHostApi. */
@@ -904,7 +904,7 @@ interface InAppStoryManagerHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val anonymousArg = args[0] as Boolean
+            val anonymousArg = args[0] as Boolean?
             val userIdArg = args[1] as String?
             val userSignArg = args[2] as String?
             val newLanguageCodeArg = args[3] as String?

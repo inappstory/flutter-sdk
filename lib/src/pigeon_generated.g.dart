@@ -1003,7 +1003,7 @@ class InAppStoryManagerHostApi {
     }
   }
 
-  Future<void> setUserSettings(bool anonymous, {String? userId, String? userSign, String? newLanguageCode, String? newLanguageRegion, List<String>? newTags, Map<String, String>? newPlaceholders, }) async {
+  Future<void> setUserSettings({bool? anonymous, String? userId, String? userSign, String? newLanguageCode, String? newLanguageRegion, List<String>? newTags, Map<String, String>? newPlaceholders, }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setUserSettings$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,

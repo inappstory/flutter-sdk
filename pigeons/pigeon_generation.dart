@@ -54,8 +54,8 @@ abstract class InAppStoryManagerHostApi {
 
   void changeSound(bool value);
 
-  void setUserSettings(
-    bool anonymous, {
+  void setUserSettings({
+    bool? anonymous,
     String? userId,
     String? userSign,
     String? newLanguageCode,

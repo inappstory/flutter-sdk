@@ -35,7 +35,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     }
 
     func setUserSettings(
-        anonymous: Bool,
+        anonymous: Bool?,
         userId: String?,
         userSign: String?,
         newLanguageCode: String?,

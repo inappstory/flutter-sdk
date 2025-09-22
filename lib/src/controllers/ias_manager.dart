@@ -21,8 +21,8 @@ class InAppStoryManager {
     await _iasManager.setTags(tags);
   }
 
-  Future<void> setUserSettings(
-    bool anonymous, {
+  Future<void> setUserSettings({
+    bool? anonymous,
     String? userId,
     String? userSign,
     Locale? locale,
@@ -30,7 +30,7 @@ class InAppStoryManager {
     Map<String, String>? placeholders,
   }) async {
     await _iasManager.setUserSettings(
-      anonymous,
+      anonymous: anonymous,
       userId: userId,
       userSign: userSign,
       newLanguageCode: locale?.languageCode,
