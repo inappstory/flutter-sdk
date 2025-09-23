@@ -77,10 +77,10 @@ rootProject.allprojects {
 }
 
 dependencies {
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.webkit:webkit:1.4.0'
-    implementation 'androidx.activity:activity-ktx:1.9.3'
-    implementation "androidx.fragment:fragment-ktx:1.6.1"
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.webkit:webkit:1.14.0'
+    implementation 'androidx.activity:activity-ktx:1.11.0'
+    implementation "androidx.fragment:fragment-ktx:1.8.9"
     implementation "androidx.appcompat:appcompat:1.7.1"
     implementation 'com.github.inappstory:android-sdk:8851daf80f4d8c91cd88aacf4a136c7c2b66d6fd'
     implementation("com.github.inappstory.android-sdk-utils:iasfilepicker:1.0.0") {
