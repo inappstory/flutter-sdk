@@ -21,8 +21,31 @@ class InAppStoryManager {
     await _iasManager.setTags(tags);
   }
 
-  Future<void> changeUser(String userId) async {
-    await _iasManager.changeUser(userId);
+  Future<void> setUserSettings({
+    bool? anonymous,
+    String? userId,
+    String? userSign,
+    Locale? locale,
+    List<String>? tags,
+    Map<String, String>? placeholders,
+  }) async {
+    await _iasManager.setUserSettings(
+      anonymous: anonymous,
+      userId: userId,
+      userSign: userSign,
+      newLanguageCode: locale?.languageCode,
+      newLanguageRegion: locale?.countryCode,
+      newTags: tags,
+      newPlaceholders: placeholders,
+    );
+  }
+
+  Future<void> changeUser(String userId, {String? userSign}) async {
+    await _iasManager.changeUser(userId, userSign: userSign);
+  }
+
+  Future<void> userLogout() async {
+    await _iasManager.userLogout();
   }
 
   Future<void> closeReaders() async {

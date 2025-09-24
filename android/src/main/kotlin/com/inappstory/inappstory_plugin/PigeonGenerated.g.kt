@@ -643,7 +643,7 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
-  fun initWith(apiKey: String, userID: String, languageCode: String?, languageRegion: String?, callback: (Result<Unit>) -> Unit)
+  fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, callback: (Result<Unit>) -> Unit)
   fun createListAdaptor(feed: String)
   fun removeListAdaptor(feed: String)
 
@@ -663,9 +663,12 @@ interface InappstorySdkModuleHostApi {
             val args = message as List<Any?>
             val apiKeyArg = args[0] as String
             val userIDArg = args[1] as String
-            val languageCodeArg = args[2] as String?
-            val languageRegionArg = args[3] as String?
-            api.initWith(apiKeyArg, userIDArg, languageCodeArg, languageRegionArg) { result: Result<Unit> ->
+            val anonymousArg = args[2] as Boolean
+            val userSignArg = args[3] as String?
+            val languageCodeArg = args[4] as String?
+            val languageRegionArg = args[5] as String?
+            val cacheSizeArg = args[6] as String?
+            api.initWith(apiKeyArg, userIDArg, anonymousArg, userSignArg, languageCodeArg, languageRegionArg, cacheSizeArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
@@ -721,12 +724,14 @@ interface InappstorySdkModuleHostApi {
 interface InAppStoryManagerHostApi {
   fun setPlaceholders(newPlaceholders: Map<String, String>)
   fun setTags(tags: List<String>)
-  fun changeUser(userId: String, callback: (Result<Unit>) -> Unit)
+  fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit)
+  fun userLogout()
   fun closeReaders()
   fun clearCache()
   fun setLang(languageCode: String, languageRegion: String)
   fun setTransparentStatusBar()
   fun changeSound(value: Boolean)
+  fun setUserSettings(anonymous: Boolean?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: List<String>?, newPlaceholders: Map<String, String>?)
 
   companion object {
     /** The codec used by InAppStoryManagerHostApi. */
@@ -779,7 +784,8 @@ interface InAppStoryManagerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val userIdArg = args[0] as String
-            api.changeUser(userIdArg) { result: Result<Unit> ->
+            val userSignArg = args[1] as String?
+            api.changeUser(userIdArg, userSignArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
@@ -787,6 +793,22 @@ interface InAppStoryManagerHostApi {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapResult(null))
               }
             }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.userLogout$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.userLogout()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
@@ -867,6 +889,30 @@ interface InAppStoryManagerHostApi {
             val valueArg = args[0] as Boolean
             val wrapped: List<Any?> = try {
               api.changeSound(valueArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setUserSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val anonymousArg = args[0] as Boolean?
+            val userIdArg = args[1] as String?
+            val userSignArg = args[2] as String?
+            val newLanguageCodeArg = args[3] as String?
+            val newLanguageRegionArg = args[4] as String?
+            val newTagsArg = args[5] as List<String>?
+            val newPlaceholdersArg = args[6] as Map<String, String>?
+            val wrapped: List<Any?> = try {
+              api.setUserSettings(anonymousArg, userIdArg, userSignArg, newLanguageCodeArg, newLanguageRegionArg, newTagsArg, newPlaceholdersArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

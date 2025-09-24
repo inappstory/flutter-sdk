@@ -1,9 +1,9 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryManagerHostApi
-import SkusCallbackFlutterApi
 import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.core.data.models.InAppStoryUserSettings
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -28,10 +28,13 @@ class IASManagerAdaptor(
         inAppStoryManager.tags = arrayList
     }
 
-    override fun changeUser(userId: String, callback: (Result<Unit>) -> Unit) {
-        inAppStoryManager.userId = userId
-
+    override fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit) {
+        inAppStoryManager.setUserId(userId, userSign)
         callback(Result.success(Unit))
+    }
+
+    override fun userLogout() {
+        inAppStoryManager.userLogout()
     }
 
     override fun closeReaders() {
@@ -49,6 +52,32 @@ class IASManagerAdaptor(
 
     override fun changeSound(value: Boolean) {
         inAppStoryManager.soundOn(value)
+    }
+
+    override fun setUserSettings(
+        anonymous: Boolean?,
+        userId: String?,
+        userSign: String?,
+        newLanguageCode: String?,
+        newLanguageRegion: String?,
+        newTags: List<String>?,
+        newPlaceholders: Map<String, String>?
+    ) {
+        var newLocale: Locale? = null;
+        if (!newLanguageCode.isNullOrEmpty() && !newLanguageRegion.isNullOrEmpty()) {
+            newLocale = Locale(newLanguageCode, newLanguageRegion)
+        }
+        var settings = InAppStoryUserSettings()
+        if (anonymous != null) {
+            settings = settings.anonymous(anonymous)
+        }
+        inAppStoryManager.userSettings(
+            settings
+                .userId(userId, userSign)
+                .lang(newLocale)
+                .tags(newTags)
+                .placeholders(newPlaceholders)
+        )
     }
 
     override fun setLang(languageCode: String, languageRegion: String) {

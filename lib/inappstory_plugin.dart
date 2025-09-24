@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
 import 'src/controllers/controllers.dart';
+import 'src/data/data.dart' show CacheSize;
 import 'src/widgets/builders/builders.dart';
 import 'src/widgets/decorators/feed_decorator.dart';
 import 'src/widgets/streams/favorites_stories_stream.dart';
@@ -28,12 +29,22 @@ class InAppStoryPlugin {
   static InAppStoryPlugin? _singleton;
 
   /// The [InAppStoryPlugin] initialization method.
-  Future<void> initWith(String apiKey, String userId, {Locale? locale}) async {
+  Future<void> initWith(
+    String apiKey,
+    String userId, {
+    bool anonymous = false,
+    String? userSign,
+    Locale? locale,
+    CacheSize? cacheSize,
+  }) async {
     return InappstoryPluginPlatform.instance.initWith(
       apiKey,
       userId,
+      anonymous: anonymous,
+      userSign: userSign,
       languageCode: locale?.languageCode,
       languageRegion: locale?.countryCode,
+      cacheSize: cacheSize?.name,
     );
   }
 

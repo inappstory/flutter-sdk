@@ -52,34 +52,21 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     onBackPressedCallback?.isEnabled = false
-                    onBackPressedCallback?.remove()
                 }
 
                 override fun readerIsClosed() {
                     onBackPressedCallback?.isEnabled = false
-                    onBackPressedCallback?.remove()
                 }
             })
     }
 
     override fun showByEvent(event: String, onlyPreloaded: Boolean) {
-        val fragmentManager = (activityHolder.activity as FragmentActivity).supportFragmentManager
-        (activityHolder.activity as FragmentActivity).onBackPressedDispatcher.addCallback(
-            onBackPressedCallback = object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    iasManager.let {
-                        if (it.onBackPressed())
-                            return
-                    }
-                }
-
-            })
         val settings = InAppMessageOpenSettings()
             .event(event)
             .showOnlyIfLoaded(onlyPreloaded)
         iasMessages.show(
             settings,
-            fragmentManager,
+            (activityHolder.activity as FragmentActivity).supportFragmentManager,
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
             object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
@@ -88,12 +75,10 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     onBackPressedCallback?.isEnabled = false
-                    onBackPressedCallback?.remove()
                 }
 
                 override fun readerIsClosed() {
                     onBackPressedCallback?.isEnabled = false
-                    onBackPressedCallback?.remove()
                 }
             })
     }

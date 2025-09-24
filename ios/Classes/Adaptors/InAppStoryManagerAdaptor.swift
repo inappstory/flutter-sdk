@@ -34,13 +34,54 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         InAppStory.shared.setTags(tags)
     }
 
+    func setUserSettings(
+        anonymous: Bool?,
+        userId: String?,
+        userSign: String?,
+        newLanguageCode: String?,
+        newLanguageRegion: String?,
+        newTags: [String]?,
+        newPlaceholders: [String: String]?
+    ) throws {
+        var locale: String? = nil
+
+        if newLanguageCode != nil && newLanguageRegion != nil {
+            let str2: String = "_"
+            locale = "\(newLanguageCode)\(str2)\(newLanguageRegion)"
+        }
+
+        if anonymous != nil {
+            InAppStory.shared.settings = Settings(
+                userID: userId ?? "",
+                sign: userSign,
+                tags: newTags ?? [""],
+            )
+        } else {
+            InAppStory.shared.settings = Settings(
+                userID: userId ?? "",
+                sign: userSign,
+                anonymous: anonymous!,
+                tags: newTags ?? [""],
+            )
+        }
+
+        if newPlaceholders != nil {
+            InAppStory.shared.placeholders = newPlaceholders!
+        }
+    }
+
     func changeUser(
         userId: String,
+        userSign: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        InAppStory.shared.settings = Settings(userID: userId)
+        InAppStory.shared.settings = Settings(userID: userId, sign: userSign)
 
         completion(.success(()))
+    }
+
+    func userLogout() throws {
+        InAppStory.shared.logOut {}
     }
 
     func closeReaders() throws {
@@ -56,7 +97,6 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     }
 
     func setLang(languageCode: String, languageRegion: String) throws {
-
         let settings = InAppStory.shared.settings
         let str2: String = "_"
         let locale = "\(languageCode)\(str2)\(languageRegion)"

@@ -18,8 +18,15 @@ import 'package:pigeon/pigeon.dart';
 @HostApi()
 abstract class InappstorySdkModuleHostApi {
   @async
-  void initWith(String apiKey, String userID,
-      {String? languageCode, String? languageRegion});
+  void initWith(
+    String apiKey,
+    String userID, {
+    bool anonymous = false,
+    String? userSign,
+    String? languageCode,
+    String? languageRegion,
+    String? cacheSize,
+  });
 
   void createListAdaptor(String feed);
 
@@ -33,7 +40,9 @@ abstract class InAppStoryManagerHostApi {
   void setTags(List<String> tags);
 
   @async
-  void changeUser(String userId);
+  void changeUser(String userId, {String? userSign});
+
+  void userLogout();
 
   void closeReaders();
 
@@ -44,6 +53,16 @@ abstract class InAppStoryManagerHostApi {
   void setTransparentStatusBar();
 
   void changeSound(bool value);
+
+  void setUserSettings({
+    bool? anonymous,
+    String? userId,
+    String? userSign,
+    String? newLanguageCode,
+    String? newLanguageRegion,
+    List<String>? newTags,
+    Map<String, String>? newPlaceholders,
+  });
 }
 
 @HostApi()

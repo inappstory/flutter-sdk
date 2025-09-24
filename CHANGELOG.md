@@ -1,8 +1,26 @@
+## [0.5.0]
+
+### Added
+
+- User sign feature
+- User logout method
+- Ability to change cache size on Android devices
+- Anonymous mode
+- Ability to change user settings
+
+### Changed
+
+- User change method, now it has an optional `userSign` parameter
+
+### Fixed
+
+- Issue when user can't close IAM by pressing back button or using back gesture on Android devices
+
 ## [0.4.1]
 
 ### Fixed
 
-- refactoring of ios story reader events logic
+- Refactoring of ios story reader events logic
 
 ## [0.4.0]
 
