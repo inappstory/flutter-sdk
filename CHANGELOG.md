@@ -16,7 +16,8 @@
 
 ### Fixed
 
-- refactoring of ios story reader events logic
+- Refactoring of ios story reader events logic
+- Issue when user can't close IAM by pressing back button or using back gesture on Android devices
 
 ## [0.4.0]
 
