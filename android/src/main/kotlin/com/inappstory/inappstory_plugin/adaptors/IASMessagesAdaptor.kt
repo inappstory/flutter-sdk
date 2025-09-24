@@ -52,12 +52,10 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     onBackPressedCallback?.isEnabled = false
-//                    onBackPressedCallback?.remove()
                 }
 
                 override fun readerIsClosed() {
                     onBackPressedCallback?.isEnabled = false
-//                    onBackPressedCallback?.remove()
                 }
             })
     }
@@ -77,12 +75,10 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     onBackPressedCallback?.isEnabled = false
-//                    onBackPressedCallback?.remove()
                 }
 
                 override fun readerIsClosed() {
                     onBackPressedCallback?.isEnabled = false
-//                    onBackPressedCallback?.remove()
                 }
             })
     }
