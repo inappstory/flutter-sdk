@@ -85,6 +85,6 @@ class AppearanceManager {
   }
 
   Future<void> setCoverQuality(CoverQuality coverQuality) async {
-    await _appearanceManager.setCoverQualit`y(coverQuality);
+    await _appearanceManager.setCoverQuality(coverQuality);
   }
 }
