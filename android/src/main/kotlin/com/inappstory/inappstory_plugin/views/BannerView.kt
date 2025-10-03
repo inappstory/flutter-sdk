@@ -56,8 +56,13 @@ internal class BannerView(
         val bannersGap: Int? = creationParams?.get("bannersGap") as? Int?
         val cornerRadius: Int? = creationParams?.get("cornerRadius") as? Int?
 
-        val decoration: Map<String, Any?>? =
-            creationParams?.get("bannerDecoration")?.let { it as? Map<String, Any?> }
+
+        var decoration: BannerDecorationDTO? = null
+        if (creationParams?.get("bannerDecoration") != null) {
+            decoration = decorationToDTO(
+                creationParams.get("bannerDecoration") as Map<String, Any?>
+            )
+        }
 
         appearanceManager.csBannerPlaceInterface(
             CustomBannerPlaceAppearance(
@@ -66,7 +71,7 @@ internal class BannerView(
                 bannersGap,
                 cornerRadius,
                 loop,
-                decoration?.toMutableMap(),
+                decoration,
             )
         )
 
@@ -97,9 +102,7 @@ internal class BannerView(
 
         bannerPlace.loadCallback(object : BannerPlaceLoadCallback() {
             override fun bannerPlaceLoaded(
-                size: Int,
-                bannerData: List<BannerData>,
-                widgetHeight: Int
+                size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
                     bannerPlaceCallback.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
@@ -116,28 +119,24 @@ internal class BannerView(
             }
         })
 
-        InAppStoryManager.getInstance().setBannerWidgetCallback(
-            object : BannerWidgetCallback {
-                override fun bannerWidget(
-                    bannerData: BannerData?,
-                    widgetEventName: String?,
-                    widgetData: Map<String?, String?>?
-                ) {
-                    if (bannerData != null) {
-                        flutterPluginBinding.runOnMainThread {
-                            bannerPlaceCallback.onActionWith(bannerData.payload()) {}
-                        }
+        InAppStoryManager.getInstance().setBannerWidgetCallback(object : BannerWidgetCallback {
+            override fun bannerWidget(
+                bannerData: BannerData?,
+                widgetEventName: String?,
+                widgetData: Map<String?, String?>?
+            ) {
+                if (bannerData != null) {
+                    flutterPluginBinding.runOnMainThread {
+                        bannerPlaceCallback.onActionWith(bannerData.payload()) {}
                     }
                 }
             }
-        )
+        })
     }
 
     override fun loadBannerPlace(placeId: String, tags: List<String>?) {
         InAppStoryManager.getInstance()?.loadBannerPlace(
-            BannerPlaceLoadSettings()
-                .placeId(placeId)
-                .tags(tags)
+            BannerPlaceLoadSettings().placeId(placeId).tags(tags)
         )
     }
 
@@ -169,6 +168,22 @@ internal class BannerView(
     override fun resumeAutoscroll() {
         bannerPlace.resumeAutoscroll()
     }
+
+    private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
+        println()
+        val gradientType: GradientType? = map["gradientType"]?.let { GradientType.ofRaw(it as Int) }
+        val color: Long? = map["color"]?.let { it as Long }
+        val image: String? = map["image"]?.let { it as String }
+        val stops: List<Double>? = map["gradientStops"]?.let { it as List<Double>? }
+        val colors: List<Long>? = map["gradientColors"]?.let { it as List<Long>? }
+        return BannerDecorationDTO(
+            color = color,
+            gradientType = gradientType,
+            gradientStops = stops,
+            image = image,
+            gradientColors = colors,
+        )
+    }
 }
 
 class CustomBannerPlaceAppearance(
@@ -177,9 +192,8 @@ class CustomBannerPlaceAppearance(
     private val bannersGap: Int?,
     private val cornerRadius: Int?,
     private val loop: Boolean?,
-    private val decoration: Map<String, Any?>?
-) :
-    DefaultBannerPlaceAppearance() {
+    private val bannerDecoration: BannerDecorationDTO?
+) : DefaultBannerPlaceAppearance() {
     override fun nextBannerOffset(): Int {
         return bannerOffset ?: super.nextBannerOffset()
     }
@@ -201,54 +215,56 @@ class CustomBannerPlaceAppearance(
     }
 
     override fun loadingPlaceholder(context: Context?): View {
-        if (decoration != null) {
-            val bannerDecoration: BannerDecorationDTO = decorationToDTO(decoration)
+        if (bannerDecoration != null) {
             val placeholderView = FrameLayout(context!!)
 
             if (bannerDecoration.color != null) {
                 placeholderView.setBackgroundColor(bannerDecoration.color.toInt())
             } else if (bannerDecoration.gradientType != null) {
-                val colors = bannerDecoration.gradientColors?.map { it.toInt() }?.toIntArray()
-                    ?: intArrayOf(
-                        Color.WHITE,
-                        Color.BLACK
+                val colors =
+                    bannerDecoration.gradientColors?.map { it.toInt() }?.toIntArray() ?: intArrayOf(
+                        Color.WHITE, Color.BLACK
                     )
 
-                if (bannerDecoration.gradientType == GradientType.LINEAR) {
-                    val gradientDrawable = GradientDrawable(
-                        GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
-                        colors
-                    )
-                    placeholderView.background = gradientDrawable
-                } else if (bannerDecoration.gradientType == GradientType.RADIAL) {
-                    val gradientDrawable = GradientDrawable(
-                        GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
-                        colors
-                    )
-                    gradientDrawable.gradientType = GradientDrawable.RADIAL_GRADIENT
-                    placeholderView.background = gradientDrawable
+                when (bannerDecoration.gradientType) {
+                    GradientType.LINEAR -> {
+                        val gradientDrawable = GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
+                            colors
+                        )
+                        placeholderView.background = gradientDrawable
+                    }
 
-                } else if (bannerDecoration.gradientType == GradientType.SWEEP) {
-                    val gradientDrawable = GradientDrawable(
-                        GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
-                        colors
-                    )
-                    gradientDrawable.gradientType = GradientDrawable.SWEEP_GRADIENT
-                    placeholderView.background = gradientDrawable
+                    GradientType.RADIAL -> {
+                        val gradientDrawable = GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
+                            colors
+                        )
+                        gradientDrawable.gradientType = GradientDrawable.RADIAL_GRADIENT
+                        placeholderView.background = gradientDrawable
+
+                    }
+
+                    GradientType.SWEEP -> {
+                        val gradientDrawable = GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM, // Orientation of the gradient
+                            colors
+                        )
+                        gradientDrawable.gradientType = GradientDrawable.SWEEP_GRADIENT
+                        placeholderView.background = gradientDrawable
+                    }
                 }
             }
 
             val layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
             )
             placeholderView.layoutParams = layoutParams
             if (bannerDecoration.image != null) {
                 val bitmap = createBitmapFromPath(bannerDecoration.image)
                 val imageView = AppCompatImageView(context)
                 imageView.layoutParams = FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
                 )
                 val params = imageView.layoutParams as FrameLayout.LayoutParams
                 params.gravity = Gravity.CENTER
@@ -261,24 +277,6 @@ class CustomBannerPlaceAppearance(
         } else {
             return super.loadingPlaceholder(context)
         }
-    }
-
-    private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
-        println()
-        val gradientType: GradientType? =
-            map["gradientType"]?.let { GradientType.ofRaw(it as Int) }
-        val color: Long? = map["color"]?.let { it as Long }
-        val image: String? = map["image"]?.let { it as String }
-        val stops: List<Double>? =
-            map["gradientStops"]?.let { it as List<Double>? }
-        val colors: List<Long>? = map["gradientColors"]?.let { (listOf(it) as List<Long>) }
-        return BannerDecorationDTO(
-            color = color,
-            gradientType = gradientType,
-            gradientStops = stops,
-            image = image,
-            gradientColors = colors,
-        )
     }
 
     private fun createBitmapFromPath(path: String): Bitmap? {
