@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../inappstory_plugin.dart';
+import '../../pigeon_generated.g.dart' show IASSingleStoryHostApi;
 
 class BaseStoryBuilder extends StatelessWidget implements StoryWidget {
   const BaseStoryBuilder(

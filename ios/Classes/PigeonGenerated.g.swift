@@ -736,6 +736,7 @@ protocol InAppStoryManagerHostApi {
   func setTransparentStatusBar() throws
   func changeSound(value: Bool) throws
   func setUserSettings(anonymous: Bool?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
+  func loadBannerPlace(placeId: String, tags: [String]?) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -895,6 +896,22 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       setUserSettingsChannel.setMessageHandler(nil)
+    }
+    let loadBannerPlaceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.loadBannerPlace\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      loadBannerPlaceChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
+        let tagsArg: [String]? = nilOrValue(args[1])
+        do {
+          try api.loadBannerPlace(placeId: placeIdArg, tags: tagsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      loadBannerPlaceChannel.setMessageHandler(nil)
     }
   }
 }

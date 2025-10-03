@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-import '../../inappstory_plugin.dart';
-import '../pigeon_generated.g.dart' show AppearanceManagerHostApi, Position;
+import '../data/data.dart' show GoodsItemAppearance;
+import '../pigeon_generated.g.dart'
+    show AppearanceManagerHostApi, Position, CoverQuality;
 
 class AppearanceManager {
   AppearanceManager._private();
@@ -84,6 +85,6 @@ class AppearanceManager {
   }
 
   Future<void> setCoverQuality(CoverQuality coverQuality) async {
-    await _appearanceManager.setCoverQuality(coverQuality);
+    await _appearanceManager.setCoverQualit`y(coverQuality);
   }
 }

@@ -63,6 +63,8 @@ abstract class InAppStoryManagerHostApi {
     List<String>? newTags,
     Map<String, String>? newPlaceholders,
   });
+
+  void loadBannerPlace(String placeId, {List<String>? tags});
 }
 
 @HostApi()

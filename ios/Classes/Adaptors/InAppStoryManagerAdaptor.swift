@@ -109,6 +109,10 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     func changeSound(value: Bool) throws {
         InAppStory.shared.muted = !value
     }
+    
+    func loadBannerPlace(placeId: String, tags: [String]?) throws {
+        
+    }
 
     private func setUpGoodsCallback() {
         InAppStory.shared.getGoodsObject = { skus, complete in

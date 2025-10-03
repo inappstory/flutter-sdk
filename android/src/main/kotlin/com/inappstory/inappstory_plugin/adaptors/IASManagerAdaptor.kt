@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.adaptors
 import InAppStoryManagerHostApi
 import com.inappstory.inappstory_plugin.helpers.CustomOpenStoriesReader
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.core.data.models.InAppStoryUserSettings
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
@@ -83,5 +84,13 @@ class IASManagerAdaptor(
     override fun setLang(languageCode: String, languageRegion: String) {
         val locale = Locale(languageCode, languageRegion)
         inAppStoryManager.setLang(locale)
+    }
+
+    override fun loadBannerPlace(placeId: String, tags: List<String>?) {
+        inAppStoryManager.loadBannerPlace(
+            BannerPlaceLoadSettings()
+                .placeId(placeId)
+                .tags(tags)
+        )
     }
 }

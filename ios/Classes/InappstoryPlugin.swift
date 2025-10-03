@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 
 public class InappstoryPlugin: NSObject, FlutterPlugin {
-    
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
             name: "inappstory_plugin",
@@ -11,6 +11,9 @@ public class InappstoryPlugin: NSObject, FlutterPlugin {
         let instance = InappstoryPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         InappstorySdkModuleAdaptor(pluginRegistrar: registrar)
+
+        let factory = BannerPlaceFactory(messenger: registrar.messenger())
+        registrar.register(factory, withId: "banner-view")
     }
 
     public func handle(

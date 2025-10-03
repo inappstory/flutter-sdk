@@ -75,4 +75,8 @@ class InAppStoryManager {
     _callbackImpl.callback = callback;
     SkusCallbackFlutterApi.setUp(_callbackImpl);
   }
+
+  Future<void> loadBannerPlace(String placeId, {List<String>? tags}) async {
+    await _iasManager.loadBannerPlace(placeId, tags: tags);
+  }
 }

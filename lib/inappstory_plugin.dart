@@ -6,7 +6,7 @@ import 'inappstory_plugin_platform_interface.dart';
 import 'src/controllers/controllers.dart';
 import 'src/data/data.dart' show CacheSize;
 import 'src/widgets/builders/builders.dart';
-import 'src/widgets/decorators/feed_decorator.dart';
+import 'src/widgets/decorators/decorators.dart';
 import 'src/widgets/streams/favorites_stories_stream.dart';
 import 'src/widgets/streams/feed_stories_stream.dart';
 
