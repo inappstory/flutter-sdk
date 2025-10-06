@@ -33,23 +33,25 @@ internal class BannerView(
     context: Context,
     id: Int,
     creationParams: Map<String?, Any?>?,
-    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     appearanceManager: AppearanceManager
 ) : PlatformView, BannerPlaceManagerHostApi {
 
     private val bannerPlace: BannerPlace
 
-    private val bannerPlaceCallback: BannerPlaceCallbackFlutterApi
+    private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
 
     override fun getView(): View {
         return bannerPlace
     }
 
-    override fun dispose() {}
+    override fun dispose() {
+        BannerPlaceManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
+    }
 
     init {
         BannerPlaceManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
-        bannerPlaceCallback = BannerPlaceCallbackFlutterApi(flutterPluginBinding.binaryMessenger);
+        bannerPlaceCallback = BannerPlaceCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
 
         val loop: Boolean? = creationParams?.get("loop") as? Boolean?
         val bannerOffset: Int? = creationParams?.get("bannerOffset") as? Int?
@@ -60,7 +62,7 @@ internal class BannerView(
         var decoration: BannerDecorationDTO? = null
         if (creationParams?.get("bannerDecoration") != null) {
             decoration = decorationToDTO(
-                creationParams.get("bannerDecoration") as Map<String, Any?>
+                creationParams["bannerDecoration"] as Map<String, Any?>
             )
         }
 
@@ -80,21 +82,21 @@ internal class BannerView(
         bannerPlace.setPlaceId(placeId)
         bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
             override fun onPageScrolled(
-                position: Int, //current index
-                total: Int, //how much elements in banner place
-                positionOffset: Float, //offset in percent, value from 0 to 1
+                position: Int,
+                total: Int,
+                positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
+
             }
 
             override fun onPageSelected(
-                position: Int,  //current index
-                total: Int //how much elements in banner place
+                position: Int,
+                total: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
                     bannerPlaceCallback.onBannerScroll(position.toLong()) {}
                 }
-
             }
         })
 
@@ -125,9 +127,11 @@ internal class BannerView(
                 widgetEventName: String?,
                 widgetData: Map<String?, String?>?
             ) {
-                if (bannerData != null) {
+                if (widgetData != null) {
                     flutterPluginBinding.runOnMainThread {
-                        bannerPlaceCallback.onActionWith(bannerData.payload()) {}
+                        widgetData["widget_value"]?.let {
+                            bannerPlaceCallback.onActionWith(widgetData["widget_value"]!!) {}
+                        }
                     }
                 }
             }
@@ -170,7 +174,6 @@ internal class BannerView(
     }
 
     private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
-        println()
         val gradientType: GradientType? = map["gradientType"]?.let { GradientType.ofRaw(it as Int) }
         val color: Long? = map["color"]?.let { it as Long }
         val image: String? = map["image"]?.let { it as String }

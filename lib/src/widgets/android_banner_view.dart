@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import '../../inappstory_plugin.dart';
 import '../generated/banner_place_generated.g.dart';
 import 'banner_place.dart';
 
@@ -41,6 +42,17 @@ class AndroidBannerView extends StatelessWidget {
         gradientStops: bannerDecoration?.gradientStops,
       ).toJson();
     }
+
+    return AndroidView(
+      viewType: viewType,
+      layoutDirection: TextDirection.ltr,
+      creationParams: creationParams,
+      creationParamsCodec: const StandardMessageCodec(),
+      onPlatformViewCreated: (id) {
+        print("created");
+        BannerPlaceManager.instance.load(placeId);
+      },
+    );
 
     return PlatformViewLink(
       viewType: viewType,
