@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../../inappstory_plugin.dart';
+import '../controllers/banner_place_manager.dart';
 import '../generated/banner_place_generated.g.dart';
 import 'banner_place.dart';
 
@@ -22,7 +22,7 @@ class AndroidBannerView extends StatelessWidget {
     // This is used in the platform side to register the view.
     const String viewType = 'banner-view';
     // Pass parameters to the platform side.
-    final Map<String, dynamic> creationParams = <String, dynamic>{};
+    Map<String, dynamic> creationParams = <String, dynamic>{};
 
     creationParams['placeId'] = placeId;
     if (decoration != null) {
@@ -46,10 +46,9 @@ class AndroidBannerView extends StatelessWidget {
     return AndroidView(
       viewType: viewType,
       layoutDirection: TextDirection.ltr,
-      creationParams: creationParams,
+      creationParams: Map.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (id) {
-        print("created");
         BannerPlaceManager.instance.load(placeId);
       },
     );

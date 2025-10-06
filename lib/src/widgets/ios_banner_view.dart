@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../controllers/banner_place_manager.dart';
 import '../generated/banner_place_generated.g.dart';
 import 'banner_place.dart';
 
@@ -35,6 +36,9 @@ class IosBannerView extends StatelessWidget {
       layoutDirection: TextDirection.ltr,
       creationParams: creationParams,
       creationParamsCodec: const StandardMessageCodec(),
+      onPlatformViewCreated: (id) {
+        BannerPlaceManager.instance.load(placeId);
+      },
     );
   }
 }
