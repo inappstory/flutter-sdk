@@ -30,7 +30,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
 
-internal class BannerView(
+class BannerView(
     context: Context,
     id: Int,
     creationParams: Map<String?, Any?>?,
@@ -67,19 +67,19 @@ internal class BannerView(
             )
         }
 
-//        val bannerAppearance = CustomBannerPlaceAppearance(
-//            flutterPluginBinding,
-//            bannerOffset,
-//            bannersGap,
-//            cornerRadius,
-//            loop,
-//            decoration,
-//        )
-//        appearanceManager.csBannerPlaceInterface(bannerAppearance)
-//        AppearanceManager().csBannerPlaceInterface(bannerAppearance)
+        val bannerAppearance = CustomBannerPlaceAppearance(
+            flutterPluginBinding,
+            bannerOffset,
+            bannersGap,
+            cornerRadius,
+            loop,
+            decoration,
+        )
+        appearanceManager.csBannerPlaceInterface(bannerAppearance)
+        //AppearanceManager().csBannerPlaceInterface(bannerAppearance)
 
         bannerPlace = BannerPlace(context)
-        val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace";
+        val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         bannerPlace.setPlaceId(placeId)
         bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
             override fun onPageScrolled(
@@ -223,11 +223,13 @@ class CustomBannerPlaceAppearance(
     private val bannerDecoration: BannerDecorationDTO?
 ) : DefaultBannerPlaceAppearance() {
     override fun nextBannerOffset(): Int {
-        return bannerOffset ?: super.nextBannerOffset()
+        return 50;
+        //return bannerOffset ?: super.nextBannerOffset()
     }
 
     override fun prevBannerOffset(): Int {
-        return bannerOffset ?: super.prevBannerOffset()
+        return 70;
+        //return bannerOffset ?: super.prevBannerOffset()
     }
 
     override fun bannersGap(): Int {
