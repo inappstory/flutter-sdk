@@ -88,6 +88,8 @@ class BannerView(
             FrameLayout.LayoutParams.WRAP_CONTENT
         )
 
+        bannerPlace.setAppearanceManager(appearanceManager)
+
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         bannerPlace.setPlaceId(placeId)
         bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
@@ -109,7 +111,6 @@ class BannerView(
             }
         })
 
-        bannerPlace.setAppearanceManager(appearanceManager)
 
         bannerPlace.loadCallback(object : BannerPlaceLoadCallback() {
             override fun bannerPlaceLoaded(
