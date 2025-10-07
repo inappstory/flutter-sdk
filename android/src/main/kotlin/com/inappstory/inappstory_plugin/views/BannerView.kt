@@ -67,16 +67,16 @@ internal class BannerView(
             )
         }
 
-        val bannerAppearance = CustomBannerPlaceAppearance(
-            flutterPluginBinding,
-            bannerOffset,
-            bannersGap,
-            cornerRadius,
-            loop,
-            decoration,
-        )
-        appearanceManager.csBannerPlaceInterface(bannerAppearance)
-        AppearanceManager().csBannerPlaceInterface(bannerAppearance)
+//        val bannerAppearance = CustomBannerPlaceAppearance(
+//            flutterPluginBinding,
+//            bannerOffset,
+//            bannersGap,
+//            cornerRadius,
+//            loop,
+//            decoration,
+//        )
+//        appearanceManager.csBannerPlaceInterface(bannerAppearance)
+//        AppearanceManager().csBannerPlaceInterface(bannerAppearance)
 
         bannerPlace = BannerPlace(context)
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace";
