@@ -397,6 +397,23 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       } 
     }
   }
+  fun onBannerPlacePreloaded(sizeArg: Long, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(sizeArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(BannerPlaceGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
 class BannerLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {

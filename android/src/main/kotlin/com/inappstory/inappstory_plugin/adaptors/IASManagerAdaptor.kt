@@ -93,4 +93,8 @@ class IASManagerAdaptor(
                 .tags(tags)
         )
     }
+
+    override fun setOptionKeys(options: Map<String, String>) {
+        inAppStoryManager.setOptions(options)
+    }
 }

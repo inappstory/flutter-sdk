@@ -152,4 +152,8 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             )
         }
     }
+    
+    func setOptionKeys(options: [String : String]) throws {
+        InAppStory.shared.options = options
+    }
 }

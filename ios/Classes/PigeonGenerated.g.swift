@@ -737,6 +737,7 @@ protocol InAppStoryManagerHostApi {
   func changeSound(value: Bool) throws
   func setUserSettings(anonymous: Bool?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
   func loadBannerPlace(placeId: String, tags: [String]?) throws
+  func setOptionKeys(options: [String: String]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -912,6 +913,21 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       loadBannerPlaceChannel.setMessageHandler(nil)
+    }
+    let setOptionKeysChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setOptionKeys\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setOptionKeysChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let optionsArg = args[0] as! [String: String]
+        do {
+          try api.setOptionKeys(options: optionsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setOptionKeysChannel.setMessageHandler(nil)
     }
   }
 }

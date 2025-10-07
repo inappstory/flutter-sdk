@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../controllers/banner_place_manager.dart';
@@ -9,19 +6,24 @@ import '../generated/banner_place_generated.g.dart';
 import 'banner_place.dart';
 
 class AndroidBannerView extends StatelessWidget {
-  const AndroidBannerView(this.placeId,
-      {super.key, this.decoration, this.bannerDecoration});
+  const AndroidBannerView(
+    this.placeId, {
+    super.key,
+    this.decoration,
+    this.bannerDecoration,
+    this.autoLoad = true,
+  });
 
   final String placeId;
   final BannerPlaceDecoration? decoration;
 
   final BannerDecoration? bannerDecoration;
 
+  final bool autoLoad;
+
   @override
   Widget build(BuildContext context) {
-    // This is used in the platform side to register the view.
     const String viewType = 'banner-view';
-    // Pass parameters to the platform side.
     Map<String, dynamic> creationParams = <String, dynamic>{};
 
     creationParams['placeId'] = placeId;
@@ -49,32 +51,9 @@ class AndroidBannerView extends StatelessWidget {
       creationParams: Map.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (id) {
-        BannerPlaceManager.instance.load(placeId);
-      },
-    );
-
-    return PlatformViewLink(
-      viewType: viewType,
-      surfaceFactory: (context, controller) {
-        return AndroidViewSurface(
-          controller: controller as AndroidViewController,
-          gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-        );
-      },
-      onCreatePlatformView: (params) {
-        return PlatformViewsService.initSurfaceAndroidView(
-          id: params.id,
-          viewType: viewType,
-          layoutDirection: TextDirection.ltr,
-          creationParams: creationParams,
-          creationParamsCodec: const StandardMessageCodec(),
-          onFocus: () {
-            params.onFocusChanged(true);
-          },
-        )
-          ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-          ..create();
+        if (autoLoad) {
+          BannerPlaceManager.instance.load(placeId);
+        }
       },
     );
   }

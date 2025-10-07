@@ -384,6 +384,8 @@ abstract class BannerPlaceCallbackFlutterApi {
 
   void onActionWith(String target);
 
+  void onBannerPlacePreloaded(int size);
+
   static void setUp(BannerPlaceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -455,6 +457,31 @@ abstract class BannerPlaceCallbackFlutterApi {
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith was null, expected non-null String.');
           try {
             api.onActionWith(arg_target!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_size = (args[0] as int?);
+          assert(arg_size != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null, expected non-null int.');
+          try {
+            api.onBannerPlacePreloaded(arg_size!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

@@ -20,6 +20,7 @@ import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.banners.BannerPlaceNavigationCallback
+import com.inappstory.sdk.banners.BannerPlacePreloadCallback
 import com.inappstory.sdk.banners.BannerWidgetCallback
 import com.inappstory.sdk.banners.ui.place.BannerPlace
 import com.inappstory.sdk.banners.ui.place.DefaultBannerPlaceAppearance
@@ -27,7 +28,6 @@ import com.inappstory.sdk.stories.outercallbacks.common.reader.BannerData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
-
 
 internal class BannerView(
     context: Context,
@@ -87,7 +87,6 @@ internal class BannerView(
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-
             }
 
             override fun onPageSelected(
@@ -145,12 +144,26 @@ internal class BannerView(
     }
 
     override fun preloadBannerPlace(placeId: String, tags: List<String>?) {
-//        InAppStoryManager.getInstance()?.preloadBannerPlace(
-//            BannerPlaceLoadSettings()
-//                .placeId(placeId)
-//                .tags(tags),
-//            callback
-//        )
+        InAppStoryManager.getInstance()?.preloadBannerPlace(
+            BannerPlaceLoadSettings()
+                .placeId(placeId)
+                .tags(tags),
+            object : BannerPlacePreloadCallback(placeId) {
+                override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
+                    bannerPlaceCallback.onBannerPlacePreloaded(size.toLong()) {}
+                }
+
+                override fun loadError() {
+                }
+
+                override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
+
+                }
+
+                override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
+                }
+            }
+        )
     }
 
     override fun showNext() {

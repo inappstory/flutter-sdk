@@ -6,11 +6,13 @@ import '../generated/banner_place_generated.g.dart';
 import 'banner_place.dart';
 
 class IosBannerView extends StatelessWidget {
-  const IosBannerView(
-      {super.key,
-      required this.placeId,
-      this.decoration,
-      this.bannerDecoration});
+  const IosBannerView({
+    super.key,
+    required this.placeId,
+    this.decoration,
+    this.bannerDecoration,
+    this.autoLoad = true,
+  });
 
   final String placeId;
 
@@ -18,10 +20,11 @@ class IosBannerView extends StatelessWidget {
 
   final BannerDecoration? bannerDecoration;
 
+  final bool autoLoad;
+
   @override
   Widget build(BuildContext context) {
     const String viewType = 'banner-view';
-    // Pass parameters to the platform side.
     final Map<String, dynamic> creationParams = <String, dynamic>{};
 
     creationParams['placeId'] = placeId;
@@ -37,7 +40,9 @@ class IosBannerView extends StatelessWidget {
       creationParams: creationParams,
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (id) {
-        BannerPlaceManager.instance.load(placeId);
+        if (autoLoad) {
+          BannerPlaceManager.instance.load(placeId);
+        }
       },
     );
   }
