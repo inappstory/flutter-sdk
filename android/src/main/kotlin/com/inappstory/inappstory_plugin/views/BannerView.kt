@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -106,7 +107,10 @@ internal class BannerView(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
-                    bannerPlaceCallback.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
+                    bannerPlaceCallback.onBannerPlaceLoaded(
+                        size.toLong(),
+                        context.toDp(widgetHeight).toLong()
+                    ) {}
                 }
             }
 
@@ -199,6 +203,14 @@ internal class BannerView(
             image = image,
             gradientColors = colors,
         )
+    }
+
+    fun Context.toDp(px: Int): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            px.toFloat(),
+            this.resources.displayMetrics
+        ) / this.resources.displayMetrics.density
     }
 }
 
