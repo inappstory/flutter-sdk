@@ -39,11 +39,12 @@ class BannerView(
 ) : PlatformView, BannerPlaceManagerHostApi {
 
     private val bannerPlace: BannerPlace
+    private val frame: FrameLayout
 
     private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
 
     override fun getView(): View {
-        return bannerPlace
+        return frame
     }
 
     override fun dispose() {
@@ -78,7 +79,15 @@ class BannerView(
         appearanceManager.csBannerPlaceInterface(bannerAppearance)
         //AppearanceManager().csBannerPlaceInterface(bannerAppearance)
 
+        frame = FrameLayout(context)
+
         bannerPlace = BannerPlace(context)
+
+        bannerPlace.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         bannerPlace.setPlaceId(placeId)
         bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
@@ -139,6 +148,8 @@ class BannerView(
                 }
             }
         })
+
+        frame.addView(bannerPlace)
     }
 
     override fun loadBannerPlace(placeId: String, tags: List<String>?) {
