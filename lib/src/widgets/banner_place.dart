@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../generated/banner_place_generated.g.dart'
-    show BannerPlaceDecoration, GradientType;
 import 'android_banner_view.dart';
+import 'decorators/decorators.dart';
 import 'ios_banner_view.dart';
 
 class BannerPlace extends StatelessWidget {
@@ -14,6 +13,7 @@ class BannerPlace extends StatelessWidget {
     required this.height,
     this.placeDecoration,
     this.bannerDecoration,
+    this.autoLoad = true,
   });
 
   final String placeId;
@@ -22,6 +22,8 @@ class BannerPlace extends StatelessWidget {
 
   final BannerPlaceDecoration? placeDecoration;
   final BannerDecoration? bannerDecoration;
+
+  final bool autoLoad;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class BannerPlace extends StatelessWidget {
           placeId,
           decoration: placeDecoration,
           bannerDecoration: bannerDecoration,
+          autoLoad: autoLoad,
         ),
       );
     }
@@ -44,6 +47,7 @@ class BannerPlace extends StatelessWidget {
           placeId: placeId,
           decoration: placeDecoration,
           bannerDecoration: bannerDecoration,
+          autoLoad: autoLoad,
         ),
       );
     }

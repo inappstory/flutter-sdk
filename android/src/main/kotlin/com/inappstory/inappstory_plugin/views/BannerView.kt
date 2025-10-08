@@ -61,31 +61,38 @@ class BannerView(
         val cornerRadius: Int? = creationParams?.get("cornerRadius") as? Int?
 
 
-        var decoration: BannerDecorationDTO? = null
+        val decoration: BannerDecorationDTO?
+        val bannerAppearance: DefaultBannerPlaceAppearance?
+
         if (creationParams?.get("bannerDecoration") != null) {
             decoration = decorationToDTO(
                 creationParams["bannerDecoration"] as Map<String, Any?>
             )
+            bannerAppearance = CustomBannerPlaceAppearance(
+                flutterPluginBinding,
+                bannerOffset,
+                bannersGap,
+                cornerRadius,
+                loop,
+                decoration,
+            )
+        } else {
+            bannerAppearance = CustomBannerPlaceAppearanceWithoutBannerDecoration(
+                bannerOffset,
+                bannersGap,
+                cornerRadius,
+                loop,
+            )
         }
 
-        val bannerAppearance = CustomBannerPlaceAppearance(
-            flutterPluginBinding,
-            bannerOffset,
-            bannersGap,
-            cornerRadius,
-            loop,
-            decoration,
-        )
         appearanceManager.csBannerPlaceInterface(bannerAppearance)
-        //AppearanceManager().csBannerPlaceInterface(bannerAppearance)
 
         frame = FrameLayout(context)
 
         bannerPlace = BannerPlace(context)
 
         bannerPlace.layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
         )
 
         bannerPlace.setAppearanceManager(appearanceManager)
@@ -94,16 +101,12 @@ class BannerView(
         bannerPlace.setPlaceId(placeId)
         bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
             override fun onPageScrolled(
-                position: Int,
-                total: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
+                position: Int, total: Int, positionOffset: Float, positionOffsetPixels: Int
             ) {
             }
 
             override fun onPageSelected(
-                position: Int,
-                total: Int
+                position: Int, total: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
                     bannerPlaceCallback.onBannerScroll(position.toLong()) {}
@@ -118,8 +121,7 @@ class BannerView(
             ) {
                 flutterPluginBinding.runOnMainThread {
                     bannerPlaceCallback.onBannerPlaceLoaded(
-                        size.toLong(),
-                        context.toDp(widgetHeight).toLong()
+                        size.toLong(), context.toDp(widgetHeight).toLong()
                     ) {}
                 }
             }
@@ -161,9 +163,7 @@ class BannerView(
 
     override fun preloadBannerPlace(placeId: String, tags: List<String>?) {
         InAppStoryManager.getInstance()?.preloadBannerPlace(
-            BannerPlaceLoadSettings()
-                .placeId(placeId)
-                .tags(tags),
+            BannerPlaceLoadSettings().placeId(placeId).tags(tags),
             object : BannerPlacePreloadCallback(placeId) {
                 override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
                     bannerPlaceCallback.onBannerPlacePreloaded(size.toLong()) {}
@@ -178,8 +178,7 @@ class BannerView(
 
                 override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
                 }
-            }
-        )
+            })
     }
 
     override fun showNext() {
@@ -219,10 +218,35 @@ class BannerView(
 
     fun Context.toDp(px: Int): Float {
         return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_PX,
-            px.toFloat(),
-            this.resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_PX, px.toFloat(), this.resources.displayMetrics
         ) / this.resources.displayMetrics.density
+    }
+}
+
+class CustomBannerPlaceAppearanceWithoutBannerDecoration(
+    private val bannerOffset: Int?,
+    private val bannersGap: Int?,
+    private val cornerRadius: Int?,
+    private val loop: Boolean?,
+) : DefaultBannerPlaceAppearance() {
+    override fun nextBannerOffset(): Int {
+        return bannerOffset ?: super.nextBannerOffset()
+    }
+
+    override fun prevBannerOffset(): Int {
+        return bannerOffset ?: super.prevBannerOffset()
+    }
+
+    override fun bannersGap(): Int {
+        return bannersGap ?: super.bannersGap()
+    }
+
+    override fun cornerRadius(): Int {
+        return cornerRadius ?: super.cornerRadius()
+    }
+
+    override fun loop(): Boolean {
+        return loop ?: super.loop()
     }
 }
 
@@ -235,13 +259,11 @@ class CustomBannerPlaceAppearance(
     private val bannerDecoration: BannerDecorationDTO?
 ) : DefaultBannerPlaceAppearance() {
     override fun nextBannerOffset(): Int {
-        return 50;
-        //return bannerOffset ?: super.nextBannerOffset()
+        return bannerOffset ?: super.nextBannerOffset()
     }
 
     override fun prevBannerOffset(): Int {
-        return 70;
-        //return bannerOffset ?: super.prevBannerOffset()
+        return bannerOffset ?: super.prevBannerOffset()
     }
 
     override fun bannersGap(): Int {
