@@ -80,7 +80,7 @@ class InAppStoryManager {
     await _iasManager.loadBannerPlace(placeId, tags: tags);
   }
 
-  Future<void> setOptionKeys(Map<String, String> options) async {
+  Future<void> setOptions(Map<String, String> options) async {
     await _iasManager.setOptionKeys(options);
   }
 }

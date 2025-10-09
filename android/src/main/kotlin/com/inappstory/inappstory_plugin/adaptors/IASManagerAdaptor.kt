@@ -6,7 +6,6 @@ import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.core.data.models.InAppStoryUserSettings
 import com.inappstory.sdk.externalapi.InAppStoryAPI
-import com.inappstory.sdk.stories.ui.reader.ForceCloseReaderCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import java.util.Locale
 
@@ -38,9 +37,12 @@ class IASManagerAdaptor(
         inAppStoryManager.userLogout()
     }
 
-    override fun closeReaders() {
+    override fun closeReaders(callback: (Result<Unit>) -> Unit) {
         InAppStoryManager.closeStoryReader(
-            true, ForceCloseReaderCallback {})
+            true
+        ) {
+            callback.invoke(Result.success(Unit))
+        }
     }
 
     override fun clearCache() {

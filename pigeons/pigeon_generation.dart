@@ -44,6 +44,7 @@ abstract class InAppStoryManagerHostApi {
 
   void userLogout();
 
+  @async
   void closeReaders();
 
   void clearCache();

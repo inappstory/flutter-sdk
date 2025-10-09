@@ -726,7 +726,7 @@ interface InAppStoryManagerHostApi {
   fun setTags(tags: List<String>)
   fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit)
   fun userLogout()
-  fun closeReaders()
+  fun closeReaders(callback: (Result<Unit>) -> Unit)
   fun clearCache()
   fun setLang(languageCode: String, languageRegion: String)
   fun setTransparentStatusBar()
@@ -820,13 +820,14 @@ interface InAppStoryManagerHostApi {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.closeReaders$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              api.closeReaders()
-              listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
+            api.closeReaders{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(PigeonGeneratedPigeonUtils.wrapResult(null))
+              }
             }
-            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

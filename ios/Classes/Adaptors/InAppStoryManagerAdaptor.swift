@@ -55,6 +55,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
                 userID: userId ?? "",
                 sign: userSign,
                 tags: newTags ?? [""],
+                lang: locale
             )
         } else {
             InAppStory.shared.settings = Settings(
@@ -62,6 +63,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
                 sign: userSign,
                 anonymous: anonymous!,
                 tags: newTags ?? [""],
+                lang: locale
             )
         }
 
@@ -84,8 +86,10 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         InAppStory.shared.logOut {}
     }
 
-    func closeReaders() throws {
-        InAppStory.shared.closeReader {}
+    func closeReaders(completion: @escaping (Result<Void, any Error>) -> Void) {
+        InAppStory.shared.closeReader {
+            completion(.success(()))
+        }
     }
 
     func clearCache() throws {
