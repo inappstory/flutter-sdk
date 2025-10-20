@@ -122,10 +122,10 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: "8dcda04c3fc16c14f48a7bb586d4be1f0d1572731b6d81d51772ef47c02081e0"
+      sha256: "33e2e26bdd85a0112ec15400c8cbffea70d0f9c3407491f672a2fad47915e2de"
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.1"
+    version: "11.0.2"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
@@ -202,10 +202,10 @@ packages:
     dependency: transitive
     description:
       name: process
-      sha256: "107d8be718f120bbba9dcd1e95e3bd325b1b4a4f07db64154635ba03f2567a0d"
+      sha256: c6248e4526673988586e8c00bb22a49210c258dc91df5227d5da9748ecf79744
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.5"
   shimmer:
     dependency: transitive
     description:
@@ -295,26 +295,26 @@ packages:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: d26f8791c8f670825cc227e2cad4319d2ac02b71b2ad5c2b67786bb873ac43b1
+      sha256: cf768d02924b91e333e2bc1ff928528f57d686445874f383bafab12d0bdfc340
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.11"
+    version: "2.8.17"
   video_player_avfoundation:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: f52261d11f97bf14c43e8ed5714f71d8ce4538552b8cc87f45e5d87d3c205e41
+      sha256: "19ed1162a7a5520e7d7791e0b7b73ba03161b6a69428b82e4689e435b325432d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.3"
+    version: "2.8.5"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
-      sha256: cf2a1d29a284db648fd66cbd18aacc157f9862d77d2cc790f6f9678a46c1db5a
+      sha256: "9e372520573311055cb353b9a0da1c9d72b094b7ba01b8ecc66f28473553793b"
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.0"
+    version: "6.5.0"
   video_player_web:
     dependency: transitive
     description:
@@ -335,10 +335,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
+      sha256: "45caa6c5917fa127b5dbcfbd1fa60b14e583afdc08bfc96dda38886ca252eb60"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.0"
+    version: "15.0.2"
   web:
     dependency: transitive
     description:
@@ -356,5 +356,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=3.8.0-0 <4.0.0"
-  flutter: ">=3.29.0"
+  dart: ">=3.9.0 <4.0.0"
+  flutter: ">=3.35.0"
