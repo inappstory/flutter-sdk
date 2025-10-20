@@ -8,8 +8,8 @@ class BannerPlaceManager {
 
   static final instance = BannerPlaceManager._private();
 
-  Future<void> load(String placeId, {List<String>? tags}) async {
-    await _bannerPlaceManagerApi.loadBannerPlace(placeId, tags: tags);
+  Future<void> load(String placeId) async {
+    await _bannerPlaceManagerApi.loadBannerPlace(placeId);
   }
 
   Future<void> showNext() async {

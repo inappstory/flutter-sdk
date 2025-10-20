@@ -65,8 +65,6 @@ abstract class InAppStoryManagerHostApi {
     Map<String, String>? newPlaceholders,
   });
 
-  void loadBannerPlace(String placeId, {List<String>? tags});
-
   void setOptionKeys(Map<String, String> options);
 }
 

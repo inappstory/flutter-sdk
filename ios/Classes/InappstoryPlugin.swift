@@ -10,9 +10,12 @@ public class InappstoryPlugin: NSObject, FlutterPlugin {
         )
         let instance = InappstoryPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-        InappstorySdkModuleAdaptor(pluginRegistrar: registrar)
+        let moduleAdapter = InappstorySdkModuleAdaptor(pluginRegistrar: registrar)
 
-        let factory = BannerPlaceFactory(messenger: registrar.messenger())
+        let factory = BannerPlaceFactory(
+            messenger: registrar.messenger(),
+            registrar: registrar
+        )
         registrar.register(factory, withId: "banner-view")
     }
 

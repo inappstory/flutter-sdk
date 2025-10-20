@@ -736,7 +736,6 @@ protocol InAppStoryManagerHostApi {
   func setTransparentStatusBar() throws
   func changeSound(value: Bool) throws
   func setUserSettings(anonymous: Bool?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
-  func loadBannerPlace(placeId: String, tags: [String]?) throws
   func setOptionKeys(options: [String: String]) throws
 }
 
@@ -899,22 +898,6 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       setUserSettingsChannel.setMessageHandler(nil)
-    }
-    let loadBannerPlaceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.loadBannerPlace\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      loadBannerPlaceChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let placeIdArg = args[0] as! String
-        let tagsArg: [String]? = nilOrValue(args[1])
-        do {
-          try api.loadBannerPlace(placeId: placeIdArg, tags: tagsArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      loadBannerPlaceChannel.setMessageHandler(nil)
     }
     let setOptionKeysChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setOptionKeys\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

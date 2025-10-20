@@ -4,8 +4,11 @@ import UIKit
 class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
     private var messenger: FlutterBinaryMessenger
 
-    init(messenger: FlutterBinaryMessenger) {
+    private var registrar: FlutterPluginRegistrar
+
+    init(messenger: FlutterBinaryMessenger, registrar: FlutterPluginRegistrar) {
         self.messenger = messenger
+        self.registrar = registrar
         super.init()
     }
 
@@ -18,7 +21,8 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
-            binaryMessenger: messenger
+            binaryMessenger: self.messenger,
+            pluginRegistrar: self.registrar
         )
     }
 

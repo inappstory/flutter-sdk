@@ -8,6 +8,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
     private var _bannersView: IASBannersView!
 
     private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
+    private var bannerLoadFlutterApi: BannerLoadCallbackFlutterApi
 
     private var _view: UIView
 
@@ -15,7 +16,8 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
-        binaryMessenger messenger: FlutterBinaryMessenger
+        binaryMessenger messenger: FlutterBinaryMessenger,
+        pluginRegistrar registrar: FlutterPluginRegistrar
     ) {
         _view = UIView()
 
@@ -23,7 +25,24 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
             binaryMessenger: messenger
         )
 
-        InAppStory.shared.placeholderView = CustomPlaceholderView()
+        bannerLoadFlutterApi = BannerLoadCallbackFlutterApi.init(
+            binaryMessenger: messenger
+        )
+
+        var decoration: BannerDecorationDTO?
+
+        if let args = args as? [String: Any] {
+            decoration = BannerDecorationDTO(
+                color: args["color"] as? Int64,
+                image: args["image"] as? String,
+            )
+        }
+
+        if decoration != nil {
+            let placeholder = CustomPlaceholderView()
+            placeholder.setDecoration(decoration, registrar: registrar)
+            InAppStory.shared.placeholderView = placeholder
+        }
 
         super.init()
         // iOS views can be created here
@@ -74,6 +93,11 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
 
         _bannersView.bannersDidUpdated = { isContent, count, listHeight in
             DispatchQueue.main.async { [self] in
+                bannerLoadFlutterApi.onBannersLoaded(
+                    size: Int64(count),
+                    widgetHeight: Int64(listHeight),
+                    completion: { _ in }
+                )
                 callbackFlutterApi.onBannerPlaceLoaded(
                     size: Int64(count),
                     widgetHeight: Int64(listHeight),
@@ -121,12 +145,12 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
         NSLayoutConstraint.activate(allConstraints)
     }
 
-    func loadBannerPlace(placeId: String, tags: [String]?) throws {
+    func loadBannerPlace(placeId: String) throws {
         _bannersView.create()
     }
 
-    func preloadBannerPlace(placeId: String, tags: [String]?) throws {
-
+    func preloadBannerPlace(placeId: String) throws {
+        InAppStory.shared.preloadBanners(placeID: placeId) { result in }
     }
 
     func showNext() throws {

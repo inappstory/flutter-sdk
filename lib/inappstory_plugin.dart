@@ -19,6 +19,7 @@ export 'src/pigeon_generated.g.dart'
         AppearanceManagerHostApi,
         CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
+export 'src/widgets/placeholders/placeholders.dart';
 export 'src/widgets/widgets.dart';
 
 class InAppStoryPlugin {

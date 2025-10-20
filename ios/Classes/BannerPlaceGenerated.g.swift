@@ -161,34 +161,22 @@ struct BannerPlaceDecoration: Hashable {
 struct BannerDecorationDTO: Hashable {
   var color: Int64? = nil
   var image: String? = nil
-  var gradientType: GradientType? = nil
-  var gradientColors: [Int64]? = nil
-  var gradientStops: [Double]? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> BannerDecorationDTO? {
     let color: Int64? = nilOrValue(pigeonVar_list[0])
     let image: String? = nilOrValue(pigeonVar_list[1])
-    let gradientType: GradientType? = nilOrValue(pigeonVar_list[2])
-    let gradientColors: [Int64]? = nilOrValue(pigeonVar_list[3])
-    let gradientStops: [Double]? = nilOrValue(pigeonVar_list[4])
 
     return BannerDecorationDTO(
       color: color,
-      image: image,
-      gradientType: gradientType,
-      gradientColors: gradientColors,
-      gradientStops: gradientStops
+      image: image
     )
   }
   func toList() -> [Any?] {
     return [
       color,
       image,
-      gradientType,
-      gradientColors,
-      gradientStops,
     ]
   }
   static func == (lhs: BannerDecorationDTO, rhs: BannerDecorationDTO) -> Bool {
@@ -250,8 +238,8 @@ class BannerPlaceGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked S
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol BannerPlaceManagerHostApi {
-  func loadBannerPlace(placeId: String, tags: [String]?) throws
-  func preloadBannerPlace(placeId: String, tags: [String]?) throws
+  func loadBannerPlace(placeId: String) throws
+  func preloadBannerPlace(placeId: String) throws
   func showNext() throws
   func showPrevious() throws
   func showByIndex(index: Int64) throws
@@ -270,9 +258,8 @@ class BannerPlaceManagerHostApiSetup {
       loadBannerPlaceChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let placeIdArg = args[0] as! String
-        let tagsArg: [String]? = nilOrValue(args[1])
         do {
-          try api.loadBannerPlace(placeId: placeIdArg, tags: tagsArg)
+          try api.loadBannerPlace(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -286,9 +273,8 @@ class BannerPlaceManagerHostApiSetup {
       preloadBannerPlaceChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let placeIdArg = args[0] as! String
-        let tagsArg: [String]? = nilOrValue(args[1])
         do {
-          try api.preloadBannerPlace(placeId: placeIdArg, tags: tagsArg)
+          try api.preloadBannerPlace(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))

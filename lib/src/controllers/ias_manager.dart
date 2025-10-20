@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import '../../inappstory_plugin.dart';
+import '../callbacks/callbacks.dart'
+    show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../pigeon_generated.g.dart'
     show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
 
@@ -74,10 +75,6 @@ class InAppStoryManager {
   void setGetSkusCallback(SkusCallbackImpl callback) {
     _callbackImpl.callback = callback;
     SkusCallbackFlutterApi.setUp(_callbackImpl);
-  }
-
-  Future<void> loadBannerPlace(String placeId, {List<String>? tags}) async {
-    await _iasManager.loadBannerPlace(placeId, tags: tags);
   }
 
   Future<void> setOptions(Map<String, String> options) async {

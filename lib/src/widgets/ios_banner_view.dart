@@ -2,44 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../controllers/banner_place_manager.dart';
-import '../generated/banner_place_generated.g.dart';
-import 'banner_place.dart';
+import 'base/banner_platform_view.dart';
 
-class IosBannerView extends StatelessWidget {
+class IosBannerView extends BannerPlatformView {
   const IosBannerView({
     super.key,
-    required this.placeId,
-    this.decoration,
-    this.bannerDecoration,
-    this.autoLoad = true,
+    required super.placeId,
+    required super.onPlatformViewCreated,
+    required super.autoLoad,
+    super.bannerDecoration,
+    super.decoration,
   });
 
-  final String placeId;
-
-  final BannerPlaceDecoration? decoration;
-
-  final BannerDecoration? bannerDecoration;
-
-  final bool autoLoad;
-
   @override
-  Widget build(BuildContext context) {
-    const String viewType = 'banner-view';
-    final Map<String, dynamic> creationParams = <String, dynamic>{};
-
-    creationParams['placeId'] = placeId;
-    if (decoration != null) {
-      creationParams['loop'] = decoration?.loop ?? false;
-      creationParams['bannerOffset'] = decoration?.bannerOffset ?? 0.0;
-      creationParams['bannersGap'] = decoration?.bannersGap ?? 8.0;
-      creationParams['cornerRadius'] = decoration?.cornerRadius ?? 16.0;
-    }
+  Widget buildPlatformView(BuildContext context, String viewType,
+      Map<String, dynamic> creationParams) {
     return UiKitView(
       viewType: viewType,
       layoutDirection: TextDirection.ltr,
-      creationParams: creationParams,
+      creationParams: Map<String, dynamic>.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (id) {
+        onPlatformViewCreated.call();
         if (autoLoad) {
           BannerPlaceManager.instance.load(placeId);
         }

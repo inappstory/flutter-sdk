@@ -105,28 +105,16 @@ class BannerDecorationDTO {
   BannerDecorationDTO({
     this.color,
     this.image,
-    this.gradientType,
-    this.gradientColors,
-    this.gradientStops,
   });
 
   int? color;
 
   String? image;
 
-  GradientType? gradientType;
-
-  List<int>? gradientColors;
-
-  List<double>? gradientStops;
-
   List<Object?> _toList() {
     return <Object?>[
       color,
       image,
-      gradientType,
-      gradientColors,
-      gradientStops,
     ];
   }
 
@@ -138,9 +126,6 @@ class BannerDecorationDTO {
     return BannerDecorationDTO(
       color: result[0] as int?,
       image: result[1] as String?,
-      gradientType: result[2] as GradientType?,
-      gradientColors: (result[3] as List<Object?>?)?.cast<int>(),
-      gradientStops: (result[4] as List<Object?>?)?.cast<double>(),
     );
   }
 
@@ -213,14 +198,14 @@ class BannerPlaceManagerHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> loadBannerPlace(String placeId, {List<String>? tags}) async {
+  Future<void> loadBannerPlace(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.loadBannerPlace$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId, tags]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -236,14 +221,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> preloadBannerPlace(String placeId, {List<String>? tags}) async {
+  Future<void> preloadBannerPlace(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.preloadBannerPlace$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId, tags]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {

@@ -120,29 +120,20 @@ data class BannerPlaceDecoration (
 /** Generated class from Pigeon that represents data sent in messages. */
 data class BannerDecorationDTO (
   val color: Long? = null,
-  val image: String? = null,
-  val gradientType: GradientType? = null,
-  val gradientColors: List<Long>? = null,
-  val gradientStops: List<Double>? = null
+  val image: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): BannerDecorationDTO {
       val color = pigeonVar_list[0] as Long?
       val image = pigeonVar_list[1] as String?
-      val gradientType = pigeonVar_list[2] as GradientType?
-      val gradientColors = pigeonVar_list[3] as List<Long>?
-      val gradientStops = pigeonVar_list[4] as List<Double>?
-      return BannerDecorationDTO(color, image, gradientType, gradientColors, gradientStops)
+      return BannerDecorationDTO(color, image)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       color,
       image,
-      gradientType,
-      gradientColors,
-      gradientStops,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -198,8 +189,8 @@ private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface BannerPlaceManagerHostApi {
-  fun loadBannerPlace(placeId: String, tags: List<String>?)
-  fun preloadBannerPlace(placeId: String, tags: List<String>?)
+  fun loadBannerPlace(placeId: String)
+  fun preloadBannerPlace(placeId: String)
   fun showNext()
   fun showPrevious()
   fun showByIndex(index: Long)
@@ -221,9 +212,8 @@ interface BannerPlaceManagerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val placeIdArg = args[0] as String
-            val tagsArg = args[1] as List<String>?
             val wrapped: List<Any?> = try {
-              api.loadBannerPlace(placeIdArg, tagsArg)
+              api.loadBannerPlace(placeIdArg)
               listOf(null)
             } catch (exception: Throwable) {
               BannerPlaceGeneratedPigeonUtils.wrapError(exception)
@@ -240,9 +230,8 @@ interface BannerPlaceManagerHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val placeIdArg = args[0] as String
-            val tagsArg = args[1] as List<String>?
             val wrapped: List<Any?> = try {
-              api.preloadBannerPlace(placeIdArg, tagsArg)
+              api.preloadBannerPlace(placeIdArg)
               listOf(null)
             } catch (exception: Throwable) {
               BannerPlaceGeneratedPigeonUtils.wrapError(exception)

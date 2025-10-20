@@ -732,7 +732,6 @@ interface InAppStoryManagerHostApi {
   fun setTransparentStatusBar()
   fun changeSound(value: Boolean)
   fun setUserSettings(anonymous: Boolean?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: List<String>?, newPlaceholders: Map<String, String>?)
-  fun loadBannerPlace(placeId: String, tags: List<String>?)
   fun setOptionKeys(options: Map<String, String>)
 
   companion object {
@@ -916,25 +915,6 @@ interface InAppStoryManagerHostApi {
             val newPlaceholdersArg = args[6] as Map<String, String>?
             val wrapped: List<Any?> = try {
               api.setUserSettings(anonymousArg, userIdArg, userSignArg, newLanguageCodeArg, newLanguageRegionArg, newTagsArg, newPlaceholdersArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.loadBannerPlace$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val placeIdArg = args[0] as String
-            val tagsArg = args[1] as List<String>?
-            val wrapped: List<Any?> = try {
-              api.loadBannerPlace(placeIdArg, tagsArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

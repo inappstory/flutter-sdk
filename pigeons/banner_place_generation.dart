@@ -9,11 +9,12 @@ import 'package:pigeon/pigeon.dart';
   swiftOut: 'ios/Classes/BannerPlaceGenerated.g.swift',
   swiftOptions: SwiftOptions(includeErrorClass: false),
 ))
+// BannerPlaceManagerHostApi
 @HostApi()
 abstract class BannerPlaceManagerHostApi {
-  void loadBannerPlace(String placeId, {List<String>? tags});
+  void loadBannerPlace(String placeId);
 
-  void preloadBannerPlace(String placeId, {List<String>? tags});
+  void preloadBannerPlace(String placeId);
 
   void showNext();
 
@@ -58,7 +59,4 @@ enum GradientType {
 class BannerDecorationDTO {
   late int? color;
   late String? image;
-  late GradientType? gradientType;
-  late List<int>? gradientColors;
-  late List<double>? gradientStops;
 }
