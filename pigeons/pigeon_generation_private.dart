@@ -9,7 +9,6 @@ import 'package:pigeon/pigeon.dart';
   swiftOut: 'ios/Classes/PigeonGeneratedPrivate.g.swift',
   swiftOptions: SwiftOptions(includeErrorClass: false),
 ))
-// ConfigurePigeon
 
 @HostApi()
 abstract class InAppStoryStatManagerHostApi {

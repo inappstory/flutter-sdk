@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import com.inappstory.inappstory_plugin.adaptors.ActivityHolder
 import com.inappstory.inappstory_plugin.adaptors.InappstorySdkModuleAdaptor
+import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.InAppStoryManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -33,10 +34,22 @@ class InAppStoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, Activ
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "inappstory_plugin")
         channel.setMethodCallHandler(this)
 
+        val inappstorySdkModuleAdaptor =
+            InappstorySdkModuleAdaptor(flutterPluginBinding, activityHolder = this)
         InappstorySdkModuleHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
-            api = InappstorySdkModuleAdaptor(flutterPluginBinding, activityHolder = this),
+            api = inappstorySdkModuleAdaptor,
         )
+
+        flutterPluginBinding
+            .platformViewRegistry
+            .registerViewFactory(
+                "banner-view",
+                BannerViewFactory(
+                    flutterPluginBinding,
+                    inappstorySdkModuleAdaptor.appearanceManager
+                )
+            )
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
