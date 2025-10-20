@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import '../callbacks/ias_skus_callback_impl.dart';
+import '../callbacks/callbacks.dart'
+    show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../pigeon_generated.g.dart'
     show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
 
@@ -74,5 +75,9 @@ class InAppStoryManager {
   void setGetSkusCallback(SkusCallbackImpl callback) {
     _callbackImpl.callback = callback;
     SkusCallbackFlutterApi.setUp(_callbackImpl);
+  }
+
+  Future<void> setOptions(Map<String, String> options) async {
+    await _iasManager.setOptionKeys(options);
   }
 }

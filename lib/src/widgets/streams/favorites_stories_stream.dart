@@ -5,6 +5,8 @@ import '../../data/story_from_pigeon_dto.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import '../../observable_error_callback_flutter_api.dart';
+import '../../pigeon_generated.g.dart'
+    show IASStoryListHostApi, StoryAPIDataDto, StoryFavoriteItemAPIDataDto;
 import 'stories_stream.dart';
 
 class FavoritesStoriesStream extends StoriesStream {
@@ -73,8 +75,9 @@ class FavoritesStoriesStream extends StoriesStream {
     }
     final newList = <StoryFromPigeonDto>[];
     for (final favorite in list) {
-      var item =
-          stories.where((element) => element.dto.id == favorite!.id).firstOrNull;
+      var item = stories
+          .where((element) => element.dto.id == favorite!.id)
+          .firstOrNull;
       if (item != null) {
         newList.add(item);
         continue;

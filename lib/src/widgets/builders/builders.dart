@@ -15,4 +15,7 @@ typedef FeedStoryWidgetBuilder = StoryWidget Function(
   FeedStoryDecorator? decorator,
 });
 
-typedef StoryWidgetBuilder = Widget Function(Story story, FeedStoryDecorator decorator);
+typedef StoryWidgetBuilder = Widget Function(
+    Story story, FeedStoryDecorator decorator);
+
+typedef BannerPlaceLoaderBuilder = Widget Function(BuildContext context);

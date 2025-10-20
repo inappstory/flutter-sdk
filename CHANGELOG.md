@@ -1,3 +1,15 @@
+## [0.6.0-rc.1]
+
+### Added
+
+- Options feature
+- Banners feature
+
+### Changed
+
+- Updated Android SDK to 1.26.0-rc6
+- Updated iOS SDK to 1.26.0-rc9
+
 ## [0.5.0]
 
 ### Added

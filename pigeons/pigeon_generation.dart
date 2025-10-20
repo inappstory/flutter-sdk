@@ -44,6 +44,7 @@ abstract class InAppStoryManagerHostApi {
 
   void userLogout();
 
+  @async
   void closeReaders();
 
   void clearCache();
@@ -63,6 +64,8 @@ abstract class InAppStoryManagerHostApi {
     List<String>? newTags,
     Map<String, String>? newPlaceholders,
   });
+
+  void setOptionKeys(Map<String, String> options);
 }
 
 @HostApi()

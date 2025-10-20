@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../inappstory_plugin.dart'
+import '../pigeon_generated.g.dart'
     show IASInAppMessagesCallbacksFlutterApi, InAppMessageDataDto;
 
 /// A mixin that provides callback methods for handling in-app message events
