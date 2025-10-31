@@ -118,10 +118,28 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
-      onScrollToStory: (index, story) {
+      onScrollToStory: (index, story) async {
         final storyWidth = widget.height * story.aspectRatio;
-        scrollController.jumpTo((index * storyWidth) +
-            (index * (feedDecorator?.storyPadding ?? 8.0)));
+
+        final maxScrollExtent = scrollController.position.maxScrollExtent;
+        final scrollToOffset = (index * storyWidth) +
+            (index * (feedDecorator?.storyPadding ?? 8.0));
+
+        final offset = (scrollToOffset < maxScrollExtent)
+            ? scrollToOffset
+            : maxScrollExtent;
+        if (feedDecorator?.animateScrollToItems ?? false) {
+          await Future.delayed(
+              Duration(milliseconds: 300),
+              () => scrollController.animateTo(
+                    offset,
+                    duration: feedDecorator?.scrollDuration ??
+                        Duration(milliseconds: 300),
+                    curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
+                  ));
+        } else {
+          scrollController.jumpTo(offset);
+        }
       },
     );
   }
@@ -170,6 +188,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
             controller: scrollController,
             itemCount: storiesWidgets.length,
             scrollDirection: Axis.horizontal,
+            physics: feedDecorator?.scrollPhysics,
             padding: feedDecorator?.feedPadding,
             itemBuilder: (context, index) {
               return snapshot.requireData.elementAt(index);

@@ -14,6 +14,11 @@ class FeedStoryDecorator {
 
   final BoxDecoration foregroundDecoration;
 
+  final ScrollPhysics? scrollPhysics;
+  final bool animateScrollToItems;
+  final Duration scrollDuration;
+  final Curve scrollCurve;
+
   final EdgeInsetsGeometry textPadding;
   final double textFontSize;
   final TextStyle? textStyle;
@@ -43,6 +48,10 @@ class FeedStoryDecorator {
         ],
       ),
     ),
+    this.scrollPhysics,
+    this.animateScrollToItems = false,
+    this.scrollCurve = Curves.easeInOut,
+    this.scrollDuration = const Duration(milliseconds: 300),
     this.textStyle,
   });
 }

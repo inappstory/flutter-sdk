@@ -1,3 +1,14 @@
+## [0.5.1]
+
+### Added
+
+- Added various options to `FeedStoryDecorator` to customize the transition to recently opened
+  stories
+
+### Fixed
+
+- Visual bug when jumping to last story after closing story reader
+
 ## [0.5.0]
 
 ### Added
