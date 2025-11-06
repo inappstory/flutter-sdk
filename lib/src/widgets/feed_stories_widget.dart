@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/feed_stories_controller.dart';
@@ -94,6 +95,8 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   late FeedFavoritesWidgetBuilder _favoritesBuilder;
 
   final scrollController = ScrollController();
+  late final observerController =
+      ListObserverController(controller: scrollController);
 
   @override
   initState() {
@@ -119,26 +122,22 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
       onScrollToStory: (index, story) async {
-        final storyWidth = widget.height * story.aspectRatio;
-
-        final maxScrollExtent = scrollController.position.maxScrollExtent;
-        final scrollToOffset = (index * storyWidth) +
-            (index * (feedDecorator?.storyPadding ?? 8.0));
-
-        final offset = (scrollToOffset < maxScrollExtent)
-            ? scrollToOffset
-            : maxScrollExtent;
         if (feedDecorator?.animateScrollToItems ?? false) {
           await Future.delayed(
-              Duration(milliseconds: 300),
-              () => scrollController.animateTo(
-                    offset,
-                    duration: feedDecorator?.scrollDuration ??
-                        Duration(milliseconds: 300),
-                    curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
-                  ));
+            Duration(milliseconds: 300),
+            () => observerController.animateTo(
+              index: index,
+              duration:
+                  feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
+              curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
+              padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
+            ),
+          );
         } else {
-          scrollController.jumpTo(offset);
+          observerController.jumpTo(
+            index: index,
+            padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
+          );
         }
       },
     );
@@ -184,17 +183,26 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
 
         return SizedBox(
           height: widget.height,
-          child: ListView.separated(
-            controller: scrollController,
-            itemCount: storiesWidgets.length,
-            scrollDirection: Axis.horizontal,
-            physics: feedDecorator?.scrollPhysics,
-            padding: feedDecorator?.feedPadding,
-            itemBuilder: (context, index) {
-              return snapshot.requireData.elementAt(index);
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overscroll) {
+              overscroll.disallowIndicator();
+              return true;
             },
-            separatorBuilder: (context, index) =>
-                SizedBox(width: feedDecorator?.storyPadding ?? 8.0),
+            child: ListViewObserver(
+              controller: observerController,
+              child: ListView.separated(
+                controller: scrollController,
+                itemCount: storiesWidgets.length,
+                scrollDirection: Axis.horizontal,
+                physics: feedDecorator?.scrollPhysics,
+                padding: feedDecorator?.feedPadding,
+                itemBuilder: (context, index) {
+                  return snapshot.requireData.elementAt(index);
+                },
+                separatorBuilder: (context, index) =>
+                    SizedBox(width: feedDecorator?.storyPadding ?? 8.0),
+              ),
+            ),
           ),
         );
       },
