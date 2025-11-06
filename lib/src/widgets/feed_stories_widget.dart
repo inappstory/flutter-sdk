@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/feed_stories_controller.dart';
@@ -94,6 +95,8 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   late FeedFavoritesWidgetBuilder _favoritesBuilder;
 
   final scrollController = ScrollController();
+  late final observerController =
+      ListObserverController(controller: scrollController);
 
   @override
   initState() {
@@ -118,10 +121,24 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
-      onScrollToStory: (index, story) {
-        final storyWidth = widget.height * story.aspectRatio;
-        scrollController.jumpTo((index * storyWidth) +
-            (index * (feedDecorator?.storyPadding ?? 8.0)));
+      onScrollToStory: (index, story) async {
+        if (feedDecorator?.animateScrollToItems ?? false) {
+          await Future.delayed(
+            Duration(milliseconds: 300),
+            () => observerController.animateTo(
+              index: index,
+              duration:
+                  feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
+              curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
+              padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
+            ),
+          );
+        } else {
+          observerController.jumpTo(
+            index: index,
+            padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
+          );
+        }
       },
     );
   }
@@ -166,16 +183,26 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
 
         return SizedBox(
           height: widget.height,
-          child: ListView.separated(
-            controller: scrollController,
-            itemCount: storiesWidgets.length,
-            scrollDirection: Axis.horizontal,
-            padding: feedDecorator?.feedPadding,
-            itemBuilder: (context, index) {
-              return snapshot.requireData.elementAt(index);
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overscroll) {
+              overscroll.disallowIndicator();
+              return true;
             },
-            separatorBuilder: (context, index) =>
-                SizedBox(width: feedDecorator?.storyPadding ?? 8.0),
+            child: ListViewObserver(
+              controller: observerController,
+              child: ListView.separated(
+                controller: scrollController,
+                itemCount: storiesWidgets.length,
+                scrollDirection: Axis.horizontal,
+                physics: feedDecorator?.scrollPhysics,
+                padding: feedDecorator?.feedPadding,
+                itemBuilder: (context, index) {
+                  return snapshot.requireData.elementAt(index);
+                },
+                separatorBuilder: (context, index) =>
+                    SizedBox(width: feedDecorator?.storyPadding ?? 8.0),
+              ),
+            ),
           ),
         );
       },

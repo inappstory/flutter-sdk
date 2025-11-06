@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FeedStoryDecorator {
   final BorderRadiusGeometry borderRadius;
-  final EdgeInsetsGeometry feedPadding;
+  final EdgeInsets feedPadding;
   final double storyPadding;
   final double loaderAspectRatio;
   final double favouriteAspectRatio;
@@ -14,7 +14,12 @@ class FeedStoryDecorator {
 
   final BoxDecoration foregroundDecoration;
 
-  final EdgeInsetsGeometry textPadding;
+  final ScrollPhysics? scrollPhysics;
+  final bool animateScrollToItems;
+  final Duration scrollDuration;
+  final Curve scrollCurve;
+
+  final EdgeInsets textPadding;
   final double textFontSize;
   final TextStyle? textStyle;
 
@@ -43,6 +48,10 @@ class FeedStoryDecorator {
         ],
       ),
     ),
+    this.scrollPhysics,
+    this.animateScrollToItems = false,
+    this.scrollCurve = Curves.easeInOut,
+    this.scrollDuration = const Duration(milliseconds: 300),
     this.textStyle,
   });
 }

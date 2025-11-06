@@ -50,12 +50,21 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             locale = "\(newLanguageCode)\(str2)\(newLanguageRegion)"
         }
 
-        InAppStory.shared.settings = Settings(
-            userID: userId ?? "",
-            sign: userSign,
-            anonymous: anonymous,
-            tags: newTags ?? [""],
-        )
+        if anonymous != nil {
+            InAppStory.shared.settings = Settings(
+                userID: userId ?? "",
+                sign: userSign,
+                tags: newTags ?? [""],
+            )
+        } else {
+            InAppStory.shared.settings = Settings(
+                userID: userId ?? "",
+                sign: userSign,
+                anonymous: anonymous!,
+                tags: newTags ?? [""],
+            )
+        }
+
         if newPlaceholders != nil {
             InAppStory.shared.placeholders = newPlaceholders!
         }

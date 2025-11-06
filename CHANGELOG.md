@@ -1,3 +1,20 @@
+## [0.5.2]
+
+### Changed
+
+- the way to scroll to the last viewed story
+
+## [0.5.1]
+
+### Added
+
+- Added various options to `FeedStoryDecorator` to customize the transition to recently opened
+  stories
+
+### Fixed
+
+- Visual bug when jumping to last viewed story after closing story reader
+
 ## [0.5.0]
 
 ### Added
@@ -12,11 +29,15 @@
 
 - User change method, now it has an optional `userSign` parameter
 
+### Fixed
+
+- Issue when user can't close IAM by pressing back button or using back gesture on Android devices
+
 ## [0.4.1]
 
 ### Fixed
 
-- refactoring of ios story reader events logic
+- Refactoring of ios story reader events logic
 
 ## [0.4.0]
 
