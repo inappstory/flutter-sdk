@@ -1,3 +1,13 @@
+## [0.5.3]
+
+### Added
+
+- added custom logger
+
+### Changed
+
+- updated Android SDK, that includes internal fixes
+
 ## [0.5.2]
 
 ### Changed
