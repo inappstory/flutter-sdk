@@ -21,7 +21,7 @@ Add dependency in your app `pubspec.yaml`
 
 ```yaml
 dependencies:
-  inappstory_plugin: ^0.5.3
+  inappstory_plugin: ^0.5.4
 ```
 
 ## Full example
