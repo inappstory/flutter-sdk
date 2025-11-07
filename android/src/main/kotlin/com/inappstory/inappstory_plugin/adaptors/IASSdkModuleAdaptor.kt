@@ -1,8 +1,10 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
+import LoggerFlutterApi
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
+import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.sdk.AppearanceManager
@@ -12,6 +14,7 @@ import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.util.Locale
+
 
 class InappstorySdkModuleAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
@@ -37,6 +40,8 @@ class InappstorySdkModuleAdaptor(
     private lateinit var iasMessages: IASMessagesAdaptor
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
+
+    private lateinit var loggerFlutterApi: LoggerFlutterApi
 
     override fun initWith(
         apiKey: String,
@@ -108,7 +113,7 @@ class InappstorySdkModuleAdaptor(
 
             iasManagerAdaptor =
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
-            statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
+            statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryManager)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(
                     flutterPluginBinding,
@@ -148,6 +153,9 @@ class InappstorySdkModuleAdaptor(
             )
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+
+            InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
+
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {
             callback(Result.failure(throwable))

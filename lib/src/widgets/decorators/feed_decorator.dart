@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FeedStoryDecorator {
   final BorderRadiusGeometry borderRadius;
-  final EdgeInsetsGeometry feedPadding;
+  final EdgeInsets feedPadding;
   final double storyPadding;
   final double loaderAspectRatio;
   final double favouriteAspectRatio;
@@ -19,7 +19,7 @@ class FeedStoryDecorator {
   final Duration scrollDuration;
   final Curve scrollCurve;
 
-  final EdgeInsetsGeometry textPadding;
+  final EdgeInsets textPadding;
   final double textFontSize;
   final TextStyle? textStyle;
 

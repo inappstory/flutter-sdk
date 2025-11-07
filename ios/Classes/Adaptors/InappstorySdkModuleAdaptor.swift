@@ -102,6 +102,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         // the parameter is responsible for animation of the reader display when you tap on a story cell
         InAppStory.shared.presentationStyle = .zoom
 
+        InAppStory.shared.logger = LoggerCallbackAdaptor(binaryMessenger: binaryMessenger)
+        
         var locale: String? = nil
         if (languageCode != nil) && (languageRegion != nil) {
             let str2: String = "_"

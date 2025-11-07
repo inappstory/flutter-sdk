@@ -1,3 +1,19 @@
+## [0.5.3]
+
+### Added
+
+- added custom logger
+
+### Changed
+
+- updated Android SDK, that includes internal fixes
+
+## [0.5.2]
+
+### Changed
+
+- the way to scroll to the last viewed story
+
 ## [0.5.1]
 
 ### Added
@@ -7,7 +23,7 @@
 
 ### Fixed
 
-- Visual bug when jumping to last story after closing story reader
+- Visual bug when jumping to last viewed story after closing story reader
 
 ## [0.5.0]
 
