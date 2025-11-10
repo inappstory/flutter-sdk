@@ -6,7 +6,7 @@ class IASLogger implements LoggerFlutterApi {
   final Function(String? tag, String? message)? onDebugLog;
   final Function(String? tag, String? message)? onErrorLog;
 
-  final List<Map<DateTime, String?>?> logStore = [];
+  final List<Map<DateTime, String?>> logStore = [];
 
   bool printToConsole = false;
 
