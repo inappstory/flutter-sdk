@@ -10,6 +10,33 @@
 - Updated Android SDK to 1.26.0-rc6
 - Updated iOS SDK to 1.26.0-rc9
 
+## [0.5.4]
+
+### Added
+
+- added custom logger
+
+### Changed
+
+- updated Android SDK, that includes internal fixes
+
+## [0.5.2]
+
+### Changed
+
+- the way to scroll to the last viewed story
+
+## [0.5.1]
+
+### Added
+
+- Added various options to `FeedStoryDecorator` to customize the transition to recently opened
+  stories
+
+### Fixed
+
+- Visual bug when jumping to last viewed story after closing story reader
+
 ## [0.5.0]
 
 ### Added

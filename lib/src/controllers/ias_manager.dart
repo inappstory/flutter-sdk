@@ -4,6 +4,7 @@ import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../pigeon_generated.g.dart'
     show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
+import 'logger.dart';
 
 class InAppStoryManager {
   InAppStoryManager._private();
@@ -13,6 +14,14 @@ class InAppStoryManager {
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
 
   static final instance = InAppStoryManager._private();
+
+  IASLogger? _logger;
+
+  IASLogger get logger => _logger ?? IASLogger.create();
+
+  set logger(IASLogger value) {
+    _logger = value;
+  }
 
   Future<void> setPlaceholders(Map<String, String> placeholders) async {
     await _iasManager.setPlaceholders(placeholders);

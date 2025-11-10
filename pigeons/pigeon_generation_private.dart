@@ -15,3 +15,10 @@ abstract class InAppStoryStatManagerHostApi {
   @async
   void sendStatistics(bool enabled);
 }
+
+@FlutterApi()
+abstract class LoggerFlutterApi {
+  void errorLog(String? tag, String? message);
+
+  void debugLog(String? tag, String? message);
+}
