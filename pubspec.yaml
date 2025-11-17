@@ -1,6 +1,6 @@
 name: inappstory_plugin
 description: "A Flutter plugin to use InAppStory SDK. Supports Android and iOS platforms."
-version: 0.5.4
+version: 0.5.5
 homepage: https://inappstory.com/
 repository: https://github.com/inappstory/flutter-sdk
 

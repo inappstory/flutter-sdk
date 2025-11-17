@@ -1,3 +1,9 @@
+## [0.5.5]
+
+### Fixed
+
+- scrolling to stories in feed in android devices has visual bugs
+
 ## [0.5.4]
 
 ### Added

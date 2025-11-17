@@ -134,8 +134,7 @@ class FeedStoriesStream extends StoriesStream {
       if (index == -1) {
         return;
       }
-      Future.delayed(Duration(milliseconds: 300),
-          () => onScrollToStory?.call(index, story));
+      onScrollToStory?.call(index, story);
     } on Exception catch (e) {
       if (kDebugMode) {
         print(e);

@@ -118,9 +118,9 @@ class InappstorySdkModuleAdaptor(
                 InAppStoryCallbacksAdaptor(
                     flutterPluginBinding,
                     inAppStoryAPI.callbacks
-                ) { slideData ->
+                ) { storyData ->
                     feedListAdaptors.forEach {
-                        it.apiSubscriber.scrollToStory(slideData)
+                        it.apiSubscriber.scrollToStory(storyData)
                     }
                 }
 
