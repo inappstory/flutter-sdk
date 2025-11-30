@@ -16,14 +16,14 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.banners.BannerCarouselNavigationCallback
+import com.inappstory.sdk.banners.BannerData
 import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.BannerPlaceLoadSettings
-import com.inappstory.sdk.banners.BannerPlaceNavigationCallback
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
 import com.inappstory.sdk.banners.BannerWidgetCallback
-import com.inappstory.sdk.banners.ui.place.BannerPlace
-import com.inappstory.sdk.banners.ui.place.DefaultBannerPlaceAppearance
-import com.inappstory.sdk.stories.outercallbacks.common.reader.BannerData
+import com.inappstory.sdk.banners.ui.carousel.BannerCarousel
+import com.inappstory.sdk.banners.ui.carousel.DefaultBannerCarouselAppearance
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
@@ -36,7 +36,7 @@ class BannerView(
     appearanceManager: AppearanceManager
 ) : PlatformView, BannerPlaceManagerHostApi {
 
-    private val bannerPlace: BannerPlace
+    private val bannerPlace: BannerCarousel
     private val frame: FrameLayout
 
     private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
@@ -62,7 +62,7 @@ class BannerView(
 
 
         val decoration: BannerDecorationDTO?
-        val bannerAppearance: DefaultBannerPlaceAppearance?
+        val bannerAppearance: DefaultBannerCarouselAppearance?
 
         if (creationParams?.get("bannerDecoration") != null) {
             decoration = decorationToDTO(
@@ -85,11 +85,11 @@ class BannerView(
             )
         }
 
-        appearanceManager.csBannerPlaceInterface(bannerAppearance)
+        appearanceManager.csBannerCarouselInterface(bannerAppearance)
 
         frame = FrameLayout(context)
 
-        bannerPlace = BannerPlace(context)
+        bannerPlace = BannerCarousel(context)
 
         bannerPlace.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
@@ -99,7 +99,7 @@ class BannerView(
 
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         bannerPlace.setPlaceId(placeId)
-        bannerPlace.navigationCallback(object : BannerPlaceNavigationCallback {
+        bannerPlace.navigationCallback(object : BannerCarouselNavigationCallback {
             override fun onPageScrolled(
                 position: Int, total: Int, positionOffset: Float, positionOffsetPixels: Int
             ) {
@@ -223,7 +223,7 @@ class CustomBannerPlaceAppearanceWithoutBannerDecoration(
     private val bannersGap: Int?,
     private val cornerRadius: Int?,
     private val loop: Boolean?,
-) : DefaultBannerPlaceAppearance() {
+) : DefaultBannerCarouselAppearance() {
     override fun nextBannerOffset(): Int {
         return bannerOffset ?: super.nextBannerOffset()
     }
@@ -252,7 +252,7 @@ class CustomBannerPlaceAppearance(
     private val cornerRadius: Int?,
     private val loop: Boolean?,
     private val bannerDecoration: BannerDecorationDTO?
-) : DefaultBannerPlaceAppearance() {
+) : DefaultBannerCarouselAppearance() {
     override fun nextBannerOffset(): Int {
         return bannerOffset ?: super.nextBannerOffset()
     }
