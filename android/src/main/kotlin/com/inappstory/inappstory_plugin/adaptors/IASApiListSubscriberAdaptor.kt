@@ -1,8 +1,8 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryAPIListSubscriberFlutterApi
-import SlideDataDto
 import StoryAPIDataDto
+import StoryDataDto
 import StoryFavoriteItemAPIDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
 import com.inappstory.inappstory_plugin.runOnMainThread
@@ -63,9 +63,9 @@ open class InAppStoryAPIListSubscriberAdaptor(
         super.readerIsClosed()
     }
 
-    fun scrollToStory(slide: SlideDataDto?) {
+    fun scrollToStory(story: StoryDataDto?) {
         storyListSubscriber.scrollToStory(
-            indexArg = (slide?.story?.id) ?: -1,
+            indexArg = (story?.id) ?: -1,
             feedArg = uniqueId
         ) {}
     }

@@ -10,6 +10,12 @@
 - Updated Android SDK to 1.26.0-rc6
 - Updated iOS SDK to 1.26.0-rc9
 
+## [0.5.5]
+
+### Fixed
+
+- scrolling to stories in feed in android devices has visual bugs
+
 ## [0.5.4]
 
 ### Added

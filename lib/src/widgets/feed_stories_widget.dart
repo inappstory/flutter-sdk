@@ -123,15 +123,12 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       onStoriesLoaded: widget.storiesLoaded,
       onScrollToStory: (index, story) async {
         if (feedDecorator?.animateScrollToItems ?? false) {
-          await Future.delayed(
-            Duration(milliseconds: 300),
-            () => observerController.animateTo(
-              index: index,
-              duration:
-                  feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
-              curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
-              padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
-            ),
+          observerController.animateTo(
+            index: index,
+            duration:
+                feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
+            curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
+            padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
           );
         } else {
           observerController.jumpTo(
