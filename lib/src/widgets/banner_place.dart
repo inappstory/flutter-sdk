@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../generated/banner_place_generated.g.dart'
     show BannerLoadCallbackFlutterApi;
-import 'android_banner_view.dart';
+import 'banner/android_banner_view.dart';
+import 'banner/ios_banner_view.dart';
 import 'builders/builders.dart' show BannerPlaceLoaderBuilder;
 import 'decorators/decorators.dart';
-import 'ios_banner_view.dart';
 
 enum BannerPlaceState {
   none,
