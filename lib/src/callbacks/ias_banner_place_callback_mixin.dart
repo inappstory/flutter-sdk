@@ -26,5 +26,8 @@ mixin IASBannerPlaceCallback<T extends StatefulWidget> on State<T>
   void onActionWith(String target) {}
 
   @override
-  void onBannerPlacePreloaded(int size) {}
+  void onBannerPlacePreloaded() {}
+
+  @override
+  void onBannerPlacePreloadedError() {}
 }

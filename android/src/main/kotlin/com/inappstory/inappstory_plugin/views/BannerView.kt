@@ -167,10 +167,11 @@ class BannerView(
             BannerPlaceLoadSettings().placeId(placeId),
             object : BannerPlacePreloadCallback(placeId) {
                 override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
-                    bannerPlaceCallback.onBannerPlacePreloaded(size.toLong()) {}
+                    bannerPlaceCallback.onBannerPlacePreloaded() {}
                 }
 
                 override fun loadError() {
+                    bannerPlaceCallback.onBannerPlacePreloadedError() {}
                 }
 
                 override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {

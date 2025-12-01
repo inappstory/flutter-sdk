@@ -150,7 +150,25 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
     }
 
     func preloadBannerPlace(placeId: String) throws {
-        InAppStory.shared.preloadBanners(placeID: placeId) { result in }
+        InAppStory.shared.preloadBanners(placeID: placeId) { result in
+            do {
+                if try result.get() {
+                    self.callbackFlutterApi.onBannerPlacePreloaded(
+                        completion: { _ in }
+                    )
+                } else {
+                    self.callbackFlutterApi.onBannerPlacePreloaded(
+                        completion: { _ in }
+                    )
+                }
+            } catch {
+                self.callbackFlutterApi.onBannerPlacePreloadedError(
+                    completion: { _ in })
+                print(
+                    "Failed to preload banner for placeId: \(placeId), error: \(error)"
+                )
+            }
+        }
     }
 
     func showNext() throws {

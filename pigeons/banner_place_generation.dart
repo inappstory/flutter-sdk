@@ -42,7 +42,9 @@ abstract class BannerPlaceCallbackFlutterApi {
 
   void onActionWith(String target);
 
-  void onBannerPlacePreloaded(int size);
+  void onBannerPlacePreloaded();
+
+  void onBannerPlacePreloadedError();
 }
 
 @FlutterApi()

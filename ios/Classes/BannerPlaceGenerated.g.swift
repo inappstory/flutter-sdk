@@ -357,7 +357,8 @@ protocol BannerPlaceCallbackFlutterApiProtocol {
   func onBannerScroll(index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlaceLoaded(size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onActionWith(target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onBannerPlacePreloaded(size sizeArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -423,10 +424,28 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onBannerPlacePreloaded(size sizeArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([sizeArg] as [Any?]) { response in
+    channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

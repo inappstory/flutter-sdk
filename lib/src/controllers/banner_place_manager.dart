@@ -31,4 +31,8 @@ class BannerPlaceManager {
   Future<void> resumeAutoscroll() async {
     await _bannerPlaceManagerApi.resumeAutoscroll();
   }
+
+  Future<void> preloadBannerPlace(String placeId) async {
+    await _bannerPlaceManagerApi.preloadBannerPlace(placeId);
+  }
 }
