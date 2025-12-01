@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'pigeon_generated.g.dart';
+import '../inappstory_plugin.dart' show IASStoryListHostApi;
 
 class IASStoryListHostApiDecorator implements IASStoryListHostApi {
   IASStoryListHostApiDecorator(this.decorated);

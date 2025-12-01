@@ -1025,6 +1025,29 @@ class InAppStoryManagerHostApi {
       return;
     }
   }
+
+  Future<void> setOptionKeys(Map<String, String> options) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setOptionKeys$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
 }
 
 class IASStoryListHostApi {
@@ -2192,7 +2215,7 @@ class IASOnboardingsHostApi {
 
   /// [feed] by default == "onboarding"
   /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
-  Future<void> show({required int limit, String feed = "onboarding", List<String> tags = const [], }) async {
+  Future<void> show({required int limit, String feed = 'onboarding', List<String> tags = const [], }) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.show$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,

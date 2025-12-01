@@ -6,8 +6,7 @@ class IASLogger implements LoggerFlutterApi {
   final Function(String? tag, String? message)? onDebugLog;
   final Function(String? tag, String? message)? onErrorLog;
 
-  final List<String?> debugStore = [];
-  final List<String?> errorStore = [];
+  final List<Map<DateTime, String?>> logStore = [];
 
   bool printToConsole = false;
 
@@ -24,7 +23,8 @@ class IASLogger implements LoggerFlutterApi {
     if (message?.isEmpty ?? true) {
       return;
     }
-    debugStore.add(message);
+
+    logStore.add({DateTime.now(): message});
     onDebugLog?.call(tag, message);
     if (printToConsole) {
       log(message!, name: 'IASLogger', time: DateTime.now());
@@ -36,7 +36,7 @@ class IASLogger implements LoggerFlutterApi {
     if (message?.isEmpty ?? true) {
       return;
     }
-    errorStore.add(message);
+    logStore.add({DateTime.now(): message});
     onErrorLog?.call(tag, message);
     if (printToConsole) {
       log(message!, name: 'IASLogger', time: DateTime.now());

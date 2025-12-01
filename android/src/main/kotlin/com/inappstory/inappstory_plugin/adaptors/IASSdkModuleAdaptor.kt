@@ -22,7 +22,7 @@ class InappstorySdkModuleAdaptor(
 ) : InappstorySdkModuleHostApi {
 
     private val inAppStoryAPI = InAppStoryAPI()
-    private val appearanceManager = AppearanceManager()
+    val appearanceManager = AppearanceManager()
     private lateinit var appearanceManagerAdaptor: AppearanceManagerAdaptor
     private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var iasManagerAdaptor: IASManagerAdaptor
@@ -118,9 +118,9 @@ class InappstorySdkModuleAdaptor(
                 InAppStoryCallbacksAdaptor(
                     flutterPluginBinding,
                     inAppStoryAPI.callbacks
-                ) { slideData ->
+                ) { storyData ->
                     feedListAdaptors.forEach {
-                        it.apiSubscriber.scrollToStory(slideData)
+                        it.apiSubscriber.scrollToStory(storyData)
                     }
                 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../pigeon_generated.g.dart';
+import '../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
 
 /// A controller for managing feed stories.
 class FeedStoriesController {

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../data/favorite_from_dto.dart';
-import '../../pigeon_generated.g.dart';
+import '../../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
 import '../streams/feed_stories_stream.dart';
 
 class BaseFeedFavoritesWidget extends StatelessWidget {

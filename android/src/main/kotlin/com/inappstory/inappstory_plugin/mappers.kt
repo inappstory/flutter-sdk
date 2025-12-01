@@ -8,8 +8,8 @@ import SourceTypeDto
 import StoryDataDto
 import StoryTypeDto
 import android.os.Handler
+import com.inappstory.sdk.inappmessage.InAppMessageData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ContentData
-import com.inappstory.sdk.stories.outercallbacks.common.reader.InAppMessageData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.StoryData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -20,8 +20,8 @@ fun FlutterPlugin.FlutterPluginBinding.runOnMainThread(callback: () -> Unit) {
 
 fun mapStoryData(storyData: StoryData): StoryDataDto {
     return StoryDataDto(
-        id = storyData.id.toLong(),
-        title = storyData.title,
+        id = storyData.id().toLong(),
+        title = storyData.title(),
         // TODO: Add tags
         // tags = storyData.tags,
         feed = storyData.feed(),
@@ -33,9 +33,9 @@ fun mapStoryData(storyData: StoryData): StoryDataDto {
 
 fun mapSlideDataDto(slideData: SlideData): SlideDataDto {
     return SlideDataDto(
-        story = mapStoryData(slideData.story),
-        index = slideData.index.toLong(),
-        payload = slideData.payload,
+        story = mapStoryData(slideData.story()),
+        index = slideData.index().toLong(),
+        payload = slideData.payload(),
     )
 }
 

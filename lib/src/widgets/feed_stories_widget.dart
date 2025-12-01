@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import '../controllers/feed_stories_controller.dart';
 import 'builders/base_story_builder.dart';
 import 'builders/builders.dart';
-import 'decorators/default_feed_favorites_widget.dart';
+import 'base/default_feed_favorites_widget.dart';
 import 'decorators/feed_decorator.dart';
 import 'streams/feed_stories_stream.dart';
 
@@ -123,15 +123,12 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       onStoriesLoaded: widget.storiesLoaded,
       onScrollToStory: (index, story) async {
         if (feedDecorator?.animateScrollToItems ?? false) {
-          await Future.delayed(
-            Duration(milliseconds: 300),
-            () => observerController.animateTo(
-              index: index,
-              duration:
-                  feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
-              curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
-              padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
-            ),
+          observerController.animateTo(
+            index: index,
+            duration:
+                feedDecorator?.scrollDuration ?? Duration(milliseconds: 300),
+            curve: feedDecorator?.scrollCurve ?? Curves.easeInOut,
+            padding: feedDecorator?.feedPadding ?? EdgeInsets.zero,
           );
         } else {
           observerController.jumpTo(

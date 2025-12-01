@@ -5,10 +5,10 @@ import ClickActionDto
 import android.content.Context
 import com.inappstory.inappstory_plugin.mapSlideDataDto
 import com.inappstory.inappstory_plugin.runOnMainThread
+import com.inappstory.sdk.inappmessage.InAppMessageData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.CallToActionCallback
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ClickAction
 import com.inappstory.sdk.stories.outercallbacks.common.reader.ContentData
-import com.inappstory.sdk.stories.outercallbacks.common.reader.InAppMessageData
 import com.inappstory.sdk.stories.outercallbacks.common.reader.SlideData
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 

@@ -43,8 +43,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               if (initializationSnapshot.hasError) {
                 return const Text('SDK was not initialized');
               } else {
-                return FeedStoriesWidget(
-                  feed: feed,
+                return Column(
+                  children: [
+                    FeedStoriesWidget(
+                      feed: feed,
+                    ),
+                  ],
                 );
               }
             }

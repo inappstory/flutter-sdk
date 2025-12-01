@@ -730,12 +730,13 @@ protocol InAppStoryManagerHostApi {
   func setTags(tags: [String]) throws
   func changeUser(userId: String, userSign: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func userLogout() throws
-  func closeReaders() throws
+  func closeReaders(completion: @escaping (Result<Void, Error>) -> Void)
   func clearCache() throws
   func setLang(languageCode: String, languageRegion: String) throws
   func setTransparentStatusBar() throws
   func changeSound(value: Bool) throws
   func setUserSettings(anonymous: Bool?, userId: String?, userSign: String?, newLanguageCode: String?, newLanguageRegion: String?, newTags: [String]?, newPlaceholders: [String: String]?) throws
+  func setOptionKeys(options: [String: String]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -808,11 +809,13 @@ class InAppStoryManagerHostApiSetup {
     let closeReadersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.closeReaders\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       closeReadersChannel.setMessageHandler { _, reply in
-        do {
-          try api.closeReaders()
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        api.closeReaders { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
         }
       }
     } else {
@@ -895,6 +898,21 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       setUserSettingsChannel.setMessageHandler(nil)
+    }
+    let setOptionKeysChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setOptionKeys\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setOptionKeysChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let optionsArg = args[0] as! [String: String]
+        do {
+          try api.setOptionKeys(options: optionsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setOptionKeysChannel.setMessageHandler(nil)
     }
   }
 }

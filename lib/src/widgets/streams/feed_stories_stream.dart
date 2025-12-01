@@ -106,10 +106,8 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
-    favorites = list
-        .whereType<StoryFavoriteItemAPIDataDto>()
-        .map(FavoriteFromDto.new)
-        .toList(growable: false);
+    favorites =
+        list.whereType<StoryFavoriteItemAPIDataDto>().map(FavoriteFromDto.new);
 
     _favoritesStreamController.add(List.from(favorites));
     controller.add(combineStoriesAndFavorites());
@@ -134,8 +132,7 @@ class FeedStoriesStream extends StoriesStream {
       if (index == -1) {
         return;
       }
-      Future.delayed(Duration(milliseconds: 300),
-          () => onScrollToStory?.call(index, story));
+      onScrollToStory?.call(index, story);
     } on Exception catch (e) {
       if (kDebugMode) {
         print(e);

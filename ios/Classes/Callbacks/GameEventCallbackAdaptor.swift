@@ -17,36 +17,45 @@ class GameEventCallbackAdaptor {
 
         switch event {
         case .startGame(let gameData):
-            gameReaderCallbackFlutterApi.startGame(
-                contentData: mapContentData(arg: gameData),
-                completion: { _ in }
-            )
+            DispatchQueue.main.async { [self] in
+                gameReaderCallbackFlutterApi.startGame(
+                    contentData: mapContentData(arg: gameData),
+                    completion: { _ in }
+                )
+            }
         case .closeGame(let gameData):
-            gameReaderCallbackFlutterApi.closeGame(
-                contentData: mapContentData(arg: gameData),
-                completion: { _ in }
-            )
+            DispatchQueue.main.async { [self] in
+                gameReaderCallbackFlutterApi.closeGame(
+                    contentData: mapContentData(arg: gameData),
+                    completion: { _ in }
+                )
+            }
         case .finishGame(let gameData, let result):
-            gameReaderCallbackFlutterApi.finishGame(
-                contentData: mapContentData(arg: gameData),
-                result: result,
-                completion: { _ in }
-            )
+            DispatchQueue.main.async { [self] in
+                gameReaderCallbackFlutterApi.finishGame(
+                    contentData: mapContentData(arg: gameData),
+                    result: result,
+                    completion: { _ in }
+                )
+            }
         case .eventGame(let gameData, let name, let payload):
-            gameReaderCallbackFlutterApi.eventGame(
-                contentData: mapContentData(arg: gameData),
-                gameId: nil,
-                eventName: name,
-                payload: payload,
-                completion: { _ in }
-            )
-
+            DispatchQueue.main.async { [self] in
+                gameReaderCallbackFlutterApi.eventGame(
+                    contentData: mapContentData(arg: gameData),
+                    gameId: nil,
+                    eventName: name,
+                    payload: payload,
+                    completion: { _ in }
+                )
+            }
         case .gameFailure(let gameData, let message):
-            gameReaderCallbackFlutterApi.gameError(
-                contentData: mapContentData(arg: gameData),
-                message: message,
-                completion: { _ in }
-            )
+            DispatchQueue.main.async { [self] in
+                gameReaderCallbackFlutterApi.gameError(
+                    contentData: mapContentData(arg: gameData),
+                    message: message,
+                    completion: { _ in }
+                )
+            }
         @unknown default:
             NSLog("WARNING: unknown failureEvent")
         }

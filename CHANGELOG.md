@@ -1,4 +1,29 @@
-## [0.5.3]
+## [0.6.0]
+
+### Changed
+
+- Updated Android SDK to 1.22.0
+- Updated iOS SDK to 1.26.0
+
+## [0.6.0-rc.1]
+
+### Added
+
+- Options feature
+- Banners feature
+
+### Changed
+
+- Updated Android SDK to 1.22.0-rc7
+- Updated iOS SDK to 1.26.0-rc9
+
+## [0.5.5]
+
+### Fixed
+
+- scrolling to stories in feed in android devices has visual bugs
+
+## [0.5.4]
 
 ### Added
 
