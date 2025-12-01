@@ -2,7 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import '../pigeon_generated.g.dart';
+import '../generated/pigeon_generated.g.dart'
+    show
+        InAppStoryAPIListSubscriberFlutterApi,
+        StoryAPIDataDto,
+        IASStoryListHostApi,
+        StoryFavoriteItemAPIDataDto;
 import 'observable.dart';
 import 'story.dart';
 

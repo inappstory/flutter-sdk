@@ -4,7 +4,14 @@ import 'package:flutter/widgets.dart';
 
 import '../../data/observable.dart';
 import '../../data/story_from_pigeon_dto.dart';
-import '../../pigeon_generated.g.dart';
+import '../../generated/pigeon_generated.g.dart'
+    show
+        InAppStoryAPIListSubscriberFlutterApi,
+        ErrorCallbackFlutterApi,
+        IASStoryListHostApi,
+        StoryAPIDataDto,
+        StoryFavoriteItemAPIDataDto,
+        InappstorySdkModuleHostApi;
 import '../base/base_story_widget.dart';
 import '../builders/builders.dart';
 import '../decorators/feed_decorator.dart';

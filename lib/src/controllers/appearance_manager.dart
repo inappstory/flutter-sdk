@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import '../data/data.dart' show GoodsItemAppearance;
-import '../pigeon_generated.g.dart'
+import '../generated/pigeon_generated.g.dart'
     show AppearanceManagerHostApi, Position, CoverQuality;
 
 class AppearanceManager {

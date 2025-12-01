@@ -3,7 +3,11 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inappstory_plugin/src/pigeon_generated.g.dart';
+import 'package:inappstory_plugin/inappstory_plugin.dart'
+    show
+        InAppStoryAPIListSubscriberFlutterApi,
+        ErrorCallbackFlutterApi,
+        StoryAPIDataDto;
 import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -87,4 +91,7 @@ class _TestStoriesStream extends StoriesStream {
 
   @override
   void storiesLoaded(int size, String feed) {}
+
+  @override
+  void scrollToStory(int index, String feed) {}
 }

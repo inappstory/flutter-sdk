@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-import '../pigeon_generated.g.dart'
-    show IASCallBacksFlutterApi, SlideDataDto, StoryDataDto;
+import '../generated/pigeon_generated.g.dart'
+    show StoryDataDto, SlideDataDto, IASCallBacksFlutterApi;
 
 /// A mixin that provides callback methods for handling various events
 /// related to stories and slides

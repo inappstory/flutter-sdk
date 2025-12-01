@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
-import '../pigeon_generated.g.dart'
+import '../generated/pigeon_generated.g.dart'
     show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
 import 'logger.dart';
 

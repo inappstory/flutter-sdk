@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
@@ -15,9 +17,7 @@ class _InAppMessagesState extends State<InAppMessages>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("In-App-Messaging"),
-      ),
+      appBar: AppBar(title: const Text("In-App-Messaging")),
       body: SafeArea(
         bottom: true,
         child: Padding(
@@ -36,13 +36,18 @@ class _InAppMessagesState extends State<InAppMessages>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ElevatedButton(
-                    onPressed: () => IASInAppMessagesHostApi()
-                        .showById(_inputController.text, onlyPreloaded: false),
+                    onPressed:
+                        () => IASInAppMessagesHostApi().showById(
+                          _inputController.text,
+                          onlyPreloaded: false,
+                        ),
                     child: const Text("Show by id"),
                   ),
                   ElevatedButton(
-                    onPressed: () => IASInAppMessagesHostApi()
-                        .showByEvent(_inputController.text),
+                    onPressed:
+                        () => IASInAppMessagesHostApi().showByEvent(
+                          _inputController.text,
+                        ),
                     child: const Text("Show by event"),
                   ),
                 ],
@@ -60,7 +65,8 @@ class _InAppMessagesState extends State<InAppMessages>
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                result ? "Success" : "Error loading messages"),
+                              result ? "Success" : "Error loading messages",
+                            ),
                           ),
                         );
                       }
@@ -78,17 +84,20 @@ class _InAppMessagesState extends State<InAppMessages>
 
   @override
   void onShowInAppMessage(InAppMessageDataDto? inAppMessageData) {
-    print("IAM: onShowInAppMessage: ${inAppMessageData?.id}");
+    log("IAM: onShowInAppMessage: ${inAppMessageData?.id}");
   }
 
   @override
   void onCloseInAppMessage(InAppMessageDataDto? inAppMessageData) {
-    print("IAM: onCloseInAppMessage: ${inAppMessageData?.id}");
+    log("IAM: onCloseInAppMessage: ${inAppMessageData?.id}");
   }
 
   @override
-  void onInAppMessageWidgetEvent(InAppMessageDataDto? inAppMessageData,
-      String? name, Map<String?, Object?>? data) {
-    print("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
+  void onInAppMessageWidgetEvent(
+    InAppMessageDataDto? inAppMessageData,
+    String? name,
+    Map<String?, Object?>? data,
+  ) {
+    log("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
   }
 }

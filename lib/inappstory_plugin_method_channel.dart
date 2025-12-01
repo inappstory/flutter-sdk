@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
-import 'src/pigeon_generated.g.dart';
+import 'src/generated/pigeon_generated.g.dart' show InappstorySdkModuleHostApi;
 
 /// An implementation of [InappstoryPluginPlatform] that uses method channels.
 class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {

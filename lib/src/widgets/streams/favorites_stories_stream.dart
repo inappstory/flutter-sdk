@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../inappstory_plugin.dart';
+import '../../controllers/feed_stories_controller.dart';
 import '../../data/story_from_pigeon_dto.dart';
+import '../../generated/pigeon_generated.g.dart'
+    show IASStoryListHostApi, StoryAPIDataDto, StoryFavoriteItemAPIDataDto;
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import '../../observable_error_callback_flutter_api.dart';
-import '../../pigeon_generated.g.dart'
-    show IASStoryListHostApi, StoryAPIDataDto, StoryFavoriteItemAPIDataDto;
+import '../decorators/feed_decorator.dart';
 import 'stories_stream.dart';
 
 class FavoritesStoriesStream extends StoriesStream {

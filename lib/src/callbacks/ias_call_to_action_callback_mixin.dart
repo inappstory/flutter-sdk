@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../pigeon_generated.g.dart'
+import '../generated/pigeon_generated.g.dart'
     show CallToActionCallbackFlutterApi, SlideDataDto, ClickActionDto;
 
 mixin IASCallToActionCallback<T extends StatefulWidget> on State<T>

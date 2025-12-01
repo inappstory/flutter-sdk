@@ -5,7 +5,7 @@ import 'package:pigeon/pigeon.dart';
 // import 'lib/inappstory_sdk_module.dart';
 
 @ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/pigeon_generated.g.dart',
+  dartOut: 'lib/src/generated/pigeon_generated.g.dart',
   dartOptions: DartOptions(),
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
@@ -283,7 +283,7 @@ abstract class IASOnboardingsHostApi {
   /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
   void show({
     required int limit,
-    String feed = "onboarding",
+    String feed = 'onboarding',
     List<String> tags = const [],
   });
 }

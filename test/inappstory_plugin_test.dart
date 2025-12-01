@@ -11,7 +11,11 @@ class MockInappstoryPluginPlatform
 
   @override
   Future<void> initWith(String apiKey, String userId,
-      {String? languageCode, String? languageRegion}) async {
+      {bool anonymous = false,
+      String? userSign,
+      String? languageCode,
+      String? languageRegion,
+      String? cacheSize}) {
     throw UnimplementedError();
   }
 }

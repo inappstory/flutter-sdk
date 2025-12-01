@@ -1,6 +1,6 @@
 import '../data/goods_item_data.dart';
-import '../pigeon_generated.g.dart'
-    show SkusCallbackFlutterApi, GoodsItemDataDto;
+import '../generated/pigeon_generated.g.dart'
+    show GoodsItemDataDto, SkusCallbackFlutterApi;
 
 typedef SkusCallbackImpl = Future<List<GoodsItemData>> Function(
     List<String> skus);

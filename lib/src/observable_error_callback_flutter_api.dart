@@ -1,5 +1,5 @@
 import 'data/observable.dart';
-import 'pigeon_generated.g.dart';
+import 'generated/pigeon_generated.g.dart' show ErrorCallbackFlutterApi;
 
 class ObservableErrorCallbackFlutterApi
     extends Observable<ErrorCallbackFlutterApi>

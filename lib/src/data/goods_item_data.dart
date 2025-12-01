@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../pigeon_generated.g.dart' show GoodsItemDataDto;
+import '../generated/pigeon_generated.g.dart' show GoodsItemDataDto;
 
 final class GoodsItemData {
   const GoodsItemData({

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
@@ -15,9 +17,7 @@ class _GamesWidgetState extends State<GamesWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Games"),
-      ),
+      appBar: AppBar(title: const Text("Games")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -57,27 +57,31 @@ class _GamesWidgetState extends State<GamesWidget>
 
   @override
   void startGame(ContentDataDto? gameData) {
-    print('startGame');
+    log('startGame');
   }
 
   @override
   void closeGame(ContentDataDto? gameData) {
-    print('closeGame');
+    log('closeGame');
   }
 
   @override
-  void eventGame(ContentDataDto? gameData, String? id, String? eventName,
-      Map<String?, Object?>? payload) {
-    print('eventGame');
+  void eventGame(
+    ContentDataDto? gameData,
+    String? id,
+    String? eventName,
+    Map<String?, Object?>? payload,
+  ) {
+    log('eventGame');
   }
 
   @override
   void finishGame(ContentDataDto? gameData, Map<String?, Object?>? result) {
-    print('finishGame');
+    log('finishGame');
   }
 
   @override
   void gameError(ContentDataDto? gameData, String? message) {
-    print('gameError');
+    log('gameError');
   }
 }

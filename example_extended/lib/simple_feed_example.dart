@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
@@ -160,36 +161,36 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
 
   @override
   void onCloseStory(SlideDataDto? slideData) {
-    print("closeStory");
+    log("closeStory");
   }
 
   @override
   void onShowStory(StoryDataDto? storyData) {
-    print("onShowStory");
+    log("onShowStory");
   }
 
   @override
   void onShareStory(SlideDataDto? slideData) {
-    print("onShareStory");
+    log("onShareStory");
   }
 
   @override
   void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
-    print("onDislikeStory $isDislike");
+    log("onDislikeStory $isDislike");
   }
 
   @override
   void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
-    print("onLikeStory $isLike");
+    log("onLikeStory $isLike");
   }
 
   @override
   void onShowSlide(SlideDataDto? slideData) {
-    print("onShowSlide");
+    log("onShowSlide");
   }
 
   @override
   void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
-    print("onFavoriteTap $isFavorite");
+    log("onFavoriteTap $isFavorite");
   }
 }

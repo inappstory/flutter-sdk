@@ -24,19 +24,14 @@ class StoryWidgetSimpleDecorator extends StatelessWidget
               onTap: onTap,
               child: Stack(
                 children: [
-                  Positioned.fill(
-                    child: StoryWidgetSimple(story: story),
-                  ),
+                  Positioned.fill(child: StoryWidgetSimple(story: story)),
                   const Positioned.fill(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black87,
-                          ],
+                          colors: [Colors.transparent, Colors.black87],
                         ),
                       ),
                     ),
@@ -95,15 +90,9 @@ class _StoryWidgetSimpleState extends State<StoryWidgetSimple> {
       return FutureBuilder(
         future: controller
             ?.initialize()
-            .then(
-              (value) => controller?.setVolume(0.0),
-            )
-            .then(
-              (value) => controller?.setLooping(true),
-            )
-            .then(
-              (value) => controller?.play(),
-            ),
+            .then((value) => controller?.setVolume(0.0))
+            .then((value) => controller?.setLooping(true))
+            .then((value) => controller?.play()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return VideoPlayer(controller!);
@@ -114,10 +103,7 @@ class _StoryWidgetSimpleState extends State<StoryWidgetSimple> {
       );
     }
     if (imageFile != null) {
-      return Image.file(
-        imageFile,
-        fit: BoxFit.cover,
-      );
+      return Image.file(imageFile, fit: BoxFit.cover);
     }
 
     return ColoredBox(color: story.backgroundColor);
