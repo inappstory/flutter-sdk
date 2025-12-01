@@ -113,7 +113,7 @@ class InappstorySdkModuleAdaptor(
 
             iasManagerAdaptor =
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
-            statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryManager)
+            statManagerAdaptor = IASStatisticsManagerAdaptor(flutterPluginBinding, inAppStoryAPI)
             inAppStoryCallbacks =
                 InAppStoryCallbacksAdaptor(
                     flutterPluginBinding,

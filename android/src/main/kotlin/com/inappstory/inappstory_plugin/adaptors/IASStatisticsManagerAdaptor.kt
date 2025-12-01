@@ -1,7 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InAppStoryStatManagerHostApi
-import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
