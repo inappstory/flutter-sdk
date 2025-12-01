@@ -1,3 +1,9 @@
+## [0.6.1]
+
+### Fixed
+
+- class mismatch in Android part
+
 ## [0.6.0]
 
 ### Changed
