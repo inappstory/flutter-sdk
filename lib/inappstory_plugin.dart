@@ -13,6 +13,8 @@ import 'src/widgets/streams/feed_stories_stream.dart';
 export 'src/callbacks/callbacks.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';
+export 'src/generated/checkout_generated.g.dart'
+    show ProductCart, ProductCartOffer;
 export 'src/generated/pigeon_generated.g.dart'
     hide
         InAppStoryManagerHostApi,

@@ -8,6 +8,8 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
 
     private var goodsItemSelectedCallback: GoodsItemSelectedCallbackFlutterApi
 
+    private var checkoutCallback: CheckoutManagerCallbackFlutterApi
+
     init(binaryMessenger: FlutterBinaryMessenger) {
         self.skusCallback = SkusCallbackFlutterApi(
             binaryMessenger: binaryMessenger
@@ -17,7 +19,12 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             binaryMessenger: binaryMessenger
         )
 
+        self.checkoutCallback = CheckoutManagerCallbackFlutterApi(
+            binaryMessenger: binaryMessenger
+        )
+
         setUpGoodsCallback()
+        setupCheckoutManager()
         InAppStoryManagerHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: self
@@ -152,8 +159,44 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             )
         }
     }
-    
-    func setOptionKeys(options: [String : String]) throws {
+
+    private func setupCheckoutManager() {
+        InAppStory.shared.productCartUpdate = { [weak self] offer, complete in
+            guard let self else { return }
+
+            let offerDTO = inappstory_plugin.ProductCartOffer(
+                offerId: offer.offerId,
+                name: offer.name ?? "",
+                imageUrls: offer.imageUrls,
+                availability: Int64(offer.availability),
+                quantity: Int64(offer.quantity)
+            )
+            self.checkoutCallback.addProductToCart(
+                offer: offerDTO,
+                completion: { result in
+                    switch result {
+                    case .success:
+                        let cartFromFlutter = result.get()
+                        let productCart: InAppStorySDK.ProductCart =
+                            InAppStorySDK.ProductCart(
+                                offers: <#T##[ProductCartOffer]#>,
+                                price: cartFromFlutter.price,
+                                oldPrice: cartFromFlutter.oldPrice,
+                                priceCurrency: cartFromFlutter.priceCurrency
+                            )
+                        complete(.success(productCart))
+                        break
+                    case .failure:
+                        complete(.failure())
+                        break
+                    }
+                }
+            )
+
+        }
+    }
+
+    func setOptionKeys(options: [String: String]) throws {
         InAppStory.shared.options = options
     }
 }
