@@ -18,7 +18,7 @@ import ProductCart as ProductCartFlutter
 import ProductCartOffer as ProductCartOfferFlutter
 
 class IASManagerAdaptor(
-    flutterPluginBinding: FlutterPluginBinding,
+    private val flutterPluginBinding: FlutterPluginBinding,
     private val inAppStoryAPI: InAppStoryAPI,
     private val inAppStoryManager: InAppStoryManager,
 ) : InAppStoryManagerHostApi {
