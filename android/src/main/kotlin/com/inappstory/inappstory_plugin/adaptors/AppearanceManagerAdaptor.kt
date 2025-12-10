@@ -381,7 +381,7 @@ class AppearanceManagerAdaptor(
     }
 
     override fun setUpGoods(appearance: GoodsItemAppearanceDto) {
-        AppearanceManager.getCommonInstance().csCustomGoodsWidget(object : ICustomGoodsWidget {
+        appearanceManager.csCustomGoodsWidget(object : ICustomGoodsWidget {
             override fun getWidgetView(contex: Context?): View? {
                 return null
             }

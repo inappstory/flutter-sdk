@@ -106,7 +106,7 @@ class IASManagerAdaptor(
     }
 
     private fun initProductsCallback() {
-        InAppStoryManager.getInstance()
+        inAppStoryManager
             .setProductCartInteractionCallback(object : ProductCartInteractionCallback {
                 override fun cartUpdate(
                     offer: ProductCartOffer?,
