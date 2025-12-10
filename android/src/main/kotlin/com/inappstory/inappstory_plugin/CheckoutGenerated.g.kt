@@ -193,10 +193,10 @@ class CheckoutManagerCallbackFlutterApi(private val binaryMessenger: BinaryMesse
       CheckoutGeneratedPigeonCodec()
     }
   }
-  fun addProductToCart(offerArg: ProductCartOffer, callback: (Result<ProductCart>) -> Unit)
+  fun onProductCartUpdate(offerArg: ProductCartOffer, callback: (Result<ProductCart>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.addProductToCart$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.onProductCartUpdate$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(offerArg)) {
       if (it is List<*>) {
@@ -213,10 +213,10 @@ class CheckoutManagerCallbackFlutterApi(private val binaryMessenger: BinaryMesse
       } 
     }
   }
-  fun getCartState(callback: (Result<ProductCart>) -> Unit)
+  fun getProductCartState(callback: (Result<ProductCart>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getCartState$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getProductCartState$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {

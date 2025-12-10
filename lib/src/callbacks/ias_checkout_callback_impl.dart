@@ -1,37 +1,38 @@
 import '../generated/checkout_generated.g.dart';
 
-typedef AddToCartCallbackImpl = Future<ProductCart> Function(
+typedef OnProductCartUpdateCallbackImpl = Future<ProductCart> Function(
     ProductCartOffer offer);
 
-typedef GetCartStateCallbackImpl = Future<ProductCart> Function();
+typedef GetProductCartStateCallbackImpl = Future<ProductCart> Function();
 
-class IasCheckoutCallbackImpl implements CheckoutManagerCallbackFlutterApi {
-  GetCartStateCallbackImpl? _getCartStateCallback;
+class IASCheckoutManagerCallbackImpl
+    implements CheckoutManagerCallbackFlutterApi {
+  GetProductCartStateCallbackImpl? _getCartStateCallback;
 
-  set getCartStateCallback(GetCartStateCallbackImpl value) {
+  set getProductCartStateCallback(GetProductCartStateCallbackImpl value) {
     _getCartStateCallback = value;
   }
 
-  AddToCartCallbackImpl? _addToCartCallback;
+  OnProductCartUpdateCallbackImpl? _onProductCartUpdateCallback;
 
-  set addToCartCallback(AddToCartCallbackImpl? value) {
-    _addToCartCallback = value;
+  set onProductCartUpdateCallback(OnProductCartUpdateCallbackImpl value) {
+    _onProductCartUpdateCallback = value;
   }
 
   @override
-  Future<ProductCart> addProductToCart(ProductCartOffer offer) async {
-    if (_addToCartCallback == null) {
-      return ProductCart(offers: [], price: '', priceCurrency: '');
+  Future<ProductCart> onProductCartUpdate(ProductCartOffer offer) async {
+    if (_onProductCartUpdateCallback == null) {
+      return Future.error('onProductCartUpdate callback not implemented!');
     }
 
-    final data = await _addToCartCallback!.call(offer);
+    final data = await _onProductCartUpdateCallback!.call(offer);
     return data;
   }
 
   @override
-  Future<ProductCart> getCartState() async {
+  Future<ProductCart> getProductCartState() async {
     if (_getCartStateCallback == null) {
-      return ProductCart(offers: [], price: '', priceCurrency: '');
+      return Future.error('getProductCartState callback not implemented!');
     }
 
     final data = await _getCartStateCallback!.call();

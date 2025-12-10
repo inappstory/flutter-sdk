@@ -249,8 +249,8 @@ class CheckoutGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Send
 
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol CheckoutManagerCallbackFlutterApiProtocol {
-  func addProductToCart(offer offerArg: ProductCartOffer, completion: @escaping (Result<ProductCart, PigeonError>) -> Void)
-  func getCartState(completion: @escaping (Result<ProductCart, PigeonError>) -> Void)
+  func onProductCartUpdate(offer offerArg: ProductCartOffer, completion: @escaping (Result<ProductCart, PigeonError>) -> Void)
+  func getProductCartState(completion: @escaping (Result<ProductCart, PigeonError>) -> Void)
 }
 class CheckoutManagerCallbackFlutterApi: CheckoutManagerCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -262,8 +262,8 @@ class CheckoutManagerCallbackFlutterApi: CheckoutManagerCallbackFlutterApiProtoc
   var codec: CheckoutGeneratedPigeonCodec {
     return CheckoutGeneratedPigeonCodec.shared
   }
-  func addProductToCart(offer offerArg: ProductCartOffer, completion: @escaping (Result<ProductCart, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.addProductToCart\(messageChannelSuffix)"
+  func onProductCartUpdate(offer offerArg: ProductCartOffer, completion: @escaping (Result<ProductCart, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.onProductCartUpdate\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([offerArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
@@ -283,8 +283,8 @@ class CheckoutManagerCallbackFlutterApi: CheckoutManagerCallbackFlutterApiProtoc
       }
     }
   }
-  func getCartState(completion: @escaping (Result<ProductCart, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getCartState\(messageChannelSuffix)"
+  func getProductCartState(completion: @escaping (Result<ProductCart, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getProductCartState\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {

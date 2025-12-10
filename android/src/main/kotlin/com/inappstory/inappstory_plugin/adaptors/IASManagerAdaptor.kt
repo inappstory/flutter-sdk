@@ -116,21 +116,21 @@ class IASManagerAdaptor(
                         flutterPluginBinding.runOnMainThread {
                             checkoutManagerCallbackFlutterApi.addProductToCart(
                                 ProductCartOfferFlutter(
-                                    offerId = it.offerId,
-                                    groupId = it.groupId,
-                                    name = it.name,
-                                    description = it.description,
-                                    url = it.url,
-                                    coverUrl = it.coverUrl,
-                                    imageUrls = it.imageUrls,
-                                    currency = it.currency,
-                                    price = it.price,
-                                    oldPrice = it.oldPrice,
-                                    adult = it.adult,
-                                    availability = it.availability.toLong(),
-                                    size = it.size,
-                                    color = it.color,
-                                    quantity = it.quantity.toLong()
+                                    offerId = offer.offerId,
+                                    groupId = offer.groupId,
+                                    name = offer.name,
+                                    description = offer.description,
+                                    url = offer.url,
+                                    coverUrl = offer.coverUrl,
+                                    imageUrls = offer.imageUrls,
+                                    currency = offer.currency,
+                                    price = offer.price,
+                                    oldPrice = offer.oldPrice,
+                                    adult = offer.adult,
+                                    availability = offer.availability.toLong(),
+                                    size = offer.size,
+                                    color = offer.color,
+                                    quantity = offer.quantity.toLong()
                                 )
                             ) { result: Result<ProductCartFlutter> ->
                                 if (result.isSuccess) {
@@ -157,8 +157,12 @@ class IASManagerAdaptor(
                 }
 
                 override fun cartClicked() {
-                    flutterPluginBinding.runOnMainThread {
-                        checkoutCallbackFlutterApi.onProductCartClicked { }
+                    InAppStoryManager.closeStoryReader(
+                        true
+                    ) {
+                        flutterPluginBinding.runOnMainThread {
+                            checkoutCallbackFlutterApi.onProductCartClicked { }
+                        }
                     }
                 }
 

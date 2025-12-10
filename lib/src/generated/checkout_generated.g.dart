@@ -234,28 +234,28 @@ class _PigeonCodec extends StandardMessageCodec {
 abstract class CheckoutManagerCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<ProductCart> addProductToCart(ProductCartOffer offer);
+  Future<ProductCart> onProductCartUpdate(ProductCartOffer offer);
 
-  Future<ProductCart> getCartState();
+  Future<ProductCart> getProductCartState();
 
   static void setUp(CheckoutManagerCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.addProductToCart$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.onProductCartUpdate$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.addProductToCart was null.');
+          'Argument for dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.onProductCartUpdate was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final ProductCartOffer? arg_offer = (args[0] as ProductCartOffer?);
           assert(arg_offer != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.addProductToCart was null, expected non-null ProductCartOffer.');
+              'Argument for dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.onProductCartUpdate was null, expected non-null ProductCartOffer.');
           try {
-            final ProductCart output = await api.addProductToCart(arg_offer!);
+            final ProductCart output = await api.onProductCartUpdate(arg_offer!);
             return wrapResponse(result: output);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -267,14 +267,14 @@ abstract class CheckoutManagerCallbackFlutterApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getCartState$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.inappstory_plugin.CheckoutManagerCallbackFlutterApi.getProductCartState$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           try {
-            final ProductCart output = await api.getCartState();
+            final ProductCart output = await api.getProductCartState();
             return wrapResponse(result: output);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

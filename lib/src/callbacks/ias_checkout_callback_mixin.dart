@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../controllers/ias_manager.dart';
 import '../generated/checkout_generated.g.dart';
 
-mixin IasCheckoutCallbackMixin<T extends StatefulWidget> on State<T>
+mixin IASCheckoutCallback<T extends StatefulWidget> on State<T>
     implements CheckoutCallbackFlutterApi {
   /// Sets up the callbacks by registering this mixin instance
   @override

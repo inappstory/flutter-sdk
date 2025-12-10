@@ -14,10 +14,10 @@ import 'package:pigeon/pigeon.dart';
 @FlutterApi()
 abstract class CheckoutManagerCallbackFlutterApi {
   @async
-  ProductCart addProductToCart(ProductCartOffer offer);
+  ProductCart onProductCartUpdate(ProductCartOffer offer);
 
   @async
-  ProductCart getCartState();
+  ProductCart getProductCartState();
 }
 
 @FlutterApi()

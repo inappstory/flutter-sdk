@@ -10,13 +10,15 @@ import '../generated/pigeon_generated.g.dart'
 import 'logger.dart';
 
 class InAppStoryManager {
-  InAppStoryManager._private();
+  InAppStoryManager._private() {
+    SkusCallbackFlutterApi.setUp(_callbackImpl);
+    CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+  }
 
   final _iasManager = InAppStoryManagerHostApi();
 
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
-  final _checkoutCallbackImpl = IasCheckoutCallbackImpl();
-  late final CheckoutManagerCallbackFlutterApi? _checkoutFlutterApi;
+  final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -88,17 +90,14 @@ class InAppStoryManager {
 
   void setGetSkusCallback(SkusCallbackImpl callback) {
     _callbackImpl.callback = callback;
-    SkusCallbackFlutterApi.setUp(_callbackImpl);
   }
 
-  void setOnAddProductToCart(AddToCartCallbackImpl callback) {
-    _checkoutCallbackImpl.addToCartCallback = callback;
-    CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+  void setOnProductCartUpdate(OnProductCartUpdateCallbackImpl callback) {
+    _checkoutCallbackImpl.onProductCartUpdateCallback = callback;
   }
 
-  void setGetCartState(GetCartStateCallbackImpl callback) {
-    _checkoutCallbackImpl.getCartStateCallback = callback;
-    CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+  void setGetProductCartState(GetProductCartStateCallbackImpl callback) {
+    _checkoutCallbackImpl.getProductCartStateCallback = callback;
   }
 
   Future<void> setOptions(Map<String, String> options) async {
