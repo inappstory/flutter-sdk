@@ -20,7 +20,7 @@ mixin IASCheckoutCallback<T extends StatefulWidget> on State<T>
   }
 
   @override
-  void onProductCartClicked() async {
+  Future<void> onProductCartClicked() async {
     await InAppStoryManager.instance.closeReaders();
   }
 }

@@ -114,7 +114,7 @@ class IASManagerAdaptor(
                 ) {
                     offer?.let {
                         flutterPluginBinding.runOnMainThread {
-                            checkoutManagerCallbackFlutterApi.addProductToCart(
+                            checkoutManagerCallbackFlutterApi.onProductCartUpdate(
                                 ProductCartOfferFlutter(
                                     offerId = offer.offerId,
                                     groupId = offer.groupId,
@@ -157,18 +157,14 @@ class IASManagerAdaptor(
                 }
 
                 override fun cartClicked() {
-                    InAppStoryManager.closeStoryReader(
-                        true
-                    ) {
-                        flutterPluginBinding.runOnMainThread {
-                            checkoutCallbackFlutterApi.onProductCartClicked { }
-                        }
+                    flutterPluginBinding.runOnMainThread {
+                        checkoutCallbackFlutterApi.onProductCartClicked { }
                     }
                 }
 
                 override fun cartGetState(callback: ProductCartUpdatedProcessCallback?) {
                     flutterPluginBinding.runOnMainThread {
-                        checkoutManagerCallbackFlutterApi.getCartState { productCartResult: Result<ProductCartFlutter> ->
+                        checkoutManagerCallbackFlutterApi.getProductCartState { productCartResult: Result<ProductCartFlutter> ->
                             if (productCartResult.isSuccess) {
                                 val productCartFlutter: ProductCartFlutter? =
                                     productCartResult.getOrNull()
