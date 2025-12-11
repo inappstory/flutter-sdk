@@ -93,7 +93,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         InAppStory.shared.isLoggingEnabled = true
         //InAppStory.shared.cellGradientEnabled = true
         //InAppStory.shared.cellBorderColor = UIColor.blue
-        //InAppStory.shared.presentationStyle = .zoom
+        InAppStory.shared.presentationStyle = .zoom
 
         InAppStory.shared.logger = LoggerCallbackAdaptor(binaryMessenger: binaryMessenger)
         
