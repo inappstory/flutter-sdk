@@ -268,35 +268,34 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         return offerDTO
     }
 
-    //    func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
-    //        -> InAppStorySDK.ProductCartOffer
-    //    {
-    //        return InAppStorySDK.ProductCartOffer(
-    //            offerId: offer.offerId,
-    //            groupId: offer.groupId,
-    //            name: offer.name,
-    //            description: offer.description,
-    //            url: offer.url,
-    //            coverUrl: offer.coverUrl,
-    //            imageUrls: offer.imageUrls,
-    //            currency: offer.currency,
-    //            price: offer.price,
-    //            oldPrice: offer.oldPrice,
-    //            adult: offer.adult,
-    //            availability: Int(offer.availability),
-    //            size: offer.size,
-    //            color: offer.color,
-    //            quantity: Int(offer.quantity)
-    //        )
-    //    }
+        func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
+            -> InAppStorySDK.ProductCartOffer
+        {
+            return InAppStorySDK.ProductCartOffer(
+                offerId: offer.offerId,
+                groupId: offer.groupId,
+                name: offer.name,
+                description: offer.description,
+                url: offer.url,
+                coverUrl: offer.coverUrl,
+                imageUrls: offer.imageUrls,
+                currency: offer.currency,
+                price: offer.price,
+                oldPrice: offer.oldPrice,
+                adult: offer.adult,
+                availability: Int(offer.availability),
+                size: offer.size,
+                color: offer.color,
+                quantity: Int(offer.quantity)
+            )
+        }
 
     func productCartFromDTO(_ productCart: inappstory_plugin.ProductCart)
         -> InAppStorySDK.ProductCart
     {
-        //let offers = productCart.offers.map { offer in offerFromDTO(offer) }
+        let offers = productCart.offers.map { offer in offerFromDTO(offer) }
         let result = InAppStorySDK.ProductCart(
-            //offers: offers,
-            offers: [],
+            offers: offers,
             price: productCart.price,
             oldPrice: productCart.oldPrice,
             priceCurrency: productCart.priceCurrency

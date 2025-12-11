@@ -1,9 +1,7 @@
 PODS:
   - Flutter (1.0.0)
-  - InAppStory (1.26.1)
   - inappstory_plugin (0.1.21):
     - Flutter
-    - InAppStory (= 1.26.1)
   - integration_test (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -15,10 +13,6 @@ DEPENDENCIES:
   - inappstory_plugin (from `.symlinks/plugins/inappstory_plugin/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
-
-SPEC REPOS:
-  trunk:
-    - InAppStory
 
 EXTERNAL SOURCES:
   Flutter:
@@ -32,8 +26,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  InAppStory: 51eab9ed73e5195204b00195b3e8727bb5e2ea4a
-  inappstory_plugin: b3f49ebac1caba129dadcdf95eb6fec1a5b2c04a
+  inappstory_plugin: 33f844ff2d95b2894454d2e243aeb28d75627e89
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   video_player_avfoundation: dd410b52df6d2466a42d28550e33e4146928280a
 
