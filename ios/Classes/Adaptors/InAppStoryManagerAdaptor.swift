@@ -2,7 +2,6 @@ import Flutter
 import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
-
 enum MyError: Error {
     case invalidInput(message: String)
 }
@@ -171,35 +170,39 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     }
 
     private func setupCheckoutManager() {
-        InAppStoryAPI.shared.callbacksAPI.productCartUpdate = { [weak self] offer, complete in
+        InAppStoryAPI.shared.callbacksAPI.productCartUpdate = {
+            [weak self] offer, complete in
             guard let self else { return }
 
             let offerDTO = offerToDTO(offer)
-            self.checkoutManagerCallback.onProductCartUpdate(
-                offer: offerDTO,
-                completion: { result in
-                    switch result {
-                    case .success(let cartFromFlutter):
-                        let productCart: InAppStorySDK.ProductCart =
-                            InAppStorySDK.ProductCart(
-                                offers: [],
-                                price: cartFromFlutter.price,
-                                oldPrice: cartFromFlutter.oldPrice,
-                                priceCurrency: cartFromFlutter.priceCurrency
-                            )
-                        complete(.success(productCart))
-                    case .failure:
-                        complete(
-                            .failure(
-                                MyError.invalidInput(
-                                    message:
-                                        "Error while getting product cart"
+            print("The quantity is \(offer.quantity)")
+            DispatchQueue.main.async { [self] in
+                self.checkoutManagerCallback.onProductCartUpdate(
+                    offer: offerDTO,
+                    completion: { result in
+                        switch result {
+                        case .success(let cartFromFlutter):
+                            let productCart: InAppStorySDK.ProductCart =
+                                InAppStorySDK.ProductCart(
+                                    offers: [],
+                                    price: cartFromFlutter.price,
+                                    oldPrice: cartFromFlutter.oldPrice,
+                                    priceCurrency: cartFromFlutter.priceCurrency
+                                )
+                            complete(.success(productCart))
+                        case .failure:
+                            complete(
+                                .failure(
+                                    MyError.invalidInput(
+                                        message:
+                                            "Error while getting product cart"
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
         InAppStoryAPI.shared.callbacksAPI.productCartClicked = { [weak self] in
@@ -210,7 +213,8 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             }
         }
 
-        InAppStoryAPI.shared.callbacksAPI.productCartGetState = { [weak self] complete in
+        InAppStoryAPI.shared.callbacksAPI.productCartGetState = {
+            [weak self] complete in
             guard let self else { return }
 
             DispatchQueue.main.async { [self] in
@@ -264,27 +268,27 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         return offerDTO
     }
 
-//    func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
-//        -> InAppStorySDK.ProductCartOffer
-//    {
-//        return InAppStorySDK.ProductCartOffer(
-//            offerId: offer.offerId,
-//            groupId: offer.groupId,
-//            name: offer.name,
-//            description: offer.description,
-//            url: offer.url,
-//            coverUrl: offer.coverUrl,
-//            imageUrls: offer.imageUrls,
-//            currency: offer.currency,
-//            price: offer.price,
-//            oldPrice: offer.oldPrice,
-//            adult: offer.adult,
-//            availability: Int(offer.availability),
-//            size: offer.size,
-//            color: offer.color,
-//            quantity: Int(offer.quantity)
-//        )
-//    }
+    //    func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
+    //        -> InAppStorySDK.ProductCartOffer
+    //    {
+    //        return InAppStorySDK.ProductCartOffer(
+    //            offerId: offer.offerId,
+    //            groupId: offer.groupId,
+    //            name: offer.name,
+    //            description: offer.description,
+    //            url: offer.url,
+    //            coverUrl: offer.coverUrl,
+    //            imageUrls: offer.imageUrls,
+    //            currency: offer.currency,
+    //            price: offer.price,
+    //            oldPrice: offer.oldPrice,
+    //            adult: offer.adult,
+    //            availability: Int(offer.availability),
+    //            size: offer.size,
+    //            color: offer.color,
+    //            quantity: Int(offer.quantity)
+    //        )
+    //    }
 
     func productCartFromDTO(_ productCart: inappstory_plugin.ProductCart)
         -> InAppStorySDK.ProductCart
