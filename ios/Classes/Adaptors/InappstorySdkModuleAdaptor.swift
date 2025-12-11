@@ -105,7 +105,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
         InAppStoryAPI.shared.plaform = ExternalPlatforms.flutter
 
-        InAppStoryAPI.shared.initWith(
+        InAppStory.shared.initWith(
             serviceKey: apiKey,
             settings: Settings(
                 userID: userID,
