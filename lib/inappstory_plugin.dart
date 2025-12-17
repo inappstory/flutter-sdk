@@ -19,6 +19,7 @@ export 'src/generated/pigeon_generated.g.dart'
     hide
         InAppStoryManagerHostApi,
         AppearanceManagerHostApi,
+        GameReaderCallbackFlutterApi,
         CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/placeholders/placeholders.dart';

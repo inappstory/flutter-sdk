@@ -49,7 +49,7 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void initState() {
     super.initState();
-    BannerLoadCallbackFlutterApi.setUp(this);
+    BannerLoadCallbackFlutterApi.setUp(this, messageChannelSuffix: widget.placeId);
   }
 
   @override
@@ -126,7 +126,7 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void dispose() {
-    BannerLoadCallbackFlutterApi.setUp(null);
+    BannerLoadCallbackFlutterApi.setUp(null, messageChannelSuffix: widget.placeId);
     super.dispose();
   }
 }

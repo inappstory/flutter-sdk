@@ -6,9 +6,19 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
 
     private var registrar: FlutterPluginRegistrar
 
+    private var bannerManager: BannerPlaceManagerAdaptor
+    private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
+
     init(messenger: FlutterBinaryMessenger, registrar: FlutterPluginRegistrar) {
         self.messenger = messenger
         self.registrar = registrar
+
+        self.bannerManager = BannerPlaceManagerAdaptor(
+            binaryMessenger: self.messenger
+        )
+        self.callbackFlutterApi = BannerPlaceCallbackFlutterApi.init(
+            binaryMessenger: self.messenger
+        )
         super.init()
     }
 
@@ -21,6 +31,8 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
+            bannerPlaceManager: self.bannerManager,
+            callbackFlutterApi: self.callbackFlutterApi,
             binaryMessenger: self.messenger,
             pluginRegistrar: self.registrar
         )

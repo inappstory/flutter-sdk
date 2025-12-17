@@ -240,11 +240,11 @@ class BannerPlaceGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked S
 protocol BannerPlaceManagerHostApi {
   func loadBannerPlace(placeId: String) throws
   func preloadBannerPlace(placeId: String) throws
-  func showNext() throws
-  func showPrevious() throws
-  func showByIndex(index: Int64) throws
-  func pauseAutoscroll() throws
-  func resumeAutoscroll() throws
+  func showNext(placeId: String) throws
+  func showPrevious(placeId: String) throws
+  func showByIndex(placeId: String, index: Int64) throws
+  func pauseAutoscroll(placeId: String) throws
+  func resumeAutoscroll(placeId: String) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -285,9 +285,11 @@ class BannerPlaceManagerHostApiSetup {
     }
     let showNextChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showNext\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      showNextChannel.setMessageHandler { _, reply in
+      showNextChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
         do {
-          try api.showNext()
+          try api.showNext(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -298,9 +300,11 @@ class BannerPlaceManagerHostApiSetup {
     }
     let showPreviousChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showPrevious\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      showPreviousChannel.setMessageHandler { _, reply in
+      showPreviousChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
         do {
-          try api.showPrevious()
+          try api.showPrevious(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -313,9 +317,10 @@ class BannerPlaceManagerHostApiSetup {
     if let api = api {
       showByIndexChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let indexArg = args[0] as! Int64
+        let placeIdArg = args[0] as! String
+        let indexArg = args[1] as! Int64
         do {
-          try api.showByIndex(index: indexArg)
+          try api.showByIndex(placeId: placeIdArg, index: indexArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -326,9 +331,11 @@ class BannerPlaceManagerHostApiSetup {
     }
     let pauseAutoscrollChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.pauseAutoscroll\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      pauseAutoscrollChannel.setMessageHandler { _, reply in
+      pauseAutoscrollChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
         do {
-          try api.pauseAutoscroll()
+          try api.pauseAutoscroll(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -339,9 +346,11 @@ class BannerPlaceManagerHostApiSetup {
     }
     let resumeAutoscrollChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.resumeAutoscroll\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      resumeAutoscrollChannel.setMessageHandler { _, reply in
+      resumeAutoscrollChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
         do {
-          try api.resumeAutoscroll()
+          try api.resumeAutoscroll(placeId: placeIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -354,11 +363,11 @@ class BannerPlaceManagerHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol BannerPlaceCallbackFlutterApiProtocol {
-  func onBannerScroll(index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onBannerPlaceLoaded(size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onActionWith(target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerScroll(placeId placeIdArg: String, index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlaceLoaded(placeId placeIdArg: String, size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onActionWith(placeId placeIdArg: String, target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlacePreloaded(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlacePreloadedError(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -370,10 +379,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
   var codec: BannerPlaceGeneratedPigeonCodec {
     return BannerPlaceGeneratedPigeonCodec.shared
   }
-  func onBannerScroll(index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onBannerScroll(placeId placeIdArg: String, index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([indexArg] as [Any?]) { response in
+    channel.sendMessage([placeIdArg, indexArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -388,10 +397,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onBannerPlaceLoaded(size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onBannerPlaceLoaded(placeId placeIdArg: String, size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([sizeArg, widgetHeightArg] as [Any?]) { response in
+    channel.sendMessage([placeIdArg, sizeArg, widgetHeightArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -406,10 +415,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onActionWith(target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onActionWith(placeId placeIdArg: String, target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([targetArg] as [Any?]) { response in
+    channel.sendMessage([placeIdArg, targetArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -424,10 +433,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onBannerPlacePreloaded(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
+    channel.sendMessage([placeIdArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -442,10 +451,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onBannerPlacePreloadedError(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
+    channel.sendMessage([placeIdArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

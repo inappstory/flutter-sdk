@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,6 +24,11 @@ class AndroidBannerView extends BannerPlatformView {
   ) {
     return AndroidView(
       viewType: viewType,
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+        ),
+      },
       layoutDirection: TextDirection.ltr,
       creationParams: Map<String, dynamic>.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),

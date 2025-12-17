@@ -37,6 +37,7 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
     override fun eventGame(contentData: ContentData?, gameId: String?, eventName: String?, payload: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         flutterPluginBinding.runOnMainThread {
+            print(payload)
             flutterApi.eventGame(contentDataDto, gameId, eventName, null) {}
         }
     }
