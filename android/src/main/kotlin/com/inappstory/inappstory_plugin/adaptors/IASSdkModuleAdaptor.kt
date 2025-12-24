@@ -43,8 +43,6 @@ class InappstorySdkModuleAdaptor(
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
-    private lateinit var loggerFlutterApi: LoggerFlutterApi
-
     override fun initWith(
         apiKey: String,
         userID: String,
@@ -147,7 +145,7 @@ class InappstorySdkModuleAdaptor(
                 )
 
             val fragmentActivity = (activityHolder.activity as FragmentActivity)
-            val onBackPressedCallback = object : OnBackPressedCallback(false) {
+            val onBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     inAppStoryManager.let {
                         if (it.onBackPressed())
