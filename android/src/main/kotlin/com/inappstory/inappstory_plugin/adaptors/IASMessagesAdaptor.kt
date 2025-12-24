@@ -23,18 +23,18 @@ class IASMessagesAdaptor(
 
     init {
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
-        val fragmentActivity = (activityHolder.activity as FragmentActivity)
-        onBackPressedCallback = object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                iasManager.let {
-                    if (it.onBackPressed())
-                        return
-                }
-            }
-        }
-        fragmentActivity.onBackPressedDispatcher.addCallback(
-            onBackPressedCallback = onBackPressedCallback!!
-        )
+//        val fragmentActivity = (activityHolder.activity as FragmentActivity)
+//        onBackPressedCallback = object : OnBackPressedCallback(false) {
+//            override fun handleOnBackPressed() {
+//                iasManager.let {
+//                    if (it.onBackPressed())
+//                        return
+//                }
+//            }
+//        }
+//        fragmentActivity.onBackPressedDispatcher.addCallback(
+//            onBackPressedCallback = onBackPressedCallback!!
+//        )
     }
 
     override fun showById(messageId: String, onlyPreloaded: Boolean) {
