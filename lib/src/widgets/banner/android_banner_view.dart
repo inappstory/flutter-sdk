@@ -9,6 +9,7 @@ import '../base/banner_platform_view.dart';
 class AndroidBannerView extends BannerPlatformView {
   const AndroidBannerView({
     super.key,
+    required super.bannerWidgetId,
     required super.autoLoad,
     required super.placeId,
     required super.onPlatformViewCreated,

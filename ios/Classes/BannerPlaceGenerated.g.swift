@@ -503,3 +503,31 @@ class BannerLoadCallbackFlutterApi: BannerLoadCallbackFlutterApiProtocol {
     }
   }
 }
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol BannerViewHostApi {
+  func changeBannerPlaceId(newPlaceId: String) throws
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class BannerViewHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { BannerPlaceGeneratedPigeonCodec.shared }
+  /// Sets up an instance of `BannerViewHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: BannerViewHostApi?, messageChannelSuffix: String = "") {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let changeBannerPlaceIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerViewHostApi.changeBannerPlaceId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      changeBannerPlaceIdChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let newPlaceIdArg = args[0] as! String
+        do {
+          try api.changeBannerPlaceId(newPlaceId: newPlaceIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      changeBannerPlaceIdChannel.setMessageHandler(nil)
+    }
+  }
+}

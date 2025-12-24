@@ -6,6 +6,7 @@ import '../banner_place.dart' show BannerDecoration;
 class BannerPlatformView extends StatelessWidget {
   const BannerPlatformView({
     super.key,
+    required this.bannerWidgetId,
     required this.placeId,
     required this.onPlatformViewCreated,
     required this.autoLoad,
@@ -14,6 +15,8 @@ class BannerPlatformView extends StatelessWidget {
   });
 
   final String placeId;
+
+  final String bannerWidgetId;
 
   final BannerPlaceDecoration? decoration;
 
@@ -27,6 +30,7 @@ class BannerPlatformView extends StatelessWidget {
     const String viewType = 'banner-view';
     Map<String, dynamic> creationParams = <String, dynamic>{};
 
+    creationParams['bannerWidgetId'] = bannerWidgetId;
     creationParams['placeId'] = placeId;
     if (decoration != null) {
       creationParams['loop'] = decoration?.loop ?? false;

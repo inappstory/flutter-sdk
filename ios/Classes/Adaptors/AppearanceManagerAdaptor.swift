@@ -34,16 +34,16 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
     func setReaderCornerRadius(radius: Int64) throws {
         InAppStory.shared.readerCornerRadius = CGFloat(radius)
     }
-    
+
     func setCoverQuality(coverQuality: CoverQuality) throws {
         DispatchQueue.main.async {
-            switch (coverQuality) {
+            switch coverQuality {
             case CoverQuality.medium:
-                    InAppStory.shared.coverQuality = .medium
+                InAppStory.shared.coverQuality = .medium
             case CoverQuality.high:
-                    InAppStory.shared.coverQuality = .high
-                default:
-                    InAppStory.shared.coverQuality = .medium
+                InAppStory.shared.coverQuality = .high
+            default:
+                InAppStory.shared.coverQuality = .medium
             }
         }
     }
@@ -189,7 +189,9 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
 
     func setCloseIcon(iconPath: String) throws {
         let image = getUIImage(path: iconPath)
-        InAppStory.shared.closeReaderImage = image!
+        if image != nil {
+            InAppStory.shared.closeReaderImage = image!
+        }
     }
 
     func setRefreshIcon(iconPath: String) throws {
@@ -246,10 +248,11 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
     }
 
     private func getUIImage(path: String) -> UIImage? {
-        let key = pluginRegistrar.lookupKey(forAsset: path)
+        let key = self.pluginRegistrar.lookupKey(forAsset: path)
         let path = Bundle.main.path(forResource: key, ofType: nil)
 
         if path == nil {
+            print("File path not exists: \(path)")
             return nil
         }
 

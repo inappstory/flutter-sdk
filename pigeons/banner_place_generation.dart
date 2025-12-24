@@ -52,6 +52,11 @@ abstract class BannerLoadCallbackFlutterApi {
   void onBannersLoaded(int size, int widgetHeight);
 }
 
+@HostApi()
+abstract class BannerViewHostApi {
+  void changeBannerPlaceId(String newPlaceId);
+}
+
 enum GradientType {
   linear,
   radial,

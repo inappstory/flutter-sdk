@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.views
 import BannerDecorationDTO
 import BannerLoadCallbackFlutterApi
 import BannerPlaceCallbackFlutterApi
+import BannerViewHostApi
 import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
@@ -36,16 +37,16 @@ import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
 
 class BannerView(
-    context: Context,
+    val context: Context,
     id: Int,
     creationParams: Map<String?, Any?>?,
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    appearanceManager: AppearanceManager,
+    private val appearanceManager: AppearanceManager,
     private var bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor,
-    bannerPlaceCallback: BannerPlaceCallbackFlutterApi
-) : PlatformView {
+    val bannerPlaceCallback: BannerPlaceCallbackFlutterApi
+) : PlatformView, BannerViewHostApi {
 
-    private val bannerPlace: BannerCarousel
+    private lateinit var bannerPlace: BannerCarousel
     private val frame: FrameLayout
 
     private var bannerLoadCallback: BannerLoadCallbackFlutterApi
@@ -60,9 +61,16 @@ class BannerView(
 
     init {
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
+        val bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
         bannerLoadCallback = BannerLoadCallbackFlutterApi(
             flutterPluginBinding.binaryMessenger,
-            messageChannelSuffix = placeId
+            messageChannelSuffix = bannerWidgetId
+        )
+
+        BannerViewHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            this,
+            messageChannelSuffix = bannerWidgetId
         )
 
         val loop: Boolean? = creationParams?.get("loop") as? Boolean?
@@ -99,6 +107,71 @@ class BannerView(
 
         frame = FrameLayout(context)
 
+        createBannerCarousel(placeId)
+
+        bannerPlaceManagerAdaptor.subscribe(LoadBannerPlace) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.loadBanners()
+        }
+        bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            InAppStoryManager.getInstance()?.preloadBannerPlace(
+                BannerPlaceLoadSettings().placeId(placeId),
+                object : BannerPlacePreloadCallback(placeId) {
+                    override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
+                        bannerPlaceCallback.onBannerPlacePreloaded(placeId) {}
+                    }
+
+                    override fun loadError() {
+                        bannerPlaceCallback.onBannerPlacePreloadedError(placeId) {}
+                    }
+
+                    override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
+
+                    }
+
+                    override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
+                    }
+                })
+        }
+        bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.showNext()
+        }
+        bannerPlaceManagerAdaptor.subscribe(ShowPrevious) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.showPrevious()
+        }
+        bannerPlaceManagerAdaptor.subscribe(ShowByIndex) { payload ->
+            if (payload.placeId != placeId) {
+                return@subscribe
+            }
+            bannerPlace.showByIndex(payload.index.toInt())
+        }
+        bannerPlaceManagerAdaptor.subscribe(PauseAutoscroll) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.pauseAutoscroll()
+        }
+        bannerPlaceManagerAdaptor.subscribe(ResumeAutoscroll) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.resumeAutoscroll()
+        }
+        frame.addView(bannerPlace)
+    }
+
+    private fun createBannerCarousel(placeId: String) {
         bannerPlace = BannerCarousel(context)
 
         bannerPlace.layoutParams = FrameLayout.LayoutParams(
@@ -167,67 +240,6 @@ class BannerView(
                 }
             }
         })
-
-        bannerPlaceManagerAdaptor.subscribe(LoadBannerPlace) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            bannerPlace.loadBanners()
-        }
-        bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            InAppStoryManager.getInstance()?.preloadBannerPlace(
-                BannerPlaceLoadSettings().placeId(placeId),
-                object : BannerPlacePreloadCallback(placeId) {
-                    override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
-                        bannerPlaceCallback.onBannerPlacePreloaded(placeId) {}
-                    }
-
-                    override fun loadError() {
-                        bannerPlaceCallback.onBannerPlacePreloadedError(placeId) {}
-                    }
-
-                    override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
-
-                    }
-
-                    override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
-                    }
-                })
-        }
-        bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            bannerPlace.showNext()
-        }
-        bannerPlaceManagerAdaptor.subscribe(ShowPrevious) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            bannerPlace.showPrevious()
-        }
-        bannerPlaceManagerAdaptor.subscribe(ShowByIndex) { payload ->
-            if (payload.placeId != placeId) {
-                return@subscribe
-            }
-            bannerPlace.showByIndex(payload.index.toInt())
-        }
-        bannerPlaceManagerAdaptor.subscribe(PauseAutoscroll) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            bannerPlace.pauseAutoscroll()
-        }
-        bannerPlaceManagerAdaptor.subscribe(ResumeAutoscroll) { payload ->
-            if (payload != placeId) {
-                return@subscribe
-            }
-            bannerPlace.resumeAutoscroll()
-        }
-        frame.addView(bannerPlace)
     }
 
     private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
@@ -243,6 +255,13 @@ class BannerView(
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_PX, px.toFloat(), this.resources.displayMetrics
         ) / this.resources.displayMetrics.density
+    }
+
+    override fun changeBannerPlaceId(newPlaceId: String) {
+        frame.removeView(bannerPlace)
+        createBannerCarousel(newPlaceId)
+        frame.addView(bannerPlace)
+        bannerPlace.loadBanners(true)
     }
 }
 

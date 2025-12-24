@@ -10,6 +10,7 @@ import '../base/banner_platform_view.dart';
 class IosBannerView extends BannerPlatformView {
   const IosBannerView({
     super.key,
+    required super.bannerWidgetId,
     required super.placeId,
     required super.onPlatformViewCreated,
     required super.autoLoad,

@@ -456,3 +456,37 @@ class BannerLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger,
     }
   }
 }
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface BannerViewHostApi {
+  fun changeBannerPlaceId(newPlaceId: String)
+
+  companion object {
+    /** The codec used by BannerViewHostApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      BannerPlaceGeneratedPigeonCodec()
+    }
+    /** Sets up an instance of `BannerViewHostApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: BannerViewHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.BannerViewHostApi.changeBannerPlaceId$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val newPlaceIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.changeBannerPlaceId(newPlaceIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              BannerPlaceGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
