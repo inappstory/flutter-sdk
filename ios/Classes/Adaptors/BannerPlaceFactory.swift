@@ -31,12 +31,14 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
                 )
                 break
             case .widgetEvent(let bannerData, let name, let data):
-                self.callbackFlutterApi.onActionWith(
-                    bannerData: self.bannerDataToDto(data: bannerData),
-                    widgetEventName: name,
-                    widgetData: data,
-                    completion: { _ in }
-                )
+                DispatchQueue.main.async {
+                    self.callbackFlutterApi.onActionWith(
+                        bannerData: self.bannerDataToDto(data: bannerData),
+                        widgetEventName: name,
+                        widgetData: data,
+                        completion: { _ in }
+                    )
+                }
                 print(
                     "Banner widget event with name: \(name) and data: \(String(describing: data))"
                 )

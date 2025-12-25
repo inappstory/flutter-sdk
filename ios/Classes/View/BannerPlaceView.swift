@@ -82,28 +82,31 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self.bannerManager.subscribe(PreloadBannerPlace()) {
             payload in
             if payload == self.placeId {
-                InAppStory.shared.preloadBanners(placeID: self.placeId) {
-                    result in
-                    do {
-                        if try result.get() {
-                            self.callbackFlutterApi.onBannerPlacePreloaded(
-                                placeId: self.placeId,
-                                completion: { _ in }
-                            )
-                        } else {
+                DispatchQueue.main.async {
+                    InAppStory.shared.preloadBanners(placeID: self.placeId) {
+                        result in
+                        do {
+                            if try result.get() {
+                                self.callbackFlutterApi.onBannerPlacePreloaded(
+                                    placeId: self.placeId,
+                                    completion: { _ in }
+                                )
+                            } else {
+                                self.callbackFlutterApi
+                                    .onBannerPlacePreloadedError(
+                                        placeId: self.placeId,
+                                        completion: { _ in }
+                                    )
+                            }
+                        } catch {
                             self.callbackFlutterApi.onBannerPlacePreloadedError(
                                 placeId: self.placeId,
                                 completion: { _ in }
                             )
+                            print(
+                                "Failed to preload banner for placeId: \(self.placeId), error: \(error)"
+                            )
                         }
-                    } catch {
-                        self.callbackFlutterApi.onBannerPlacePreloadedError(
-                            placeId: self.placeId,
-                            completion: { _ in }
-                        )
-                        print(
-                            "Failed to preload banner for placeId: \(self.placeId), error: \(error)"
-                        )
                     }
                 }
             }
@@ -165,30 +168,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
         createBannerView()
 
-        //        // TODO: !!!!
-        //        InAppStory.shared.iasBannerEvent = {
-        //            switch $0 {
-        //            case .bannersLoaded(let placeID):
-        //                print(
-        //                    "Banners loaded with place id: \(String(describing: placeID))"
-        //                )
-        //                break
-        //            case .widgetEvent(let bannerData, let name, let data):
-        //                print(
-        //                    "Banner widget event with name: \(name) and data: \(String(describing: data))"
-        //                )
-        //                break
-        //            case .preloaded(let placeID, let banners):
-        //                break
-        //            case .show(let bannerData):
-        //                break
-        //            case .clickOnButton(let bannerData, let link):
-        //                break
-        //            @unknown default:
-        //                print("default")
-        //            }
-        //        }
-
         _view.addSubview(_bannersView!)
 
         var allConstraints: [NSLayoutConstraint] = []  // настройка констрайнов
@@ -245,22 +224,22 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             }
         }
 
-//        self._bannersView?.onActionWith = { target in
-//            DispatchQueue.main.async { [self] in
-//
-//                callbackFlutterApi.onActionWith(
-//                    bannerData: <#T##BannerData#>,
-//                    widgetEventName: target.,
-//                    widgetData: <#T##<<error type>>#>,
-//                    completion: { _ in }
-//                )
-//                callbackFlutterApi.onActionWith(
-//                    placeId: self.placeId,
-//                    target: target,
-//                    completion: { _ in }
-//                )
-//            }
-//        }
+        //        self._bannersView?.onActionWith = { target in
+        //            DispatchQueue.main.async { [self] in
+        //
+        //                callbackFlutterApi.onActionWith(
+        //                    bannerData: <#T##BannerData#>,
+        //                    widgetEventName: target.,
+        //                    widgetData: <#T##<<error type>>#>,
+        //                    completion: { _ in }
+        //                )
+        //                callbackFlutterApi.onActionWith(
+        //                    placeId: self.placeId,
+        //                    target: target,
+        //                    completion: { _ in }
+        //                )
+        //            }
+        //        }
 
         self._bannersView?.bannersDidScroll = { index in
             DispatchQueue.main.async { [self] in

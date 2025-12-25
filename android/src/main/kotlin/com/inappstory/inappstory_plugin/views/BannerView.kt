@@ -131,11 +131,19 @@ class BannerView(
                 BannerPlaceLoadSettings().placeId(placeId),
                 object : BannerPlacePreloadCallback(placeId) {
                     override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
-                        bannerPlaceCallback.onBannerPlacePreloaded(placeId) {}
+                        flutterPluginBinding.runOnMainThread {
+                            bannerPlaceCallback.onBannerPlacePreloaded(
+                                placeId
+                            ) {}
+                        }
                     }
 
                     override fun loadError() {
-                        bannerPlaceCallback.onBannerPlacePreloadedError(placeId) {}
+                        flutterPluginBinding.runOnMainThread {
+                            bannerPlaceCallback.onBannerPlacePreloadedError(
+                                placeId
+                            ) {}
+                        }
                     }
 
                     override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {

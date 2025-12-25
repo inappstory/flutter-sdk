@@ -32,11 +32,13 @@ class BannerViewFactory(
                 widgetData: Map<String?, String?>?
             ) {
                 if (bannerData != null && widgetEventName != null && widgetData != null && widgetData.keys.any { s: String? -> s != null }) {
-                    bannerPlaceCallback.onActionWith(
-                        bannerDataToDto(bannerData),
-                        widgetEventName,
-                        widgetData.map { (k, v) -> k as String to v }.toMap()
-                    ) {}
+                    flutterPluginBinding.runOnMainThread {
+                        bannerPlaceCallback.onActionWith(
+                            bannerDataToDto(bannerData),
+                            widgetEventName,
+                            widgetData.map { (k, v) -> k as String to v }.toMap()
+                        ) {}
+                    }
                 }
             }
         })
