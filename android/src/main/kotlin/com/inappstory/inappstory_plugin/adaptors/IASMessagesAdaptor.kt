@@ -35,6 +35,7 @@ class IASMessagesAdaptor(
             }
         }
         fragmentActivity.onBackPressedDispatcher.addCallback(
+            fragmentActivity,
             onBackPressedCallback = onBackPressedCallback
         )
     }
