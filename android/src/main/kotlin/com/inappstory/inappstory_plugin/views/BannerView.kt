@@ -30,7 +30,6 @@ import com.inappstory.sdk.banners.BannerData
 import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
-import com.inappstory.sdk.banners.BannerWidgetCallback
 import com.inappstory.sdk.banners.ui.carousel.BannerCarousel
 import com.inappstory.sdk.banners.ui.carousel.DefaultBannerCarouselAppearance
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -228,25 +227,6 @@ class BannerView(
             }
 
             override fun bannerLoadError(p0: Int, p1: Boolean) {
-            }
-        })
-
-        InAppStoryManager.getInstance().setBannerWidgetCallback(object : BannerWidgetCallback {
-            override fun bannerWidget(
-                bannerData: BannerData?,
-                widgetEventName: String?,
-                widgetData: Map<String?, String?>?
-            ) {
-                if (widgetData != null) {
-                    flutterPluginBinding.runOnMainThread {
-                        widgetData["widget_value"]?.let {
-                            bannerPlaceCallback.onActionWith(
-                                placeId,
-                                widgetData["widget_value"]!!
-                            ) {}
-                        }
-                    }
-                }
             }
         })
     }
