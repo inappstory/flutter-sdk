@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.views
 import BannerPlaceCallbackFlutterApi
 import android.content.Context
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.banners.BannerData
