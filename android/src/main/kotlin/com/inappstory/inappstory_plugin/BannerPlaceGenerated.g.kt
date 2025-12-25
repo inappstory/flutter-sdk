@@ -147,6 +147,40 @@ data class BannerDecorationDTO (
 
   override fun hashCode(): Int = toList().hashCode()
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class BannerData (
+  val id: String? = null,
+  val bannerPlace: String? = null,
+  val payload: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): BannerData {
+      val id = pigeonVar_list[0] as String?
+      val bannerPlace = pigeonVar_list[1] as String?
+      val payload = pigeonVar_list[2] as String?
+      return BannerData(id, bannerPlace, payload)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      bannerPlace,
+      payload,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is BannerData) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return BannerPlaceGeneratedPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
 private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -163,6 +197,11 @@ private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           BannerDecorationDTO.fromList(it)
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          BannerData.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -182,6 +221,10 @@ private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(131)
         writeValue(stream, value.toList())
       }
+      is BannerData -> {
+        stream.write(132)
+        writeValue(stream, value.toList())
+      }
       else -> super.writeValue(stream, value)
     }
   }
@@ -190,6 +233,7 @@ private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface BannerPlaceManagerHostApi {
   fun loadBannerPlace(placeId: String)
+  fun reloadBannerPlace(placeId: String)
   fun preloadBannerPlace(placeId: String)
   fun showNext(placeId: String)
   fun showPrevious(placeId: String)
@@ -214,6 +258,24 @@ interface BannerPlaceManagerHostApi {
             val placeIdArg = args[0] as String
             val wrapped: List<Any?> = try {
               api.loadBannerPlace(placeIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              BannerPlaceGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.reloadBannerPlace$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val placeIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.reloadBannerPlace(placeIdArg)
               listOf(null)
             } catch (exception: Throwable) {
               BannerPlaceGeneratedPigeonUtils.wrapError(exception)
@@ -378,12 +440,12 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       } 
     }
   }
-  fun onActionWith(placeIdArg: String, targetArg: String, callback: (Result<Unit>) -> Unit)
+  fun onActionWith(bannerDataArg: BannerData, widgetEventNameArg: String, widgetDataArg: Map<String, Any?>?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(placeIdArg, targetArg)) {
+    channel.send(listOf(bannerDataArg, widgetEventNameArg, widgetDataArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))

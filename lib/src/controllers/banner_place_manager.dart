@@ -12,6 +12,10 @@ class BannerPlaceManager {
     await _bannerPlaceManagerApi.loadBannerPlace(placeId);
   }
 
+  Future<void> reload(String placeId) async {
+    await _bannerPlaceManagerApi.reloadBannerPlace(placeId);
+  }
+
   Future<void> showNext(String placeId) async {
     await _bannerPlaceManagerApi.showNext(placeId);
   }

@@ -17,6 +17,7 @@ import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.adaptors.LoadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.PauseAutoscroll
 import com.inappstory.inappstory_plugin.adaptors.PreloadBannerPlace
+import com.inappstory.inappstory_plugin.adaptors.ReloadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.ResumeAutoscroll
 import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
@@ -115,6 +116,14 @@ class BannerView(
             }
             bannerPlace.loadBanners()
         }
+
+        bannerPlaceManagerAdaptor.subscribe(ReloadBannerPlace) { payload ->
+            if (payload != placeId) {
+                return@subscribe
+            }
+            bannerPlace.reloadBanners()
+        }
+
         bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
             if (payload != placeId) {
                 return@subscribe

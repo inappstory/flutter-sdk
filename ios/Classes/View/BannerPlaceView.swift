@@ -32,7 +32,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self.placeId = (args as! [String: Any])["placeId"] as! String
         self.bannerWidgetId =
             (args as! [String: Any])["bannerWidgetId"] as! String
-        
 
         self.bannerManager = bannerManager
 
@@ -66,11 +65,18 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             api: self,
             messageChannelSuffix: self.bannerWidgetId
         )
-        
+
         self.bannerManager.subscribe(LoadBannerPlace()) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.create()
+            }
+        }
+
+        self.bannerManager.subscribe(ReloadBannerPlace()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.refresh()
             }
         }
         self.bannerManager.subscribe(PreloadBannerPlace()) {
@@ -159,29 +165,29 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
         createBannerView()
 
-        // TODO: !!!!
-        InAppStory.shared.iasBannerEvent = {
-            switch $0 {
-            case .bannersLoaded(let placeID):
-                print(
-                    "Banners loaded with place id: \(String(describing: placeID))"
-                )
-                break
-            case .widgetEvent(let bannerData, let name, let data):
-                print(
-                    "Banner widget event with name: \(name) and data: \(String(describing: data))"
-                )
-                break
-            case .preloaded(let placeID, let banners):
-                break
-            case .show(let bannerData):
-                break
-            case .clickOnButton(let bannerData, let link):
-                break
-            @unknown default:
-                print("default")
-            }
-        }
+        //        // TODO: !!!!
+        //        InAppStory.shared.iasBannerEvent = {
+        //            switch $0 {
+        //            case .bannersLoaded(let placeID):
+        //                print(
+        //                    "Banners loaded with place id: \(String(describing: placeID))"
+        //                )
+        //                break
+        //            case .widgetEvent(let bannerData, let name, let data):
+        //                print(
+        //                    "Banner widget event with name: \(name) and data: \(String(describing: data))"
+        //                )
+        //                break
+        //            case .preloaded(let placeID, let banners):
+        //                break
+        //            case .show(let bannerData):
+        //                break
+        //            case .clickOnButton(let bannerData, let link):
+        //                break
+        //            @unknown default:
+        //                print("default")
+        //            }
+        //        }
 
         _view.addSubview(_bannersView!)
 
@@ -239,15 +245,22 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             }
         }
 
-        self._bannersView?.onActionWith = { target in
-            DispatchQueue.main.async { [self] in
-                callbackFlutterApi.onActionWith(
-                    placeId: self.placeId,
-                    target: target,
-                    completion: { _ in }
-                )
-            }
-        }
+//        self._bannersView?.onActionWith = { target in
+//            DispatchQueue.main.async { [self] in
+//
+//                callbackFlutterApi.onActionWith(
+//                    bannerData: <#T##BannerData#>,
+//                    widgetEventName: target.,
+//                    widgetData: <#T##<<error type>>#>,
+//                    completion: { _ in }
+//                )
+//                callbackFlutterApi.onActionWith(
+//                    placeId: self.placeId,
+//                    target: target,
+//                    completion: { _ in }
+//                )
+//            }
+//        }
 
         self._bannersView?.bannersDidScroll = { index in
             DispatchQueue.main.async { [self] in
@@ -259,7 +272,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             }
         }
     }
-    
+
     func changeBannerPlaceId(newPlaceId: String) throws {
         self.placeId = newPlaceId
         createBannerView()

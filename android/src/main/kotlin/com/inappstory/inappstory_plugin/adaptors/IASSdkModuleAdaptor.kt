@@ -1,9 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
-import LoggerFlutterApi
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.FragmentActivity
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
@@ -144,26 +141,11 @@ class InappstorySdkModuleAdaptor(
                     inAppStoryAPI.onboardings
                 )
 
-            val fragmentActivity = (activityHolder.activity as FragmentActivity)
-            val onBackPressedCallback = object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    inAppStoryManager.let {
-                        if (it.onBackPressed())
-                            return
-                    }
-                }
-            }
-
-            fragmentActivity.onBackPressedDispatcher.addCallback(
-                onBackPressedCallback = onBackPressedCallback
-            )
-
             iasMessages = IASMessagesAdaptor(
                 flutterPluginBinding,
                 inAppStoryAPI.inAppMessage,
                 inAppStoryManager,
-                activityHolder,
-                onBackPressedCallback
+                activityHolder
             )
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)

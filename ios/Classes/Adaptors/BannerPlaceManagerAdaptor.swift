@@ -6,6 +6,9 @@ import Foundation
 struct LoadBannerPlace: EventKey {
     typealias Payload = String
 }
+struct ReloadBannerPlace: EventKey {
+    typealias Payload = String
+}
 struct PreloadBannerPlace: EventKey {
     typealias Payload = String
 }
@@ -39,6 +42,8 @@ public protocol EventKey: Hashable {
 }
 
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
+   
+    
     typealias Token = UUID
 
     private var subscribers: [AnyHashable: [Token: (Any) -> Void]] = [:]
@@ -141,6 +146,10 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
         self.emit(LoadBannerPlace(), payload: placeId)
     }
 
+    func reloadBannerPlace(placeId: String) throws {
+        self.emit(ReloadBannerPlace(), payload: placeId)
+    }
+    
     func preloadBannerPlace(placeId: String) throws {
         self.emit(PreloadBannerPlace(), payload: placeId)
     }

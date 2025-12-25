@@ -59,13 +59,11 @@ class IASBannerPlaceManagerAdaptor(
 
     fun <P : Any> emit(key: EventKey<P>, payload: P) {
         val map = subscribers[key] ?: return
-        // Делать snapshot, чтобы подписчики не мешали друг другу при изменении в процессе уведомления
         val callbacks = ArrayList<(Any) -> Unit>(map.values)
         for (cb in callbacks) {
             try {
                 cb(payload as Any)
             } catch (e: Throwable) {
-                // Игнорируем исключения от слушателей, чтобы другие получили событие
             }
         }
     }
@@ -82,6 +80,10 @@ class IASBannerPlaceManagerAdaptor(
 
     override fun loadBannerPlace(placeId: String) {
         emit(LoadBannerPlace, placeId)
+    }
+
+    override fun reloadBannerPlace(placeId: String) {
+        emit(ReloadBannerPlace, placeId)
     }
 
     override fun preloadBannerPlace(placeId: String) {
@@ -110,6 +112,7 @@ class IASBannerPlaceManagerAdaptor(
 }
 
 object LoadBannerPlace : EventKey<String>
+object ReloadBannerPlace : EventKey<String>
 object PreloadBannerPlace : EventKey<String>
 object ShowNext : EventKey<String>
 object ShowPrevious : EventKey<String>

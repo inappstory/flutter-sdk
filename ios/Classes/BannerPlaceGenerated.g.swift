@@ -186,6 +186,39 @@ struct BannerDecorationDTO: Hashable {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct BannerData: Hashable {
+  var id: String? = nil
+  var bannerPlace: String? = nil
+  var payload: String? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> BannerData? {
+    let id: String? = nilOrValue(pigeonVar_list[0])
+    let bannerPlace: String? = nilOrValue(pigeonVar_list[1])
+    let payload: String? = nilOrValue(pigeonVar_list[2])
+
+    return BannerData(
+      id: id,
+      bannerPlace: bannerPlace,
+      payload: payload
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+      bannerPlace,
+      payload,
+    ]
+  }
+  static func == (lhs: BannerData, rhs: BannerData) -> Bool {
+    return deepEqualsBannerPlaceGenerated(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashBannerPlaceGenerated(value: toList(), hasher: &hasher)
+  }
+}
+
 private class BannerPlaceGeneratedPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -199,6 +232,8 @@ private class BannerPlaceGeneratedPigeonCodecReader: FlutterStandardReader {
       return BannerPlaceDecoration.fromList(self.readValue() as! [Any?])
     case 131:
       return BannerDecorationDTO.fromList(self.readValue() as! [Any?])
+    case 132:
+      return BannerData.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -215,6 +250,9 @@ private class BannerPlaceGeneratedPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? BannerDecorationDTO {
       super.writeByte(131)
+      super.writeValue(value.toList())
+    } else if let value = value as? BannerData {
+      super.writeByte(132)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -239,6 +277,7 @@ class BannerPlaceGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked S
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol BannerPlaceManagerHostApi {
   func loadBannerPlace(placeId: String) throws
+  func reloadBannerPlace(placeId: String) throws
   func preloadBannerPlace(placeId: String) throws
   func showNext(placeId: String) throws
   func showPrevious(placeId: String) throws
@@ -267,6 +306,21 @@ class BannerPlaceManagerHostApiSetup {
       }
     } else {
       loadBannerPlaceChannel.setMessageHandler(nil)
+    }
+    let reloadBannerPlaceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.reloadBannerPlace\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      reloadBannerPlaceChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
+        do {
+          try api.reloadBannerPlace(placeId: placeIdArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      reloadBannerPlaceChannel.setMessageHandler(nil)
     }
     let preloadBannerPlaceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.preloadBannerPlace\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -365,7 +419,7 @@ class BannerPlaceManagerHostApiSetup {
 protocol BannerPlaceCallbackFlutterApiProtocol {
   func onBannerScroll(placeId placeIdArg: String, index indexArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlaceLoaded(placeId placeIdArg: String, size sizeArg: Int64, widgetHeight widgetHeightArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func onActionWith(placeId placeIdArg: String, target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onActionWith(bannerData bannerDataArg: BannerData, widgetEventName widgetEventNameArg: String, widgetData widgetDataArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloaded(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloadedError(placeId placeIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
@@ -415,10 +469,10 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
       }
     }
   }
-  func onActionWith(placeId placeIdArg: String, target targetArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func onActionWith(bannerData bannerDataArg: BannerData, widgetEventName widgetEventNameArg: String, widgetData widgetDataArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([placeIdArg, targetArg] as [Any?]) { response in
+    channel.sendMessage([bannerDataArg, widgetEventNameArg, widgetDataArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

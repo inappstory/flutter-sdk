@@ -14,6 +14,8 @@ import 'package:pigeon/pigeon.dart';
 abstract class BannerPlaceManagerHostApi {
   void loadBannerPlace(String placeId);
 
+  void reloadBannerPlace(String placeId);
+
   void preloadBannerPlace(String placeId);
 
   void showNext(String placeId);
@@ -40,7 +42,8 @@ abstract class BannerPlaceCallbackFlutterApi {
 
   void onBannerPlaceLoaded(String placeId, int size, int widgetHeight);
 
-  void onActionWith(String placeId, String target);
+  void onActionWith(BannerData bannerData, String widgetEventName,
+      Map<String, Object?>? widgetData);
 
   void onBannerPlacePreloaded(String placeId);
 
@@ -66,4 +69,10 @@ enum GradientType {
 class BannerDecorationDTO {
   late int? color;
   late String? image;
+}
+
+class BannerData {
+  late String? id;
+  late String? bannerPlace;
+  late String? payload;
 }
