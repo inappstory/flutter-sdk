@@ -18,8 +18,9 @@ class IASMessagesAdaptor(
     private val iasMessages: IASInAppMessage,
     private val iasManager: InAppStoryManager,
     private val activityHolder: ActivityHolder,
-    private var onBackPressedCallback: OnBackPressedCallback?,
 ) : IASInAppMessagesHostApi {
+
+    private var onBackPressedCallback: OnBackPressedCallback
 
     init {
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -27,13 +28,16 @@ class IASMessagesAdaptor(
         onBackPressedCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
                 iasManager.let {
-                    if (it.onBackPressed())
+                    if (it.onBackPressed()) {
                         return
+                    }
                 }
             }
         }
+
         fragmentActivity.onBackPressedDispatcher.addCallback(
-            onBackPressedCallback = onBackPressedCallback!!
+            fragmentActivity,
+            onBackPressedCallback = onBackPressedCallback
         )
     }
 
@@ -47,15 +51,15 @@ class IASMessagesAdaptor(
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
             object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
-                    onBackPressedCallback?.isEnabled = true
+                    onBackPressedCallback.isEnabled = true
                 }
 
                 override fun readerOpenError(p0: String?) {
-                    onBackPressedCallback?.isEnabled = false
+                    onBackPressedCallback.isEnabled = false
                 }
 
                 override fun readerIsClosed() {
-                    onBackPressedCallback?.isEnabled = false
+                    onBackPressedCallback.isEnabled = false
                 }
             })
     }
@@ -70,15 +74,15 @@ class IASMessagesAdaptor(
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
             object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
-                    onBackPressedCallback?.isEnabled = true
+                    onBackPressedCallback.isEnabled = true
                 }
 
                 override fun readerOpenError(p0: String?) {
-                    onBackPressedCallback?.isEnabled = false
+                    onBackPressedCallback.isEnabled = false
                 }
 
                 override fun readerIsClosed() {
-                    onBackPressedCallback?.isEnabled = false
+                    onBackPressedCallback.isEnabled = false
                 }
             })
     }

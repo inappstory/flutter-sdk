@@ -3,30 +3,43 @@ import Flutter
 @_spi(IAS_API) import InAppStorySDK
 import UIKit
 
-class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
-{
-    private var _bannersView: IASBannersView!
+class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
+    private var _bannersView: IASBannersView?
+
+    private var bannerManager: BannerPlaceManagerAdaptor
     private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
     private var bannerLoadFlutterApi: BannerLoadCallbackFlutterApi
 
     private var _view: UIView
 
+    private var placeId: String
+    private var bannerWidgetId: String
+
+    private var bannersAppearance: IASBannersAppearance?
+
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
+        bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
+        callbackFlutterApi: BannerPlaceCallbackFlutterApi,
         binaryMessenger messenger: FlutterBinaryMessenger,
         pluginRegistrar registrar: FlutterPluginRegistrar
     ) {
         _view = UIView()
 
-        callbackFlutterApi = BannerPlaceCallbackFlutterApi.init(
-            binaryMessenger: messenger
-        )
+        self.placeId = (args as! [String: Any])["placeId"] as! String
+        self.bannerWidgetId =
+            (args as! [String: Any])["bannerWidgetId"] as! String
 
-        bannerLoadFlutterApi = BannerLoadCallbackFlutterApi.init(
-            binaryMessenger: messenger
+        self.bannerManager = bannerManager
+
+        self.callbackFlutterApi = callbackFlutterApi
+
+        self.bannerLoadFlutterApi = BannerLoadCallbackFlutterApi.init(
+            binaryMessenger: messenger,
+            messageChannelSuffix: self.bannerWidgetId
         )
 
         var decoration: BannerDecorationDTO?
@@ -47,11 +60,87 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
         super.init()
         // iOS views can be created here
 
-        BannerPlaceManagerHostApiSetup.setUp(
+        BannerViewHostApiSetup.setUp(
             binaryMessenger: messenger,
-            api: self
+            api: self,
+            messageChannelSuffix: self.bannerWidgetId
         )
 
+        self.bannerManager.subscribe(LoadBannerPlace()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.create()
+            }
+        }
+
+        self.bannerManager.subscribe(ReloadBannerPlace()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.refresh()
+            }
+        }
+        self.bannerManager.subscribe(PreloadBannerPlace()) {
+            payload in
+            if payload == self.placeId {
+                DispatchQueue.main.async {
+                    InAppStory.shared.preloadBanners(placeID: self.placeId) {
+                        result in
+                        do {
+                            if try result.get() {
+                                self.callbackFlutterApi.onBannerPlacePreloaded(
+                                    placeId: self.placeId,
+                                    completion: { _ in }
+                                )
+                            } else {
+                                self.callbackFlutterApi
+                                    .onBannerPlacePreloadedError(
+                                        placeId: self.placeId,
+                                        completion: { _ in }
+                                    )
+                            }
+                        } catch {
+                            self.callbackFlutterApi.onBannerPlacePreloadedError(
+                                placeId: self.placeId,
+                                completion: { _ in }
+                            )
+                            print(
+                                "Failed to preload banner for placeId: \(self.placeId), error: \(error)"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        self.bannerManager.subscribe(ShowNext()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.showNext()
+            }
+        }
+        self.bannerManager.subscribe(ShowPrevious()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.showPrevious()
+            }
+        }
+        self.bannerManager.subscribe(ShowByIndex()) {
+            payload in
+            if payload.placeId == self.placeId {
+                self._bannersView?.showBannerWith(index: Int(payload.index))
+            }
+        }
+        self.bannerManager.subscribe(PauseAutoscroll()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.pause()
+            }
+        }
+        self.bannerManager.subscribe(ResumeAutoscroll()) {
+            payload in
+            if payload == self.placeId {
+                self._bannersView?.resume()
+            }
+        }
         createNativeView(view: _view, args: args! as! [String: Any])
     }
 
@@ -60,7 +149,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
     }
 
     func createNativeView(view _view: UIView, args _args: [String: Any]) {
-
         let shouldLoop = _args["loop"] as? Bool
         let sideInset = _args["bannerOffset"] as? NSNumber
         let interItemSpacing = _args["bannersGap"] as? NSNumber
@@ -69,63 +157,18 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
         if shouldLoop != nil && sideInset != nil && interItemSpacing != nil
             && cornerRadius != nil
         {
-            let bannersAppearance = IASBannersAppearance(
+            self.bannersAppearance = IASBannersAppearance(
                 shouldLoop: shouldLoop!,
                 sideInset: CGFloat(sideInset!),
                 interItemSpacing: CGFloat(interItemSpacing!),
                 cornerRadius: CGFloat(cornerRadius!)
             )
 
-            _bannersView = IASBannersView(
-                placeID: _args["placeId"] as! String,
-                appearance: bannersAppearance,
-                frame: .zero
-            )
-        } else {
-            _bannersView = IASBannersView(
-                placeID: _args["placeId"] as! String,
-                appearance: .init(),
-                frame: .zero
-            )
         }
 
-        _bannersView.translatesAutoresizingMaskIntoConstraints = false
+        createBannerView()
 
-        _bannersView.bannersDidUpdated = { isContent, count, listHeight in
-            DispatchQueue.main.async { [self] in
-                bannerLoadFlutterApi.onBannersLoaded(
-                    size: Int64(count),
-                    widgetHeight: Int64(listHeight),
-                    completion: { _ in }
-                )
-                callbackFlutterApi.onBannerPlaceLoaded(
-                    size: Int64(count),
-                    widgetHeight: Int64(listHeight),
-                    completion: { _ in }
-                )
-            }
-        }
-
-        _bannersView.onActionWith = { target in
-
-            DispatchQueue.main.async { [self] in
-                callbackFlutterApi.onActionWith(
-                    target: target,
-                    completion: { _ in }
-                )
-            }
-        }
-
-        _bannersView.bannersDidScroll = { index in
-            DispatchQueue.main.async { [self] in
-                callbackFlutterApi.onBannerScroll(
-                    index: Int64(index),
-                    completion: { _ in }
-                )
-            }
-        }
-
-        _view.addSubview(_bannersView)
+        _view.addSubview(_bannersView!)
 
         var allConstraints: [NSLayoutConstraint] = []  // настройка констрайнов
         let horConstraint = NSLayoutConstraint.constraints(
@@ -145,50 +188,74 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerPlaceManagerHostApi
         NSLayoutConstraint.activate(allConstraints)
     }
 
-    func loadBannerPlace(placeId: String) throws {
-        _bannersView.create()
-    }
+    func createBannerView() {
+        if self._bannersView != nil {
+            self._bannersView?.removeFromSuperview()
+            //_view.willRemoveSubview(self._bannersView!)
+        }
+        if self.bannersAppearance != nil {
 
-    func preloadBannerPlace(placeId: String) throws {
-        InAppStory.shared.preloadBanners(placeID: placeId) { result in
-            do {
-                if try result.get() {
-                    self.callbackFlutterApi.onBannerPlacePreloaded(
-                        completion: { _ in }
-                    )
-                } else {
-                    self.callbackFlutterApi.onBannerPlacePreloaded(
-                        completion: { _ in }
-                    )
-                }
-            } catch {
-                self.callbackFlutterApi.onBannerPlacePreloadedError(
-                    completion: { _ in })
-                print(
-                    "Failed to preload banner for placeId: \(placeId), error: \(error)"
+            self._bannersView = IASBannersView(
+                placeID: self.placeId,
+                appearance: self.bannersAppearance!,
+                frame: .zero
+            )
+        } else {
+            self._bannersView = IASBannersView(
+                placeID: self.placeId,
+                appearance: .init(),
+                frame: .zero
+            )
+        }
+        self._bannersView?.translatesAutoresizingMaskIntoConstraints = false
+        self._bannersView?.bannersDidUpdated = { isContent, count, listHeight in
+            DispatchQueue.main.async { [self] in
+                bannerLoadFlutterApi.onBannersLoaded(
+                    size: Int64(count),
+                    widgetHeight: Int64(listHeight),
+                    completion: { _ in }
+                )
+                callbackFlutterApi.onBannerPlaceLoaded(
+                    placeId: self.placeId,
+                    size: Int64(count),
+                    widgetHeight: Int64(listHeight),
+                    completion: { _ in }
+                )
+            }
+        }
+
+        //        self._bannersView?.onActionWith = { target in
+        //            DispatchQueue.main.async { [self] in
+        //
+        //                callbackFlutterApi.onActionWith(
+        //                    bannerData: <#T##BannerData#>,
+        //                    widgetEventName: target.,
+        //                    widgetData: <#T##<<error type>>#>,
+        //                    completion: { _ in }
+        //                )
+        //                callbackFlutterApi.onActionWith(
+        //                    placeId: self.placeId,
+        //                    target: target,
+        //                    completion: { _ in }
+        //                )
+        //            }
+        //        }
+
+        self._bannersView?.bannersDidScroll = { index in
+            DispatchQueue.main.async { [self] in
+                callbackFlutterApi.onBannerScroll(
+                    placeId: self.placeId,
+                    index: Int64(index),
+                    completion: { _ in }
                 )
             }
         }
     }
 
-    func showNext() throws {
-        _bannersView.showNext()
-    }
-
-    func showPrevious() throws {
-        _bannersView.showPrevious()
-
-    }
-
-    func showByIndex(index: Int64) throws {
-        _bannersView.showBannerWith(index: Int(index))
-    }
-
-    func pauseAutoscroll() throws {
-        _bannersView.pause()
-    }
-
-    func resumeAutoscroll() throws {
-        _bannersView.resume()
+    func changeBannerPlaceId(newPlaceId: String) throws {
+        self.placeId = newPlaceId
+        createBannerView()
+        _view.addSubview(_bannersView!)
+        _bannersView?.create()
     }
 }

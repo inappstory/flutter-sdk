@@ -90,16 +90,9 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         cacheSize: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        // the parameter is responsible for logging to the XCode console
         InAppStory.shared.isLoggingEnabled = true
-        // the parameter is responsible for displaying the shading under cell headers
-        InAppStory.shared.cellGradientEnabled = true
-        // the parameter is responsible for the color of the cell gradient of the unread story.
-        InAppStory.shared.cellBorderColor = UIColor.blue
-        // the parameter is responsible for displaying the bottom panel in the story card (likes, favorites and share)
-        // additionally should be configured in the console
-        //        InAppStory.shared.panelSettings = PanelSettings(like: self._hasLike, favorites: self._hasFavorites, share: self._hasShare)
-        // the parameter is responsible for animation of the reader display when you tap on a story cell
+        //InAppStory.shared.cellGradientEnabled = true
+        //InAppStory.shared.cellBorderColor = UIColor.blue
         InAppStory.shared.presentationStyle = .zoom
 
         InAppStory.shared.logger = LoggerCallbackAdaptor(binaryMessenger: binaryMessenger)

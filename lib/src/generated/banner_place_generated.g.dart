@@ -147,6 +147,57 @@ class BannerDecorationDTO {
 ;
 }
 
+class BannerData {
+  BannerData({
+    this.id,
+    this.bannerPlace,
+    this.payload,
+  });
+
+  String? id;
+
+  String? bannerPlace;
+
+  String? payload;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      bannerPlace,
+      payload,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static BannerData decode(Object result) {
+    result as List<Object?>;
+    return BannerData(
+      id: result[0] as String?,
+      bannerPlace: result[1] as String?,
+      payload: result[2] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! BannerData || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(encode(), other.encode());
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hashAll(_toList())
+;
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -164,6 +215,9 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is BannerDecorationDTO) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
+    }    else if (value is BannerData) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -179,6 +233,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return BannerPlaceDecoration.decode(readValue(buffer)!);
       case 131: 
         return BannerDecorationDTO.decode(readValue(buffer)!);
+      case 132: 
+        return BannerData.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -200,6 +256,29 @@ class BannerPlaceManagerHostApi {
 
   Future<void> loadBannerPlace(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.loadBannerPlace$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> reloadBannerPlace(String placeId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.reloadBannerPlace$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -244,14 +323,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> showNext() async {
+  Future<void> showNext(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showNext$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -267,14 +346,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> showPrevious() async {
+  Future<void> showPrevious(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showPrevious$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -290,14 +369,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> showByIndex(int index) async {
+  Future<void> showByIndex(String placeId, int index) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showByIndex$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[index]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId, index]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -313,14 +392,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> pauseAutoscroll() async {
+  Future<void> pauseAutoscroll(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.pauseAutoscroll$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -336,14 +415,14 @@ class BannerPlaceManagerHostApi {
     }
   }
 
-  Future<void> resumeAutoscroll() async {
+  Future<void> resumeAutoscroll(String placeId) async {
     final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.resumeAutoscroll$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[placeId]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -363,15 +442,15 @@ class BannerPlaceManagerHostApi {
 abstract class BannerPlaceCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void onBannerScroll(int index);
+  void onBannerScroll(String placeId, int index);
 
-  void onBannerPlaceLoaded(int size, int widgetHeight);
+  void onBannerPlaceLoaded(String placeId, int size, int widgetHeight);
 
-  void onActionWith(String target);
+  void onActionWith(BannerData bannerData, String widgetEventName, Map<String, Object?>? widgetData);
 
-  void onBannerPlacePreloaded();
+  void onBannerPlacePreloaded(String placeId);
 
-  void onBannerPlacePreloadedError();
+  void onBannerPlacePreloadedError(String placeId);
 
   static void setUp(BannerPlaceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -386,11 +465,14 @@ abstract class BannerPlaceCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_index = (args[0] as int?);
+          final String? arg_placeId = (args[0] as String?);
+          assert(arg_placeId != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null, expected non-null String.');
+          final int? arg_index = (args[1] as int?);
           assert(arg_index != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null, expected non-null int.');
           try {
-            api.onBannerScroll(arg_index!);
+            api.onBannerScroll(arg_placeId!, arg_index!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -411,14 +493,17 @@ abstract class BannerPlaceCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_size = (args[0] as int?);
+          final String? arg_placeId = (args[0] as String?);
+          assert(arg_placeId != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null String.');
+          final int? arg_size = (args[1] as int?);
           assert(arg_size != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null int.');
-          final int? arg_widgetHeight = (args[1] as int?);
+          final int? arg_widgetHeight = (args[2] as int?);
           assert(arg_widgetHeight != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null int.');
           try {
-            api.onBannerPlaceLoaded(arg_size!, arg_widgetHeight!);
+            api.onBannerPlaceLoaded(arg_placeId!, arg_size!, arg_widgetHeight!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -439,11 +524,15 @@ abstract class BannerPlaceCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_target = (args[0] as String?);
-          assert(arg_target != null,
+          final BannerData? arg_bannerData = (args[0] as BannerData?);
+          assert(arg_bannerData != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith was null, expected non-null BannerData.');
+          final String? arg_widgetEventName = (args[1] as String?);
+          assert(arg_widgetEventName != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith was null, expected non-null String.');
+          final Map<String, Object?>? arg_widgetData = (args[2] as Map<Object?, Object?>?)?.cast<String, Object?>();
           try {
-            api.onActionWith(arg_target!);
+            api.onActionWith(arg_bannerData!, arg_widgetEventName!, arg_widgetData);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -461,8 +550,14 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_placeId = (args[0] as String?);
+          assert(arg_placeId != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null, expected non-null String.');
           try {
-            api.onBannerPlacePreloaded();
+            api.onBannerPlacePreloaded(arg_placeId!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -480,8 +575,14 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_placeId = (args[0] as String?);
+          assert(arg_placeId != null,
+              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError was null, expected non-null String.');
           try {
-            api.onBannerPlacePreloadedError();
+            api.onBannerPlacePreloadedError(arg_placeId!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -528,6 +629,43 @@ abstract class BannerLoadCallbackFlutterApi {
           }
         });
       }
+    }
+  }
+}
+
+class BannerViewHostApi {
+  /// Constructor for [BannerViewHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  BannerViewHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<void> changeBannerPlaceId(String newPlaceId) async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.BannerViewHostApi.changeBannerPlaceId$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[newPlaceId]);
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
     }
   }
 }

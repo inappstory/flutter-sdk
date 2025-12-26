@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../../controllers/banner_place_manager.dart';
@@ -7,6 +10,7 @@ import '../base/banner_platform_view.dart';
 class IosBannerView extends BannerPlatformView {
   const IosBannerView({
     super.key,
+    required super.bannerWidgetId,
     required super.placeId,
     required super.onPlatformViewCreated,
     required super.autoLoad,
@@ -19,6 +23,12 @@ class IosBannerView extends BannerPlatformView {
       Map<String, dynamic> creationParams) {
     return UiKitView(
       viewType: viewType,
+      hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+        ),
+      },
       layoutDirection: TextDirection.ltr,
       creationParams: Map<String, dynamic>.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),

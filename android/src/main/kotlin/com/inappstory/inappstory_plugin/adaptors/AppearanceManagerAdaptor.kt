@@ -381,6 +381,7 @@ class AppearanceManagerAdaptor(
     }
 
     override fun setUpGoods(appearance: GoodsItemAppearanceDto) {
+        // use common instance to work with products 1.0
         AppearanceManager.getCommonInstance().csCustomGoodsWidget(object : ICustomGoodsWidget {
             override fun getWidgetView(contex: Context?): View? {
                 return null

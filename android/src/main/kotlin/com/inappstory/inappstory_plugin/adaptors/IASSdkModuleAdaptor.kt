@@ -1,7 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
-import LoggerFlutterApi
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
@@ -40,8 +39,6 @@ class InappstorySdkModuleAdaptor(
     private lateinit var iasMessages: IASMessagesAdaptor
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
-
-    private lateinit var loggerFlutterApi: LoggerFlutterApi
 
     override fun initWith(
         apiKey: String,
@@ -148,8 +145,7 @@ class InappstorySdkModuleAdaptor(
                 flutterPluginBinding,
                 inAppStoryAPI.inAppMessage,
                 inAppStoryManager,
-                activityHolder,
-                null
+                activityHolder
             )
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
