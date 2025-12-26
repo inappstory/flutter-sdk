@@ -3,7 +3,7 @@
 ### Added
 
 - checkout feature
-- multiple BannerPlace
+- BannerPlace now support multiple banner places in one screen
 
 ### Fixed
 
@@ -14,7 +14,7 @@
 
 ### Changed
 
-- added more info to `onActionWith` in the `IASBannerPlaceCallback` mixin
+- added more info and support multiple banner places in the `IASBannerPlaceCallback` mixin
 - `IASGameReaderCallback` instead of old `GameReaderCallbackFlutterApi`
 - updated iOS SDK to 1.26.3
 
