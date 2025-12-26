@@ -13,6 +13,7 @@ scripts:
       - dart run pigeon --input pigeons/pigeon_generation.dart
       - dart run pigeon --input pigeons/pigeon_generation_private.dart
       - dart run pigeon --input pigeons/banner_place_generation.dart
+      - dart run pigeon --input pigeons/checkout_generation.dart
 
   run pod install:
     description: Running pod install in examples
@@ -21,9 +22,21 @@ scripts:
       - pod install --repo-update
       - cd ../../example_extended
       - pod install --repo-update
+      - cd ../
+
+  test publish:
+    description: 🧩 Test build before publish 🧩
+    steps:
+      - flutter clean
+      - flutter pub get
+      - cd example/ios
+      - rm Podfile.lock
+      - pod install --repo-update
+      - cd ../
+      - flutter build apk
 
   publish plugin:
-    description: Running pod install in examples
+    description: 🚀 Publishing plugin  🚀
     steps:
       - flutter pub get
       - dart pub publish

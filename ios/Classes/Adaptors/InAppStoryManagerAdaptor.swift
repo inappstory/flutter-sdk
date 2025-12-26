@@ -2,11 +2,18 @@ import Flutter
 import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
+enum MyError: Error {
+    case invalidInput(message: String)
+}
+
 class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
 
     private var skusCallback: SkusCallbackFlutterApi
 
     private var goodsItemSelectedCallback: GoodsItemSelectedCallbackFlutterApi
+
+    private var checkoutManagerCallback: CheckoutManagerCallbackFlutterApi
+    private var checkoutCallback: CheckoutCallbackFlutterApi
 
     init(binaryMessenger: FlutterBinaryMessenger) {
         self.skusCallback = SkusCallbackFlutterApi(
@@ -17,7 +24,16 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             binaryMessenger: binaryMessenger
         )
 
+        self.checkoutManagerCallback = CheckoutManagerCallbackFlutterApi(
+            binaryMessenger: binaryMessenger
+        )
+
+        self.checkoutCallback = CheckoutCallbackFlutterApi(
+            binaryMessenger: binaryMessenger
+        )
+
         setUpGoodsCallback()
+        setupCheckoutManager()
         InAppStoryManagerHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: self
@@ -152,8 +168,138 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             )
         }
     }
-    
-    func setOptionKeys(options: [String : String]) throws {
+
+    private func setupCheckoutManager() {
+        InAppStoryAPI.shared.callbacksAPI.productCartUpdate = {
+            [weak self] offer, complete in
+            guard let self else { return }
+
+            let offerDTO = offerToDTO(offer)
+            print("The quantity is \(offer.quantity)")
+            DispatchQueue.main.async { [self] in
+                self.checkoutManagerCallback.onProductCartUpdate(
+                    offer: offerDTO,
+                    completion: { result in
+                        switch result {
+                        case .success(let cartFromFlutter):
+                            let productCart: InAppStorySDK.ProductCart =
+                                InAppStorySDK.ProductCart(
+                                    offers: [],
+                                    price: cartFromFlutter.price,
+                                    oldPrice: cartFromFlutter.oldPrice,
+                                    priceCurrency: cartFromFlutter.priceCurrency
+                                )
+                            complete(.success(productCart))
+                        case .failure:
+                            complete(
+                                .failure(
+                                    MyError.invalidInput(
+                                        message:
+                                            "Error while getting product cart"
+                                    )
+                                )
+                            )
+                        }
+                    }
+                )
+            }
+        }
+
+        InAppStoryAPI.shared.callbacksAPI.productCartClicked = { [weak self] in
+            guard let self else { return }
+
+            DispatchQueue.main.async { [self] in
+                self.checkoutCallback.onProductCartClicked(completion: { _ in })
+            }
+        }
+
+        InAppStoryAPI.shared.callbacksAPI.productCartGetState = {
+            [weak self] complete in
+            guard let self else { return }
+
+            DispatchQueue.main.async { [self] in
+                self.checkoutManagerCallback.getProductCartState(completion: {
+                    result in
+                    switch result {
+                    case .success(let productCartFromFlutter):
+                        let productCart = self.productCartFromDTO(
+                            productCartFromFlutter
+                        )
+                        complete(.success(productCart))
+                    case .failure(_):
+                        complete(
+                            .failure(
+                                MyError.invalidInput(
+                                    message:
+                                        "Error while getting product cart"
+                                )
+                            )
+                        )
+                    }
+                })
+            }
+        }
+    }
+
+    func setOptionKeys(options: [String: String]) throws {
         InAppStory.shared.options = options
+    }
+
+    func offerToDTO(_ offer: InAppStorySDK.ProductCartOffer)
+        -> inappstory_plugin.ProductCartOffer
+    {
+        let offerDTO = inappstory_plugin.ProductCartOffer(
+            offerId: offer.offerId,
+            groupId: offer.groupId,
+            name: offer.name ?? "",
+            description: offer.description,
+            url: offer.url,
+            coverUrl: offer.coverUrl,
+            imageUrls: offer.imageUrls,
+            currency: offer.currency,
+            price: offer.price,
+            oldPrice: offer.oldPrice,
+            adult: offer.adult,
+            availability: Int64(offer.availability),
+            size: offer.size,
+            color: offer.color,
+            quantity: Int64(offer.quantity),
+        )
+        return offerDTO
+    }
+
+        func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
+            -> InAppStorySDK.ProductCartOffer
+        {
+            return InAppStorySDK.ProductCartOffer(
+                offerId: offer.offerId,
+                groupId: offer.groupId,
+                name: offer.name,
+                description: offer.description,
+                url: offer.url,
+                coverUrl: offer.coverUrl,
+                imageUrls: offer.imageUrls,
+                currency: offer.currency,
+                price: offer.price,
+                oldPrice: offer.oldPrice,
+                adult: offer.adult,
+                availability: Int(offer.availability),
+                size: offer.size,
+                color: offer.color,
+                quantity: Int(offer.quantity)
+            )
+        }
+
+    func productCartFromDTO(_ productCart: inappstory_plugin.ProductCart)
+        -> InAppStorySDK.ProductCart
+    {
+        let offers = productCart.offers.map { offer in offerFromDTO(offer) }
+        let result = InAppStorySDK.ProductCart(
+            offers: offers,
+            price: productCart.price,
+            oldPrice: productCart.oldPrice,
+            priceCurrency: productCart.priceCurrency
+        )
+        return result
     }
 }

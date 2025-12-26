@@ -17,17 +17,18 @@ mixin IASBannerPlaceCallback<T extends StatefulWidget> on State<T>
   }
 
   @override
-  void onBannerScroll(int index) {}
+  void onBannerScroll(String placeId, int index) {}
 
   @override
-  void onBannerPlaceLoaded(int size, int widgetHeight) {}
+  void onBannerPlaceLoaded(String placeId, int size, int widgetHeight) {}
 
   @override
-  void onActionWith(String target) {}
+  void onActionWith(BannerData bannerData, String widgetEventName,
+      Map<String, Object?>? widgetData) {}
 
   @override
-  void onBannerPlacePreloaded() {}
+  void onBannerPlacePreloaded(String placeId) {}
 
   @override
-  void onBannerPlacePreloadedError() {}
+  void onBannerPlacePreloadedError(String placeId) {}
 }

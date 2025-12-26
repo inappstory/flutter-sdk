@@ -1,3 +1,29 @@
+## [0.7.0]
+
+### Added
+
+- checkout feature
+- BannerPlace now support multiple banner places in one screen
+
+### Fixed
+
+- gestures on banners don't work, if the scrollable view is a parent element
+- changing the banner placeId didn't reload the BannerPlace widget
+- adding stories to favorites doesn't work on iOS devices in some cases
+- fixed a crash when using anonymous mode and banners on iOS devices.
+
+### Changed
+
+- added more info and support multiple banner places in the `IASBannerPlaceCallback` mixin
+- `IASGameReaderCallback` instead of old `GameReaderCallbackFlutterApi`
+- updated iOS SDK to 1.26.3
+
+## [0.6.1]
+
+### Fixed
+
+- class mismatch in Android part
+
 ## [0.6.0]
 
 ### Changed

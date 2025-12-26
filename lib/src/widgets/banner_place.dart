@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../generated/banner_place_generated.g.dart'
-    show BannerLoadCallbackFlutterApi;
+    show BannerLoadCallbackFlutterApi, BannerViewHostApi;
+import '../helpers/id_gen.dart';
 import 'banner/android_banner_view.dart';
 import 'banner/ios_banner_view.dart';
 import 'builders/builders.dart' show BannerPlaceLoaderBuilder;
@@ -44,12 +45,25 @@ class BannerPlace extends StatefulWidget {
 
 class _BannerPlaceState extends State<BannerPlace>
     implements BannerLoadCallbackFlutterApi {
-  BannerPlaceState bannerPlaceState = BannerPlaceState.none;
+  BannerPlaceState _bannerPlaceState = BannerPlaceState.none;
+
+  String bannerWidgetId = idGenerator();
+
+  @override
+  void didUpdateWidget(covariant BannerPlace oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.placeId != widget.placeId) {
+      _bannerPlaceState = BannerPlaceState.loading;
+      BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+          .changeBannerPlaceId(widget.placeId);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    BannerLoadCallbackFlutterApi.setUp(this);
+    BannerLoadCallbackFlutterApi.setUp(this,
+        messageChannelSuffix: bannerWidgetId);
   }
 
   @override
@@ -63,8 +77,8 @@ class _BannerPlaceState extends State<BannerPlace>
       child: Stack(
         children: [
           buildPlatformView(context),
-          if (bannerPlaceState == BannerPlaceState.loading ||
-              bannerPlaceState == BannerPlaceState.none)
+          if (_bannerPlaceState == BannerPlaceState.loading ||
+              _bannerPlaceState == BannerPlaceState.none)
             Positioned(
               top: 0,
               bottom: 0,
@@ -83,13 +97,14 @@ class _BannerPlaceState extends State<BannerPlace>
         height: widget.height,
         width: MediaQuery.of(context).size.width,
         child: AndroidBannerView(
+          bannerWidgetId: bannerWidgetId,
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             setState(() {
-              bannerPlaceState = BannerPlaceState.loading;
+              _bannerPlaceState = BannerPlaceState.loading;
             });
           },
         ),
@@ -100,13 +115,14 @@ class _BannerPlaceState extends State<BannerPlace>
         height: widget.height,
         width: MediaQuery.of(context).size.width,
         child: IosBannerView(
+          bannerWidgetId: bannerWidgetId,
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             setState(() {
-              bannerPlaceState = BannerPlaceState.loading;
+              _bannerPlaceState = BannerPlaceState.loading;
             });
           },
         ),
@@ -120,13 +136,14 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void onBannersLoaded(int size, int widgetHeight) {
     setState(() {
-      bannerPlaceState = BannerPlaceState.loaded;
+      _bannerPlaceState = BannerPlaceState.loaded;
     });
   }
 
   @override
   void dispose() {
-    BannerLoadCallbackFlutterApi.setUp(null);
+    BannerLoadCallbackFlutterApi.setUp(null,
+        messageChannelSuffix: bannerWidgetId);
     super.dispose();
   }
 }

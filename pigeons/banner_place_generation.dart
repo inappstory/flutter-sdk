@@ -14,17 +14,19 @@ import 'package:pigeon/pigeon.dart';
 abstract class BannerPlaceManagerHostApi {
   void loadBannerPlace(String placeId);
 
+  void reloadBannerPlace(String placeId);
+
   void preloadBannerPlace(String placeId);
 
-  void showNext();
+  void showNext(String placeId);
 
-  void showPrevious();
+  void showPrevious(String placeId);
 
-  void showByIndex(int index);
+  void showByIndex(String placeId, int index);
 
-  void pauseAutoscroll();
+  void pauseAutoscroll(String placeId);
 
-  void resumeAutoscroll();
+  void resumeAutoscroll(String placeId);
 }
 
 class BannerPlaceDecoration {
@@ -36,20 +38,26 @@ class BannerPlaceDecoration {
 
 @FlutterApi()
 abstract class BannerPlaceCallbackFlutterApi {
-  void onBannerScroll(int index);
+  void onBannerScroll(String placeId, int index);
 
-  void onBannerPlaceLoaded(int size, int widgetHeight);
+  void onBannerPlaceLoaded(String placeId, int size, int widgetHeight);
 
-  void onActionWith(String target);
+  void onActionWith(BannerData bannerData, String widgetEventName,
+      Map<String, Object?>? widgetData);
 
-  void onBannerPlacePreloaded();
+  void onBannerPlacePreloaded(String placeId);
 
-  void onBannerPlacePreloadedError();
+  void onBannerPlacePreloadedError(String placeId);
 }
 
 @FlutterApi()
 abstract class BannerLoadCallbackFlutterApi {
   void onBannersLoaded(int size, int widgetHeight);
+}
+
+@HostApi()
+abstract class BannerViewHostApi {
+  void changeBannerPlaceId(String newPlaceId);
 }
 
 enum GradientType {
@@ -61,4 +69,10 @@ enum GradientType {
 class BannerDecorationDTO {
   late int? color;
   late String? image;
+}
+
+class BannerData {
+  late String? id;
+  late String? bannerPlace;
+  late String? payload;
 }
