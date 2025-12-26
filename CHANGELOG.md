@@ -1,3 +1,21 @@
+## [0.7.0]
+
+### Added
+
+- checkout feature
+- multiple BannerPlace
+
+### Fixed
+
+- gestures on banners don't work, if the scrollable view is a parent element
+- changing the banner placeId didn't reload the BannerPlace widget
+
+### Changed
+
+- added more info to `onActionWith` in the `IASBannerPlaceCallback` mixin
+- `IASGameReaderCallback` instead of old `GameReaderCallbackFlutterApi`
+- updated iOS SDK to 1.26.3
+
 ## [0.6.1]
 
 ### Fixed
