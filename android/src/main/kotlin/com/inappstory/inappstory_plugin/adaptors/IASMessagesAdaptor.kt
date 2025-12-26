@@ -34,6 +34,7 @@ class IASMessagesAdaptor(
                 }
             }
         }
+
         fragmentActivity.onBackPressedDispatcher.addCallback(
             fragmentActivity,
             onBackPressedCallback = onBackPressedCallback
@@ -41,7 +42,6 @@ class IASMessagesAdaptor(
     }
 
     override fun showById(messageId: String, onlyPreloaded: Boolean) {
-        onBackPressedCallback.isEnabled = true
         val settings = InAppMessageOpenSettings()
             .id(messageId.toInt())
             .showOnlyIfLoaded(onlyPreloaded)
@@ -65,7 +65,6 @@ class IASMessagesAdaptor(
     }
 
     override fun showByEvent(event: String, onlyPreloaded: Boolean) {
-        onBackPressedCallback.isEnabled = true
         val settings = InAppMessageOpenSettings()
             .event(event)
             .showOnlyIfLoaded(onlyPreloaded)
