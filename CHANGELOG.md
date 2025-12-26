@@ -9,6 +9,8 @@
 
 - gestures on banners don't work, if the scrollable view is a parent element
 - changing the banner placeId didn't reload the BannerPlace widget
+- adding stories to favorites doesn't work on iOS devices in some cases
+- fixed a crash when using anonymous mode and banners on iOS devices.
 
 ### Changed
 
