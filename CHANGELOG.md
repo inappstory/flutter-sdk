@@ -1,8 +1,18 @@
+## [0.7.1]
+
+### Added
+
+- added feature to show multiple stories feed in one screen
+
+### Fixed
+
+- issue on android 12 and lower devices, when using back navigation in in-app-messages
+
 ## [0.7.0]
 
 ### Added
 
-- checkout feature
+- Checkout feature
 - BannerPlace now support multiple banner places in one screen
 
 ### Fixed
