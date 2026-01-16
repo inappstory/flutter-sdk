@@ -23,8 +23,8 @@ InAppStory SDK Plugin
   s.swift_version = '5.0'
 
   #s.preserve_paths = 'InAppStorySDK.xcframework/**/*'
-  s.vendored_frameworks = 'InAppStorySDK.xcframework'
-#  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
+  #s.vendored_frameworks = 'InAppStorySDK.xcframework'
+  #s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386 arm64' }
   
   # If your plugin requires a privacy manifest, for example if it uses any
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
