@@ -13,48 +13,51 @@ class StoriesListUpdateHandlerAdaptor {
     init(
         binaryMessenger: FlutterBinaryMessenger,
         storyListAPI: StoryListAPI,
+        feed: String,
         uniqueId: String
     ) {
         self.binaryMessenger = binaryMessenger
 
         self.uniqueId = uniqueId
+        self.feed = feed
 
-        self.flutter = InAppStoryAPIListSubscriberFlutterApi(
+        self.apiListSubscriberFlutterApi = InAppStoryAPIListSubscriberFlutterApi(
             binaryMessenger: binaryMessenger,
             messageChannelSuffix: uniqueId
         )
 
         self.storyListAPI = storyListAPI
 
-        storyListAPI.storyListUpdate = storiesListUpdateHandler
+        storyListAPI.storyListUpdate = self.storiesListUpdateHandler
 
-        storyListAPI.storyUpdate = storyUpdateHandler
+        storyListAPI.storyUpdate = self.storyUpdateHandler
 
-        storyListAPI.favoritesUpdate = favoriteUpdateHandler
+        storyListAPI.favoritesUpdate = self.favoriteUpdateHandler
 
-        storyListAPI.scrollUpdate = scrollUpdateHandler
+        storyListAPI.scrollUpdate = self.scrollUpdateHandler
     }
 
     private var binaryMessenger: FlutterBinaryMessenger
 
+    private var feed: String
     private var uniqueId: String
 
     private var storyListAPI: StoryListAPI
 
-    internal var flutter: InAppStoryAPIListSubscriberFlutterApi
+    internal var apiListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApi
 
     private lazy var _storiesListUpdateHandler: StoriesListUpdateHandler = {
         storiesList,
         isFavorite,
         feed in
-        self.flutter.updateStoriesData(
+        self.apiListSubscriberFlutterApi.updateStoriesData(
             list: storiesList.map(self.mapStoryAPIData),
             completion: { _ in }
         )
 
         self.favoriteUpdateHandler(isFavorite)
 
-        self.flutter.storiesLoaded(
+        self.apiListSubscriberFlutterApi.storiesLoaded(
             size: Int64(storiesList.count),
             feed: feed,
             completion: { _ in }
@@ -67,7 +70,7 @@ class StoriesListUpdateHandlerAdaptor {
 
     private lazy var storyUpdateHandler: StoryUpdateHandler = { storyCellData in
         DispatchQueue.main.async {
-            self.flutter.updateStoryData(
+            self.apiListSubscriberFlutterApi.updateStoryData(
                 var1: self.mapStoryAPIData(arg: storyCellData),
                 completion: { _ in }
             )
@@ -77,7 +80,7 @@ class StoriesListUpdateHandlerAdaptor {
     func favoriteUpdateHandler(_ data: [InAppStorySDK.SimpleFavoriteData]?) {
         if data == nil {
             DispatchQueue.main.async {
-                self.flutter.updateFavoriteStoriesData(
+                self.apiListSubscriberFlutterApi.updateFavoriteStoriesData(
                     list: [],
                     completion: { _ in }
                 )
@@ -87,14 +90,14 @@ class StoriesListUpdateHandlerAdaptor {
         if let favorites = data {
             if favorites.isEmpty {
                 DispatchQueue.main.async {
-                    self.flutter.updateFavoriteStoriesData(
+                    self.apiListSubscriberFlutterApi.updateFavoriteStoriesData(
                         list: [],
                         completion: { _ in }
                     )
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.flutter.updateFavoriteStoriesData(
+                    self.apiListSubscriberFlutterApi.updateFavoriteStoriesData(
                         list: favorites.map(self.mapFavorite),
                         completion: { _ in }
                     )
@@ -105,9 +108,10 @@ class StoriesListUpdateHandlerAdaptor {
 
     func scrollUpdateHandler(_ index: Int) {
         DispatchQueue.main.async {
-            self.flutter.scrollToStory(
+            self.apiListSubscriberFlutterApi.scrollToStory(
                 index: Int64(index),
-                feed: self.uniqueId,
+                feed: self.feed,
+                uniqueId: self.uniqueId,
                 completion: { _ in }
             )
         }
@@ -179,12 +183,12 @@ class FavoriteStoriesListUpdateHandlerAdaptor: StoriesListUpdateHandlerAdaptor {
             storiesList,
             isFavorite,
             feed in
-            self.flutter.updateStoriesData(
+            self.apiListSubscriberFlutterApi.updateStoriesData(
                 list: storiesList.map(self.mapStoryAPIData),
                 completion: { _ in }
             )
 
-            self.flutter.storiesLoaded(
+            self.apiListSubscriberFlutterApi.storiesLoaded(
                 size: Int64(storiesList.count),
                 feed: feed,
                 completion: { _ in }

@@ -1,5 +1,5 @@
 package com.inappstory.inappstory_plugin_example
 
-import io.flutter.embedding.android.FlutterFragmentActivity
+import com.inappstory.inappstory_plugin.activity.InAppStoryActivity
 
-class MainActivity : FlutterFragmentActivity()
+class MainActivity : InAppStoryActivity()

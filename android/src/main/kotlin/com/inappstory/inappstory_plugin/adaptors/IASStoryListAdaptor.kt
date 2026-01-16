@@ -14,6 +14,7 @@ open class IASStoryListAdaptor(
     internal val iASStoryList: IASStoryList,
     private val inAppStoryAPI: InAppStoryAPI,
     internal val activityHolder: ActivityHolder,
+    val feed: String,
     val uniqueId: String = "feed",
 ) : IASStoryListHostApi, DisposableHandle {
 
@@ -23,6 +24,7 @@ open class IASStoryListAdaptor(
         IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, this, uniqueId)
         apiSubscriber = InAppStoryAPIListSubscriberAdaptor(
             flutterPluginBinding,
+            feed,
             uniqueId,
         )
         inAppStoryAPI.addSubscriber(apiSubscriber)
@@ -32,18 +34,18 @@ open class IASStoryListAdaptor(
         IASStoryListHostApi.setUp(flutterPluginBinding.binaryMessenger, null, uniqueId)
     }
 
-    override fun load(feed: String) {
-        iASStoryList.load(feed, feed, true, false, mutableListOf<String>())
+    override fun load(feed: String, uniqueId: String) {
+        iASStoryList.load(feed, this.uniqueId, true, false, mutableListOf<String>())
     }
 
     override fun reloadFeed(feed: String) {
-        iASStoryList.load(feed, feed, true, false, mutableListOf<String>())
+        iASStoryList.load(feed, uniqueId, true, false, mutableListOf<String>())
     }
 
     override fun openStoryReader(storyId: Long, feed: String) {
         iASStoryList.openStoryReader(
             activityHolder.activity,
-            feed,
+            uniqueId,
             storyId.toInt(),
             appearanceManager,
         )
@@ -59,7 +61,7 @@ open class IASStoryListAdaptor(
     }
 
     override fun removeSubscriber(feed: String) {
-        inAppStoryAPI.removeSubscriber(feed)
+        inAppStoryAPI.removeSubscriber(uniqueId)
     }
 }
 
@@ -75,6 +77,7 @@ class IASFavoritesListAdaptor(
     iASStoryList,
     inAppStoryAPI,
     activityHolder,
+    feed = "favorites",
     uniqueId = "favorites"
 ) {
     init {
@@ -82,12 +85,13 @@ class IASFavoritesListAdaptor(
         apiSubscriber = InAppStoryAPIListSubscriberAdaptor(
             flutterPluginBinding,
             "favorites",
+            uniqueId,
         )
         inAppStoryAPI.addSubscriber(apiSubscriber)
     }
 
-    override fun load(feed: String) {
-        iASStoryList.load(feed, uniqueId, true, true, mutableListOf())
+    override fun load(feed: String, uniqueId: String) {
+        iASStoryList.load(feed, this.uniqueId, true, true, mutableListOf())
     }
 
     override fun reloadFeed(feed: String) {

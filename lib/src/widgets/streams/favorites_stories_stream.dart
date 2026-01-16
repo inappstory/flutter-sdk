@@ -99,7 +99,7 @@ class FavoritesStoriesStream extends StoriesStream {
   void onListen() async {
     observableStoryList.addObserver(this);
     observableErrorCallback.addObserver(this);
-    iasStoryListHostApi.load(feed);
+    iasStoryListHostApi.load(feed, uniqueId);
   }
 
   @override
@@ -114,7 +114,7 @@ class FavoritesStoriesStream extends StoriesStream {
       onStoriesLoaded?.call(size, feed);
 
   @override
-  void scrollToStory(int index, String feed) {
+  void scrollToStory(int index, String feed, String uniqueId) {
     // TODO: implement scrollToStory
   }
 }

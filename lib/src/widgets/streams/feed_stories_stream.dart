@@ -24,23 +24,21 @@ abstract class FeedFavoritesWidget implements Widget {
 }
 
 class FeedStoriesStream extends StoriesStream {
-  static const _uniqueId = 'feed';
-
   FeedStoriesStream({
     required super.feed,
     required super.storyWidgetBuilder,
+    required super.uniqueId,
     this.feedDecorator,
     this.feedController,
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
     this.onScrollToStory,
   }) : super(
-          uniqueId: _uniqueId,
           observableStoryList:
-              InAppStoryAPIListSubscriberFlutterApiObservable(feed),
+              InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId),
           observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(
-              IASStoryListHostApi(messageChannelSuffix: feed)),
+              IASStoryListHostApi(messageChannelSuffix: uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
         ) {
     feedController
@@ -118,8 +116,8 @@ class FeedStoriesStream extends StoriesStream {
       onStoriesLoaded?.call(size, feed);
 
   @override
-  void scrollToStory(int id, String feed) {
-    if (this.feed != feed) {
+  void scrollToStory(int id, String feed, String uniqueId) {
+    if (uniqueId != this.uniqueId) {
       return;
     }
     try {

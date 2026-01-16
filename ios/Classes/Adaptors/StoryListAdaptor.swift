@@ -13,11 +13,13 @@ class StoryListAdaptor: IASStoryListHostApi {
     init(
         binaryMessenger: FlutterBinaryMessenger,
         storyListAPI: StoryListAPI,
+        feed: String,
         uniqueId: String
     ) {
         self.binaryMessenger = binaryMessenger
 
         self.uniqueId = uniqueId
+        self.feed = feed
 
         self.storyListAPI = storyListAPI
 
@@ -28,6 +30,7 @@ class StoryListAdaptor: IASStoryListHostApi {
         StoriesListUpdateHandlerAdaptor(
             binaryMessenger: binaryMessenger,
             storyListAPI: storyListAPI,
+            feed: feed,
             uniqueId: uniqueId
         )
         IASStoryListHostApiSetup.setUp(
@@ -38,12 +41,13 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
 
     public var uniqueId: String
+    public var feed: String
 
     internal var binaryMessenger: FlutterBinaryMessenger
 
     var storyListAPI: StoryListAPI
 
-    func load(feed: String) throws {
+    func load(feed: String, uniqueId: String) throws {
         // Noop use impls for Feed & Favorites
     }
 
@@ -69,16 +73,20 @@ class StoryListAdaptor: IASStoryListHostApi {
 }
 
 class FeedStoryListAdaptor: StoryListAdaptor {
-    init(binaryMessenger: FlutterBinaryMessenger, feed: String) {
+    init(
+        binaryMessenger: FlutterBinaryMessenger,
+        feed: String,
+        uniqueId: String
+    ) {
         super.init(
             binaryMessenger: binaryMessenger,
             storyListAPI: StoryListAPI(feed: feed),
-            uniqueId: feed
+            feed: feed,
+            uniqueId: uniqueId
         )
     }
 
-    override func load(feed: String) throws {
-        //        storyListAPI.setNewFeed(feed)
+    override func load(feed: String, uniqueId: String) throws {
         storyListAPI.getStoriesList()
     }
 }
@@ -88,6 +96,7 @@ class FavoritesStoryListAdaptor: StoryListAdaptor {
         super.init(
             binaryMessenger: binaryMessenger,
             storyListAPI: StoryListAPI(isFavorite: true),
+            feed: "favorites",
             uniqueId: "favorites"
         )
     }
@@ -96,6 +105,7 @@ class FavoritesStoryListAdaptor: StoryListAdaptor {
         FavoriteStoriesListUpdateHandlerAdaptor(
             binaryMessenger: binaryMessenger,
             storyListAPI: storyListAPI,
+            feed: feed,
             uniqueId: uniqueId
         )
 
@@ -105,9 +115,8 @@ class FavoritesStoryListAdaptor: StoryListAdaptor {
             messageChannelSuffix: uniqueId
         )
     }
-    
-    override func load(feed: String) throws {
+
+    override func load(feed: String, uniqueId: String) throws {
         storyListAPI.getStoriesList()
-        //storyListAPI.setNewFeed(feed)
     }
 }

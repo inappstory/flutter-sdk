@@ -158,7 +158,7 @@ class InappstorySdkModuleAdaptor(
         }
     }
 
-    override fun createListAdaptor(feed: String) {
+    override fun createListAdaptor(feed: String, uniqueId: String) {
         val iasStoryList = inAppStoryAPI.storyList
 
         val newFeed = IASStoryListAdaptor(
@@ -167,16 +167,17 @@ class InappstorySdkModuleAdaptor(
             iasStoryList,
             inAppStoryAPI,
             activityHolder,
-            uniqueId = feed
+            feed = feed,
+            uniqueId = uniqueId
         )
         feedListAdaptors.add(newFeed)
     }
 
 
-    override fun removeListAdaptor(feed: String) {
+    override fun removeListAdaptor(feed: String, uniqueId: String) {
         val iterator = feedListAdaptors.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().uniqueId == feed) {
+            if (iterator.next().uniqueId == uniqueId) {
                 iterator.remove()
             }
         }

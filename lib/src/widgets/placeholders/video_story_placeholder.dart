@@ -27,7 +27,10 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.file(widget.videoFile);
+    controller = VideoPlayerController.file(widget.videoFile,
+        videoPlayerOptions: VideoPlayerOptions(
+          allowBackgroundPlayback: false,
+        ));
   }
 
   @override
@@ -55,13 +58,13 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
         if (snapshot.connectionState == ConnectionState.done) {
           return VisibilityDetector(
             key: ObjectKey(videoFile),
-            onVisibilityChanged: (VisibilityInfo info) {
+            onVisibilityChanged: (VisibilityInfo info) async {
               if (info.visibleFraction == 0) {
                 if (mounted) {
-                  controller.pause();
+                  await controller.pause();
                 }
               } else {
-                controller.play();
+                await controller.play();
               }
             },
             child: VideoPlayer(controller),
@@ -86,6 +89,6 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
     await controller.initialize();
     await controller.setVolume(0.0);
     await controller.setLooping(true);
-    await controller.play();
+    setState(() async {});
   }
 }

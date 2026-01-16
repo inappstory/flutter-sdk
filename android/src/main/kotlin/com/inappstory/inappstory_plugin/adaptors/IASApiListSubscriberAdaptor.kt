@@ -15,6 +15,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 open class InAppStoryAPIListSubscriberAdaptor(
     private val flutterPluginBinding: FlutterPluginBinding,
+    private val feed: String,
     uniqueId: String,
 ) : InAppStoryAPIListSubscriber(uniqueId) {
 
@@ -64,10 +65,13 @@ open class InAppStoryAPIListSubscriberAdaptor(
     }
 
     fun scrollToStory(story: StoryDataDto?) {
-        storyListSubscriber.scrollToStory(
-            indexArg = (story?.id) ?: -1,
-            feedArg = uniqueId
-        ) {}
+        flutterPluginBinding.runOnMainThread {
+            storyListSubscriber.scrollToStory(
+                indexArg = (story?.id) ?: -1,
+                feedArg = feed,
+                uniqueIdArg = uniqueId
+            ) {}
+        }
     }
 
     private fun getAspectRatio(): Float {

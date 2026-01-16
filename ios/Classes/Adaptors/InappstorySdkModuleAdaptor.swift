@@ -95,8 +95,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         //InAppStory.shared.cellBorderColor = UIColor.blue
         InAppStory.shared.presentationStyle = .zoom
 
-        InAppStory.shared.logger = LoggerCallbackAdaptor(binaryMessenger: binaryMessenger)
-        
+        InAppStory.shared.logger = LoggerCallbackAdaptor(
+            binaryMessenger: binaryMessenger
+        )
+
         var locale: String? = nil
         if (languageCode != nil) && (languageRegion != nil) {
             let str2: String = "_"
@@ -126,15 +128,16 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         completion(.success(()))
     }
 
-    func createListAdaptor(feed: String) {
+    func createListAdaptor(feed: String, uniqueId: String) {
         let newAdaptor = FeedStoryListAdaptor(
             binaryMessenger: binaryMessenger,
-            feed: feed
+            feed: feed,
+            uniqueId: uniqueId
         )
         feedStoryListAdaptors.append(newAdaptor)
     }
 
-    func removeListAdaptor(feed: String) {
-        feedStoryListAdaptors.removeAll { $0.uniqueId == feed }
+    func removeListAdaptor(feed: String, uniqueId: String) {
+        feedStoryListAdaptors.removeAll { $0.uniqueId == uniqueId }
     }
 }
