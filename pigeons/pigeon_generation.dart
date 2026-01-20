@@ -324,7 +324,7 @@ abstract class GameReaderCallbackFlutterApi {
   void closeGame(ContentDataDto? contentData);
 
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName,
-      Map<String?, Object?>? payload);
+      Map<String, Object?>? payload);
 
   void gameError(ContentDataDto? contentData, String? message);
 }

@@ -2356,7 +2356,7 @@ abstract class GameReaderCallbackFlutterApi {
 
   void closeGame(ContentDataDto? contentData);
 
-  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String?, Object?>? payload);
+  void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String, Object?>? payload);
 
   void gameError(ContentDataDto? contentData, String? message);
 
@@ -2446,7 +2446,7 @@ abstract class GameReaderCallbackFlutterApi {
           final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
           final String? arg_gameId = (args[1] as String?);
           final String? arg_eventName = (args[2] as String?);
-          final Map<String?, Object?>? arg_payload = (args[3] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String, Object?>? arg_payload = (args[3] as Map<Object?, Object?>?)?.cast<String, Object?>();
           try {
             api.eventGame(arg_contentData, arg_gameId, arg_eventName, arg_payload);
             return wrapResponse(empty: true);
