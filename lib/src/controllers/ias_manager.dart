@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
+
+import 'package:async/async.dart';
 
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
@@ -6,7 +9,10 @@ import '../callbacks/ias_checkout_callback_impl.dart';
 import '../generated/checkout_generated.g.dart'
     show CheckoutManagerCallbackFlutterApi;
 import '../generated/pigeon_generated.g.dart'
-    show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
+    show
+        InAppStoryManagerHostApi,
+        SkusCallbackFlutterApi,
+        IASInAppMessagesHostApi;
 import 'logger.dart';
 
 class InAppStoryManager {
@@ -19,6 +25,7 @@ class InAppStoryManager {
 
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
+  final _iam = IASInAppMessagesHostApi();
 
   static final instance = InAppStoryManager._private();
 
@@ -102,5 +109,16 @@ class InAppStoryManager {
 
   Future<void> setOptions(Map<String, String> options) async {
     await _iasManager.setOptionKeys(options);
+  }
+
+  CancelableOperation<void> showIAMbyId(String id) {
+
+    var operation = CancelableOperation.fromFuture(
+      _iam.showById(id),
+      onCancel: () async {
+
+      },
+    );
+    return operation;
   }
 }

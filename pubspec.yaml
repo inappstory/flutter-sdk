@@ -12,11 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
+  meta: ^1.16.0
+  async: ^2.13.0
+  scrollview_observer: ^1.26.2
   visibility_detector: ^0.4.0+2
   video_player: ^2.9.5
   shimmer: ^3.0.0
-  meta: ^1.16.0
-  scrollview_observer: ^1.26.2
 
 dev_dependencies:
   flutter_test:

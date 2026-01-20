@@ -15,12 +15,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _inAppStoryPlugin = InAppStoryPlugin();
 
-  final apiKey = '<you-api-key>';
+  final apiKey =
+      'BSsDAAAAAAAAAAAAABEaIThgEhYUJk9CMBlDT0RBDgeJy_jXGlAqSvX0nv7No3kHUQXK54ui7O7wg2UnuWm5';
 
   // can be empty
   final userId = '<user-id>';
 
-  final feed = 'feed-id';
+  final feed = 'test';
 
   late final initialization = initSdk();
 
@@ -47,6 +48,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   children: [
                     FeedStoriesWidget(
                       feed: feed,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await IASInAppMessagesHostApi().showById('132');
+                      },
+                      child: Text("show iam"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final operation =
+                            InAppStoryManager.instance.showIAMbyId('132');
+                        operation.cancel();
+                      },
+                      child: Text("show new iam"),
                     ),
                   ],
                 );

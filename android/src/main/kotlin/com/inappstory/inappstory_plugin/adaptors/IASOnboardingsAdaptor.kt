@@ -3,13 +3,13 @@ package com.inappstory.inappstory_plugin.adaptors
 import IASOnboardingsHostApi
 import com.inappstory.inappstory_plugin.callbacks.OnboardingLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.core.api.IASOnboardings
+import com.inappstory.sdk.externalapi.onboardings.IASOnboardingsExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASOnboardingsAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
-    private val iasOnboardings: IASOnboardings,
+    private val iasOnboardings: IASOnboardingsExternalAPI,
 ) : IASOnboardingsHostApi {
     init {
         IASOnboardingsHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
