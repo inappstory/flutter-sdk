@@ -319,7 +319,7 @@ abstract class IASGamesHostApi {
 abstract class GameReaderCallbackFlutterApi {
   void startGame(ContentDataDto? contentData);
 
-  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+  void finishGame(ContentDataDto? contentData, Map<String, Object?>? result);
 
   void closeGame(ContentDataDto? contentData);
 

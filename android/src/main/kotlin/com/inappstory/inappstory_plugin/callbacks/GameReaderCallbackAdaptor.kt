@@ -32,9 +32,14 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
 
     override fun finishGame(contentData: ContentData?, result: String?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
-        val mapOfString: Map<String?, Any?>? = result?.let { Json.decodeFromString(it) }
+       // val mapOfString: Map<String?, Any?>? = result?.let { Json.decodeFromString(it) }
+
+        val jsonObject: JsonObject? = result?.let { Json.parseToJsonElement(it).jsonObject }
+
+        val map: Map<String, Any?>? = jsonObject?.toMap()
+
         flutterPluginBinding.runOnMainThread {
-            flutterApi.finishGame(contentDataDto, mapOfString) {}
+            flutterApi.finishGame(contentDataDto, map) {}
         }
     }
 
@@ -55,8 +60,6 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
         val jsonObject: JsonObject? = payload?.let { Json.parseToJsonElement(it).jsonObject }
 
         val map: Map<String, Any?>? = jsonObject?.toMap()
-
-        //val mapOfString: Map<String?, Any?>? = payload?.let { Json.decodeFromString(it) }
 
         flutterPluginBinding.runOnMainThread {
             flutterApi.eventGame(contentDataDto, gameId, eventName, map) {}

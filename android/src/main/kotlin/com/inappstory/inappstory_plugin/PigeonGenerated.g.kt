@@ -2041,7 +2041,7 @@ class GameReaderCallbackFlutterApi(private val binaryMessenger: BinaryMessenger,
       } 
     }
   }
-  fun finishGame(contentDataArg: ContentDataDto?, resultArg: Map<String?, Any?>?, callback: (Result<Unit>) -> Unit)
+  fun finishGame(contentDataArg: ContentDataDto?, resultArg: Map<String, Any?>?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame$separatedMessageChannelSuffix"

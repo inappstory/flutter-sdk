@@ -2352,7 +2352,7 @@ abstract class GameReaderCallbackFlutterApi {
 
   void startGame(ContentDataDto? contentData);
 
-  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+  void finishGame(ContentDataDto? contentData, Map<String, Object?>? result);
 
   void closeGame(ContentDataDto? contentData);
 
@@ -2397,7 +2397,7 @@ abstract class GameReaderCallbackFlutterApi {
           'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
-          final Map<String?, Object?>? arg_result = (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          final Map<String, Object?>? arg_result = (args[1] as Map<Object?, Object?>?)?.cast<String, Object?>();
           try {
             api.finishGame(arg_contentData, arg_result);
             return wrapResponse(empty: true);

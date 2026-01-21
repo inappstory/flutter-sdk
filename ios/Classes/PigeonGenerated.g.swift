@@ -1965,7 +1965,7 @@ class IASGamesHostApiSetup {
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol GameReaderCallbackFlutterApiProtocol {
   func startGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func closeGame(contentData contentDataArg: ContentDataDto?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func eventGame(contentData contentDataArg: ContentDataDto?, gameId gameIdArg: String?, eventName eventNameArg: String?, payload payloadArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func gameError(contentData contentDataArg: ContentDataDto?, message messageArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
@@ -1998,7 +1998,7 @@ class GameReaderCallbackFlutterApi: GameReaderCallbackFlutterApiProtocol {
       }
     }
   }
-  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String?: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+  func finishGame(contentData contentDataArg: ContentDataDto?, result resultArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([contentDataArg, resultArg] as [Any?]) { response in
