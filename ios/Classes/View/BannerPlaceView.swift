@@ -18,6 +18,15 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     private var bannersAppearance: IASBannersAppearance?
 
+    private var loadBannerPlaceToken: UUID?
+    private var reloadBannerPlaceToken: UUID?
+    private var preloadBannerPlaceToken: UUID?
+    private var showNextToken: UUID?
+    private var showPreviousToken: UUID?
+    private var showByIndexToken: UUID?
+    private var pauseAutoscrollToken: UUID?
+    private var resumeAutoscrollToken: UUID?
+
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
@@ -66,20 +75,26 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             messageChannelSuffix: self.bannerWidgetId
         )
 
-        self.bannerManager.subscribe(LoadBannerPlace()) {
+        self.loadBannerPlaceToken = self.bannerManager.subscribe(
+            LoadBannerPlace()
+        ) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.create()
             }
         }
 
-        self.bannerManager.subscribe(ReloadBannerPlace()) {
+        self.reloadBannerPlaceToken = self.bannerManager.subscribe(
+            ReloadBannerPlace()
+        ) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.refresh()
             }
         }
-        self.bannerManager.subscribe(PreloadBannerPlace()) {
+        self.preloadBannerPlaceToken = self.bannerManager.subscribe(
+            PreloadBannerPlace()
+        ) {
             payload in
             if payload == self.placeId {
                 DispatchQueue.main.async {
@@ -111,31 +126,35 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 }
             }
         }
-        self.bannerManager.subscribe(ShowNext()) {
+        self.showNextToken = self.bannerManager.subscribe(ShowNext()) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.showNext()
             }
         }
-        self.bannerManager.subscribe(ShowPrevious()) {
+        self.showPreviousToken = self.bannerManager.subscribe(ShowPrevious()) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.showPrevious()
             }
         }
-        self.bannerManager.subscribe(ShowByIndex()) {
+        self.showByIndexToken = self.bannerManager.subscribe(ShowByIndex()) {
             payload in
             if payload.placeId == self.placeId {
                 self._bannersView?.showBannerWith(index: Int(payload.index))
             }
         }
-        self.bannerManager.subscribe(PauseAutoscroll()) {
+        self.pauseAutoscrollToken = self.bannerManager.subscribe(
+            PauseAutoscroll()
+        ) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.pause()
             }
         }
-        self.bannerManager.subscribe(ResumeAutoscroll()) {
+        self.resumeAutoscrollToken = self.bannerManager.subscribe(
+            ResumeAutoscroll()
+        ) {
             payload in
             if payload == self.placeId {
                 self._bannersView?.resume()
@@ -260,4 +279,25 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         _bannersView?.create()
     }
 
+    deinit {
+        if let loadBannerPlaceToken = self.loadBannerPlaceToken {
+            self.bannerManager.unsubscribe(loadBannerPlaceToken)
+        }
+        if let pauseAutoscrollToken = self.pauseAutoscrollToken {
+            self.bannerManager.unsubscribe(pauseAutoscrollToken)
+        }
+        if let preloadBannerPlaceToken = self.preloadBannerPlaceToken {
+            self.bannerManager.unsubscribe(preloadBannerPlaceToken)
+        }
+        if let showNextToken = self.showNextToken {
+            self.bannerManager.unsubscribe(showNextToken)
+        }
+        if let showPreviousToken = self.showPreviousToken {
+            self.bannerManager.unsubscribe(showPreviousToken)
+        }
+        if let showByIndexToken = self.showByIndexToken {
+            self.bannerManager.unsubscribe(showByIndexToken)
+        }
+    }
 }
+
