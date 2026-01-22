@@ -30,14 +30,14 @@ class GameEventCallbackAdaptor {
                     completion: { _ in }
                 )
             }
-        case .finishGame(let gameData, let result):
-            DispatchQueue.main.async { [self] in
-                gameReaderCallbackFlutterApi.finishGame(
-                    contentData: mapContentData(arg: gameData),
-                    result: result,
-                    completion: { _ in }
-                )
-            }
+//        case .finishGame(let gameData, let result):
+//            DispatchQueue.main.async { [self] in
+//                gameReaderCallbackFlutterApi.finishGame(
+//                    contentData: mapContentData(arg: gameData),
+//                    result: result,
+//                    completion: { _ in }
+//                )
+//            }
         case .eventGame(let gameData, let name, let payload):
             DispatchQueue.main.async { [self] in
                 gameReaderCallbackFlutterApi.eventGame(
