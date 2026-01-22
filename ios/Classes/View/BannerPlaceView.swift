@@ -191,6 +191,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     func createBannerView() {
         if self._bannersView != nil {
             self._bannersView?.removeFromSuperview()
+            self._bannersView = nil
             //_view.willRemoveSubview(self._bannersView!)
         }
         if self.bannersAppearance != nil {
@@ -258,4 +259,5 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         _view.addSubview(_bannersView!)
         _bannersView?.create()
     }
+
 }
