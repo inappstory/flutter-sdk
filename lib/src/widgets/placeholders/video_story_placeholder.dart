@@ -27,7 +27,12 @@ class _VideoStoryPlaceholderState extends State<VideoStoryPlaceholder> {
   @override
   void initState() {
     super.initState();
-    controller = VideoPlayerController.file(widget.videoFile);
+    controller = VideoPlayerController.file(
+      widget.videoFile,
+      videoPlayerOptions: VideoPlayerOptions(
+        mixWithOthers: true,
+      ),
+    );
   }
 
   @override
