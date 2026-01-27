@@ -67,7 +67,7 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             arguments: args,
             bannerPlaceManager: self.bannerManager,
             callbackFlutterApi: self.callbackFlutterApi,
-            binaryMessenger: self.messenger,
+            binaryMessenger: messenger,
             pluginRegistrar: self.registrar
         )
     }

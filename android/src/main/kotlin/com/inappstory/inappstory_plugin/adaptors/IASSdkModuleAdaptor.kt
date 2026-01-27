@@ -23,7 +23,7 @@ class InappstorySdkModuleAdaptor(
     private val inAppStoryAPI = InAppStoryAPI()
     val appearanceManager = AppearanceManager()
     private lateinit var appearanceManagerAdaptor: AppearanceManagerAdaptor
-    private lateinit var inAppStoryManager: InAppStoryManager
+    lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var iasManagerAdaptor: IASManagerAdaptor
     private lateinit var statManagerAdaptor: IASStatisticsManagerAdaptor
 
