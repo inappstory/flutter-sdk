@@ -4,6 +4,7 @@ import IASSingleStoryHostApi
 import com.inappstory.inappstory_plugin.callbacks.IShowStoryCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
+import com.inappstory.sdk.CancellationToken
 import com.inappstory.sdk.externalapi.single.IASSingleStoryExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
@@ -13,6 +14,9 @@ class IASSingleStoryAdaptor(
     private val iasSingleStory: IASSingleStoryExternalAPI,
     private val activityHolder: ActivityHolder,
 ) : IASSingleStoryHostApi {
+
+    private val tokenMap = mutableMapOf<String, CancellationToken>()
+
     private val callback = IShowStoryCallbackAdaptor(flutterPluginBinding)
 
     init {
@@ -21,16 +25,17 @@ class IASSingleStoryAdaptor(
         iasSingleStory.loadCallback(SingleLoadCallbackAdaptor(flutterPluginBinding))
     }
 
-    override fun showOnce(storyId: String) {
-        iasSingleStory.showOnce(
+    override fun showOnce(storyId: String, token: String) {
+        val cancelToken = iasSingleStory.showOnce(
             activityHolder.activity,
             storyId,
             appearanceManager,
             callback,
         )
+        tokenMap[token] = cancelToken
     }
 
-    override fun show(storyId: String) {
+    override fun show(storyId: String, token: String) {
         val cancelToken = iasSingleStory.show(
             activityHolder.activity,
             storyId,
@@ -38,7 +43,14 @@ class IASSingleStoryAdaptor(
             callback,
             null,
         )
-        cancelToken.cancel()
+        tokenMap[token] = cancelToken
+    }
+
+    override fun cancelByToken(token: String) {
+        if (tokenMap.containsKey(token)) {
+            tokenMap[token]?.cancel()
+            tokenMap.remove(token)
+        }
     }
 }
 

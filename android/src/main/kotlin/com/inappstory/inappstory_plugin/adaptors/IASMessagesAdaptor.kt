@@ -63,6 +63,7 @@ class IASMessagesAdaptor(
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
                 }
             })
+        val result = cancellationToken.cancel()
     }
 
     override fun showByEvent(event: String, onlyPreloaded: Boolean) {

@@ -12,7 +12,9 @@ import '../generated/pigeon_generated.g.dart'
     show
         InAppStoryManagerHostApi,
         SkusCallbackFlutterApi,
-        IASInAppMessagesHostApi;
+        IASInAppMessagesHostApi,
+        IASSingleStoryHostApi;
+import '../helpers/id_gen.dart';
 import 'logger.dart';
 
 class InAppStoryManager {
@@ -26,6 +28,7 @@ class InAppStoryManager {
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
   final _iam = IASInAppMessagesHostApi();
+  final _singleStoryApi = IASSingleStoryHostApi();
 
   static final instance = InAppStoryManager._private();
 
@@ -112,11 +115,19 @@ class InAppStoryManager {
   }
 
   CancelableOperation<void> showIAMbyId(String id) {
-
     var operation = CancelableOperation.fromFuture(
       _iam.showById(id),
-      onCancel: () async {
+      onCancel: () async {},
+    );
+    return operation;
+  }
 
+  CancelableOperation<void> showStoryById(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _singleStoryApi.show(storyId: id, token: uniqueId),
+      onCancel: () async {
+        _singleStoryApi.cancelByToken(token: uniqueId);
       },
     );
     return operation;

@@ -256,9 +256,11 @@ class StoryFavoriteItemAPIDataDto {
 
 @HostApi()
 abstract class IASSingleStoryHostApi {
-  void showOnce({required String storyId});
+  void showOnce({required String storyId, required String token});
 
-  void show({required String storyId});
+  void show({required String storyId, required String token});
+
+  void cancelByToken({required String token});
 }
 
 @FlutterApi()

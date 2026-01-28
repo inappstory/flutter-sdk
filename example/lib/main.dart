@@ -58,10 +58,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     ElevatedButton(
                       onPressed: () async {
                         final operation =
-                            InAppStoryManager.instance.showIAMbyId('132');
+                            InAppStoryManager.instance.showStoryById('102683');
                         operation.cancel();
                       },
-                      child: Text("show new iam"),
+                      child: Text("show new story"),
                     ),
                   ],
                 );
