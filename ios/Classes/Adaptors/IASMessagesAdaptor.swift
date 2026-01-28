@@ -14,6 +14,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
 
     private var inAppMessagesApi: InAppStorySDK.InAppMessagesAPI
     private var binaryMessenger: FlutterBinaryMessenger
+    private var tokenMap: [String: InAppStorySDK.CancellationToken] = [:]
 
     init(
         binaryMessenger: FlutterBinaryMessenger,
@@ -27,18 +28,30 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         )
     }
 
-    func showById(messageId: String, onlyPreloaded: Bool) throws {
-        inAppMessagesApi.showInAppMessageWith(
+    func showById(messageId: String, token: String, onlyPreloaded: Bool) throws
+    {
+        let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             id: messageId,
             onlyPreloaded: onlyPreloaded
         ) { _ in }
+        tokenMap[token] = cancellationToken
     }
-    
-    func showByEvent(event: String, onlyPreloaded: Bool) throws {
-        inAppMessagesApi.showInAppMessageWith(
+
+    func showByEvent(event: String, token: String, onlyPreloaded: Bool) throws {
+        let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             event: event,
             onlyPreloaded: onlyPreloaded
         ) { _ in }
+        tokenMap[token] = cancellationToken
+    }
+
+    func cancelByToken(token: String) throws -> Bool {
+        if tokenMap[token] != nil {
+            let result = tokenMap[token]!.cancel()
+            tokenMap.removeValue(forKey: token)
+            return result
+        }
+        return false
     }
 
     func preloadMessages(

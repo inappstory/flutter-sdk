@@ -5,6 +5,7 @@ import com.inappstory.inappstory_plugin.callbacks.IShowStoryCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.CancellationToken
+import com.inappstory.sdk.CancellationTokenCancelResult
 import com.inappstory.sdk.externalapi.single.IASSingleStoryExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
@@ -46,11 +47,13 @@ class IASSingleStoryAdaptor(
         tokenMap[token] = cancelToken
     }
 
-    override fun cancelByToken(token: String) {
+    override fun cancelByToken(token: String): Boolean {
         if (tokenMap.containsKey(token)) {
-            tokenMap[token]?.cancel()
+            val result = tokenMap[token]?.cancel()
             tokenMap.remove(token)
+            return result == CancellationTokenCancelResult.SUCCESS
         }
+        return false
     }
 }
 

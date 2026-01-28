@@ -37,7 +37,7 @@ class _InAppMessagesState extends State<InAppMessages>
                 children: [
                   ElevatedButton(
                     onPressed:
-                        () => IASInAppMessagesHostApi().showById(
+                        () => InAppStoryManager.instance.showIAMById(
                           _inputController.text,
                           onlyPreloaded: false,
                         ),
@@ -45,7 +45,7 @@ class _InAppMessagesState extends State<InAppMessages>
                   ),
                   ElevatedButton(
                     onPressed:
-                        () => IASInAppMessagesHostApi().showByEvent(
+                        () => InAppStoryManager.instance.showIAMByEvent(
                           _inputController.text,
                         ),
                     child: const Text("Show by event"),
@@ -60,7 +60,8 @@ class _InAppMessagesState extends State<InAppMessages>
                   ElevatedButton(
                     onPressed: () async {
                       final result =
-                          await IASInAppMessagesHostApi().preloadMessages();
+                          await InAppStoryManager.instance
+                              .preloadInAppMessages();
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

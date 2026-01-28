@@ -114,18 +114,48 @@ class InAppStoryManager {
     await _iasManager.setOptionKeys(options);
   }
 
-  CancelableOperation<void> showIAMbyId(String id) {
+  CancelableOperation<void> showIAMById(String id,
+      {bool onlyPreloaded = false}) {
+    final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
-      _iam.showById(id),
-      onCancel: () async {},
+      _iam.showById(id, uniqueId, onlyPreloaded: onlyPreloaded),
+      onCancel: () async {
+        _iam.cancelByToken(token: uniqueId);
+      },
     );
     return operation;
   }
 
-  CancelableOperation<void> showStoryById(String id) {
+  Future<bool> preloadInAppMessages({List<String>? ids}) async {
+    return await _iam.preloadMessages(ids: ids);
+  }
+
+  CancelableOperation<void> showIAMByEvent(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _iam.showByEvent(id, uniqueId),
+      onCancel: () async {
+        _iam.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  CancelableOperation<void> showStory(String id) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
       _singleStoryApi.show(storyId: id, token: uniqueId),
+      onCancel: () async {
+        _singleStoryApi.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  CancelableOperation<void> showStoryOnce(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _singleStoryApi.showOnce(storyId: id, token: uniqueId),
       onCancel: () async {
         _singleStoryApi.cancelByToken(token: uniqueId);
       },

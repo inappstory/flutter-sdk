@@ -46,11 +46,13 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
         tokenMap[token] = cancellationToken
     }
 
-    func cancelByToken(token: String) throws {
+    func cancelByToken(token: String) throws -> Bool {
         if tokenMap[token] != nil {
             let result = tokenMap[token]!.cancel()
             tokenMap.removeValue(forKey: token)
+            return result
         }
+        return false
     }
 
     private func showOnceComplete(show: Bool) {

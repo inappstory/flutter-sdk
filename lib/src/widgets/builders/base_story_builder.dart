@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/ias_manager.dart';
 import '../../data/story.dart';
-import '../../generated/pigeon_generated.g.dart' show IASSingleStoryHostApi;
 import '../base/story_content.dart';
 import '../base/story_widget.dart';
 import '../decorators/feed_decorator.dart';
@@ -95,7 +95,6 @@ class StoryWidgetSingleReader extends BaseStoryBuilder {
 
   @override
   Future<void> onTap(story) async {
-    // TODO: 28.01.2026 !!!!
-    //IASSingleStoryHostApi().showOnce(storyId: '${story.id}');
+    InAppStoryManager.instance.showStoryOnce('${story.id}');
   }
 }

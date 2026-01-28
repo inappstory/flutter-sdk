@@ -260,7 +260,7 @@ abstract class IASSingleStoryHostApi {
 
   void show({required String storyId, required String token});
 
-  void cancelByToken({required String token});
+  bool cancelByToken({required String token});
 }
 
 @FlutterApi()
@@ -286,8 +286,11 @@ abstract class IASOnboardingsHostApi {
   void show({
     required int limit,
     String feed = 'onboarding',
+    String token,
     List<String> tags = const [],
   });
+
+  bool cancelByToken(String token);
 }
 
 @FlutterApi()
@@ -353,12 +356,14 @@ abstract class IASCallBacksFlutterApi {
 
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void showById(String messageId, {bool onlyPreloaded = false});
+  void showById(String messageId, String token, {bool onlyPreloaded = false});
 
-  void showByEvent(String event, {bool onlyPreloaded = false});
+  void showByEvent(String event, String token, {bool onlyPreloaded = false});
 
   @async
   bool preloadMessages({List<String>? ids});
+
+  bool cancelByToken({required String token});
 }
 
 /// Represents data for an in-app message.
