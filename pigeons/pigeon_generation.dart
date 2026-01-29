@@ -286,7 +286,7 @@ abstract class IASOnboardingsHostApi {
   void show({
     required int limit,
     String feed = 'onboarding',
-    String token,
+    required String token,
     List<String> tags = const [],
   });
 
@@ -323,8 +323,6 @@ abstract class IASGamesHostApi {
 @FlutterApi()
 abstract class GameReaderCallbackFlutterApi {
   void startGame(ContentDataDto? contentData);
-
-  void finishGame(ContentDataDto? contentData, Map<String, Object?>? result);
 
   void closeGame(ContentDataDto? contentData);
 

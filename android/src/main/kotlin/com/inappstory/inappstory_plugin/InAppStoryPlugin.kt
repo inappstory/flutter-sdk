@@ -47,6 +47,7 @@ class InAppStoryPlugin : FlutterPlugin, MethodCallHandler, ActivityHolder, Activ
                 "banner-view",
                 BannerViewFactory(
                     flutterPluginBinding,
+                    inappstorySdkModuleAdaptor.inAppStoryManager,
                     inappstorySdkModuleAdaptor.appearanceManager
                 )
             )

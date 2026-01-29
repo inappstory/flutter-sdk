@@ -2205,7 +2205,7 @@ class IASOnboardingsHostApi {
 
   /// [feed] by default == "onboarding"
   /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
-  Future<void> show({required int limit, String feed = 'onboarding', String token, List<String> tags = const [], }) async {
+  Future<void> show({required int limit, String feed = 'onboarding', required String token, List<String> tags = const [], }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.show$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -2406,8 +2406,6 @@ abstract class GameReaderCallbackFlutterApi {
 
   void startGame(ContentDataDto? contentData);
 
-  void finishGame(ContentDataDto? contentData, Map<String, Object?>? result);
-
   void closeGame(ContentDataDto? contentData);
 
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName, Map<String, Object?>? payload);
@@ -2430,30 +2428,6 @@ abstract class GameReaderCallbackFlutterApi {
           final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
           try {
             api.startGame(arg_contentData);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final ContentDataDto? arg_contentData = (args[0] as ContentDataDto?);
-          final Map<String, Object?>? arg_result = (args[1] as Map<Object?, Object?>?)?.cast<String, Object?>();
-          try {
-            api.finishGame(arg_contentData, arg_result);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

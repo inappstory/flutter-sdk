@@ -2080,23 +2080,6 @@ class GameReaderCallbackFlutterApi(private val binaryMessenger: BinaryMessenger,
       } 
     }
   }
-  fun finishGame(contentDataArg: ContentDataDto?, resultArg: Map<String, Any?>?, callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.GameReaderCallbackFlutterApi.finishGame$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(contentDataArg, resultArg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
-      } 
-    }
-  }
   fun closeGame(contentDataArg: ContentDataDto?, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
