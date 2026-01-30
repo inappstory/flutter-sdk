@@ -2,11 +2,27 @@
 
 ### Added
 
-- added feature to show multiple stories feed in one screen
+- Feature to show multiple/same stories feed in one screen
+
+### Changed
+
+- `IASGameReaderCallback` method `finishGame` is now `Deprecated`, please use `closeGame` callback
+- Updated iOS native SDK to 1.26.7
+- Updated Android native SDK to 1.22.5
 
 ### Fixed
 
-- issue on android 12 and lower devices, when using back navigation in in-app-messages
+- Issue on android 12 and lower devices, when using back navigation in in-app-messages. Please
+  see [migration guide](migrations.md#from-070-to-071)!
+- Memory leaks when using BannerPlaces
+- After switching between applications or opening the built-in browser, banners may disappear
+- Enable audio mixing for video previews in story list
+
+### Removed
+
+- Removed legacy `getStoriesWidgets()` and `getFavoritesStoriesWidgets()` methods from `InAppStoryPlugin` class
+
+
 
 ## [0.7.0]
 
