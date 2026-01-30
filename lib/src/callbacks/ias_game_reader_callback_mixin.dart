@@ -25,12 +25,13 @@ mixin IASGameReaderCallback<T extends StatefulWidget> on State<T>
   @override
   void closeGame(ContentDataDto? contentData) {}
 
+  @Deprecated('Use closeGame instead')
   @override
   void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result) {}
 
   @override
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName,
-      Map<String?, Object?>? payload) {}
+      Map<String, Object?>? payload) {}
 
   @override
   void gameError(ContentDataDto? contentData, String? message) {}

@@ -10,8 +10,7 @@ class GamesWidget extends StatefulWidget {
   State<GamesWidget> createState() => _GamesWidgetState();
 }
 
-class _GamesWidgetState extends State<GamesWidget>
-    implements GameReaderCallbackFlutterApi {
+class _GamesWidgetState extends State<GamesWidget> with IASGameReaderCallback {
   final _inputController = TextEditingController();
 
   @override
@@ -37,18 +36,6 @@ class _GamesWidgetState extends State<GamesWidget>
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    GameReaderCallbackFlutterApi.setUp(this);
-  }
-
-  @override
-  void dispose() {
-    GameReaderCallbackFlutterApi.setUp(null);
-    super.dispose();
   }
 
   void startIASGame() async {

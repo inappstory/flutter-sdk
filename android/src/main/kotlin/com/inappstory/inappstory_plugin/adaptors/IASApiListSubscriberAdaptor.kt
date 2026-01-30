@@ -6,7 +6,6 @@ import StoryDataDto
 import StoryFavoriteItemAPIDataDto
 import com.inappstory.inappstory_plugin.mapStoryData
 import com.inappstory.inappstory_plugin.runOnMainThread
-import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.StoryAPIData
 import com.inappstory.sdk.externalapi.StoryFavoriteItemAPIData
 import com.inappstory.sdk.externalapi.storylist.IASStoryListSessionData
@@ -15,14 +14,12 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
 open class InAppStoryAPIListSubscriberAdaptor(
     private val flutterPluginBinding: FlutterPluginBinding,
+    private val feed: String,
     uniqueId: String,
 ) : InAppStoryAPIListSubscriber(uniqueId) {
 
     private val storyListSubscriber =
         InAppStoryAPIListSubscriberFlutterApi(flutterPluginBinding.binaryMessenger, uniqueId)
-
-    private val sessionData =
-        InAppStoryManager.getInstance()?.iasCore()?.sessionManager()?.session?.sessionData()
 
     override fun updateStoryData(
         storyAPIData: StoryAPIData,
@@ -32,7 +29,7 @@ open class InAppStoryAPIListSubscriberAdaptor(
             storyListSubscriber.updateStoryData(
                 mapStoryAPIData(
                     storyAPIData,
-                    storySessionData?.previewAspectRatio() ?: getAspectRatio()
+                    storySessionData?.previewAspectRatio() ?: 1.0f
                 )
             ) {}
         }
@@ -46,7 +43,7 @@ open class InAppStoryAPIListSubscriberAdaptor(
             storyListSubscriber.updateStoriesData(list.map {
                 mapStoryAPIData(
                     it,
-                    storySessionData?.previewAspectRatio() ?: getAspectRatio()
+                    storySessionData?.previewAspectRatio() ?: 1.0f
                 )
             }) {}
             storyListSubscriber.storiesLoaded(list.size.toLong(), uniqueId) {}
@@ -64,18 +61,13 @@ open class InAppStoryAPIListSubscriberAdaptor(
     }
 
     fun scrollToStory(story: StoryDataDto?) {
-        storyListSubscriber.scrollToStory(
-            indexArg = (story?.id) ?: -1,
-            feedArg = uniqueId
-        ) {}
-    }
-
-    private fun getAspectRatio(): Float {
-        var aspectRatio = 1.0f
-        if (sessionData != null) {
-            aspectRatio = sessionData.previewAspectRatio
+        flutterPluginBinding.runOnMainThread {
+            storyListSubscriber.scrollToStory(
+                indexArg = (story?.id) ?: -1,
+                feedArg = feed,
+                uniqueIdArg = uniqueId
+            ) {}
         }
-        return aspectRatio
     }
 
     private fun mapStoryAPIData(p0: StoryAPIData, aspectRatio: Float): StoryAPIDataDto {

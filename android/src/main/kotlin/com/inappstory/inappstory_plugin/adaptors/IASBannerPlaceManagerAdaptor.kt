@@ -3,7 +3,6 @@ package com.inappstory.inappstory_plugin.adaptors
 import BannerPlaceManagerHostApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 typealias Token = UUID
 
@@ -21,10 +20,9 @@ class IASBannerPlaceManagerAdaptor(
 ) : BannerPlaceManagerHostApi {
 
     private val subscribers =
-        ConcurrentHashMap<EventKey<*>, ConcurrentHashMap<Token, (Any) -> Unit>>()
+        mutableMapOf<EventKey<*>, MutableMap<Token, (Any) -> Unit>>()
 
-    private val tokenToKey = ConcurrentHashMap<Token, EventKey<*>>()
-
+    private val tokenToKey = mutableMapOf<Token, EventKey<*>>()
 
     init {
         BannerPlaceManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -37,12 +35,17 @@ class IASBannerPlaceManagerAdaptor(
                 @Suppress("UNCHECKED_CAST")
                 callback(payload as P)
             } catch (e: ClassCastException) {
-                // payload другого типа — игнорируем
+                // payload other type
             } catch (e: Throwable) {
-                // Не даём падать эмиттеру
+                //
             }
         }
-        val map = subscribers.computeIfAbsent(key) { ConcurrentHashMap() }
+        var map = mutableMapOf<Token, (Any) -> Unit>()
+        if (subscribers.containsKey(key)) {
+            map = subscribers[key] ?: mutableMapOf()
+        } else {
+            subscribers[key] = map
+        }
         map[id] = anyCallback
         tokenToKey[id] = key
         return Subscription(this, id)
@@ -57,7 +60,7 @@ class IASBannerPlaceManagerAdaptor(
         }
     }
 
-    fun <P : Any> emit(key: EventKey<P>, payload: P) {
+    private fun <P : Any> emit(key: EventKey<P>, payload: P) {
         val map = subscribers[key] ?: return
         val callbacks = ArrayList<(Any) -> Unit>(map.values)
         for (cb in callbacks) {
