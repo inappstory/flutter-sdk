@@ -44,17 +44,17 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   );
 
   void onListen() async {
-    await InappstorySdkModuleHostApi().createListAdaptor(feed);
+    await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
     observableErrorCallback.addObserver(this);
-    iasStoryListHostApi.load(feed);
+    iasStoryListHostApi.load(feed, uniqueId);
   }
 
   void onCancel() async {
-    iasStoryListHostApi.removeSubscriber(feed);
+    iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
     observableErrorCallback.removeObserver(this);
-    await InappstorySdkModuleHostApi().removeListAdaptor(feed);
+    await InappstorySdkModuleHostApi().removeListAdaptor(feed, uniqueId);
   }
 
   StoryFromPigeonDto createStoryFromDto(StoryAPIDataDto dto) {

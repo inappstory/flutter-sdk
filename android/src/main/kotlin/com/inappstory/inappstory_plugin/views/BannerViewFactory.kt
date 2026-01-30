@@ -16,6 +16,7 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    private val inAppStoryManager: InAppStoryManager,
     private val appearanceManager: AppearanceManager
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
@@ -25,27 +26,12 @@ class BannerViewFactory(
     private var bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor =
         IASBannerPlaceManagerAdaptor(flutterPluginBinding)
 
-    init {
-        InAppStoryManager.getInstance().setBannerWidgetCallback(object : BannerWidgetCallback {
-            override fun bannerWidget(
-                bannerData: BannerData?,
-                widgetEventName: String?,
-                widgetData: Map<String?, String?>?
-            ) {
-                if (bannerData != null && widgetEventName != null && widgetData != null && widgetData.keys.any { s: String? -> s != null }) {
-                    flutterPluginBinding.runOnMainThread {
-                        bannerPlaceCallback.onActionWith(
-                            bannerDataToDto(bannerData),
-                            widgetEventName,
-                            widgetData.map { (k, v) -> k as String to v }.toMap()
-                        ) {}
-                    }
-                }
-            }
-        })
-    }
+    private var bannersCallback: BannerWidgetCallback? = null
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
+        if (bannersCallback == null) {
+            createBannersCallback()
+        }
         val creationParams = args as Map<String?, Any>?
         return BannerView(
             context,
@@ -58,7 +44,22 @@ class BannerViewFactory(
         )
     }
 
-    fun bannerDataToDto(data: BannerData): BannerDataDto {
+    private fun createBannersCallback() {
+        bannersCallback = BannerWidgetCallback { bannerData, widgetEventName, widgetData ->
+            if (bannerData != null && widgetEventName != null && widgetData != null && widgetData.keys.any { s: String? -> s != null }) {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onActionWith(
+                        bannerDataToDto(bannerData),
+                        widgetEventName,
+                        widgetData.map { (k, v) -> k as String to v }.toMap()
+                    ) {}
+                }
+            }
+        }
+        inAppStoryManager.setBannerWidgetCallback(bannersCallback)
+    }
+
+    private fun bannerDataToDto(data: BannerData): BannerDataDto {
         return BannerDataDto(
             id = data.id().toString(),
             bannerPlace = data.bannerPlace(),

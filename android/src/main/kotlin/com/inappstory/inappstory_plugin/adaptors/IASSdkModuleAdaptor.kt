@@ -6,6 +6,7 @@ import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
+import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.ExternalPlatforms
@@ -21,7 +22,7 @@ class InappstorySdkModuleAdaptor(
 ) : InappstorySdkModuleHostApi {
 
     private val inAppStoryAPI = InAppStoryAPI()
-    val appearanceManager = AppearanceManager()
+    private val appearanceManager = AppearanceManager()
     private lateinit var appearanceManagerAdaptor: AppearanceManagerAdaptor
     private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var iasManagerAdaptor: IASManagerAdaptor
@@ -150,6 +151,17 @@ class InappstorySdkModuleAdaptor(
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
 
+            flutterPluginBinding
+                .platformViewRegistry
+                .registerViewFactory(
+                    "banner-view",
+                    BannerViewFactory(
+                        flutterPluginBinding,
+                        inAppStoryManager,
+                        appearanceManager
+                    )
+                )
+
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 
             callback(Result.success(Unit))
@@ -158,7 +170,7 @@ class InappstorySdkModuleAdaptor(
         }
     }
 
-    override fun createListAdaptor(feed: String) {
+    override fun createListAdaptor(feed: String, uniqueId: String) {
         val iasStoryList = inAppStoryAPI.storyList
 
         val newFeed = IASStoryListAdaptor(
@@ -167,16 +179,17 @@ class InappstorySdkModuleAdaptor(
             iasStoryList,
             inAppStoryAPI,
             activityHolder,
-            uniqueId = feed
+            feed = feed,
+            uniqueId = uniqueId
         )
         feedListAdaptors.add(newFeed)
     }
 
 
-    override fun removeListAdaptor(feed: String) {
+    override fun removeListAdaptor(feed: String, uniqueId: String) {
         val iterator = feedListAdaptors.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().uniqueId == feed) {
+            if (iterator.next().uniqueId == uniqueId) {
                 iterator.remove()
             }
         }

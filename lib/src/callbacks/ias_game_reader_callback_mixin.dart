@@ -30,7 +30,7 @@ mixin IASGameReaderCallback<T extends StatefulWidget> on State<T>
 
   @override
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName,
-      Map<String?, Object?>? payload) {}
+      Map<String, Object?>? payload) {}
 
   @override
   void gameError(ContentDataDto? contentData, String? message) {}

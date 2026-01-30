@@ -8,6 +8,7 @@ import 'package:inappstory_plugin/inappstory_plugin.dart'
         InAppStoryAPIListSubscriberFlutterApi,
         ErrorCallbackFlutterApi,
         StoryAPIDataDto;
+import 'package:inappstory_plugin/src/helpers/id_gen.dart';
 import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -15,7 +16,8 @@ import 'mocks.dart';
 
 void main() {
   group('GIVEN new instance for feedID', () {
-    const feed = 'feedID';
+    final feed = 'feedID';
+    final uniqueId = idGenerator();
 
     late StoriesStream storiesStream;
     late MockObservable<InAppStoryAPIListSubscriberFlutterApi>
@@ -34,7 +36,8 @@ void main() {
         storyDecorator: MockStoryDecorator(),
       );
 
-      when(() => iasStoryListHostApi.load(feed)).thenAnswer((_) async {});
+      when(() => iasStoryListHostApi.load(feed, uniqueId))
+          .thenAnswer((_) async {});
     });
 
     group('WHEN got client', () {
@@ -44,7 +47,7 @@ void main() {
         verify(() => observableStoryList.addObserver(storiesStream)).called(1);
         verify(() => observableErrorCallback.addObserver(storiesStream))
             .called(1);
-        verify(() => iasStoryListHostApi.load(feed)).called(1);
+        verify(() => iasStoryListHostApi.load(feed, uniqueId)).called(1);
       });
     });
 
@@ -93,5 +96,5 @@ class _TestStoriesStream extends StoriesStream {
   void storiesLoaded(int size, String feed) {}
 
   @override
-  void scrollToStory(int index, String feed) {}
+  void scrollToStory(int index, String feed, String uniqueId) {}
 }

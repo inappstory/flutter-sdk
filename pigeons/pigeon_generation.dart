@@ -28,9 +28,9 @@ abstract class InappstorySdkModuleHostApi {
     String? cacheSize,
   });
 
-  void createListAdaptor(String feed);
+  void createListAdaptor(String feed, String uniqueId);
 
-  void removeListAdaptor(String feed);
+  void removeListAdaptor(String feed, String uniqueId);
 }
 
 @HostApi()
@@ -70,7 +70,7 @@ abstract class InAppStoryManagerHostApi {
 
 @HostApi()
 abstract class IASStoryListHostApi {
-  void load(String feed);
+  void load(String feed, String uniqueId);
 
   void reloadFeed(String feed);
 
@@ -93,7 +93,7 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void storiesLoaded(int size, String feed);
 
-  void scrollToStory(int index, String feed);
+  void scrollToStory(int index, String feed, String uniqueId);
 }
 
 @FlutterApi()
@@ -319,12 +319,12 @@ abstract class IASGamesHostApi {
 abstract class GameReaderCallbackFlutterApi {
   void startGame(ContentDataDto? contentData);
 
-  void finishGame(ContentDataDto? contentData, Map<String?, Object?>? result);
+  void finishGame(ContentDataDto? contentData, Map<String, Object?>? result);
 
   void closeGame(ContentDataDto? contentData);
 
   void eventGame(ContentDataDto? contentData, String? gameId, String? eventName,
-      Map<String?, Object?>? payload);
+      Map<String, Object?>? payload);
 
   void gameError(ContentDataDto? contentData, String? message);
 }

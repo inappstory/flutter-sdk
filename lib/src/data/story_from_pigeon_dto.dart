@@ -100,7 +100,7 @@ class StoryFromPigeonDto
   void storiesLoaded(int size, String feed) {}
 
   @override
-  void scrollToStory(int index, String feed) {}
+  void scrollToStory(int index, String feed, String uniqueId) {}
 }
 
 File? nullableFileFromString(String? filePath) {
