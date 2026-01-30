@@ -260,6 +260,10 @@ class BannerView(
         frame.addView(bannerPlace)
         bannerPlace.loadBanners(true)
     }
+
+    override fun deInitBannerPlace() {
+        //not using in android
+    }
 }
 
 class CustomBannerPlaceAppearanceWithoutBannerDecoration(
