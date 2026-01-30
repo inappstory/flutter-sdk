@@ -22,6 +22,7 @@ import com.inappstory.inappstory_plugin.adaptors.ResumeAutoscroll
 import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
+import com.inappstory.inappstory_plugin.adaptors.Subscription
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
@@ -37,7 +38,7 @@ import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
 
 class BannerView(
-    val context: Context,
+    private val context: Context,
     id: Int,
     creationParams: Map<String?, Any?>?,
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
@@ -46,10 +47,19 @@ class BannerView(
     val bannerPlaceCallback: BannerPlaceCallbackFlutterApi
 ) : PlatformView, BannerViewHostApi {
 
-    private lateinit var bannerPlace: BannerCarousel
+    private var bannerPlace: BannerCarousel? = null
     private val frame: FrameLayout
 
     private var bannerLoadCallback: BannerLoadCallbackFlutterApi
+
+    private var loadBannerPlace: Subscription
+    private var reloadBannerPlace: Subscription
+    private var preloadBannerPlace: Subscription
+    private var showNext: Subscription
+    private var showPrevious: Subscription
+    private var showByIndex: Subscription
+    private var pauseAutoscroll: Subscription
+    private var resumeAutoscroll: Subscription
 
     override fun getView(): View {
         return frame
@@ -109,21 +119,21 @@ class BannerView(
 
         createBannerCarousel(placeId)
 
-        bannerPlaceManagerAdaptor.subscribe(LoadBannerPlace) { payload ->
+        loadBannerPlace = bannerPlaceManagerAdaptor.subscribe(LoadBannerPlace) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.loadBanners()
+            bannerPlace?.loadBanners()
         }
 
-        bannerPlaceManagerAdaptor.subscribe(ReloadBannerPlace) { payload ->
+        reloadBannerPlace = bannerPlaceManagerAdaptor.subscribe(ReloadBannerPlace) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.reloadBanners()
+            bannerPlace?.reloadBanners()
         }
 
-        bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
+        preloadBannerPlace = bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
@@ -154,35 +164,35 @@ class BannerView(
                     }
                 })
         }
-        bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
+        showNext = bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.showNext()
+            bannerPlace?.showNext()
         }
-        bannerPlaceManagerAdaptor.subscribe(ShowPrevious) { payload ->
+        showPrevious = bannerPlaceManagerAdaptor.subscribe(ShowPrevious) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.showPrevious()
+            bannerPlace?.showPrevious()
         }
-        bannerPlaceManagerAdaptor.subscribe(ShowByIndex) { payload ->
+        showByIndex = bannerPlaceManagerAdaptor.subscribe(ShowByIndex) { payload ->
             if (payload.placeId != placeId) {
                 return@subscribe
             }
-            bannerPlace.showByIndex(payload.index.toInt())
+            bannerPlace?.showByIndex(payload.index.toInt())
         }
-        bannerPlaceManagerAdaptor.subscribe(PauseAutoscroll) { payload ->
+        pauseAutoscroll = bannerPlaceManagerAdaptor.subscribe(PauseAutoscroll) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.pauseAutoscroll()
+            bannerPlace?.pauseAutoscroll()
         }
-        bannerPlaceManagerAdaptor.subscribe(ResumeAutoscroll) { payload ->
+        resumeAutoscroll = bannerPlaceManagerAdaptor.subscribe(ResumeAutoscroll) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            bannerPlace.resumeAutoscroll()
+            bannerPlace?.resumeAutoscroll()
         }
         frame.addView(bannerPlace)
     }
@@ -190,14 +200,14 @@ class BannerView(
     private fun createBannerCarousel(placeId: String) {
         bannerPlace = BannerCarousel(context)
 
-        bannerPlace.layoutParams = FrameLayout.LayoutParams(
+        bannerPlace?.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
         )
 
-        bannerPlace.setAppearanceManager(appearanceManager)
+        bannerPlace?.setAppearanceManager(appearanceManager)
 
-        bannerPlace.setPlaceId(placeId)
-        bannerPlace.navigationCallback(object : BannerCarouselNavigationCallback {
+        bannerPlace?.setPlaceId(placeId)
+        bannerPlace?.navigationCallback(object : BannerCarouselNavigationCallback {
             override fun onPageScrolled(
                 position: Int, total: Int, positionOffset: Float, positionOffsetPixels: Int
             ) {
@@ -213,7 +223,7 @@ class BannerView(
         })
 
 
-        bannerPlace.loadCallback(object : BannerPlaceLoadCallback() {
+        bannerPlace?.loadCallback(object : BannerPlaceLoadCallback() {
             override fun bannerPlaceLoaded(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
@@ -258,11 +268,20 @@ class BannerView(
         frame.removeView(bannerPlace)
         createBannerCarousel(newPlaceId)
         frame.addView(bannerPlace)
-        bannerPlace.loadBanners(true)
+        bannerPlace?.loadBanners(true)
     }
 
     override fun deInitBannerPlace() {
-        //not using in android
+        loadBannerPlace.unsubscribe()
+        reloadBannerPlace.unsubscribe()
+        preloadBannerPlace.unsubscribe()
+        showNext.unsubscribe()
+        showPrevious.unsubscribe()
+        showByIndex.unsubscribe()
+        pauseAutoscroll.unsubscribe()
+        resumeAutoscroll.unsubscribe()
+        frame.removeView(bannerPlace)
+        bannerPlace = null
     }
 }
 
