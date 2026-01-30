@@ -142,6 +142,7 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void dispose() {
+    BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
     BannerLoadCallbackFlutterApi.setUp(null,
         messageChannelSuffix: bannerWidgetId);
     super.dispose();
