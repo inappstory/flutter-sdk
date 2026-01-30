@@ -6,6 +6,7 @@ import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
+import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.ExternalPlatforms
@@ -21,9 +22,9 @@ class InappstorySdkModuleAdaptor(
 ) : InappstorySdkModuleHostApi {
 
     private val inAppStoryAPI = InAppStoryAPI()
-    val appearanceManager = AppearanceManager()
+    private val appearanceManager = AppearanceManager()
     private lateinit var appearanceManagerAdaptor: AppearanceManagerAdaptor
-    lateinit var inAppStoryManager: InAppStoryManager
+    private lateinit var inAppStoryManager: InAppStoryManager
     private lateinit var iasManagerAdaptor: IASManagerAdaptor
     private lateinit var statManagerAdaptor: IASStatisticsManagerAdaptor
 
@@ -149,6 +150,17 @@ class InappstorySdkModuleAdaptor(
             )
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+
+            flutterPluginBinding
+                .platformViewRegistry
+                .registerViewFactory(
+                    "banner-view",
+                    BannerViewFactory(
+                        flutterPluginBinding,
+                        inAppStoryManager,
+                        appearanceManager
+                    )
+                )
 
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 
