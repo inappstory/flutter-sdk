@@ -66,7 +66,6 @@ class BannerView(
     }
 
     override fun dispose() {
-        bannerPlaceManagerAdaptor.removeAll()
     }
 
     init {
