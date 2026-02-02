@@ -50,7 +50,7 @@ class BannerView(
     private var bannerPlace: BannerCarousel? = null
     private val frame: FrameLayout
 
-    private var bannerLoadCallback: BannerLoadCallbackFlutterApi
+    private var bannerLoadCallback: BannerLoadCallbackFlutterApi?
 
     private var loadBannerPlace: Subscription
     private var reloadBannerPlace: Subscription
@@ -283,6 +283,7 @@ class BannerView(
         frame.removeView(bannerPlace)
         bannerPlace = null
         BannerViewHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        bannerLoadCallback = null
     }
 }
 
