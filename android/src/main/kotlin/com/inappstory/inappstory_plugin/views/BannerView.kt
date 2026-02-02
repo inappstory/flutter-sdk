@@ -228,7 +228,7 @@ class BannerView(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
-                    bannerLoadCallback.onBannersLoaded(
+                    bannerLoadCallback?.onBannersLoaded(
                         size.toLong(), context.toDp(widgetHeight).toLong()
                     ) {}
                     bannerPlaceCallback.onBannerPlaceLoaded(
