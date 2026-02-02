@@ -1,7 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import InappstorySdkModuleHostApi
-import android.util.Log
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
@@ -41,6 +40,8 @@ class InappstorySdkModuleAdaptor(
     private lateinit var iasMessages: IASMessagesAdaptor
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
+
+    private var bannerFactory: BannerViewFactory? = null
 
     override fun initWith(
         apiKey: String,
@@ -152,18 +153,25 @@ class InappstorySdkModuleAdaptor(
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
 
-            val registerAlready = flutterPluginBinding
+            if (bannerFactory == null) {
+                bannerFactory = BannerViewFactory(
+                    flutterPluginBinding,
+                    inAppStoryManager,
+                    appearanceManager
+                )
+            }
+
+            val registered = flutterPluginBinding
                 .platformViewRegistry
                 .registerViewFactory(
                     "banner-view",
-                    BannerViewFactory(
-                        flutterPluginBinding,
-                        inAppStoryManager,
-                        appearanceManager
-                    )
+                    bannerFactory!!,
                 )
 
-            Log.d("Flutter", "registerAlready: $registerAlready")
+            if (!registered) {
+                bannerFactory?.setInAppStoryManager(inAppStoryManager)
+                bannerFactory?.setAppearanceManager(appearanceManager)
+            }
 
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 

@@ -16,8 +16,8 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val inAppStoryManager: InAppStoryManager,
-    private val appearanceManager: AppearanceManager
+    private var inAppStoryManager: InAppStoryManager,
+    private var appearanceManager: AppearanceManager
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -27,6 +27,14 @@ class BannerViewFactory(
         IASBannerPlaceManagerAdaptor(flutterPluginBinding)
 
     private var bannersCallback: BannerWidgetCallback? = null
+
+    fun setInAppStoryManager(manager: InAppStoryManager) {
+        this.inAppStoryManager = manager
+    }
+
+    fun setAppearanceManager(manager: AppearanceManager) {
+        this.appearanceManager = manager
+    }
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
         if (bannersCallback == null) {
