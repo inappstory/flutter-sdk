@@ -13,16 +13,15 @@
 ### Fixed
 
 - Issue on android 12 and lower devices, when using back navigation in in-app-messages. Please
-  see [migration guide](migrations.md#from-070-to-071)!
+  see [migration guide](https://docs.inappstory.com/sdk-guides/flutter/migrations.html)!
 - Memory leaks when using BannerPlaces
 - After switching between applications or opening the built-in browser, banners may disappear
 - Enable audio mixing for video previews in story list
 
 ### Removed
 
-- Removed legacy `getStoriesWidgets()` and `getFavoritesStoriesWidgets()` methods from `InAppStoryPlugin` class
-
-
+- Removed legacy `getStoriesWidgets()` and `getFavoritesStoriesWidgets()` methods from
+  `InAppStoryPlugin` class
 
 ## [0.7.0]
 
