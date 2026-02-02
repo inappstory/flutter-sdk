@@ -66,6 +66,7 @@ class BannerView(
     }
 
     override fun dispose() {
+        bannerPlace = null
     }
 
     init {
@@ -281,6 +282,7 @@ class BannerView(
         resumeAutoscroll.unsubscribe()
         frame.removeView(bannerPlace)
         bannerPlace = null
+        BannerViewHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
     }
 }
 
