@@ -61,9 +61,9 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void initState() {
-    super.initState();
     BannerLoadCallbackFlutterApi.setUp(this,
         messageChannelSuffix: bannerWidgetId);
+    super.initState();
   }
 
   @override

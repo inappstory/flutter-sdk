@@ -66,7 +66,7 @@ class BannerView(
     }
 
     override fun dispose() {
-        bannerPlace = null
+        //bannerPlace = null
     }
 
     init {
