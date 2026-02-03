@@ -66,12 +66,18 @@ class BannerView(
     }
 
     override fun dispose() {
+        //bannerPlace = null
     }
 
     init {
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         val bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
         bannerLoadCallback = BannerLoadCallbackFlutterApi(
+            flutterPluginBinding.binaryMessenger,
+            messageChannelSuffix = bannerWidgetId
+        )
+
+        BannerLoadCallbackFlutterApi(
             flutterPluginBinding.binaryMessenger,
             messageChannelSuffix = bannerWidgetId
         )
@@ -221,7 +227,6 @@ class BannerView(
             }
         })
 
-
         bannerPlace?.loadCallback(object : BannerPlaceLoadCallback() {
             override fun bannerPlaceLoaded(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
@@ -281,6 +286,7 @@ class BannerView(
         resumeAutoscroll.unsubscribe()
         frame.removeView(bannerPlace)
         bannerPlace = null
+        BannerViewHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
     }
 }
 

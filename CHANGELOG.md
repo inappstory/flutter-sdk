@@ -1,3 +1,9 @@
+## [0.7.2]
+
+### Fixed
+
+- BannerPlace stability improvements on Android
+
 ## [0.7.1]
 
 ### Added

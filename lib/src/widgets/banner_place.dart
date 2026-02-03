@@ -45,9 +45,9 @@ class BannerPlace extends StatefulWidget {
 
 class _BannerPlaceState extends State<BannerPlace>
     implements BannerLoadCallbackFlutterApi {
-  BannerPlaceState _bannerPlaceState = BannerPlaceState.none;
+  var _bannerPlaceState = BannerPlaceState.none;
 
-  String bannerWidgetId = idGenerator();
+  final bannerWidgetId = idGenerator();
 
   @override
   void didUpdateWidget(covariant BannerPlace oldWidget) {
@@ -61,9 +61,9 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void initState() {
-    super.initState();
     BannerLoadCallbackFlutterApi.setUp(this,
         messageChannelSuffix: bannerWidgetId);
+    super.initState();
   }
 
   @override
