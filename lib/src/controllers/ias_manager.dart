@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
+
+import 'package:async/async.dart';
 
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
@@ -6,7 +10,12 @@ import '../callbacks/ias_checkout_callback_impl.dart';
 import '../generated/checkout_generated.g.dart'
     show CheckoutManagerCallbackFlutterApi;
 import '../generated/pigeon_generated.g.dart'
-    show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
+    show
+        InAppStoryManagerHostApi,
+        SkusCallbackFlutterApi,
+        IASInAppMessagesHostApi,
+        IASSingleStoryHostApi;
+import '../helpers/id_gen.dart';
 import 'logger.dart';
 
 class InAppStoryManager {
@@ -19,6 +28,8 @@ class InAppStoryManager {
 
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
+  final _iam = IASInAppMessagesHostApi();
+  final _singleStoryApi = IASSingleStoryHostApi();
 
   static final instance = InAppStoryManager._private();
 
@@ -102,5 +113,75 @@ class InAppStoryManager {
 
   Future<void> setOptions(Map<String, String> options) async {
     await _iasManager.setOptionKeys(options);
+  }
+
+  Future<bool> preloadInAppMessages({List<String>? ids}) async {
+    return await _iam.preloadMessages(ids: ids);
+  }
+
+  CancelableOperation<void> showIAMById(String id,
+      {bool onlyPreloaded = false}) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _iam
+          .showById(id, uniqueId, onlyPreloaded: onlyPreloaded)
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: showIAMById finished with error');
+        return false;
+      }),
+      onCancel: () async {
+        return _iam.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  CancelableOperation<void> showIAMByEvent(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _iam.showByEvent(id, uniqueId).then((value) => true).catchError((error) {
+        log('[InAppStory]: showIAMByEvent finished with error');
+        return false;
+      }),
+      onCancel: () async {
+        return _iam.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  CancelableOperation<bool> showStory(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _singleStoryApi
+          .show(storyId: id, token: uniqueId)
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: ShowStory finished with error');
+        return false;
+      }),
+      onCancel: () async {
+        return _singleStoryApi.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  CancelableOperation<bool> showStoryOnce(String id) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _singleStoryApi
+          .showOnce(storyId: id, token: uniqueId)
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: showStoryOnce finished with error');
+        return false;
+      }),
+      onCancel: () async {
+        return _singleStoryApi.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
   }
 }

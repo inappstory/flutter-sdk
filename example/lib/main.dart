@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // can be empty
   final userId = '<user-id>';
 
-  final feed = 'feed-id';
+  final feed = '<feed-id>';
 
   late final initialization = initSdk();
 

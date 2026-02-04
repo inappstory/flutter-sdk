@@ -30,10 +30,9 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
         }
     }
 
+    // deprecated callback
     override fun finishGame(contentData: ContentData?, result: String?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
-       // val mapOfString: Map<String?, Any?>? = result?.let { Json.decodeFromString(it) }
-
         val jsonObject: JsonObject? = result?.let { Json.parseToJsonElement(it).jsonObject }
 
         val map: Map<String, Any?>? = jsonObject?.toMap()
@@ -88,18 +87,16 @@ fun JsonObject.toMap(): Map<String, Any?> {
 fun JsonElement.toRaw(): Any? {
     return when (this) {
         is JsonNull -> null
-        is JsonObject -> this.toMap() // Рекурсия для вложенных объектов
-        is JsonArray -> this.map { it.toRaw() } // Рекурсия для массивов
+        is JsonObject -> this.toMap()
+        is JsonArray -> this.map { it.toRaw() }
         is JsonPrimitive -> {
             if (isString) {
-                content // Это строка в кавычках
+                content
             } else {
-                // Это литерал (число или булево).
-                // Пытаемся определить тип. Порядок важен.
                 booleanOrNull
                     ?: longOrNull
                     ?: doubleOrNull
-                    ?: content // Если ничего не подошло, возвращаем как строку
+                    ?: content
             }
         }
     }

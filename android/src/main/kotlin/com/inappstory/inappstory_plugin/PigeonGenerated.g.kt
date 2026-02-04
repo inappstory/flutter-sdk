@@ -1711,8 +1711,9 @@ class GoodsItemSelectedCallbackFlutterApi(private val binaryMessenger: BinaryMes
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASSingleStoryHostApi {
-  fun showOnce(storyId: String)
-  fun show(storyId: String)
+  fun showOnce(storyId: String, token: String)
+  fun show(storyId: String, token: String)
+  fun cancelByToken(token: String): Boolean
 
   companion object {
     /** The codec used by IASSingleStoryHostApi. */
@@ -1729,8 +1730,9 @@ interface IASSingleStoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val storyIdArg = args[0] as String
+            val tokenArg = args[1] as String
             val wrapped: List<Any?> = try {
-              api.showOnce(storyIdArg)
+              api.showOnce(storyIdArg, tokenArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -1747,9 +1749,27 @@ interface IASSingleStoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val storyIdArg = args[0] as String
+            val tokenArg = args[1] as String
             val wrapped: List<Any?> = try {
-              api.show(storyIdArg)
+              api.show(storyIdArg, tokenArg)
               listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.cancelByToken$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val tokenArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.cancelByToken(tokenArg))
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }
@@ -1871,7 +1891,8 @@ interface IASOnboardingsHostApi {
    * [feed] by default == "onboarding"
    * [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
    */
-  fun show(limit: Long, feed: String, tags: List<String>)
+  fun show(limit: Long, feed: String, token: String, tags: List<String>)
+  fun cancelByToken(token: String): Boolean
 
   companion object {
     /** The codec used by IASOnboardingsHostApi. */
@@ -1889,10 +1910,28 @@ interface IASOnboardingsHostApi {
             val args = message as List<Any?>
             val limitArg = args[0] as Long
             val feedArg = args[1] as String
-            val tagsArg = args[2] as List<String>
+            val tokenArg = args[2] as String
+            val tagsArg = args[3] as List<String>
             val wrapped: List<Any?> = try {
-              api.show(limitArg, feedArg, tagsArg)
+              api.show(limitArg, feedArg, tokenArg, tagsArg)
               listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.cancelByToken$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val tokenArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.cancelByToken(tokenArg))
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }
@@ -2257,9 +2296,10 @@ class IASCallBacksFlutterApi(private val binaryMessenger: BinaryMessenger, priva
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASInAppMessagesHostApi {
-  fun showById(messageId: String, onlyPreloaded: Boolean)
-  fun showByEvent(event: String, onlyPreloaded: Boolean)
+  fun showById(messageId: String, token: String, onlyPreloaded: Boolean)
+  fun showByEvent(event: String, token: String, onlyPreloaded: Boolean)
   fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit)
+  fun cancelByToken(token: String): Boolean
 
   companion object {
     /** The codec used by IASInAppMessagesHostApi. */
@@ -2276,9 +2316,10 @@ interface IASInAppMessagesHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val messageIdArg = args[0] as String
-            val onlyPreloadedArg = args[1] as Boolean
+            val tokenArg = args[1] as String
+            val onlyPreloadedArg = args[2] as Boolean
             val wrapped: List<Any?> = try {
-              api.showById(messageIdArg, onlyPreloadedArg)
+              api.showById(messageIdArg, tokenArg, onlyPreloadedArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -2295,9 +2336,10 @@ interface IASInAppMessagesHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val eventArg = args[0] as String
-            val onlyPreloadedArg = args[1] as Boolean
+            val tokenArg = args[1] as String
+            val onlyPreloadedArg = args[2] as Boolean
             val wrapped: List<Any?> = try {
-              api.showByEvent(eventArg, onlyPreloadedArg)
+              api.showByEvent(eventArg, tokenArg, onlyPreloadedArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -2323,6 +2365,23 @@ interface IASInAppMessagesHostApi {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapResult(data))
               }
             }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.cancelByToken$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val tokenArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              listOf(api.cancelByToken(tokenArg))
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)

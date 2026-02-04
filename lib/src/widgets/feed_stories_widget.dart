@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -158,10 +159,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         }
 
         if (snapshot.hasError) {
-          if (kDebugMode) {
-            print(
-                'InAppStory: error while loading feed stories: ${snapshot.error}');
-          }
+          log('[InAppStory]: error while loading feed stories: ${snapshot.error}');
           if (widget.errorBuilder == null) {
             return SizedBox.shrink();
           }
@@ -174,9 +172,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         final storiesWidgets = snapshot.data ?? [];
 
         if (storiesWidgets.isEmpty) {
-          if (kDebugMode) {
-            print('InAppStory: no stories found in feed: ${widget.feed}');
-          }
+          log('[InAppStory]: no stories found in feed: ${widget.feed}');
           return SizedBox.shrink();
         }
 
