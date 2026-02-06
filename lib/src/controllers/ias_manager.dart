@@ -119,7 +119,7 @@ class InAppStoryManager {
     return await _iam.preloadMessages(ids: ids);
   }
 
-  CancelableOperation<void> showIAMById(String id,
+  CancelableOperation<bool> showIAMById(String id,
       {bool onlyPreloaded = false}) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
@@ -137,7 +137,7 @@ class InAppStoryManager {
     return operation;
   }
 
-  CancelableOperation<void> showIAMByEvent(String id) {
+  CancelableOperation<bool> showIAMByEvent(String id) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
       _iam.showByEvent(id, uniqueId).then((value) => true).catchError((error) {
