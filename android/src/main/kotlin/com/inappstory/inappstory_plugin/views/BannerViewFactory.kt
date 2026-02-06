@@ -1,6 +1,5 @@
 package com.inappstory.inappstory_plugin.views
 
-import BannerPlaceCallbackFlutterApi
 import android.content.Context
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.runOnMainThread
@@ -21,12 +20,13 @@ class BannerViewFactory(
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
-    private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi =
-        BannerPlaceCallbackFlutterApi(flutterPluginBinding.binaryMessenger)
+
     private var bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor =
         IASBannerPlaceManagerAdaptor(flutterPluginBinding)
 
     private var bannersCallback: BannerWidgetCallback? = null
+
+    private val bannerDataListener: BannerDataListener = BannerDataListener()
 
     fun setInAppStoryManager(manager: InAppStoryManager) {
         this.inAppStoryManager = manager
@@ -48,7 +48,7 @@ class BannerViewFactory(
             flutterPluginBinding,
             appearanceManager,
             bannerPlaceManagerAdaptor,
-            bannerPlaceCallback,
+            bannerDataListener,
         )
     }
 
@@ -56,11 +56,11 @@ class BannerViewFactory(
         bannersCallback = BannerWidgetCallback { bannerData, widgetEventName, widgetData ->
             if (bannerData != null && widgetEventName != null && widgetData != null && widgetData.keys.any { s: String? -> s != null }) {
                 flutterPluginBinding.runOnMainThread {
-                    bannerPlaceCallback.onActionWith(
+                    bannerDataListener.notifyAll(
                         bannerDataToDto(bannerData),
                         widgetEventName,
                         widgetData.map { (k, v) -> k as String to v }.toMap()
-                    ) {}
+                    )
                 }
             }
         }

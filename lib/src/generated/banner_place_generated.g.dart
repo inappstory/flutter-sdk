@@ -434,15 +434,15 @@ class BannerPlaceManagerHostApi {
 abstract class BannerPlaceCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void onBannerScroll(String placeId, int index);
+  void onBannerScroll(int index);
 
-  void onBannerPlaceLoaded(String placeId, int size, int widgetHeight);
+  void onBannerPlaceLoaded(int size, int widgetHeight);
 
   void onActionWith(BannerData bannerData, String widgetEventName, Map<String, Object?>? widgetData);
 
-  void onBannerPlacePreloaded(String placeId);
+  void onBannerPlacePreloaded();
 
-  void onBannerPlacePreloadedError(String placeId);
+  void onBannerPlacePreloadedError();
 
   static void setUp(BannerPlaceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
@@ -457,14 +457,11 @@ abstract class BannerPlaceCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_placeId = (args[0] as String?);
-          assert(arg_placeId != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null, expected non-null String.');
-          final int? arg_index = (args[1] as int?);
+          final int? arg_index = (args[0] as int?);
           assert(arg_index != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll was null, expected non-null int.');
           try {
-            api.onBannerScroll(arg_placeId!, arg_index!);
+            api.onBannerScroll(arg_index!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -485,17 +482,14 @@ abstract class BannerPlaceCallbackFlutterApi {
           assert(message != null,
           'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_placeId = (args[0] as String?);
-          assert(arg_placeId != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null String.');
-          final int? arg_size = (args[1] as int?);
+          final int? arg_size = (args[0] as int?);
           assert(arg_size != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null int.');
-          final int? arg_widgetHeight = (args[2] as int?);
+          final int? arg_widgetHeight = (args[1] as int?);
           assert(arg_widgetHeight != null,
               'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded was null, expected non-null int.');
           try {
-            api.onBannerPlaceLoaded(arg_placeId!, arg_size!, arg_widgetHeight!);
+            api.onBannerPlaceLoaded(arg_size!, arg_widgetHeight!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -542,14 +536,8 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_placeId = (args[0] as String?);
-          assert(arg_placeId != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded was null, expected non-null String.');
           try {
-            api.onBannerPlacePreloaded(arg_placeId!);
+            api.onBannerPlacePreloaded();
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
@@ -567,52 +555,8 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_placeId = (args[0] as String?);
-          assert(arg_placeId != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError was null, expected non-null String.');
           try {
-            api.onBannerPlacePreloadedError(arg_placeId!);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-  }
-}
-
-abstract class BannerLoadCallbackFlutterApi {
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
-
-  void onBannersLoaded(int size, int widgetHeight);
-
-  static void setUp(BannerLoadCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-    {
-      final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.BannerLoadCallbackFlutterApi.onBannersLoaded$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.inappstory_plugin.BannerLoadCallbackFlutterApi.onBannersLoaded was null.');
-          final List<Object?> args = (message as List<Object?>?)!;
-          final int? arg_size = (args[0] as int?);
-          assert(arg_size != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerLoadCallbackFlutterApi.onBannersLoaded was null, expected non-null int.');
-          final int? arg_widgetHeight = (args[1] as int?);
-          assert(arg_widgetHeight != null,
-              'Argument for dev.flutter.pigeon.inappstory_plugin.BannerLoadCallbackFlutterApi.onBannersLoaded was null, expected non-null int.');
-          try {
-            api.onBannersLoaded(arg_size!, arg_widgetHeight!);
+            api.onBannerPlacePreloadedError();
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

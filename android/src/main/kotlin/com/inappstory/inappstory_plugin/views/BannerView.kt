@@ -1,7 +1,6 @@
 package com.inappstory.inappstory_plugin.views
 
 import BannerDecorationDTO
-import BannerLoadCallbackFlutterApi
 import BannerPlaceCallbackFlutterApi
 import BannerViewHostApi
 import android.content.Context
@@ -43,14 +42,14 @@ class BannerView(
     creationParams: Map<String?, Any?>?,
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
-    private var bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor,
-    val bannerPlaceCallback: BannerPlaceCallbackFlutterApi
+    bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor,
+    private var bannerDataListener: BannerDataListener
 ) : PlatformView, BannerViewHostApi {
 
     private var bannerPlace: BannerCarousel? = null
     private val frame: FrameLayout
 
-    private var bannerLoadCallback: BannerLoadCallbackFlutterApi
+    private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
 
     private var loadBannerPlace: Subscription
     private var reloadBannerPlace: Subscription
@@ -61,32 +60,40 @@ class BannerView(
     private var pauseAutoscroll: Subscription
     private var resumeAutoscroll: Subscription
 
+    private var bannersData: BannersData
+
     override fun getView(): View {
         return frame
     }
 
-    override fun dispose() {
-        //bannerPlace = null
-    }
+    override fun dispose() {}
 
     init {
         val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         val bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
-        bannerLoadCallback = BannerLoadCallbackFlutterApi(
-            flutterPluginBinding.binaryMessenger,
-            messageChannelSuffix = bannerWidgetId
-        )
-
-        BannerLoadCallbackFlutterApi(
-            flutterPluginBinding.binaryMessenger,
-            messageChannelSuffix = bannerWidgetId
-        )
+        bannerPlaceCallback =
+            BannerPlaceCallbackFlutterApi(
+                flutterPluginBinding.binaryMessenger,
+                messageChannelSuffix = bannerWidgetId
+            )
 
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
             this,
             messageChannelSuffix = bannerWidgetId
         )
+
+        bannersData = { bannerData, eventName, widgetData ->
+            flutterPluginBinding.runOnMainThread {
+                bannerPlaceCallback.onActionWith(
+                    bannerData,
+                    eventName,
+                    widgetData,
+                ) {}
+            }
+        }
+
+        bannerDataListener.addListener(listener = this.bannersData)
 
         val loop: Boolean? = creationParams?.get("loop") as? Boolean?
         val bannerOffset: Int? = creationParams?.get("bannerOffset") as? Int?
@@ -138,37 +145,37 @@ class BannerView(
             bannerPlace?.reloadBanners()
         }
 
-        preloadBannerPlace = bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
-            if (payload != placeId) {
-                return@subscribe
+        preloadBannerPlace =
+            bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
+                if (payload != placeId) {
+                    return@subscribe
+                }
+                InAppStoryManager.getInstance()?.preloadBannerPlace(
+                    BannerPlaceLoadSettings().placeId(placeId),
+                    object : BannerPlacePreloadCallback(placeId) {
+                        override fun bannerPlaceLoaded(
+                            size: Int,
+                            bannerData: List<BannerData>
+                        ) {
+                            flutterPluginBinding.runOnMainThread {
+                                bannerPlaceCallback.onBannerPlacePreloaded() {}
+                            }
+                        }
+
+                        override fun loadError() {
+                            flutterPluginBinding.runOnMainThread {
+                                bannerPlaceCallback.onBannerPlacePreloadedError() {}
+                            }
+                        }
+
+                        override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
+
+                        }
+
+                        override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
+                        }
+                    })
             }
-            InAppStoryManager.getInstance()?.preloadBannerPlace(
-                BannerPlaceLoadSettings().placeId(placeId),
-                object : BannerPlacePreloadCallback(placeId) {
-                    override fun bannerPlaceLoaded(size: Int, bannerData: List<BannerData>) {
-                        flutterPluginBinding.runOnMainThread {
-                            bannerPlaceCallback.onBannerPlacePreloaded(
-                                placeId
-                            ) {}
-                        }
-                    }
-
-                    override fun loadError() {
-                        flutterPluginBinding.runOnMainThread {
-                            bannerPlaceCallback.onBannerPlacePreloadedError(
-                                placeId
-                            ) {}
-                        }
-                    }
-
-                    override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
-
-                    }
-
-                    override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
-                    }
-                })
-        }
         showNext = bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
             if (payload != placeId) {
                 return@subscribe
@@ -222,7 +229,7 @@ class BannerView(
                 position: Int, total: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
-                    bannerPlaceCallback.onBannerScroll(placeId, position.toLong()) {}
+                    bannerPlaceCallback.onBannerScroll(position.toLong()) {}
                 }
             }
         })
@@ -232,11 +239,7 @@ class BannerView(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
-                    bannerLoadCallback.onBannersLoaded(
-                        size.toLong(), context.toDp(widgetHeight).toLong()
-                    ) {}
                     bannerPlaceCallback.onBannerPlaceLoaded(
-                        placeId,
                         size.toLong(), context.toDp(widgetHeight).toLong()
                     ) {}
                 }
@@ -287,6 +290,7 @@ class BannerView(
         frame.removeView(bannerPlace)
         bannerPlace = null
         BannerViewHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        bannerDataListener.removeListener(bannersData)
     }
 }
 

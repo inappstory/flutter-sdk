@@ -406,12 +406,12 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       BannerPlaceGeneratedPigeonCodec()
     }
   }
-  fun onBannerScroll(placeIdArg: String, indexArg: Long, callback: (Result<Unit>) -> Unit)
+  fun onBannerScroll(indexArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(placeIdArg, indexArg)) {
+    channel.send(listOf(indexArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -423,12 +423,12 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       } 
     }
   }
-  fun onBannerPlaceLoaded(placeIdArg: String, sizeArg: Long, widgetHeightArg: Long, callback: (Result<Unit>) -> Unit)
+  fun onBannerPlaceLoaded(sizeArg: Long, widgetHeightArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(placeIdArg, sizeArg, widgetHeightArg)) {
+    channel.send(listOf(sizeArg, widgetHeightArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -457,12 +457,12 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       } 
     }
   }
-  fun onBannerPlacePreloaded(placeIdArg: String, callback: (Result<Unit>) -> Unit)
+  fun onBannerPlacePreloaded(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloaded$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(placeIdArg)) {
+    channel.send(null) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -474,38 +474,12 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
       } 
     }
   }
-  fun onBannerPlacePreloadedError(placeIdArg: String, callback: (Result<Unit>) -> Unit)
+  fun onBannerPlacePreloadedError(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(placeIdArg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(BannerPlaceGeneratedPigeonUtils.createConnectionError(channelName)))
-      } 
-    }
-  }
-}
-/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
-class BannerLoadCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
-  companion object {
-    /** The codec used by BannerLoadCallbackFlutterApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      BannerPlaceGeneratedPigeonCodec()
-    }
-  }
-  fun onBannersLoaded(sizeArg: Long, widgetHeightArg: Long, callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerLoadCallbackFlutterApi.onBannersLoaded$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(sizeArg, widgetHeightArg)) {
+    channel.send(null) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))

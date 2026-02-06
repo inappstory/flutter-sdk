@@ -38,26 +38,22 @@ class BannerPlaceDecoration {
 
 @FlutterApi()
 abstract class BannerPlaceCallbackFlutterApi {
-  void onBannerScroll(String placeId, int index);
+  void onBannerScroll(int index);
 
-  void onBannerPlaceLoaded(String placeId, int size, int widgetHeight);
+  void onBannerPlaceLoaded(int size, int widgetHeight);
 
   void onActionWith(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData);
 
-  void onBannerPlacePreloaded(String placeId);
+  void onBannerPlacePreloaded();
 
-  void onBannerPlacePreloadedError(String placeId);
-}
-
-@FlutterApi()
-abstract class BannerLoadCallbackFlutterApi {
-  void onBannersLoaded(int size, int widgetHeight);
+  void onBannerPlacePreloadedError();
 }
 
 @HostApi()
 abstract class BannerViewHostApi {
   void changeBannerPlaceId(String newPlaceId);
+
   void deInitBannerPlace();
 }
 

@@ -9,7 +9,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     private weak var bannerManager: BannerPlaceManagerAdaptor?
     private weak var callbackFlutterApi: BannerPlaceCallbackFlutterApi?
-    private var bannerLoadFlutterApi: BannerLoadCallbackFlutterApi
 
     private var _view: UIView
 
@@ -45,11 +44,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self.bannerManager = bannerManager
 
         self.callbackFlutterApi = callbackFlutterApi
-
-        self.bannerLoadFlutterApi = BannerLoadCallbackFlutterApi.init(
-            binaryMessenger: messenger,
-            messageChannelSuffix: self.bannerWidgetId
-        )
 
         var decoration: BannerDecorationDTO?
 
@@ -105,20 +99,17 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                         do {
                             if try result.get() {
                                 self.callbackFlutterApi?.onBannerPlacePreloaded(
-                                    placeId: self.placeId,
                                     completion: { _ in }
                                 )
                             } else {
                                 self.callbackFlutterApi?
                                     .onBannerPlacePreloadedError(
-                                        placeId: self.placeId,
                                         completion: { _ in }
                                     )
                             }
                         } catch {
                             self.callbackFlutterApi?
                                 .onBannerPlacePreloadedError(
-                                    placeId: self.placeId,
                                     completion: { _ in }
                                 )
                             print(
@@ -235,13 +226,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             [weak self] isContent, count, listHeight in
             guard let self else { return }
             DispatchQueue.main.async { [self] in
-                self.bannerLoadFlutterApi.onBannersLoaded(
-                    size: Int64(count),
-                    widgetHeight: Int64(listHeight),
-                    completion: { _ in }
-                )
                 self.callbackFlutterApi?.onBannerPlaceLoaded(
-                    placeId: self.placeId,
                     size: Int64(count),
                     widgetHeight: Int64(listHeight),
                     completion: { _ in }
@@ -253,7 +238,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             guard let self else { return }
             DispatchQueue.main.async { [self] in
                 self.callbackFlutterApi?.onBannerScroll(
-                    placeId: self.placeId,
                     index: Int64(index),
                     completion: { _ in }
                 )

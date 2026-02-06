@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../generated/banner_place_generated.g.dart'
-    show BannerLoadCallbackFlutterApi, BannerViewHostApi;
+    show BannerViewHostApi, BannerPlaceCallbackFlutterApi, BannerData;
 import '../helpers/id_gen.dart';
 import 'banner/android_banner_view.dart';
 import 'banner/ios_banner_view.dart';
@@ -26,6 +26,11 @@ class BannerPlace extends StatefulWidget {
     this.bannerDecoration,
     this.autoLoad = true,
     this.bannerPlaceLoaderBuilder,
+    this.onActionWith,
+    this.onBannerScroll,
+    this.onBannerPlaceLoaded,
+    this.onBannerPlacePreloaded,
+    this.onPreloadedError,
   });
 
   final String placeId;
@@ -39,12 +44,19 @@ class BannerPlace extends StatefulWidget {
 
   final bool autoLoad;
 
+  final Function(BannerData bannerData, String widgetEventName,
+      Map<String, Object?>? widgetData)? onActionWith;
+  final Function(int index)? onBannerScroll;
+  final Function(int size, int widgetHeight)? onBannerPlaceLoaded;
+  final Function()? onBannerPlacePreloaded;
+  final Function()? onPreloadedError;
+
   @override
   State<BannerPlace> createState() => _BannerPlaceState();
 }
 
 class _BannerPlaceState extends State<BannerPlace>
-    implements BannerLoadCallbackFlutterApi {
+    implements BannerPlaceCallbackFlutterApi {
   var _bannerPlaceState = BannerPlaceState.none;
 
   final bannerWidgetId = idGenerator();
@@ -61,7 +73,7 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void initState() {
-    BannerLoadCallbackFlutterApi.setUp(this,
+    BannerPlaceCallbackFlutterApi.setUp(this,
         messageChannelSuffix: bannerWidgetId);
     super.initState();
   }
@@ -134,18 +146,37 @@ class _BannerPlaceState extends State<BannerPlace>
   }
 
   @override
-  void onBannersLoaded(int size, int widgetHeight) {
-    setState(() {
-      _bannerPlaceState = BannerPlaceState.loaded;
-    });
+  void dispose() {
+    BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
+    BannerPlaceCallbackFlutterApi.setUp(null,
+        messageChannelSuffix: bannerWidgetId);
+    super.dispose();
   }
 
   @override
-  void dispose() {
-    BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
-    BannerLoadCallbackFlutterApi.setUp(null,
-        messageChannelSuffix: bannerWidgetId);
-    super.dispose();
+  void onActionWith(BannerData bannerData, String widgetEventName,
+      Map<String, Object?>? widgetData) {
+    widget.onActionWith?.call(bannerData, widgetEventName, widgetData);
+  }
+
+  @override
+  void onBannerPlaceLoaded(int size, int widgetHeight) {
+    widget.onBannerPlaceLoaded?.call(size, widgetHeight);
+  }
+
+  @override
+  void onBannerPlacePreloaded() {
+    widget.onBannerPlacePreloaded?.call();
+  }
+
+  @override
+  void onBannerPlacePreloadedError() {
+    widget.onPreloadedError?.call();
+  }
+
+  @override
+  void onBannerScroll(int index) {
+    widget.onBannerScroll?.call(index);
   }
 }
 

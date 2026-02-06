@@ -21,23 +21,25 @@ class IosBannerView extends BannerPlatformView {
   @override
   Widget buildPlatformView(BuildContext context, String viewType,
       Map<String, dynamic> creationParams) {
-    return UiKitView(
-      viewType: viewType,
-      hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-        Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
-        ),
-      },
-      layoutDirection: TextDirection.ltr,
-      creationParams: Map<String, dynamic>.from(creationParams),
-      creationParamsCodec: const StandardMessageCodec(),
-      onPlatformViewCreated: (id) {
-        onPlatformViewCreated.call();
-        if (autoLoad) {
-          BannerPlaceManager.instance.load(placeId);
-        }
-      },
+    return GestureDetector(
+      child: UiKitView(
+        viewType: viewType,
+        hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+          Factory<OneSequenceGestureRecognizer>(
+            () => EagerGestureRecognizer(),
+          ),
+        },
+        layoutDirection: TextDirection.ltr,
+        creationParams: Map<String, dynamic>.from(creationParams),
+        creationParamsCodec: const StandardMessageCodec(),
+        onPlatformViewCreated: (id) {
+          onPlatformViewCreated.call();
+          if (autoLoad) {
+            BannerPlaceManager.instance.load(placeId);
+          }
+        },
+      ),
     );
   }
 }
