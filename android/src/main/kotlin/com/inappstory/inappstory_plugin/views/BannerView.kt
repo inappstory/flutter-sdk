@@ -77,11 +77,6 @@ class BannerView(
             messageChannelSuffix = bannerWidgetId
         )
 
-        BannerLoadCallbackFlutterApi(
-            flutterPluginBinding.binaryMessenger,
-            messageChannelSuffix = bannerWidgetId
-        )
-
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
             this,

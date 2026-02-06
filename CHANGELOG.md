@@ -1,3 +1,9 @@
+## [0.8.0]
+
+### Added
+
+- Cancellation of long-running actions
+
 ## [0.7.2]
 
 ### Fixed
