@@ -19,6 +19,8 @@ export 'src/generated/pigeon_generated.g.dart'
         IASSingleStoryHostApi,
         IASInAppMessagesHostApi,
         IASOnboardingsHostApi,
+        IShowStoryCallbackFlutterApi,
+        OnboardingLoadCallbackFlutterApi,
         CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/placeholders/placeholders.dart';

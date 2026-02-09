@@ -14,7 +14,8 @@ import '../generated/pigeon_generated.g.dart'
         InAppStoryManagerHostApi,
         SkusCallbackFlutterApi,
         IASInAppMessagesHostApi,
-        IASSingleStoryHostApi;
+        IASSingleStoryHostApi,
+        IASOnboardingsHostApi;
 import '../helpers/id_gen.dart';
 import 'logger.dart';
 
@@ -29,6 +30,7 @@ class InAppStoryManager {
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
   final _iam = IASInAppMessagesHostApi();
+  final _onboardings = IASOnboardingsHostApi();
   final _singleStoryApi = IASSingleStoryHostApi();
 
   static final instance = InAppStoryManager._private();
@@ -117,6 +119,28 @@ class InAppStoryManager {
 
   Future<bool> preloadInAppMessages({List<String>? ids}) async {
     return await _iam.preloadMessages(ids: ids);
+  }
+
+  CancelableOperation<bool> showOnboarding(int limit,
+      {String? feed, List<String>? tags}) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _onboardings
+          .show(
+              limit: limit,
+              token: uniqueId,
+              feed: feed ?? 'onboarding',
+              tags: tags ?? <String>[])
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: showIAMById finished with error');
+        return false;
+      }),
+      onCancel: () async {
+        return _iam.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
   }
 
   CancelableOperation<bool> showIAMById(String id,

@@ -4,6 +4,13 @@
 
 - Cancellation of long-running actions
 
+### Changed
+
+- Onboardings, In-App-Messages and single stories now opens from `InAppStoryManager`
+- `IShowStoryCallbackFlutterApi` changed to `IASShowStoryCallback` mixin
+- `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
+- Updated iOS SDK to 1.27.1
+
 ## [0.7.2]
 
 ### Fixed
