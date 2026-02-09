@@ -4,15 +4,20 @@ import IASSingleStoryHostApi
 import com.inappstory.inappstory_plugin.callbacks.IShowStoryCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.core.api.IASSingleStory
+import com.inappstory.sdk.CancellationToken
+import com.inappstory.sdk.CancellationTokenCancelResult
+import com.inappstory.sdk.externalapi.single.IASSingleStoryExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASSingleStoryAdaptor(
-    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
-    private val iasSingleStory: IASSingleStory,
+    private val iasSingleStory: IASSingleStoryExternalAPI,
     private val activityHolder: ActivityHolder,
 ) : IASSingleStoryHostApi {
+
+    private val tokenMap = mutableMapOf<String, CancellationToken>()
+
     private val callback = IShowStoryCallbackAdaptor(flutterPluginBinding)
 
     init {
@@ -21,23 +26,34 @@ class IASSingleStoryAdaptor(
         iasSingleStory.loadCallback(SingleLoadCallbackAdaptor(flutterPluginBinding))
     }
 
-    override fun showOnce(storyId: String) {
-        iasSingleStory.showOnce(
+    override fun showOnce(storyId: String, token: String) {
+        val cancelToken = iasSingleStory.showOnce(
             activityHolder.activity,
             storyId,
             appearanceManager,
             callback,
         )
+        tokenMap[token] = cancelToken
     }
 
-    override fun show(storyId: String) {
-        iasSingleStory.show(
+    override fun show(storyId: String, token: String) {
+        val cancelToken = iasSingleStory.show(
             activityHolder.activity,
             storyId,
             appearanceManager,
             callback,
             null,
         )
+        tokenMap[token] = cancelToken
+    }
+
+    override fun cancelByToken(token: String): Boolean {
+        if (tokenMap.containsKey(token)) {
+            val result = tokenMap[token]?.cancel()
+            tokenMap.remove(token)
+            return result == CancellationTokenCancelResult.SUCCESS
+        }
+        return false
     }
 }
 

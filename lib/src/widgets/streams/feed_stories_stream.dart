@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../../inappstory_plugin.dart';
@@ -96,9 +96,7 @@ class FeedStoriesStream extends StoriesStream {
 
       controller.add(combineStoriesAndFavorites());
     } catch (e) {
-      if (kDebugMode) {
-        print('InAppStory: Error updating story data: $e');
-      }
+      log('[InAppStory]: Error updating story data: $e');
     }
   }
 
@@ -132,9 +130,7 @@ class FeedStoriesStream extends StoriesStream {
       }
       onScrollToStory?.call(index, story);
     } on Exception catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      log(e.toString());
     }
   }
 

@@ -1986,14 +1986,14 @@ class IASSingleStoryHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> showOnce({required String storyId}) async {
+  Future<void> showOnce({required String storyId, required String token}) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.showOnce$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[storyId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[storyId, token]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
@@ -2008,14 +2008,14 @@ class IASSingleStoryHostApi {
     }
   }
 
-  Future<void> show({required String storyId}) async {
+  Future<void> show({required String storyId, required String token}) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[storyId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[storyId, token]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
@@ -2027,6 +2027,33 @@ class IASSingleStoryHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<bool> cancelByToken({required String token}) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.cancelByToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[token]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
     }
   }
 }
@@ -2178,14 +2205,14 @@ class IASOnboardingsHostApi {
 
   /// [feed] by default == "onboarding"
   /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
-  Future<void> show({required int limit, String feed = 'onboarding', List<String> tags = const [], }) async {
+  Future<void> show({required int limit, String feed = 'onboarding', required String token, List<String> tags = const [], }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.show$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[limit, feed, tags]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[limit, feed, token, tags]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
@@ -2197,6 +2224,33 @@ class IASOnboardingsHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<bool> cancelByToken(String token) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.cancelByToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[token]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
     }
   }
 }
@@ -2716,14 +2770,14 @@ class IASInAppMessagesHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> showById(String messageId, {bool onlyPreloaded = false}) async {
+  Future<void> showById(String messageId, String token, {bool onlyPreloaded = false, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, onlyPreloaded]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, token, onlyPreloaded]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
@@ -2738,14 +2792,14 @@ class IASInAppMessagesHostApi {
     }
   }
 
-  Future<void> showByEvent(String event, {bool onlyPreloaded = false}) async {
+  Future<void> showByEvent(String event, String token, {bool onlyPreloaded = false, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[event, onlyPreloaded]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[event, token, onlyPreloaded]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);
@@ -2768,6 +2822,33 @@ class IASInAppMessagesHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[ids]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as bool?)!;
+    }
+  }
+
+  Future<bool> cancelByToken({required String token}) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.cancelByToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[token]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);

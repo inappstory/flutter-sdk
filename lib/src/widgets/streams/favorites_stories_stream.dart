@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
 
 import '../../controllers/feed_stories_controller.dart';
 import '../../data/story_from_pigeon_dto.dart';
@@ -61,9 +61,7 @@ class FavoritesStoriesStream extends StoriesStream {
           .firstOrNull;
       story?.updateStoryData(storyData);
     } catch (e) {
-      if (kDebugMode) {
-        print('InAppStory: Error updating story data: $e');
-      }
+      log('[InAppStory]: Error updating story data: $e');
     }
   }
 

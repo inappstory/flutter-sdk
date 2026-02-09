@@ -301,3 +301,4 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         }
     }
 }
+

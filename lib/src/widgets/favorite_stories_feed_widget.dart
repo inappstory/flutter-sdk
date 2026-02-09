@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 
 import 'builders/base_story_builder.dart';
@@ -62,9 +63,7 @@ class _FavoriteStoriesFeedWidgetState extends FeedStoriesWidgetState {
         final storiesWidgets = snapshot.data ?? [];
 
         if (storiesWidgets.isEmpty) {
-          if (kDebugMode) {
-            print('InAppStory: no stories found in feed: ${widget.feed}');
-          }
+          log('InAppStory: no stories found in feed: ${widget.feed}');
           return SizedBox.shrink();
         }
 
