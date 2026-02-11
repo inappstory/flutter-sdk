@@ -73,8 +73,6 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void initState() {
-    BannerPlaceCallbackFlutterApi.setUp(this,
-        messageChannelSuffix: bannerWidgetId);
     super.initState();
   }
 
@@ -115,6 +113,8 @@ class _BannerPlaceState extends State<BannerPlace>
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
+            BannerPlaceCallbackFlutterApi.setUp(this,
+                messageChannelSuffix: bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });
@@ -133,6 +133,8 @@ class _BannerPlaceState extends State<BannerPlace>
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
+            BannerPlaceCallbackFlutterApi.setUp(this,
+                messageChannelSuffix: bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });

@@ -9,7 +9,8 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
     private var registrar: FlutterPluginRegistrar
 
     private var bannerManager: BannerPlaceManagerAdaptor
-    private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
+
+    private var bannerPlaceCallbackManager: BannerPlaceCallbackManager
 
     init(messenger: FlutterBinaryMessenger, registrar: FlutterPluginRegistrar) {
         self.messenger = messenger
@@ -18,9 +19,7 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
         self.bannerManager = BannerPlaceManagerAdaptor(
             binaryMessenger: self.messenger
         )
-        self.callbackFlutterApi = BannerPlaceCallbackFlutterApi.init(
-            binaryMessenger: self.messenger
-        )
+        self.bannerPlaceCallbackManager = BannerPlaceCallbackManager()
         super.init()
 
         InAppStory.shared.iasBannerEvent = {
@@ -31,16 +30,10 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
                 )
                 break
             case .widgetEvent(let bannerData, let name, let data):
-                DispatchQueue.main.async {
-                    self.callbackFlutterApi.onActionWith(
-                        bannerData: self.bannerDataToDto(data: bannerData),
-                        widgetEventName: name,
-                        widgetData: data,
-                        completion: { _ in }
-                    )
-                }
-                print(
-                    "Banner widget event with name: \(name) and data: \(String(describing: data))"
+                self.bannerPlaceCallbackManager.sendEvent(
+                    bannerData: self.bannerDataToDto(data: bannerData),
+                    name: name,
+                    data: data,
                 )
                 break
             case .preloaded(let placeID, let banners):
@@ -48,6 +41,7 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             case .show(let bannerData):
                 break
             case .clickOnButton(let bannerData, let link):
+                print("clickOnButton: \(bannerData), \(link)")
                 break
             @unknown default:
                 print("default")
@@ -66,7 +60,7 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             viewIdentifier: viewId,
             arguments: args,
             bannerPlaceManager: self.bannerManager,
-            callbackFlutterApi: self.callbackFlutterApi,
+            bannerPlaceCallbackManager: self.bannerPlaceCallbackManager,
             binaryMessenger: messenger,
             pluginRegistrar: self.registrar
         )
@@ -80,7 +74,7 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
     private func bannerDataToDto(data: IASBannerData) -> BannerData {
         return BannerData(
             id: data.id,
-            bannerPlace: nil,
+            bannerPlace: data.placeID,
             payload: nil
         )
     }

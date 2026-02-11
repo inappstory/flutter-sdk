@@ -84,12 +84,14 @@ class BannerView(
         )
 
         bannersData = { bannerData, eventName, widgetData ->
-            flutterPluginBinding.runOnMainThread {
-                bannerPlaceCallback.onActionWith(
-                    bannerData,
-                    eventName,
-                    widgetData,
-                ) {}
+            if (bannerData.bannerPlace == placeId) {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onActionWith(
+                        bannerData,
+                        eventName,
+                        widgetData,
+                    ) {}
+                }
             }
         }
 

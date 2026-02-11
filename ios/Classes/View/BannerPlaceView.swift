@@ -8,7 +8,8 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var _bannersView: IASBannersView?
 
     private weak var bannerManager: BannerPlaceManagerAdaptor?
-    private weak var callbackFlutterApi: BannerPlaceCallbackFlutterApi?
+    private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
+    private weak var bannerPlaceCallbackManager: BannerPlaceCallbackManager?
 
     private var _view: UIView
 
@@ -31,9 +32,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
-        callbackFlutterApi: BannerPlaceCallbackFlutterApi,
+        bannerPlaceCallbackManager: BannerPlaceCallbackManager,
         binaryMessenger messenger: FlutterBinaryMessenger,
-        pluginRegistrar registrar: FlutterPluginRegistrar
+        pluginRegistrar registrar: FlutterPluginRegistrar,
     ) {
         _view = UIView()
 
@@ -43,7 +44,12 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
         self.bannerManager = bannerManager
 
-        self.callbackFlutterApi = callbackFlutterApi
+        self.callbackFlutterApi = BannerPlaceCallbackFlutterApi(
+            binaryMessenger: messenger,
+            messageChannelSuffix: self.bannerWidgetId
+        )
+
+        self.bannerPlaceCallbackManager = bannerPlaceCallbackManager
 
         var decoration: BannerDecorationDTO?
 
@@ -68,6 +74,23 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             api: self,
             messageChannelSuffix: self.bannerWidgetId
         )
+
+        self.bannerPlaceCallbackManager!.onProgress = {
+            bannerData,
+            name,
+            data in
+            if bannerData.bannerPlace != self.placeId {
+                return
+            }
+            DispatchQueue.main.async {
+                self.callbackFlutterApi.onActionWith(
+                    bannerData: bannerData,
+                    widgetEventName: name,
+                    widgetData: data,
+                    completion: { _ in }
+                )
+            }
+        }
 
         self.loadBannerPlaceToken = self.bannerManager?.subscribe(
             LoadBannerPlace()
@@ -98,17 +121,17 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                         guard let self else { return }
                         do {
                             if try result.get() {
-                                self.callbackFlutterApi?.onBannerPlacePreloaded(
+                                self.callbackFlutterApi.onBannerPlacePreloaded(
                                     completion: { _ in }
                                 )
                             } else {
-                                self.callbackFlutterApi?
+                                self.callbackFlutterApi
                                     .onBannerPlacePreloadedError(
                                         completion: { _ in }
                                     )
                             }
                         } catch {
-                            self.callbackFlutterApi?
+                            self.callbackFlutterApi
                                 .onBannerPlacePreloadedError(
                                     completion: { _ in }
                                 )
@@ -226,7 +249,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             [weak self] isContent, count, listHeight in
             guard let self else { return }
             DispatchQueue.main.async { [self] in
-                self.callbackFlutterApi?.onBannerPlaceLoaded(
+                self.callbackFlutterApi.onBannerPlaceLoaded(
                     size: Int64(count),
                     widgetHeight: Int64(listHeight),
                     completion: { _ in }
@@ -237,7 +260,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self._bannersView?.bannersDidScroll = { [weak self] index in
             guard let self else { return }
             DispatchQueue.main.async { [self] in
-                self.callbackFlutterApi?.onBannerScroll(
+                self.callbackFlutterApi.onBannerScroll(
                     index: Int64(index),
                     completion: { _ in }
                 )
@@ -283,5 +306,13 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         if let showByIndexToken = self.showByIndexToken {
             self.bannerManager?.unsubscribe(showByIndexToken)
         }
+    }
+}
+
+class BannerPlaceCallbackManager {
+    var onProgress: ((BannerData, String, [String: Any]?) -> Void)?
+
+    func sendEvent(bannerData: BannerData, name: String, data: [String: Any]?) {
+        onProgress?(bannerData, name, data)
     }
 }
