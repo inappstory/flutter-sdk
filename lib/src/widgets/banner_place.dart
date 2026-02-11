@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../generated/banner_place_generated.g.dart'
     show BannerViewHostApi, BannerPlaceCallbackFlutterApi, BannerData;
@@ -61,6 +62,8 @@ class _BannerPlaceState extends State<BannerPlace>
 
   final bannerWidgetId = idGenerator();
 
+  bool isVisible = false;
+
   @override
   void didUpdateWidget(covariant BannerPlace oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -72,11 +75,6 @@ class _BannerPlaceState extends State<BannerPlace>
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Widget? placeholder = widget.bannerPlaceLoaderBuilder != null
         ? widget.bannerPlaceLoaderBuilder!(context)
@@ -84,19 +82,29 @@ class _BannerPlaceState extends State<BannerPlace>
     return SizedBox(
       height: widget.height,
       width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: [
-          buildPlatformView(context),
-          if (_bannerPlaceState == BannerPlaceState.loading ||
-              _bannerPlaceState == BannerPlaceState.none)
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: placeholder,
-            ),
-        ],
+      child: VisibilityDetector(
+        key: ValueKey(bannerWidgetId),
+        onVisibilityChanged: (VisibilityInfo info) {
+          if (info.visibleFraction > 0.0) {
+            isVisible = true;
+          } else {
+            isVisible = false;
+          }
+        },
+        child: Stack(
+          children: [
+            buildPlatformView(context),
+            if (_bannerPlaceState == BannerPlaceState.loading ||
+                _bannerPlaceState == BannerPlaceState.none)
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: placeholder,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -158,7 +166,9 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void onActionWith(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData) {
-    widget.onActionWith?.call(bannerData, widgetEventName, widgetData);
+    if (isVisible) {
+      widget.onActionWith?.call(bannerData, widgetEventName, widgetData);
+    }
   }
 
   @override
