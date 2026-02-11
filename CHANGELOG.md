@@ -1,3 +1,9 @@
+## [0.7.3-rc3]
+
+### Fixed
+
+- BannerPlace stability improvements
+
 ## [0.7.2]
 
 ### Fixed
