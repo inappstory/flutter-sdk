@@ -174,6 +174,9 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void onBannerPlaceLoaded(int size, int widgetHeight) {
     widget.onBannerPlaceLoaded?.call(size, widgetHeight);
+    setState(() {
+      _bannerPlaceState = BannerPlaceState.loaded;
+    });
   }
 
   @override
