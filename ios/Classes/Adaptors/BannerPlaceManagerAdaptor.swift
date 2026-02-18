@@ -42,8 +42,6 @@ public protocol EventKey: Hashable {
 }
 
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
-   
-    
     typealias Token = UUID
 
     private var subscribers: [AnyHashable: [Token: (Any) -> Void]] = [:]
@@ -110,7 +108,8 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     private func emit<K: EventKey>(_ key: K, payload: K.Payload) {
         let anyKey = AnyHashable(key)
         var callbacks: [(Any) -> Void] = []
-        queue.sync {
+        queue.sync { [weak self] in
+            guard let self = self else { return }
             if let dict = self.subscribers[anyKey] {
                 callbacks = Array(dict.values)
             }
@@ -149,7 +148,7 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     func reloadBannerPlace(placeId: String) throws {
         self.emit(ReloadBannerPlace(), payload: placeId)
     }
-    
+
     func preloadBannerPlace(placeId: String) throws {
         self.emit(PreloadBannerPlace(), payload: placeId)
     }

@@ -4,25 +4,23 @@ import Flutter
 import UIKit
 
 class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
-    private var messenger: FlutterBinaryMessenger
-
     private var registrar: FlutterPluginRegistrar
 
     private var bannerManager: BannerPlaceManagerAdaptor
 
-    private var bannerPlaceCallbackManager: BannerPlaceCallbackManager
+    private var bannerPlaceCallbackManager = BannerPlaceCallbackManager()
 
-    init(messenger: FlutterBinaryMessenger, registrar: FlutterPluginRegistrar) {
-        self.messenger = messenger
+    init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
 
         self.bannerManager = BannerPlaceManagerAdaptor(
-            binaryMessenger: self.messenger
+            binaryMessenger: self.registrar.messenger()
         )
-        self.bannerPlaceCallbackManager = BannerPlaceCallbackManager()
         super.init()
 
         InAppStory.shared.iasBannerEvent = {
+            [weak self] in
+            guard let self else { return }
             switch $0 {
             case .bannersLoaded(let placeID):
                 print(
@@ -36,9 +34,9 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
                     data: data,
                 )
                 break
-            case .preloaded(let placeID, let banners):
+            case .preloaded(_, _):
                 break
-            case .show(let bannerData):
+            case .show(_):
                 break
             case .clickOnButton(let bannerData, let link):
                 print("clickOnButton: \(bannerData), \(link)")
@@ -61,7 +59,6 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             arguments: args,
             bannerPlaceManager: self.bannerManager,
             bannerPlaceCallbackManager: self.bannerPlaceCallbackManager,
-            binaryMessenger: messenger,
             pluginRegistrar: self.registrar
         )
     }

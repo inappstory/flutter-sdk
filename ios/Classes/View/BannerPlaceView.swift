@@ -7,11 +7,13 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     private var _bannersView: IASBannersView?
 
-    private weak var bannerManager: BannerPlaceManagerAdaptor?
-    private var callbackFlutterApi: BannerPlaceCallbackFlutterApi
+    private weak var bannerPlaceManagerAdaptor: BannerPlaceManagerAdaptor?
+    private var callbackFlutterApi: BannerPlaceCallbackFlutterApi?
     private weak var bannerPlaceCallbackManager: BannerPlaceCallbackManager?
 
-    private var _view: UIView
+    private weak var registrar: FlutterPluginRegistrar?
+
+    private var _view: UIView?
 
     private var placeId: String
     private var bannerWidgetId: String
@@ -33,23 +35,19 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         arguments args: Any?,
         bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
         bannerPlaceCallbackManager: BannerPlaceCallbackManager,
-        binaryMessenger messenger: FlutterBinaryMessenger,
         pluginRegistrar registrar: FlutterPluginRegistrar,
     ) {
         _view = UIView()
 
         self.placeId = (args as! [String: Any])["placeId"] as! String
-        self.bannerWidgetId =
-            (args as! [String: Any])["bannerWidgetId"] as! String
+        bannerWidgetId =
+        (args as! [String: Any])["bannerWidgetId"] as! String
 
-        self.bannerManager = bannerManager
-
-        self.callbackFlutterApi = BannerPlaceCallbackFlutterApi(
-            binaryMessenger: messenger,
-            messageChannelSuffix: self.bannerWidgetId
-        )
+        self.bannerPlaceManagerAdaptor = bannerManager
 
         self.bannerPlaceCallbackManager = bannerPlaceCallbackManager
+
+        self.registrar = registrar
 
         var decoration: BannerDecorationDTO?
 
@@ -70,20 +68,24 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         // iOS views can be created here
 
         BannerViewHostApiSetup.setUp(
-            binaryMessenger: messenger,
+            binaryMessenger: registrar.messenger(),
             api: self,
-            messageChannelSuffix: self.bannerWidgetId
+            messageChannelSuffix: bannerWidgetId
         )
 
         self.bannerPlaceCallbackManager!.onProgress = {
+            [weak self]
             bannerData,
             name,
             data in
+            guard let self else { return }
             if bannerData.bannerPlace != self.placeId {
                 return
             }
             DispatchQueue.main.async {
-                self.callbackFlutterApi.onActionWith(
+                [weak self] in
+                guard let self else { return }
+                self.callbackFlutterApi?.onActionWith(
                     bannerData: bannerData,
                     widgetEventName: name,
                     widgetData: data,
@@ -92,96 +94,127 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             }
         }
 
-        self.loadBannerPlaceToken = self.bannerManager?.subscribe(
+        self.loadBannerPlaceToken = self.bannerPlaceManagerAdaptor?.subscribe(
             LoadBannerPlace()
         ) {
+            [weak self]
             payload in
+            guard let self else { return }
             if payload == self.placeId {
                 self._bannersView?.create()
             }
         }
 
-        self.reloadBannerPlaceToken = self.bannerManager?.subscribe(
+        self.reloadBannerPlaceToken = self.bannerPlaceManagerAdaptor?.subscribe(
             ReloadBannerPlace()
         ) {
+            [weak self]
             payload in
+            guard let self else { return }
             if payload == self.placeId {
                 self._bannersView?.refresh()
             }
         }
-        self.preloadBannerPlaceToken = self.bannerManager?.subscribe(
-            PreloadBannerPlace()
-        ) {
-            payload in
-            if payload == self.placeId {
-                DispatchQueue.main.async {
-                    InAppStory.shared.preloadBanners(placeID: self.placeId) {
-                        [weak self]
-                        result in
-                        guard let self else { return }
-                        do {
-                            if try result.get() {
-                                self.callbackFlutterApi.onBannerPlacePreloaded(
-                                    completion: { _ in }
-                                )
-                            } else {
-                                self.callbackFlutterApi
-                                    .onBannerPlacePreloadedError(
-                                        completion: { _ in }
+        self.preloadBannerPlaceToken = self.bannerPlaceManagerAdaptor?
+            .subscribe(
+                PreloadBannerPlace()
+            ) {
+                [weak self]
+                payload in
+                guard let self else { return }
+                if payload == self.placeId {
+                    DispatchQueue.main.async {
+                        InAppStory.shared
+                            .preloadBanners(placeID: self.placeId) {
+                                [weak self]
+                                result in
+                                guard let self else { return }
+                                do {
+                                    if try result.get() {
+                                        self.callbackFlutterApi?
+                                            .onBannerPlacePreloaded(
+                                                completion: { _ in }
+                                            )
+                                    } else {
+                                        self.callbackFlutterApi?
+                                            .onBannerPlacePreloadedError(
+                                                completion: { _ in }
+                                            )
+                                    }
+                                } catch {
+                                    self.callbackFlutterApi?
+                                        .onBannerPlacePreloadedError(
+                                            completion: { _ in }
+                                        )
+                                    print(
+                                        "Failed to preload banner for placeId: \(self.placeId), error: \(error)"
                                     )
+                                }
                             }
-                        } catch {
-                            self.callbackFlutterApi
-                                .onBannerPlacePreloadedError(
-                                    completion: { _ in }
-                                )
-                            print(
-                                "Failed to preload banner for placeId: \(self.placeId), error: \(error)"
-                            )
-                        }
                     }
                 }
             }
-        }
-        self.showNextToken = self.bannerManager?.subscribe(ShowNext()) {
-            payload in
-            if payload == self.placeId {
-                self._bannersView?.showNext()
+        self.showNextToken = self.bannerPlaceManagerAdaptor?
+            .subscribe(ShowNext()) {
+                [weak self]
+                payload in
+                guard let self else { return }
+                if payload == self.placeId {
+                    self._bannersView?.showNext()
+                }
             }
-        }
-        self.showPreviousToken = self.bannerManager?.subscribe(ShowPrevious()) {
-            payload in
-            if payload == self.placeId {
-                self._bannersView?.showPrevious()
+        self.showPreviousToken = self.bannerPlaceManagerAdaptor?
+            .subscribe(ShowPrevious()) {
+                [weak self]
+                payload in
+                guard let self else { return }
+                if payload == self.placeId {
+                    self._bannersView?.showPrevious()
+                }
             }
-        }
-        self.showByIndexToken = self.bannerManager?.subscribe(ShowByIndex()) {
-            payload in
-            if payload.placeId == self.placeId {
-                self._bannersView?.showBannerWith(index: Int(payload.index))
+        self.showByIndexToken = self.bannerPlaceManagerAdaptor?
+            .subscribe(ShowByIndex()) {
+                [weak self]
+                payload in
+                guard let self else { return }
+                if payload.placeId == self.placeId {
+                    self._bannersView?.showBannerWith(index: Int(payload.index))
+                }
             }
-        }
-        self.pauseAutoscrollToken = self.bannerManager?.subscribe(
+        self.pauseAutoscrollToken = self.bannerPlaceManagerAdaptor?.subscribe(
             PauseAutoscroll()
         ) {
+            [weak self]
             payload in
+            guard let self else { return }
             if payload == self.placeId {
                 self._bannersView?.pause()
             }
         }
-        self.resumeAutoscrollToken = self.bannerManager?.subscribe(
+        self.resumeAutoscrollToken = self.bannerPlaceManagerAdaptor?.subscribe(
             ResumeAutoscroll()
         ) {
+            [weak self]
             payload in
+            guard let self else { return }
             if payload == self.placeId {
                 self._bannersView?.resume()
             }
         }
-        createNativeView(view: _view, args: args! as! [String: Any])
+        self.callbackFlutterApi = BannerPlaceCallbackFlutterApi(
+            binaryMessenger: registrar.messenger(),
+            messageChannelSuffix: bannerWidgetId
+        )
+        if let _view {
+            createNativeView(view: _view, args: args! as! [String: Any])
+        } else {
+            _view = UIView()
+            createNativeView(view: _view!, args: args! as! [String: Any])
+        }
     }
 
     func view() -> UIView {
-        return _view
+        return _view ?? UIView()
     }
 
     func createNativeView(view _view: UIView, args _args: [String: Any]) {
@@ -199,7 +232,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 interItemSpacing: CGFloat(interItemSpacing!),
                 cornerRadius: CGFloat(cornerRadius!)
             )
-
         }
 
         createBannerView()
@@ -228,7 +260,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         if self._bannersView != nil {
             self._bannersView?.removeFromSuperview()
             self._bannersView = nil
-            //_view.willRemoveSubview(self._bannersView!)
         }
         if self.bannersAppearance != nil {
 
@@ -248,8 +279,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self._bannersView?.bannersDidUpdated = {
             [weak self] isContent, count, listHeight in
             guard let self else { return }
-            DispatchQueue.main.async { [self] in
-                self.callbackFlutterApi.onBannerPlaceLoaded(
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.callbackFlutterApi?.onBannerPlaceLoaded(
                     size: Int64(count),
                     widgetHeight: Int64(listHeight),
                     completion: { _ in }
@@ -259,8 +291,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
         self._bannersView?.bannersDidScroll = { [weak self] index in
             guard let self else { return }
-            DispatchQueue.main.async { [self] in
-                self.callbackFlutterApi.onBannerScroll(
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.callbackFlutterApi?.onBannerScroll(
                     index: Int64(index),
                     completion: { _ in }
                 )
@@ -271,7 +304,14 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     func changeBannerPlaceId(newPlaceId: String) throws {
         self.placeId = newPlaceId
         createBannerView()
-        _view.addSubview(_bannersView!)
+        guard let bannersView = _bannersView, let view = _view else { return }
+        _view?.addSubview(_bannersView!)
+        NSLayoutConstraint.activate([
+            bannersView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bannersView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bannersView.topAnchor.constraint(equalTo: view.topAnchor),
+            bannersView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
         _bannersView?.create()
     }
 
@@ -285,27 +325,53 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     func clearBannerPlaceView() {
         if _bannersView != nil {
+            self._bannersView?.bannersDidUpdated = nil
+            self._bannersView?.bannersDidScroll = nil
             self._bannersView?.removeFromSuperview()
             _bannersView = nil
         }
+        self._view?.removeFromSuperview()
+
+        self._view = nil
+
+        self.callbackFlutterApi = nil
+
         if let loadBannerPlaceToken = self.loadBannerPlaceToken {
-            self.bannerManager?.unsubscribe(loadBannerPlaceToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(loadBannerPlaceToken)
+        }
+        if let reloadBannerPlaceToken = self.reloadBannerPlaceToken {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(reloadBannerPlaceToken)
         }
         if let pauseAutoscrollToken = self.pauseAutoscrollToken {
-            self.bannerManager?.unsubscribe(pauseAutoscrollToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(pauseAutoscrollToken)
+        }
+        if let resumeAutoscrollToken = self.resumeAutoscrollToken {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(resumeAutoscrollToken)
         }
         if let preloadBannerPlaceToken = self.preloadBannerPlaceToken {
-            self.bannerManager?.unsubscribe(preloadBannerPlaceToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(preloadBannerPlaceToken)
         }
         if let showNextToken = self.showNextToken {
-            self.bannerManager?.unsubscribe(showNextToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(showNextToken)
         }
         if let showPreviousToken = self.showPreviousToken {
-            self.bannerManager?.unsubscribe(showPreviousToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(showPreviousToken)
         }
         if let showByIndexToken = self.showByIndexToken {
-            self.bannerManager?.unsubscribe(showByIndexToken)
+            self.bannerPlaceManagerAdaptor?.unsubscribe(showByIndexToken)
         }
+        self.bannerPlaceManagerAdaptor = nil
+        self.bannerPlaceCallbackManager?.onProgress = nil
+        self.bannerPlaceCallbackManager = nil
+
+        if let registrar = self.registrar {
+            BannerViewHostApiSetup.setUp(
+                binaryMessenger: registrar.messenger(),
+                api: nil,
+                messageChannelSuffix: self.bannerWidgetId
+            )
+        }
+
     }
 }
 
