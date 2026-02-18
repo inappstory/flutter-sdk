@@ -46,6 +46,9 @@ class BannerView(
     private var bannerDataListener: BannerDataListener
 ) : PlatformView, BannerViewHostApi {
 
+    private var bannerWidgetId: String
+    private var placeId: String
+
     private var bannerPlace: BannerCarousel? = null
     private val frame: FrameLayout
 
@@ -66,11 +69,13 @@ class BannerView(
         return frame
     }
 
-    override fun dispose() {}
+    override fun dispose() {
+        deInitBannerPlace()
+    }
 
     init {
-        val placeId: String = creationParams?.get("placeId") as String? ?: "customBannerPlace"
-        val bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
+        placeId = creationParams?.get("placeId") as String? ?: "customBannerPlace"
+        bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
         bannerPlaceCallback =
             BannerPlaceCallbackFlutterApi(
                 flutterPluginBinding.binaryMessenger,
@@ -112,6 +117,7 @@ class BannerView(
             )
             bannerAppearance = CustomBannerPlaceAppearance(
                 flutterPluginBinding,
+                flutterPluginBinding.getFlutterAssets(),
                 bannerOffset,
                 bannersGap,
                 cornerRadius,
@@ -274,6 +280,7 @@ class BannerView(
     }
 
     override fun changeBannerPlaceId(newPlaceId: String) {
+        placeId = newPlaceId
         frame.removeView(bannerPlace)
         createBannerCarousel(newPlaceId)
         frame.addView(bannerPlace)
@@ -291,7 +298,11 @@ class BannerView(
         resumeAutoscroll.unsubscribe()
         frame.removeView(bannerPlace)
         bannerPlace = null
-        BannerViewHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
+        BannerViewHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            null,
+            messageChannelSuffix = bannerWidgetId
+        )
         bannerDataListener.removeListener(bannersData)
     }
 }
@@ -325,6 +336,7 @@ class CustomBannerPlaceAppearanceWithoutBannerDecoration(
 
 class CustomBannerPlaceAppearance(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    private val flutterAssets: FlutterPlugin.FlutterAssets,
     private val bannerOffset: Int?,
     private val bannersGap: Int?,
     private val cornerRadius: Int?,
@@ -385,7 +397,7 @@ class CustomBannerPlaceAppearance(
         try {
             val bitmap: Bitmap?
             val assetPath: String =
-                flutterPluginBinding.getFlutterAssets().getAssetFilePathBySubpath(path)
+                flutterAssets.getAssetFilePathBySubpath(path)
             val fd: AssetFileDescriptor =
                 flutterPluginBinding.getApplicationContext().getAssets().openFd(assetPath)
             val inputStream = fd.createInputStream()
