@@ -209,6 +209,7 @@ class BannerView(
             bannerPlace?.resumeAutoscroll()
         }
         frame.addView(bannerPlace)
+        bannerPlace?.loadBanners()
     }
 
     private fun createBannerCarousel(placeId: String) {

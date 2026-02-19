@@ -35,9 +35,9 @@ class AndroidBannerView extends BannerPlatformView {
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: (id) {
         onPlatformViewCreated.call();
-        if (autoLoad) {
-          BannerPlaceManager.instance.load(placeId);
-        }
+        // if (autoLoad) {
+        //   BannerPlaceManager.instance.load(placeId);
+        // }
       },
     );
   }
