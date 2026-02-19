@@ -291,7 +291,8 @@ class BannerView(
         showByIndex.unsubscribe()
         pauseAutoscroll.unsubscribe()
         resumeAutoscroll.unsubscribe()
-        frame.removeView(bannerPlace)
+        frame.removeAllViews()
+        bannerPlace?.clear()
         bannerPlace = null
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger, null, messageChannelSuffix = bannerWidgetId
