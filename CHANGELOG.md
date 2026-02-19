@@ -11,6 +11,18 @@
 - `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
 - Updated iOS SDK to 1.27.1
 
+## [0.7.3-rc4]
+
+### Fixed
+
+- BannerPlace stability improvements
+
+## [0.7.3-rc3]
+
+### Fixed
+
+- BannerPlace stability improvements
+
 ## [0.7.2]
 
 ### Fixed

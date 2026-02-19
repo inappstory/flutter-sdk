@@ -13,7 +13,6 @@ public class InappstoryPlugin: NSObject, FlutterPlugin {
         let moduleAdapter = InappstorySdkModuleAdaptor(pluginRegistrar: registrar)
 
         let factory = BannerPlaceFactory(
-            messenger: registrar.messenger(),
             registrar: registrar
         )
         registrar.register(factory, withId: "banner-view")

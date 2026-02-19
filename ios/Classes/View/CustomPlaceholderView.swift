@@ -18,7 +18,7 @@ class CustomPlaceholderView: UIView, PlaceholderProtocol {
 
     private var _imageView: UIImageView?
 
-    private var registrar: FlutterPluginRegistrar?
+    private weak var registrar: FlutterPluginRegistrar?
 
     private var decoration: BannerDecorationDTO?
 
