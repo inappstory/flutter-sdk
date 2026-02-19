@@ -17,6 +17,7 @@ dependencies:
   shimmer: ^3.0.0
   meta: ^1.16.0
   scrollview_observer: ^1.26.2
+  async: ^2.13.0
 
 dev_dependencies:
   flutter_test:
