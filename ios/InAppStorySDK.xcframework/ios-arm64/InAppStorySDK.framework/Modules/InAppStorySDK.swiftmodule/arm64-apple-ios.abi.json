@@ -84870,7 +84870,7 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/IASBannersView.swift",
       "kind": "FloatLiteral",
-      "offset": 16726,
+      "offset": 16443,
       "length": 3,
       "value": "1.0"
     },
@@ -90638,7 +90638,7 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Download\/IASBannersManager.swift",
       "kind": "IntegerLiteral",
-      "offset": 8632,
+      "offset": 9310,
       "length": 1,
       "value": "0"
     },
@@ -91723,7 +91723,7 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager.swift",
       "kind": "IntegerLiteral",
-      "offset": 15559,
+      "offset": 14424,
       "length": 1,
       "value": "0"
     },
