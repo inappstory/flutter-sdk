@@ -36,7 +36,7 @@ class IosBannerView extends BannerPlatformView {
         onPlatformViewCreated: (id) {
           onPlatformViewCreated.call();
           if (autoLoad) {
-            BannerPlaceManager.instance.load(placeId);
+            // BannerPlaceManager.instance.load(placeId);
           }
         },
       ),
