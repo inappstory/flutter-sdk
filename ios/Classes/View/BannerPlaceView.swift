@@ -211,7 +211,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             _view = UIView()
             createNativeView(view: _view!, args: args! as! [String: Any])
         }
-        self._bannersView.create()
+        self._bannersView?.create()
     }
 
     func view() -> UIView {
