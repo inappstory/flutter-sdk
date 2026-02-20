@@ -191,7 +191,9 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void onBannerScroll(int index) {
-    widget.onBannerScroll?.call(index);
+    if (isVisible) {
+      widget.onBannerScroll?.call(index);
+    }
   }
 }
 
