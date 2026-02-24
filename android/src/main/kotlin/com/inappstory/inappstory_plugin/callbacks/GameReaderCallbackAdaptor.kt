@@ -30,18 +30,6 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
         }
     }
 
-    // deprecated callback
-    override fun finishGame(contentData: ContentData?, result: String?, id: String?) {
-        val contentDataDto = contentData?.let { mapContentDataDto(it) }
-        val jsonObject: JsonObject? = result?.let { Json.parseToJsonElement(it).jsonObject }
-
-        val map: Map<String, Any?>? = jsonObject?.toMap()
-
-        flutterPluginBinding.runOnMainThread {
-            flutterApi.finishGame(contentDataDto, map) {}
-        }
-    }
-
     override fun closeGame(contentData: ContentData?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         flutterPluginBinding.runOnMainThread {
