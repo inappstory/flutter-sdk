@@ -9,7 +9,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     private weak var bannerPlaceManagerAdaptor: BannerPlaceManagerAdaptor?
     private var callbackFlutterApi: BannerPlaceCallbackFlutterApi?
-    private weak var bannerPlaceCallbackManager: BannerPlaceCallbackManager?
 
     private weak var registrar: FlutterPluginRegistrar?
 
@@ -28,13 +27,13 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var showByIndexToken: UUID?
     private var pauseAutoscrollToken: UUID?
     private var resumeAutoscrollToken: UUID?
+    private var onActionWith: UUID?
 
     init(
         frame: CGRect,
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
-        bannerPlaceCallbackManager: BannerPlaceCallbackManager,
         pluginRegistrar registrar: FlutterPluginRegistrar,
     ) {
         _view = UIView()
@@ -44,8 +43,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         (args as! [String: Any])["bannerWidgetId"] as! String
 
         self.bannerPlaceManagerAdaptor = bannerManager
-
-        self.bannerPlaceCallbackManager = bannerPlaceCallbackManager
 
         self.registrar = registrar
 
@@ -72,27 +69,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             api: self,
             messageChannelSuffix: bannerWidgetId
         )
-
-        self.bannerPlaceCallbackManager!.onProgress = {
-            [weak self]
-            bannerData,
-            name,
-            data in
-            guard let self else { return }
-            if bannerData.bannerPlace != self.placeId {
-                return
-            }
-            DispatchQueue.main.async {
-                [weak self] in
-                guard let self else { return }
-                self.callbackFlutterApi?.onActionWith(
-                    bannerData: bannerData,
-                    widgetEventName: name,
-                    widgetData: data,
-                    completion: { _ in }
-                )
-            }
-        }
 
         self.loadBannerPlaceToken = self.bannerPlaceManagerAdaptor?.subscribe(
             LoadBannerPlace()
@@ -199,6 +175,24 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             guard let self else { return }
             if payload == self.placeId {
                 self._bannersView?.resume()
+            }
+        }
+        self.onActionWith = self.bannerPlaceManagerAdaptor?.subscribe(OnActionWith()) {
+            [weak self]
+            payload in
+            guard let self else { return }
+            if payload.bannerData.bannerPlace != self.placeId {
+                return
+            }
+            DispatchQueue.main.async {
+                [weak self] in
+                guard let self else { return }
+                self.callbackFlutterApi?.onActionWith(
+                    bannerData: payload.bannerData,
+                    widgetEventName: payload.name,
+                    widgetData: payload.data,
+                    completion: { _ in }
+                )
             }
         }
         self.callbackFlutterApi = BannerPlaceCallbackFlutterApi(
@@ -361,9 +355,10 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         if let showByIndexToken = self.showByIndexToken {
             self.bannerPlaceManagerAdaptor?.unsubscribe(showByIndexToken)
         }
+        if let onActionWith = self.onActionWith {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(onActionWith)
+        }
         self.bannerPlaceManagerAdaptor = nil
-        self.bannerPlaceCallbackManager?.onProgress = nil
-        self.bannerPlaceCallbackManager = nil
 
         if let registrar = self.registrar {
             BannerViewHostApiSetup.setUp(
@@ -375,12 +370,3 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     }
 }
-
-class BannerPlaceCallbackManager {
-    var onProgress: ((BannerData, String, [String: Any]?) -> Void)?
-
-    func sendEvent(bannerData: BannerData, name: String, data: [String: Any]?) {
-        onProgress?(bannerData, name, data)
-    }
-}
-
