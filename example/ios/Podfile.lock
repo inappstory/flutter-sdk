@@ -1,12 +1,10 @@
 PODS:
   - Flutter (1.0.0)
-  - InAppStory (1.27.3)
-  - inappstory_plugin (0.1.30):
+  - InAppStory (1.27.4)
+  - inappstory_plugin (0.1.32):
     - Flutter
-    - InAppStory (= 1.27.3)
+    - InAppStory (= 1.27.4)
   - integration_test (0.0.1):
-    - Flutter
-  - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
@@ -16,7 +14,6 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - inappstory_plugin (from `.symlinks/plugins/inappstory_plugin/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
 
 SPEC REPOS:
@@ -30,18 +27,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/inappstory_plugin/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  url_launcher_ios:
-    :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  InAppStory: 2a39701c126b1b7d6d37961730a6559c86e669c5
-  inappstory_plugin: 68ff657dfa4efb05dd7c048a94e6231b7c0eb7d5
+  InAppStory: fb1ea6677ba4e6c350c5363fd65eac85304133ae
+  inappstory_plugin: 77c033aace6b0e1551106b324741652991aab4f8
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
-  video_player_avfoundation: dd410b52df6d2466a42d28550e33e4146928280a
+  video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
 
 PODFILE CHECKSUM: 4f1c12611da7338d21589c0b2ecd6bd20b109694
 
