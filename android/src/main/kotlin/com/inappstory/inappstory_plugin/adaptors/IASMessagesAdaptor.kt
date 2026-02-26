@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import com.inappstory.inappstory_plugin.activity.BackPressManagerHandler
 import com.inappstory.inappstory_plugin.activity.InAppStoryActivity
 import com.inappstory.sdk.InAppStoryManager
-import com.inappstory.sdk.core.api.IASInAppMessage
+import com.inappstory.sdk.externalapi.inappmessage.IASInAppMessageExternalAPI
 import com.inappstory.sdk.inappmessage.InAppMessageLoadCallback
 import com.inappstory.sdk.inappmessage.InAppMessageOpenSettings
 import com.inappstory.sdk.inappmessage.InAppMessagePreloadSettings
@@ -16,7 +16,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASMessagesAdaptor(
     flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val iasMessages: IASInAppMessage,
+    private val iasMessages: IASInAppMessageExternalAPI,
     private val iasManager: InAppStoryManager,
     private val activityHolder: ActivityHolder,
 ) : IASInAppMessagesHostApi {
@@ -43,10 +43,9 @@ class IASMessagesAdaptor(
     }
 
     override fun showById(messageId: String, onlyPreloaded: Boolean) {
-        val settings = InAppMessageOpenSettings()
-            .id(messageId.toInt())
-            .showOnlyIfLoaded(onlyPreloaded)
-        iasMessages.show(
+        val settings =
+            InAppMessageOpenSettings().id(messageId.toInt()).showOnlyIfLoaded(onlyPreloaded)
+        val cancellationToken = iasMessages.show(
             settings,
             (activityHolder.activity as FragmentActivity).supportFragmentManager,
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
@@ -63,13 +62,12 @@ class IASMessagesAdaptor(
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
                 }
             })
+
     }
 
     override fun showByEvent(event: String, onlyPreloaded: Boolean) {
-        val settings = InAppMessageOpenSettings()
-            .event(event)
-            .showOnlyIfLoaded(onlyPreloaded)
-        iasMessages.show(
+        val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
+        val cancellationToken = iasMessages.show(
             settings,
             (activityHolder.activity as FragmentActivity).supportFragmentManager,
             FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,

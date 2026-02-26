@@ -215,6 +215,10 @@ class BannerView(
             bannerPlace?.resumeAutoscroll()
         }
         frame.addView(bannerPlace)
+        val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
+        if (autoLoad) {
+            bannerPlace?.loadBanners()
+        }
     }
 
     private fun createBannerCarousel(placeId: String) {
@@ -296,7 +300,8 @@ class BannerView(
         showByIndex.unsubscribe()
         pauseAutoscroll.unsubscribe()
         resumeAutoscroll.unsubscribe()
-        frame.removeView(bannerPlace)
+        frame.removeAllViews()
+        bannerPlace?.clear()
         bannerPlace = null
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger,

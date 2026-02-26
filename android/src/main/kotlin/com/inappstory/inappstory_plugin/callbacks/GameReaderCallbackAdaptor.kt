@@ -30,19 +30,6 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
         }
     }
 
-    override fun finishGame(contentData: ContentData?, result: String?, id: String?) {
-        val contentDataDto = contentData?.let { mapContentDataDto(it) }
-       // val mapOfString: Map<String?, Any?>? = result?.let { Json.decodeFromString(it) }
-
-        val jsonObject: JsonObject? = result?.let { Json.parseToJsonElement(it).jsonObject }
-
-        val map: Map<String, Any?>? = jsonObject?.toMap()
-
-        flutterPluginBinding.runOnMainThread {
-            flutterApi.finishGame(contentDataDto, map) {}
-        }
-    }
-
     override fun closeGame(contentData: ContentData?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         flutterPluginBinding.runOnMainThread {
@@ -51,10 +38,7 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
     }
 
     override fun eventGame(
-        contentData: ContentData?,
-        gameId: String?,
-        eventName: String?,
-        payload: String?
+        contentData: ContentData?, gameId: String?, eventName: String?, payload: String?
     ) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         val jsonObject: JsonObject? = payload?.let { Json.parseToJsonElement(it).jsonObject }
@@ -88,18 +72,15 @@ fun JsonObject.toMap(): Map<String, Any?> {
 fun JsonElement.toRaw(): Any? {
     return when (this) {
         is JsonNull -> null
-        is JsonObject -> this.toMap() // Рекурсия для вложенных объектов
-        is JsonArray -> this.map { it.toRaw() } // Рекурсия для массивов
+        is JsonObject -> this.toMap()
+        is JsonArray -> this.map { it.toRaw() }
         is JsonPrimitive -> {
             if (isString) {
-                content // Это строка в кавычках
+                content
             } else {
-                // Это литерал (число или булево).
-                // Пытаемся определить тип. Порядок важен.
-                booleanOrNull
-                    ?: longOrNull
-                    ?: doubleOrNull
-                    ?: content // Если ничего не подошло, возвращаем как строку
+
+                booleanOrNull ?: longOrNull ?: doubleOrNull
+                ?: content
             }
         }
     }

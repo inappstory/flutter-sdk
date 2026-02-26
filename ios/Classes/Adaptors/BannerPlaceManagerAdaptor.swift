@@ -41,6 +41,23 @@ public protocol EventKey: Hashable {
     associatedtype Payload
 }
 
+struct OnActionWith: EventKey {
+    public struct Payload {
+        public let bannerData: BannerData
+        public let name: String
+        public let data: [String: Any]?
+
+        public init(bannerData: BannerData, name: String, data: [String: Any]?)
+        {
+            self.bannerData = bannerData
+            self.name = name
+            self.data = data
+
+        }
+        public typealias Payload = OnActionWith.Payload
+    }
+}
+
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     typealias Token = UUID
 
@@ -174,5 +191,20 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
 
     func resumeAutoscroll(placeId: String) throws {
         self.emit(ResumeAutoscroll(), payload: placeId)
+    }
+
+    func onActionWith(
+        bannerData: BannerData,
+        name: String,
+        data: [String: Any]?
+    ) throws {
+        self.emit(
+            OnActionWith(),
+            payload: OnActionWith.Payload(
+                bannerData: bannerData,
+                name: name,
+                data: data
+            )
+        )
     }
 }

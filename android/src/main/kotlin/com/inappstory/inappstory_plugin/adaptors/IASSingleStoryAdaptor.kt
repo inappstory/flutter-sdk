@@ -4,15 +4,16 @@ import IASSingleStoryHostApi
 import com.inappstory.inappstory_plugin.callbacks.IShowStoryCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
-import com.inappstory.sdk.core.api.IASSingleStory
+import com.inappstory.sdk.externalapi.single.IASSingleStoryExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASSingleStoryAdaptor(
-    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
-    private val iasSingleStory: IASSingleStory,
+    private val iasSingleStory: IASSingleStoryExternalAPI,
     private val activityHolder: ActivityHolder,
 ) : IASSingleStoryHostApi {
+
     private val callback = IShowStoryCallbackAdaptor(flutterPluginBinding)
 
     init {
@@ -22,7 +23,7 @@ class IASSingleStoryAdaptor(
     }
 
     override fun showOnce(storyId: String) {
-        iasSingleStory.showOnce(
+        val cancelToken = iasSingleStory.showOnce(
             activityHolder.activity,
             storyId,
             appearanceManager,
@@ -31,7 +32,7 @@ class IASSingleStoryAdaptor(
     }
 
     override fun show(storyId: String) {
-        iasSingleStory.show(
+        val cancelToken = iasSingleStory.show(
             activityHolder.activity,
             storyId,
             appearanceManager,
@@ -40,5 +41,4 @@ class IASSingleStoryAdaptor(
         )
     }
 }
-
 

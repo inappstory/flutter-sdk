@@ -171,6 +171,8 @@ enum Position {
   bottomRight,
 }
 
+enum CoverQuality { Medium, High }
+
 class GoodsItemAppearanceDto {
   late int? itemBackgroundColor;
   late int? itemCornerRadius;
@@ -185,8 +187,6 @@ class GoodsItemAppearanceDto {
   late int? closeButtonColor;
   late int? widgetBackgroundHeight;
 }
-
-enum CoverQuality { Medium, High }
 
 @HostApi()
 abstract class AppearanceManagerHostApi {

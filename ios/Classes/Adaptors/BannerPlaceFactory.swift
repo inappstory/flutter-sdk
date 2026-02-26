@@ -8,8 +8,6 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
 
     private var bannerManager: BannerPlaceManagerAdaptor
 
-    private var bannerPlaceCallbackManager = BannerPlaceCallbackManager()
-
     init(registrar: FlutterPluginRegistrar) {
         self.registrar = registrar
 
@@ -28,11 +26,15 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
                 )
                 break
             case .widgetEvent(let bannerData, let name, let data):
-                self.bannerPlaceCallbackManager.sendEvent(
-                    bannerData: self.bannerDataToDto(data: bannerData),
-                    name: name,
-                    data: data,
-                )
+                do {
+                    try self.bannerManager.onActionWith(
+                        bannerData: self.bannerDataToDto(data: bannerData),
+                        name: name,
+                        data: data
+                    )
+                } catch {
+                    print("Failed to handle widgetEvent: \(error)")
+                }
                 break
             case .preloaded(_, _):
                 break
@@ -58,7 +60,6 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
             viewIdentifier: viewId,
             arguments: args,
             bannerPlaceManager: self.bannerManager,
-            bannerPlaceCallbackManager: self.bannerPlaceCallbackManager,
             pluginRegistrar: self.registrar
         )
     }
