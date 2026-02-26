@@ -28,10 +28,7 @@ class IASOnboardingsAdaptor: IASOnboardingsHostApi {
     private var onboardingLoadCallbackFlutterApi:
         OnboardingLoadCallbackFlutterApi
 
-    private var tokenMap: [String: InAppStorySDK.CancellationToken] = [:]
-
-    func show(limit: Int64, feed: String, token: String, tags: [String]) throws
-    {
+    func show(limit: Int64, feed: String, tags: [String]) throws {
         func complete(show: Bool) {
             if show {
                 onboardingLoadCallbackFlutterApi.onboardingLoadSuccess(
@@ -53,15 +50,5 @@ class IASOnboardingsAdaptor: IASOnboardingsHostApi {
             with: InAppStory.shared.panelSettings,
             complete: complete
         )
-        tokenMap[token] = cancellationToken
-    }
-
-    func cancelByToken(token: String) throws -> Bool {
-        if tokenMap[token] != nil {
-            let result = tokenMap[token]!.cancel()
-            tokenMap.removeValue(forKey: token)
-            return result
-        }
-        return false
     }
 }

@@ -22,37 +22,18 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
         )
     }
 
-    private var tokenMap: [String: InAppStorySDK.CancellationToken] = [:]
-
     private var binaryMessenger: FlutterBinaryMessenger
 
     private var singleStoryAPI: SingleStoryAPI
 
     private var showStoryCallback: IShowStoryCallbackFlutterApi
 
-    func showOnce(storyId: String, token: String) throws {
-        let cancellationToken = singleStoryAPI.showStoryOnce(
-            with: storyId,
-            complete: showOnceComplete
-        )
-        tokenMap[token] = cancellationToken
+    func showOnce(storyId: String) throws {
+        singleStoryAPI.showStoryOnce(with: storyId, complete: showOnceComplete)
     }
 
-    func show(storyId: String, token: String) throws {
-        let cancellationToken = singleStoryAPI.showStory(
-            with: storyId,
-            complete: showComplete
-        )
-        tokenMap[token] = cancellationToken
-    }
-
-    func cancelByToken(token: String) throws -> Bool {
-        if tokenMap[token] != nil {
-            let result = tokenMap[token]!.cancel()
-            tokenMap.removeValue(forKey: token)
-            return result
-        }
-        return false
+    func show(storyId: String) throws {
+        singleStoryAPI.showStory(with: storyId, complete: showComplete)
     }
 
     private func showOnceComplete(show: Bool) {
