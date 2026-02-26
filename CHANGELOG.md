@@ -1,15 +1,13 @@
-## [0.8.0]
+## [0.7.3]
 
-### Added
+### Fixed
 
-- Cancellation of long-running actions
+- BannerPlace stability improvements
 
 ### Changed
 
-- Onboardings, In-App-Messages and single stories now opens from `InAppStoryManager`
-- `IShowStoryCallbackFlutterApi` changed to `IASShowStoryCallback` mixin
-- `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
-- Updated iOS SDK to 1.27.1
+- Updated Android native SDK to 1.24.1
+- Updated iOS native SDK to 1.27.4
 
 ## [0.7.2]
 

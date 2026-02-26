@@ -10,8 +10,6 @@
 A Flutter plugin to use [InAppStory SDK](https://inappstory.com/). Supports Android and iOS
 platforms.
 
-Currently under development & not published
-
 The full documentation for InAppStory SDK can be found
 on [docs.inappstory.com](https://docs.inappstory.com/sdk-guides/flutter/how-to-get-started.html).
 
@@ -21,7 +19,7 @@ Add dependency in your app `pubspec.yaml`
 
 ```yaml
 dependencies:
-  inappstory_plugin: ^0.8.0
+  inappstory_plugin: ^0.7.3
 ```
 
 ## Full example

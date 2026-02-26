@@ -4,8 +4,6 @@ import IASInAppMessagesHostApi
 import androidx.fragment.app.FragmentActivity
 import com.inappstory.inappstory_plugin.activity.BackPressManagerHandler
 import com.inappstory.inappstory_plugin.activity.InAppStoryActivity
-import com.inappstory.sdk.CancellationToken
-import com.inappstory.sdk.CancellationTokenCancelResult
 import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.inappmessage.IASInAppMessageExternalAPI
 import com.inappstory.sdk.inappmessage.InAppMessageLoadCallback
@@ -24,8 +22,6 @@ class IASMessagesAdaptor(
 ) : IASInAppMessagesHostApi {
 
     private var fragmentActivity: InAppStoryActivity? = null
-
-    private val tokenMap = mutableMapOf<String, CancellationToken>()
 
     init {
         IASInAppMessagesHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -46,7 +42,7 @@ class IASMessagesAdaptor(
         }
     }
 
-    override fun showById(messageId: String, token: String, onlyPreloaded: Boolean) {
+    override fun showById(messageId: String, onlyPreloaded: Boolean) {
         val settings =
             InAppMessageOpenSettings().id(messageId.toInt()).showOnlyIfLoaded(onlyPreloaded)
         val cancellationToken = iasMessages.show(
@@ -67,10 +63,9 @@ class IASMessagesAdaptor(
                 }
             })
 
-        tokenMap[token] = cancellationToken
     }
 
-    override fun showByEvent(event: String, token: String, onlyPreloaded: Boolean) {
+    override fun showByEvent(event: String, onlyPreloaded: Boolean) {
         val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
         val cancellationToken = iasMessages.show(
             settings,
@@ -90,16 +85,6 @@ class IASMessagesAdaptor(
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
                 }
             })
-        tokenMap[token] = cancellationToken
-    }
-
-    override fun cancelByToken(token: String): Boolean {
-        if (tokenMap.containsKey(token)) {
-            val result = tokenMap[token]?.cancel()
-            tokenMap.remove(token)
-            return result == CancellationTokenCancelResult.SUCCESS
-        }
-        return false
     }
 
     override fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit) {

@@ -171,6 +171,8 @@ enum Position {
   bottomRight,
 }
 
+enum CoverQuality { Medium, High }
+
 class GoodsItemAppearanceDto {
   late int? itemBackgroundColor;
   late int? itemCornerRadius;
@@ -185,8 +187,6 @@ class GoodsItemAppearanceDto {
   late int? closeButtonColor;
   late int? widgetBackgroundHeight;
 }
-
-enum CoverQuality { Medium, High }
 
 @HostApi()
 abstract class AppearanceManagerHostApi {
@@ -256,11 +256,9 @@ class StoryFavoriteItemAPIDataDto {
 
 @HostApi()
 abstract class IASSingleStoryHostApi {
-  void showOnce({required String storyId, required String token});
+  void showOnce({required String storyId});
 
-  void show({required String storyId, required String token});
-
-  bool cancelByToken({required String token});
+  void show({required String storyId});
 }
 
 @FlutterApi()
@@ -286,11 +284,8 @@ abstract class IASOnboardingsHostApi {
   void show({
     required int limit,
     String feed = 'onboarding',
-    required String token,
     List<String> tags = const [],
   });
-
-  bool cancelByToken(String token);
 }
 
 @FlutterApi()
@@ -356,14 +351,12 @@ abstract class IASCallBacksFlutterApi {
 
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void showById(String messageId, String token, {bool onlyPreloaded = false});
+  void showById(String messageId, {bool onlyPreloaded = false});
 
-  void showByEvent(String event, String token, {bool onlyPreloaded = false});
+  void showByEvent(String event, {bool onlyPreloaded = false});
 
   @async
   bool preloadMessages({List<String>? ids});
-
-  bool cancelByToken({required String token});
 }
 
 /// Represents data for an in-app message.

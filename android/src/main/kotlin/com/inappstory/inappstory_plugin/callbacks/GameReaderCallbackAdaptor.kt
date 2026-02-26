@@ -30,18 +30,6 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
         }
     }
 
-    // deprecated callback
-    override fun finishGame(contentData: ContentData?, result: String?, id: String?) {
-        val contentDataDto = contentData?.let { mapContentDataDto(it) }
-        val jsonObject: JsonObject? = result?.let { Json.parseToJsonElement(it).jsonObject }
-
-        val map: Map<String, Any?>? = jsonObject?.toMap()
-
-        flutterPluginBinding.runOnMainThread {
-            flutterApi.finishGame(contentDataDto, map) {}
-        }
-    }
-
     override fun closeGame(contentData: ContentData?, id: String?) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         flutterPluginBinding.runOnMainThread {
@@ -50,10 +38,7 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
     }
 
     override fun eventGame(
-        contentData: ContentData?,
-        gameId: String?,
-        eventName: String?,
-        payload: String?
+        contentData: ContentData?, gameId: String?, eventName: String?, payload: String?
     ) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         val jsonObject: JsonObject? = payload?.let { Json.parseToJsonElement(it).jsonObject }
@@ -93,10 +78,7 @@ fun JsonElement.toRaw(): Any? {
             if (isString) {
                 content
             } else {
-                booleanOrNull
-                    ?: longOrNull
-                    ?: doubleOrNull
-                    ?: content
+                booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
             }
         }
     }

@@ -1655,9 +1655,8 @@ class GoodsItemSelectedCallbackFlutterApi: GoodsItemSelectedCallbackFlutterApiPr
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASSingleStoryHostApi {
-  func showOnce(storyId: String, token: String) throws
-  func show(storyId: String, token: String) throws
-  func cancelByToken(token: String) throws -> Bool
+  func showOnce(storyId: String) throws
+  func show(storyId: String) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1671,9 +1670,8 @@ class IASSingleStoryHostApiSetup {
       showOnceChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let storyIdArg = args[0] as! String
-        let tokenArg = args[1] as! String
         do {
-          try api.showOnce(storyId: storyIdArg, token: tokenArg)
+          try api.showOnce(storyId: storyIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -1687,9 +1685,8 @@ class IASSingleStoryHostApiSetup {
       showChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let storyIdArg = args[0] as! String
-        let tokenArg = args[1] as! String
         do {
-          try api.show(storyId: storyIdArg, token: tokenArg)
+          try api.show(storyId: storyIdArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -1697,21 +1694,6 @@ class IASSingleStoryHostApiSetup {
       }
     } else {
       showChannel.setMessageHandler(nil)
-    }
-    let cancelByTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.cancelByToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      cancelByTokenChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let tokenArg = args[0] as! String
-        do {
-          let result = try api.cancelByToken(token: tokenArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      cancelByTokenChannel.setMessageHandler(nil)
     }
   }
 }
@@ -1842,8 +1824,7 @@ class SingleLoadCallbackFlutterApi: SingleLoadCallbackFlutterApiProtocol {
 protocol IASOnboardingsHostApi {
   /// [feed] by default == "onboarding"
   /// [limit] has to be set greater than 0 (can be set as any big number if limits is unnecessary)
-  func show(limit: Int64, feed: String, token: String, tags: [String]) throws
-  func cancelByToken(token: String) throws -> Bool
+  func show(limit: Int64, feed: String, tags: [String]) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1860,10 +1841,9 @@ class IASOnboardingsHostApiSetup {
         let args = message as! [Any?]
         let limitArg = args[0] as! Int64
         let feedArg = args[1] as! String
-        let tokenArg = args[2] as! String
-        let tagsArg = args[3] as! [String]
+        let tagsArg = args[2] as! [String]
         do {
-          try api.show(limit: limitArg, feed: feedArg, token: tokenArg, tags: tagsArg)
+          try api.show(limit: limitArg, feed: feedArg, tags: tagsArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -1871,21 +1851,6 @@ class IASOnboardingsHostApiSetup {
       }
     } else {
       showChannel.setMessageHandler(nil)
-    }
-    let cancelByTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASOnboardingsHostApi.cancelByToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      cancelByTokenChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let tokenArg = args[0] as! String
-        do {
-          let result = try api.cancelByToken(token: tokenArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      cancelByTokenChannel.setMessageHandler(nil)
     }
   }
 }
@@ -2274,10 +2239,9 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASInAppMessagesHostApi {
-  func showById(messageId: String, token: String, onlyPreloaded: Bool) throws
-  func showByEvent(event: String, token: String, onlyPreloaded: Bool) throws
+  func showById(messageId: String, onlyPreloaded: Bool) throws
+  func showByEvent(event: String, onlyPreloaded: Bool) throws
   func preloadMessages(ids: [String]?, completion: @escaping (Result<Bool, Error>) -> Void)
-  func cancelByToken(token: String) throws -> Bool
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -2291,10 +2255,9 @@ class IASInAppMessagesHostApiSetup {
       showByIdChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let messageIdArg = args[0] as! String
-        let tokenArg = args[1] as! String
-        let onlyPreloadedArg = args[2] as! Bool
+        let onlyPreloadedArg = args[1] as! Bool
         do {
-          try api.showById(messageId: messageIdArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg)
+          try api.showById(messageId: messageIdArg, onlyPreloaded: onlyPreloadedArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -2308,10 +2271,9 @@ class IASInAppMessagesHostApiSetup {
       showByEventChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let eventArg = args[0] as! String
-        let tokenArg = args[1] as! String
-        let onlyPreloadedArg = args[2] as! Bool
+        let onlyPreloadedArg = args[1] as! Bool
         do {
-          try api.showByEvent(event: eventArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg)
+          try api.showByEvent(event: eventArg, onlyPreloaded: onlyPreloadedArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -2336,21 +2298,6 @@ class IASInAppMessagesHostApiSetup {
       }
     } else {
       preloadMessagesChannel.setMessageHandler(nil)
-    }
-    let cancelByTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.cancelByToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      cancelByTokenChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let tokenArg = args[0] as! String
-        do {
-          let result = try api.cancelByToken(token: tokenArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      cancelByTokenChannel.setMessageHandler(nil)
     }
   }
 }
