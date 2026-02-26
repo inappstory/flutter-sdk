@@ -1,14 +1,13 @@
-## [0.7.3-rc4]
+## [0.7.3]
 
 ### Fixed
 
 - BannerPlace stability improvements
 
-## [0.7.3-rc3]
+### Changed
 
-### Fixed
-
-- BannerPlace stability improvements
+- Updated Android native SDK to 1.24.1
+- Updated iOS native SDK to 1.27.4
 
 ## [0.7.2]
 
