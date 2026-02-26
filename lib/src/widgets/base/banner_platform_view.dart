@@ -45,6 +45,7 @@ class BannerPlatformView extends StatelessWidget {
         image: bannerDecoration?.image,
       ).toJson();
     }
+    creationParams['autoLoad'] = autoLoad;
     return buildPlatformView(context, viewType, creationParams);
   }
 

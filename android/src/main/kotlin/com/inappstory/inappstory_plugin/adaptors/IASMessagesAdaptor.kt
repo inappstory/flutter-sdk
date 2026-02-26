@@ -66,7 +66,6 @@ class IASMessagesAdaptor(
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
                 }
             })
-
         tokenMap[token] = cancellationToken
     }
 

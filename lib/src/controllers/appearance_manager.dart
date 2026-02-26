@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import '../data/data.dart' show GoodsItemAppearance;
 import '../generated/pigeon_generated.g.dart'
-    show AppearanceManagerHostApi, Position, CoverQuality;
+    show AppearanceManagerHostApi, Position, CoverQuality, ScrollStyle, PresentationStyle;
 
 class AppearanceManager {
   AppearanceManager._private();
@@ -86,5 +86,13 @@ class AppearanceManager {
 
   Future<void> setCoverQuality(CoverQuality coverQuality) async {
     await _appearanceManager.setCoverQuality(coverQuality);
+  }
+
+  Future<void> setReaderScrollStyle(ScrollStyle style) async {
+    await _appearanceManager.setReaderScrollStyle(style);
+  }
+
+  Future<void> setReaderPresentationStyle(PresentationStyle style) async {
+    await _appearanceManager.setReaderPresentationStyle(style);
   }
 }

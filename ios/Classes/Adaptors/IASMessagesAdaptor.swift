@@ -1,10 +1,3 @@
-//
-//  IASMessages.swift
-//
-//
-//  Created by Alexander Sungurov on 13.05.2025.
-//
-
 import Flutter
 import Foundation
 @_spi(QAApp) import InAppStorySDK

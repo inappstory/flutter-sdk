@@ -142,6 +142,30 @@ enum class CoverQuality(val raw: Int) {
   }
 }
 
+enum class ScrollStyle(val raw: Int) {
+  FLAT(0),
+  COVER(1),
+  CUBE(2);
+
+  companion object {
+    fun ofRaw(raw: Int): ScrollStyle? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class PresentationStyle(val raw: Int) {
+  ZOOM(0),
+  MODAL(1),
+  FADE(2);
+
+  companion object {
+    fun ofRaw(raw: Int): PresentationStyle? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class ContentTypeDto(val raw: Int) {
   STORY(0),
   UGC(1),
@@ -531,45 +555,55 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       134.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          ContentTypeDto.ofRaw(it.toInt())
+          ScrollStyle.ofRaw(it.toInt())
         }
       }
       135.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          StoryAPIDataDto.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          PresentationStyle.ofRaw(it.toInt())
         }
       }
       136.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          StoryDataDto.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          ContentTypeDto.ofRaw(it.toInt())
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SlideDataDto.fromList(it)
+          StoryAPIDataDto.fromList(it)
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemAppearanceDto.fromList(it)
+          StoryDataDto.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemDataDto.fromList(it)
+          SlideDataDto.fromList(it)
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryFavoriteItemAPIDataDto.fromList(it)
+          GoodsItemAppearanceDto.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ContentDataDto.fromList(it)
+          GoodsItemDataDto.fromList(it)
         }
       }
       142.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          StoryFavoriteItemAPIDataDto.fromList(it)
+        }
+      }
+      143.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentDataDto.fromList(it)
+        }
+      }
+      144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           InAppMessageDataDto.fromList(it)
         }
@@ -599,40 +633,48 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(133)
         writeValue(stream, value.raw.toLong())
       }
-      is ContentTypeDto -> {
+      is ScrollStyle -> {
         stream.write(134)
         writeValue(stream, value.raw.toLong())
       }
-      is StoryAPIDataDto -> {
+      is PresentationStyle -> {
         stream.write(135)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is StoryDataDto -> {
+      is ContentTypeDto -> {
         stream.write(136)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is SlideDataDto -> {
+      is StoryAPIDataDto -> {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is GoodsItemAppearanceDto -> {
+      is StoryDataDto -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is GoodsItemDataDto -> {
+      is SlideDataDto -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is GoodsItemAppearanceDto -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is ContentDataDto -> {
+      is GoodsItemDataDto -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is InAppMessageDataDto -> {
+      is StoryFavoriteItemAPIDataDto -> {
         stream.write(142)
+        writeValue(stream, value.toList())
+      }
+      is ContentDataDto -> {
+        stream.write(143)
+        writeValue(stream, value.toList())
+      }
+      is InAppMessageDataDto -> {
+        stream.write(144)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1314,6 +1356,8 @@ interface AppearanceManagerHostApi {
   fun setSoundIcon(iconPath: String, selectedIconPath: String)
   fun setUpGoods(appearance: GoodsItemAppearanceDto)
   fun setCoverQuality(coverQuality: CoverQuality)
+  fun setReaderScrollStyle(style: ScrollStyle)
+  fun setReaderPresentationStyle(style: PresentationStyle)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -1641,6 +1685,42 @@ interface AppearanceManagerHostApi {
             val coverQualityArg = args[0] as CoverQuality
             val wrapped: List<Any?> = try {
               api.setCoverQuality(coverQualityArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderScrollStyle$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val styleArg = args[0] as ScrollStyle
+            val wrapped: List<Any?> = try {
+              api.setReaderScrollStyle(styleArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderPresentationStyle$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val styleArg = args[0] as PresentationStyle
+            val wrapped: List<Any?> = try {
+              api.setReaderPresentationStyle(styleArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)

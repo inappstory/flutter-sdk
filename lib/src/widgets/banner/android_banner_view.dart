@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../controllers/banner_place_manager.dart';
 import '../base/banner_platform_view.dart';
 
 class AndroidBannerView extends BannerPlatformView {
@@ -33,12 +32,7 @@ class AndroidBannerView extends BannerPlatformView {
       layoutDirection: TextDirection.ltr,
       creationParams: Map<String, dynamic>.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),
-      onPlatformViewCreated: (id) {
-        onPlatformViewCreated.call();
-        if (autoLoad) {
-          BannerPlaceManager.instance.load(placeId);
-        }
-      },
+      onPlatformViewCreated: (id) => onPlatformViewCreated.call(),
     );
   }
 }

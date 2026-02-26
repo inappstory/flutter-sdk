@@ -1,4 +1,4 @@
-## [0.8.0]
+## 0.8.0
 
 ### Added
 
@@ -11,13 +11,24 @@
 - `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
 - Updated iOS SDK to 1.27.1
 
-## [0.7.2]
+## 0.7.3
+
+### Fixed
+
+- BannerPlace stability improvements
+
+### Changed
+
+- Updated Android native SDK to 1.24.1
+- Updated iOS native SDK to 1.27.4
+
+## 0.7.2
 
 ### Fixed
 
 - BannerPlace stability improvements on Android
 
-## [0.7.1]
+## 0.7.1
 
 ### Added
 
@@ -42,7 +53,7 @@
 - Removed legacy `getStoriesWidgets()` and `getFavoritesStoriesWidgets()` methods from
   `InAppStoryPlugin` class
 
-## [0.7.0]
+## 0.7.0
 
 ### Added
 
@@ -62,20 +73,20 @@
 - `IASGameReaderCallback` instead of old `GameReaderCallbackFlutterApi`
 - updated iOS SDK to 1.26.3
 
-## [0.6.1]
+## 0.6.1
 
 ### Fixed
 
 - class mismatch in Android part
 
-## [0.6.0]
+## 0.6.0
 
 ### Changed
 
 - Updated Android SDK to 1.22.0
 - Updated iOS SDK to 1.26.0
 
-## [0.6.0-rc.1]
+## 0.6.0-rc.1
 
 ### Added
 
@@ -87,13 +98,13 @@
 - Updated Android SDK to 1.22.0-rc7
 - Updated iOS SDK to 1.26.0-rc9
 
-## [0.5.5]
+## 0.5.5
 
 ### Fixed
 
 - scrolling to stories in feed in android devices has visual bugs
 
-## [0.5.4]
+## 0.5.4
 
 ### Added
 
@@ -103,13 +114,13 @@
 
 - updated Android SDK, that includes internal fixes
 
-## [0.5.2]
+## 0.5.2
 
 ### Changed
 
 - the way to scroll to the last viewed story
 
-## [0.5.1]
+##0.5.1]
 
 ### Added
 
@@ -120,7 +131,7 @@
 
 - Visual bug when jumping to last viewed story after closing story reader
 
-## [0.5.0]
+## 0.5.0
 
 ### Added
 
@@ -138,13 +149,13 @@
 
 - Issue when user can't close IAM by pressing back button or using back gesture on Android devices
 
-## [0.4.1]
+## 0.4.1
 
 ### Fixed
 
 - Refactoring of ios story reader events logic
 
-## [0.4.0]
+## 0.4.0
 
 ### Added
 
@@ -169,20 +180,20 @@
 - Bug when clearing cache on Android devices
 - Issue when can't close in-app-message using system back button on Android devices
 
-## [0.4.0-rc.4]
+## 0.4.0-rc.4
 
 ### Fixed
 
 - changed 'favorites' logic implementation
 
-## [0.4.0-rc.3]
+## 0.4.0-rc.3
 
 ### Fixed
 
 - goods v1 implementation on Android
 - fixed issue when items not updated in grid favorites widget
 
-## [0.4.0-rc.2]
+## 0.4.0-rc.2
 
 ### Changed
 
@@ -195,7 +206,7 @@
 - Bug when clearing cache on Android devices
 - Issue when can't close in-app-message using system back button on Android devices
 
-## [0.4.0-rc.1]
+## 0.4.0-rc.1
 
 ### Added
 
@@ -211,25 +222,25 @@
   `pod install --repo update` command before building your app
 - Various internal fixes
 
-## [0.3.9]
+## 0.3.9
 
 ### Fixed
 
 - issue when game webhooks not working
 
-## [0.3.8]
+## 0.3.8
 
 ### Fixed
 
 - issue when onCloseStory callback always returns 0 index in SlideData on android devices
 
-## [0.3.7]
+## 0.3.7
 
 ### Changed
 
 - Updated Android SDK to 1.21.13, that includes internal fixes
 
-## [0.3.6]
+## 0.3.6
 
 ### Changed
 
@@ -237,7 +248,7 @@
 - Updated iOS SDK to 1.25.8, that includes internal fixes, make sure you run `pod install` or
   `pod install --repo update` command before building your app
 
-## [0.3.5]
+## 0.3.5
 
 ### Changed
 
@@ -245,7 +256,7 @@
 - Updated iOS SDK to 1.25.6, that includes internal fixes, make sure you run `pod install` or
   `pod install --repo update` command before building your app
 
-## [0.3.4]
+## 0.3.4]
 
 ### Added
 
@@ -256,7 +267,7 @@
 
 - Refactor InAppStoryManager, now you need to call `InAppStoryManager.instance` to access methods
 
-## [0.3.3]
+## 0.3.3
 
 ### Added
 
@@ -267,19 +278,19 @@
 - Updated Android SDK to 1.21.6, that includes internal fixes
 - Updated iOS SDK to 1.25.5, that includes internal fixes
 
-## [0.3.2]
+## 0.3.2
 
 ### Fixed
 
 - internal fixes
 
-## [0.3.1]
+## 0.3.1
 
 ### Fixed
 
 - Fixed flickering video covers
 
-## [0.3.0]
+## 0.3.0
 
 ### Added
 
@@ -304,25 +315,25 @@
 - Fixed build error in iOS
 - Fixed 'flickering' stories when an uploaded image replaced a placeholder
 
-## [0.3.0-rc.5]
+## 0.3.0-rc.5
 
 ### Fixed
 
 - Fixed build error in iOS
 
-## [0.3.0-rc.4]
+## 0.3.0-rc.4
 
 ### Fixed
 
 - Fixed build error when android gradle plugin can't find main class path
 
-## [0.3.0-rc.3]
+## 0.3.0-rc.3
 
 ### Added
 
 - Added border around stories in `FeedStoryDecorator`, that indicates the story has been opened
 
-## [0.3.0-rc.2]
+## 0.3.0-rc.2
 
 ### Added
 
@@ -332,7 +343,7 @@
 
 - `loaderBuilder` and `errorBuilder` parameters are now optional in `FeedStoriesWidget` widget
 
-## [0.2.3]
+## 0.2.3
 
 ### Added
 
@@ -346,7 +357,7 @@
 - Placeholders in story feed are not working in iOS devices
 - Fixed image caching issues in iOS devices
 
-## [0.2.2]
+## 0.2.2
 
 ### Added
 
@@ -356,7 +367,7 @@
 
 - Moved `IASCallBacksFlutterApi` code to `IASCallbacks` mixin class
 
-## [0.3.0-rc.1]
+## 0.3.0-rc.1
 
 ### Added
 
@@ -374,13 +385,13 @@
 
 - Fixed 'flickering' stories when an uploaded image replaced a placeholder
 
-## [0.2.1]
+## 0.2.1
 
 ### Added
 
 - Added interface for listening to story reader events
 
-## [0.2.0]
+## 0.2.0
 
 ### Added
 
@@ -410,13 +421,13 @@
 - Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
 - Fixed a issue where cover images were lost after refreshing the story feed.
 
-## [0.2.0-rc.5]
+## 0.2.0-rc.5
 
 ### Fixed
 
 - Fixed a crash when calling `AppearanceManagerHostApi().setClosePosition(position)` in iOS devices
 
-## [0.2.0-rc.4]
+## 0.2.0-rc.4
 
 ### Added
 
@@ -429,19 +440,19 @@
 
 - Fixed a issue where cover images were lost after refreshing the story feed.
 
-## [0.2.0-rc.3]
+## 0.2.0-rc.3
 
 ### Fixed
 
 - Fixed crash when calling `InAppStoryManagerHostApi().closeReaders()` in Android device
 
-## [0.2.0-rc.2]
+## 0.2.0-rc.2
 
 ### Changed
 
 - Renamed `IShowStoryOnceCallbackFlutterApi` to `IShowStoryCallbackFlutterApi`
 
-## [0.2.0-rc.1]
+## 0.2.0-rc.1
 
 ### Added
 
@@ -451,13 +462,13 @@
 
 - error when initializing plugin in Java application class
 
-## [0.1.0-rc.1]
+## 0.1.0-rc.1
 
 ### Changed
 
 - Initializing Android native SDK, please watch README for details
 
-## [0.0.20]
+## 0.0.20
 
 ### Added
 
@@ -475,19 +486,19 @@
 - Removed `loadOnboardingError()`, `loadSingleError()`, `readerError()` callbacks from
   ErrorCallbackFlutterApi
 
-## [0.0.19]
+## 0.0.19
 
 ### Added
 
 - FeedStoriesController to force reload the feed stories
 
-## [0.0.18]
+## 0.0.18
 
 ### Added
 
 - InAppStoryManagerHostApi.closeReaders() close all readers
 
-## [0.0.17]
+## 0.0.17
 
 ### Changed
 
@@ -499,7 +510,7 @@
 
 - removed slide argument `IASSingleStoryHostApi.show()`
 
-## [0.0.16]
+## 0.0.16
 
 ### Fixed
 

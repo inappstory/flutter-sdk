@@ -71,6 +71,18 @@ enum CoverQuality {
   High,
 }
 
+enum ScrollStyle {
+  flat,
+  cover,
+  cube,
+}
+
+enum PresentationStyle {
+  zoom,
+  modal,
+  fade,
+}
+
 enum ContentTypeDto {
   STORY,
   UGC,
@@ -625,32 +637,38 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is CoverQuality) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    }    else if (value is ContentTypeDto) {
+    }    else if (value is ScrollStyle) {
       buffer.putUint8(134);
       writeValue(buffer, value.index);
-    }    else if (value is StoryAPIDataDto) {
+    }    else if (value is PresentationStyle) {
       buffer.putUint8(135);
-      writeValue(buffer, value.encode());
-    }    else if (value is StoryDataDto) {
+      writeValue(buffer, value.index);
+    }    else if (value is ContentTypeDto) {
       buffer.putUint8(136);
-      writeValue(buffer, value.encode());
-    }    else if (value is SlideDataDto) {
+      writeValue(buffer, value.index);
+    }    else if (value is StoryAPIDataDto) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is GoodsItemAppearanceDto) {
+    }    else if (value is StoryDataDto) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is GoodsItemDataDto) {
+    }    else if (value is SlideDataDto) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is GoodsItemAppearanceDto) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is ContentDataDto) {
+    }    else if (value is GoodsItemDataDto) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is InAppMessageDataDto) {
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
       buffer.putUint8(142);
+      writeValue(buffer, value.encode());
+    }    else if (value is ContentDataDto) {
+      buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    }    else if (value is InAppMessageDataDto) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -677,22 +695,28 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : CoverQuality.values[value];
       case 134: 
         final value = readValue(buffer) as int?;
-        return value == null ? null : ContentTypeDto.values[value];
+        return value == null ? null : ScrollStyle.values[value];
       case 135: 
-        return StoryAPIDataDto.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : PresentationStyle.values[value];
       case 136: 
-        return StoryDataDto.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : ContentTypeDto.values[value];
       case 137: 
-        return SlideDataDto.decode(readValue(buffer)!);
+        return StoryAPIDataDto.decode(readValue(buffer)!);
       case 138: 
-        return GoodsItemAppearanceDto.decode(readValue(buffer)!);
+        return StoryDataDto.decode(readValue(buffer)!);
       case 139: 
-        return GoodsItemDataDto.decode(readValue(buffer)!);
+        return SlideDataDto.decode(readValue(buffer)!);
       case 140: 
-        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+        return GoodsItemAppearanceDto.decode(readValue(buffer)!);
       case 141: 
-        return ContentDataDto.decode(readValue(buffer)!);
+        return GoodsItemDataDto.decode(readValue(buffer)!);
       case 142: 
+        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+      case 143: 
+        return ContentDataDto.decode(readValue(buffer)!);
+      case 144: 
         return InAppMessageDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1888,6 +1912,50 @@ class AppearanceManagerHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[coverQuality]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setReaderScrollStyle(ScrollStyle style) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderScrollStyle$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[style]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> setReaderPresentationStyle(PresentationStyle style) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderPresentationStyle$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[style]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);

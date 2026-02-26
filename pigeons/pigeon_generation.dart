@@ -171,6 +171,12 @@ enum Position {
   bottomRight,
 }
 
+enum CoverQuality { Medium, High }
+
+enum ScrollStyle { flat, cover, cube }
+
+enum PresentationStyle { zoom, modal, fade }
+
 class GoodsItemAppearanceDto {
   late int? itemBackgroundColor;
   late int? itemCornerRadius;
@@ -185,8 +191,6 @@ class GoodsItemAppearanceDto {
   late int? closeButtonColor;
   late int? widgetBackgroundHeight;
 }
-
-enum CoverQuality { Medium, High }
 
 @HostApi()
 abstract class AppearanceManagerHostApi {
@@ -226,6 +230,10 @@ abstract class AppearanceManagerHostApi {
   void setUpGoods(GoodsItemAppearanceDto appearance);
 
   void setCoverQuality(CoverQuality coverQuality);
+
+  void setReaderScrollStyle(ScrollStyle style);
+
+  void setReaderPresentationStyle(PresentationStyle style);
 }
 
 class GoodsItemDataDto {

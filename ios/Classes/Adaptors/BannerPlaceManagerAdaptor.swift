@@ -41,9 +41,24 @@ public protocol EventKey: Hashable {
     associatedtype Payload
 }
 
+struct OnActionWith: EventKey {
+    public struct Payload {
+        public let bannerData: BannerData
+        public let name: String
+        public let data: [String: Any]?
+
+        public init(bannerData: BannerData, name: String, data: [String: Any]?)
+        {
+            self.bannerData = bannerData
+            self.name = name
+            self.data = data
+
+        }
+        public typealias Payload = OnActionWith.Payload
+    }
+}
+
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
-   
-    
     typealias Token = UUID
 
     private var subscribers: [AnyHashable: [Token: (Any) -> Void]] = [:]
@@ -110,7 +125,8 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     private func emit<K: EventKey>(_ key: K, payload: K.Payload) {
         let anyKey = AnyHashable(key)
         var callbacks: [(Any) -> Void] = []
-        queue.sync {
+        queue.sync { [weak self] in
+            guard let self = self else { return }
             if let dict = self.subscribers[anyKey] {
                 callbacks = Array(dict.values)
             }
@@ -149,7 +165,7 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     func reloadBannerPlace(placeId: String) throws {
         self.emit(ReloadBannerPlace(), payload: placeId)
     }
-    
+
     func preloadBannerPlace(placeId: String) throws {
         self.emit(PreloadBannerPlace(), payload: placeId)
     }
@@ -175,5 +191,20 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
 
     func resumeAutoscroll(placeId: String) throws {
         self.emit(ResumeAutoscroll(), payload: placeId)
+    }
+
+    func onActionWith(
+        bannerData: BannerData,
+        name: String,
+        data: [String: Any]?
+    ) throws {
+        self.emit(
+            OnActionWith(),
+            payload: OnActionWith.Payload(
+                bannerData: bannerData,
+                name: name,
+                data: data
+            )
+        )
     }
 }
