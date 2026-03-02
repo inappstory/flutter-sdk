@@ -1,3 +1,10 @@
+## [0.7.4]
+
+### Fixed
+
+- Games on Android running in new activity
+- Game events do not trigger a call to action (CTA)
+
 ## [0.7.3]
 
 ### Fixed

@@ -151,7 +151,7 @@ class InappstorySdkModuleAdaptor(
                 activityHolder
             )
 
-            iasGames = IASGamesAdaptor(flutterPluginBinding, inAppStoryAPI.games)
+            iasGames = IASGamesAdaptor(flutterPluginBinding, activityHolder, inAppStoryAPI.games)
 
             if (bannerFactory == null) {
                 bannerFactory = BannerViewFactory(
