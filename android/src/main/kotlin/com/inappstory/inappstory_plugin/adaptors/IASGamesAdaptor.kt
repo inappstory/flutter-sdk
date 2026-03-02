@@ -7,6 +7,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASGamesAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    private val activityHolder: ActivityHolder,
     private val iasGames: IASGames,
 ) : IASGamesHostApi {
     init {
@@ -16,11 +17,9 @@ class IASGamesAdaptor(
     }
 
     override fun openGame(gameId: String) =
-        iasGames.open(flutterPluginBinding.applicationContext, gameId)
+        iasGames.open(activityHolder.activity ?: flutterPluginBinding.applicationContext, gameId)
 
     override fun closeGame() = iasGames.close()
 
     override fun preloadGames() = iasGames.preloadGames()
-
-
 }

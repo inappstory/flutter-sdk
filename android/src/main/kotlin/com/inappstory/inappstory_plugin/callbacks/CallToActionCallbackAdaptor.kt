@@ -43,8 +43,15 @@ class CallToActionCallbackAdaptor(
                     clickActionArg = null
                 ) {}
             }
+        } else {
+            flutterPluginBinding.runOnMainThread {
+                api.callToAction(
+                    slideDataArg = null,
+                    urlArg = url,
+                    clickActionArg = action?.let { ClickActionDto.ofRaw(it.ordinal) }
+                ) {}
+            }
         }
-
     }
 }
 
