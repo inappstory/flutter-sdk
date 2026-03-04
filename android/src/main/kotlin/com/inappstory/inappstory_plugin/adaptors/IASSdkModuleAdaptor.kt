@@ -141,7 +141,8 @@ class InappstorySdkModuleAdaptor(
                 IASOnboardingsAdaptor(
                     flutterPluginBinding,
                     appearanceManager,
-                    inAppStoryAPI.onboardings
+                    inAppStoryAPI.onboardings,
+                    activityHolder
                 )
 
             iasMessages = IASMessagesAdaptor(

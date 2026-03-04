@@ -1,3 +1,9 @@
+## [0.7.5]
+
+### Fixed
+
+- Onboardings on Android running in new activity
+
 ## [0.7.4]
 
 ### Fixed

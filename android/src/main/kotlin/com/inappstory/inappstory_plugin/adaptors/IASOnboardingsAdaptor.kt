@@ -7,9 +7,10 @@ import com.inappstory.sdk.externalapi.onboardings.IASOnboardingsExternalAPI
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASOnboardingsAdaptor(
-    private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
+    flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
     private val iasOnboardings: IASOnboardingsExternalAPI,
+    private val activityHolder: ActivityHolder,
 ) : IASOnboardingsHostApi {
     init {
         IASOnboardingsHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -19,7 +20,7 @@ class IASOnboardingsAdaptor(
 
     override fun show(limit: Long, feed: String, tags: List<String>) {
         iasOnboardings.show(
-            flutterPluginBinding.applicationContext,
+            activityHolder.activity,
             feed,
             appearanceManager,
             tags,
