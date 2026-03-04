@@ -11,6 +11,12 @@
 - `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
 - Updated iOS SDK to 1.27.1
 
+## 0.7.5
+
+### Fixed
+
+- Onboardings on Android running in new activity
+
 ## 0.7.4
 
 ### Fixed
