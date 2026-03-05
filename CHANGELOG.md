@@ -3,6 +3,7 @@
 ### Fixed
 
 - Onboardings on Android running in new activity
+- Build error on iOS devices 
 
 ## [0.7.4]
 

@@ -34,7 +34,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
-        pluginRegistrar registrar: FlutterPluginRegistrar,
+        pluginRegistrar registrar: FlutterPluginRegistrar
     ) {
         _view = UIView()
 
@@ -51,7 +51,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         if let args = args as? [String: Any] {
             decoration = BannerDecorationDTO(
                 color: args["color"] as? Int64,
-                image: args["image"] as? String,
+                image: args["image"] as? String
             )
         }
 
