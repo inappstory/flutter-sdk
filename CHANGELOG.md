@@ -1,3 +1,9 @@
+## [0.7.6]
+
+### Changed
+
+- Updated iOS SDK to 1.27.5
+
 ## [0.7.5]
 
 ### Fixed
