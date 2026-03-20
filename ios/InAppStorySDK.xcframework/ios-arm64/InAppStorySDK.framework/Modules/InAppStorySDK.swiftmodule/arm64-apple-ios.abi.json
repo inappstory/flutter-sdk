@@ -22487,6 +22487,46 @@
       },
       {
         "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -22719,16 +22759,6 @@
         "printedName": "AudioToolbox",
         "declKind": "Import",
         "moduleName": "InAppStorySDK"
-      },
-      {
-        "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
-        "declKind": "Import",
-        "moduleName": "InAppStorySDK",
-        "declAttributes": [
-          "RawDocComment"
-        ]
       },
       {
         "kind": "Import",
@@ -26116,28 +26146,8 @@
       },
       {
         "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
-        "declKind": "Import",
-        "moduleName": "InAppStorySDK",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
-        "declKind": "Import",
-        "moduleName": "InAppStorySDK",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
         "declKind": "Import",
         "moduleName": "InAppStorySDK",
         "declAttributes": [
@@ -38650,16 +38660,6 @@
       },
       {
         "kind": "Import",
-        "name": "WebKit",
-        "printedName": "WebKit",
-        "declKind": "Import",
-        "moduleName": "InAppStorySDK",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "UIKit",
         "printedName": "UIKit",
         "declKind": "Import",
@@ -46074,6 +46074,76 @@
         "printedName": "WebKit",
         "declKind": "Import",
         "moduleName": "InAppStorySDK"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
       },
       {
         "kind": "Import",
@@ -73192,6 +73262,60 @@
       },
       {
         "kind": "Import",
+        "name": "UIKit",
+        "printedName": "UIKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "WebKit",
+        "printedName": "WebKit",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "CoreGraphics",
+        "printedName": "CoreGraphics",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK"
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "InAppStorySDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -84908,7 +85032,7 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/IASBannersView.swift",
       "kind": "FloatLiteral",
-      "offset": 16443,
+      "offset": 16655,
       "length": 3,
       "value": "1.0"
     },
@@ -85426,7 +85550,7 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerCell.swift",
       "kind": "IntegerLiteral",
-      "offset": 11385,
+      "offset": 11699,
       "length": 1,
       "value": "0"
     },
@@ -86604,7 +86728,7 @@
       "kind": "StringLiteral",
       "offset": 402,
       "length": 6,
-      "value": "\"4039\""
+      "value": "\"4041\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/InAppStory.swift",
@@ -87069,6 +87193,125 @@
       "value": "true"
     },
     {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
+      "kind": "Array",
+      "offset": 297,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 333,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 367,
+      "length": 6,
+      "value": "10000"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
+      "kind": "Array",
+      "offset": 501,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 545,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "Array",
+      "offset": 321,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 356,
+      "length": 6,
+      "value": "10000"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 576,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "Array",
+      "offset": 797,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 840,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "FloatLiteral",
+      "offset": 879,
+      "length": 3,
+      "value": "0.0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "BooleanLiteral",
+      "offset": 913,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4573,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "BooleanLiteral",
+      "offset": 11701,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "BooleanLiteral",
+      "offset": 12804,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "BooleanLiteral",
+      "offset": 12929,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
+      "kind": "BooleanLiteral",
+      "offset": 14008,
+      "length": 4,
+      "value": "true"
+    },
+    {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/MD5\/MD5.swift",
       "kind": "IntegerLiteral",
       "offset": 8433,
@@ -87440,41 +87683,6 @@
       "value": "1"
     },
     {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
-      "kind": "Array",
-      "offset": 297,
-      "length": 2,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 333,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 367,
-      "length": 6,
-      "value": "10000"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
-      "kind": "Array",
-      "offset": 501,
-      "length": 2,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteVerticalLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 545,
-      "length": 1,
-      "value": "0"
-    },
-    {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Reader\/Creator\/ReaderCreator.swift",
       "kind": "BooleanLiteral",
       "offset": 435,
@@ -87569,90 +87777,6 @@
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/IASBannersFeatureFlags.swift",
       "kind": "BooleanLiteral",
       "offset": 200,
-      "length": 4,
-      "value": "true"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "Array",
-      "offset": 321,
-      "length": 2,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 356,
-      "length": 6,
-      "value": "10000"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 576,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "Array",
-      "offset": 797,
-      "length": 2,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 840,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "FloatLiteral",
-      "offset": 879,
-      "length": 3,
-      "value": "0.0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "BooleanLiteral",
-      "offset": 913,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "IntegerLiteral",
-      "offset": 4573,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "BooleanLiteral",
-      "offset": 11270,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "BooleanLiteral",
-      "offset": 12373,
-      "length": 4,
-      "value": "true"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "BooleanLiteral",
-      "offset": 12498,
-      "length": 4,
-      "value": "true"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Layouts\/InfiniteCenteredLayout.swift",
-      "kind": "BooleanLiteral",
-      "offset": 13577,
       "length": 4,
       "value": "true"
     },
@@ -88092,113 +88216,50 @@
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "IntegerLiteral",
-      "offset": 801,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "IntegerLiteral",
-      "offset": 819,
-      "length": 1,
-      "value": "1"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "IntegerLiteral",
-      "offset": 839,
-      "length": 1,
-      "value": "2"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "IntegerLiteral",
-      "offset": 861,
-      "length": 1,
-      "value": "3"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "BooleanLiteral",
-      "offset": 1555,
+      "offset": 933,
       "length": 5,
       "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1584,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "Dictionary",
-      "offset": 2606,
-      "length": 3,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "Array",
-      "offset": 2653,
-      "length": 2,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "BooleanLiteral",
-      "offset": 2698,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "Dictionary",
-      "offset": 2822,
-      "length": 3,
-      "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
-      "kind": "Dictionary",
-      "offset": 2884,
-      "length": 3,
-      "value": "[]"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "StringLiteral",
-      "offset": 2947,
+      "offset": 1207,
       "length": 42,
       "value": "\"com.inappstory.bannercache.new.scheduler\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "StringLiteral",
-      "offset": 3045,
+      "offset": 1305,
       "length": 42,
       "value": "\"com.inappstory.bannercache.new.resources\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1680,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "IntegerLiteral",
-      "offset": 3460,
+      "offset": 2574,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "IntegerLiteral",
-      "offset": 4151,
+      "offset": 3265,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Managers\/BannerCacheManager_new.swift",
       "kind": "IntegerLiteral",
-      "offset": 26922,
+      "offset": 14816,
       "length": 1,
       "value": "0"
     },
@@ -88779,301 +88840,301 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 4297,
+      "offset": 4640,
       "length": 11,
       "value": "\"#ffffffff\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 4347,
+      "offset": 4690,
       "length": 11,
       "value": "\"#ffffff50\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 4937,
+      "offset": 5280,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 4978,
+      "offset": 5321,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 5019,
+      "offset": 5362,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 5060,
+      "offset": 5403,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "IntegerLiteral",
-      "offset": 5197,
+      "offset": 5540,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 5294,
+      "offset": 5637,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 5340,
+      "offset": 5683,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 5394,
+      "offset": 5737,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5513,
+      "offset": 5856,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5565,
+      "offset": 5908,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5617,
+      "offset": 5960,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5691,
+      "offset": 6034,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "IntegerLiteral",
-      "offset": 5765,
+      "offset": 6108,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "IntegerLiteral",
-      "offset": 5806,
+      "offset": 6149,
       "length": 1,
       "value": "0"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5842,
+      "offset": 6185,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5887,
+      "offset": 6230,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5936,
+      "offset": 6279,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 5980,
+      "offset": 6323,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "BooleanLiteral",
-      "offset": 6024,
+      "offset": 6367,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6069,
+      "offset": 6412,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "Dictionary",
-      "offset": 6273,
+      "offset": 6616,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6643,
+      "offset": 6986,
       "length": 4,
       "value": "\"id\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6697,
+      "offset": 7040,
       "length": 12,
       "value": "\"stat_title\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6779,
+      "offset": 7122,
       "length": 13,
       "value": "\"video_cover\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6823,
+      "offset": 7166,
       "length": 14,
       "value": "\"slides_count\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6878,
+      "offset": 7221,
       "length": 18,
       "value": "\"background_color\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6928,
+      "offset": 7271,
       "length": 13,
       "value": "\"title_color\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 6981,
+      "offset": 7324,
       "length": 10,
       "value": "\"deeplink\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7022,
+      "offset": 7365,
       "length": 15,
       "value": "\"game_instance\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7068,
+      "offset": 7411,
       "length": 16,
       "value": "\"hide_in_reader\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7115,
+      "offset": 7458,
       "length": 15,
       "value": "\"hide_timeline\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7161,
+      "offset": 7504,
       "length": 15,
       "value": "\"disable_close\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7212,
+      "offset": 7555,
       "length": 12,
       "value": "\"display_to\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7251,
+      "offset": 7594,
       "length": 11,
       "value": "\"is_opened\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7293,
+      "offset": 7636,
       "length": 6,
       "value": "\"like\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7355,
+      "offset": 7698,
       "length": 11,
       "value": "\"has_audio\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7507,
+      "offset": 7850,
       "length": 12,
       "value": "\"updated_at\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7563,
+      "offset": 7906,
       "length": 17,
       "value": "\"like_functional\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7607,
+      "offset": 7950,
       "length": 21,
       "value": "\"favorite_functional\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7655,
+      "offset": 7998,
       "length": 18,
       "value": "\"share_functional\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Story.swift",
       "kind": "StringLiteral",
-      "offset": 7713,
+      "offset": 8056,
       "length": 9,
       "value": "\"payload\""
     },
@@ -89478,45 +89539,108 @@
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
-      "kind": "BooleanLiteral",
-      "offset": 1804,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
-      "kind": "BooleanLiteral",
-      "offset": 1851,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
-      "kind": "BooleanLiteral",
-      "offset": 1910,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
-      "kind": "BooleanLiteral",
-      "offset": 1962,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
-      "kind": "BooleanLiteral",
-      "offset": 2010,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/IASBannerContentView.swift",
       "kind": "Array",
-      "offset": 2855,
+      "offset": 3869,
       "length": 412,
       "value": "[\"storyLoaded\", \"storyRenderReady\", \"storyStarted\", \"updateTimeline\", \"storyShowNext\", \"storyShowPrev\", \"storyClick\", \"storySetLocalData\", \"storyGetLocalData\", \"storySendData\", \"showSingleStory\", \"closeStory\", \"writeToClipboard\", \"storyFreezeUI\", \"storyStatisticEvent\", \"openGame\", \"emptySwipeUp\", \"sendApiRequest\", \"vibrate\", \"haptic\", \"logHandler\", \"infoHandler\", \"debugHandler\", \"warnHandler\", \"errorHandler\"]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 237,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 255,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 275,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 297,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1036,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1065,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "Dictionary",
+      "offset": 1346,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Core\/BannerTaskStore.swift",
+      "kind": "Array",
+      "offset": 1394,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Subscriptions\/BannerSubscriptionsHub.swift",
+      "kind": "Dictionary",
+      "offset": 1439,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Subscriptions\/BannerSubscriptionsHub.swift",
+      "kind": "Dictionary",
+      "offset": 1501,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Subscriptions\/BannerSubscriptionsHub.swift",
+      "kind": "Dictionary",
+      "offset": 1576,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Subscriptions\/BannerSubscriptionsHub.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1613,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Bridge\/BannerCacheEventBridge.swift",
+      "kind": "Dictionary",
+      "offset": 1090,
+      "length": 3,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Cache\/Bridge\/BannerCacheEventBridge.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1127,
+      "length": 5,
+      "value": "false"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Model\/Resource.swift",
@@ -90864,22 +90988,29 @@
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Download\/IASBannersManager.swift",
+      "kind": "Array",
+      "offset": 489,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Download\/IASBannersManager.swift",
       "kind": "StringLiteral",
-      "offset": 498,
+      "offset": 550,
       "length": 39,
       "value": "\"com.inappstory.IASBannersManager.sync\""
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Download\/IASBannersManager.swift",
       "kind": "Dictionary",
-      "offset": 636,
+      "offset": 688,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Download\/IASBannersManager.swift",
       "kind": "IntegerLiteral",
-      "offset": 9310,
+      "offset": 10444,
       "length": 1,
       "value": "0"
     },
@@ -91808,6 +91939,55 @@
       "value": "false"
     },
     {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerWebRenderer.swift",
+      "kind": "IntegerLiteral",
+      "offset": 475,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerRenderStateMachine.swift",
+      "kind": "BooleanLiteral",
+      "offset": 417,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerRenderStateMachine.swift",
+      "kind": "BooleanLiteral",
+      "offset": 582,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerRenderStateMachine.swift",
+      "kind": "BooleanLiteral",
+      "offset": 714,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerRenderStateMachine.swift",
+      "kind": "BooleanLiteral",
+      "offset": 821,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerRenderStateMachine.swift",
+      "kind": "BooleanLiteral",
+      "offset": 909,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/UI\/Renderer\/BannerLoadingFallbackPolicy.swift",
+      "kind": "FloatLiteral",
+      "offset": 669,
+      "length": 4,
+      "value": "0.35"
+    },
+    {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/DataCompression\/ZIPFoundation_old\/ArchiveOD+MemoryFile.swift",
       "kind": "IntegerLiteral",
       "offset": 2161,
@@ -91852,14 +92032,14 @@
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/Collection\/IASBannersCollectionView.swift",
       "kind": "Array",
-      "offset": 3814,
+      "offset": 4024,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/stpashik\/Documents\/XCodeProject\/InAppStory\/InAppStory\/Classes\/Banners\/Elements\/Collection\/IASBannersCollectionView.swift",
       "kind": "Array",
-      "offset": 17809,
+      "offset": 19086,
       "length": 2,
       "value": "[]"
     },
