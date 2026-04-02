@@ -1,10 +1,17 @@
-## [0.7.7-rc.1]
+## [0.7.7]
 
-## Changed
+### Added
+
+- Story reader scroll and presentation style
+
+### Changed
+
+- Updated Android SDK to 1.24.2
+- Updated iOS SDK to 1.27.7
+
+### Fixed
 
 - BannerPlace stability improvements
-- Updated iOS SDK
-- Updated Android SDK to 1.24.2
 
 ## [0.7.6]
 
@@ -17,7 +24,7 @@
 ### Fixed
 
 - Onboardings on Android running in new activity
-- Build error on iOS devices 
+- Build error on iOS devices
 
 ## [0.7.4]
 
