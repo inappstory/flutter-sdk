@@ -6,6 +6,8 @@ import GoodsItemAppearanceDto
 import GoodsItemDataDto
 import GoodsItemSelectedCallbackFlutterApi
 import Position
+import PresentationStyle
+import ScrollStyle
 import SkusCallbackFlutterApi
 import android.content.Context
 import android.content.res.AssetFileDescriptor
@@ -100,6 +102,25 @@ class AppearanceManagerAdaptor(
         when (coverQuality) {
             CoverQuality.MEDIUM -> appearanceManager.csCoverQuality(QUALITY_MEDIUM)
             CoverQuality.HIGH -> appearanceManager.csCoverQuality(QUALITY_HIGH)
+        }
+    }
+
+    override fun setReaderScrollStyle(style: ScrollStyle) {
+        when (style) {
+            ScrollStyle.FLAT -> appearanceManager.csStoryReaderAnimation(AppearanceManager.ANIMATION_FLAT)
+            ScrollStyle.COVER -> appearanceManager.csStoryReaderAnimation(AppearanceManager.ANIMATION_COVER)
+            ScrollStyle.CUBE -> appearanceManager.csStoryReaderAnimation(AppearanceManager.ANIMATION_CUBE)
+        }
+    }
+
+    override fun setReaderPresentationStyle(style: PresentationStyle) {
+        when (style) {
+            PresentationStyle.ZOOM -> appearanceManager.csStoryReaderPresentationStyle(
+                AppearanceManager.ZOOM)
+            PresentationStyle.MODAL -> appearanceManager.csStoryReaderPresentationStyle(
+                AppearanceManager.POPUP)
+            PresentationStyle.FADE -> appearanceManager.csStoryReaderPresentationStyle(
+                AppearanceManager.FADE)
         }
     }
 

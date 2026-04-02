@@ -164,6 +164,18 @@ enum CoverQuality: Int {
   case high = 1
 }
 
+enum ScrollStyle: Int {
+  case flat = 0
+  case cover = 1
+  case cube = 2
+}
+
+enum PresentationStyle: Int {
+  case zoom = 0
+  case modal = 1
+  case fade = 2
+}
+
 enum ContentTypeDto: Int {
   case sTORY = 0
   case uGC = 1
@@ -566,24 +578,36 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
     case 134:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return ContentTypeDto(rawValue: enumResultAsInt)
+        return ScrollStyle(rawValue: enumResultAsInt)
       }
       return nil
     case 135:
-      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return PresentationStyle(rawValue: enumResultAsInt)
+      }
+      return nil
     case 136:
-      return StoryDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return ContentTypeDto(rawValue: enumResultAsInt)
+      }
+      return nil
     case 137:
-      return SlideDataDto.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 138:
-      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 139:
-      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
     case 140:
-      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
     case 141:
-      return ContentDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
     case 142:
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+    case 143:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 144:
       return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -608,32 +632,38 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? CoverQuality {
       super.writeByte(133)
       super.writeValue(value.rawValue)
-    } else if let value = value as? ContentTypeDto {
+    } else if let value = value as? ScrollStyle {
       super.writeByte(134)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIDataDto {
+    } else if let value = value as? PresentationStyle {
       super.writeByte(135)
-      super.writeValue(value.toList())
-    } else if let value = value as? StoryDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? ContentTypeDto {
       super.writeByte(136)
-      super.writeValue(value.toList())
-    } else if let value = value as? SlideDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(137)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemAppearanceDto {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemDataDto {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? GoodsItemAppearanceDto {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? ContentDataDto {
+    } else if let value = value as? GoodsItemDataDto {
       super.writeByte(141)
       super.writeValue(value.toList())
-    } else if let value = value as? InAppMessageDataDto {
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
       super.writeByte(142)
+      super.writeValue(value.toList())
+    } else if let value = value as? ContentDataDto {
+      super.writeByte(143)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(144)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -1300,6 +1330,8 @@ protocol AppearanceManagerHostApi {
   func setSoundIcon(iconPath: String, selectedIconPath: String) throws
   func setUpGoods(appearance: GoodsItemAppearanceDto) throws
   func setCoverQuality(coverQuality: CoverQuality) throws
+  func setReaderScrollStyle(style: ScrollStyle) throws
+  func setReaderPresentationStyle(style: PresentationStyle) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1581,6 +1613,36 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setCoverQualityChannel.setMessageHandler(nil)
+    }
+    let setReaderScrollStyleChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderScrollStyle\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setReaderScrollStyleChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let styleArg = args[0] as! ScrollStyle
+        do {
+          try api.setReaderScrollStyle(style: styleArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setReaderScrollStyleChannel.setMessageHandler(nil)
+    }
+    let setReaderPresentationStyleChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setReaderPresentationStyle\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setReaderPresentationStyleChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let styleArg = args[0] as! PresentationStyle
+        do {
+          try api.setReaderPresentationStyle(style: styleArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setReaderPresentationStyleChannel.setMessageHandler(nil)
     }
   }
 }

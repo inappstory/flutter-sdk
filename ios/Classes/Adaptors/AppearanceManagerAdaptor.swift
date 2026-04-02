@@ -48,6 +48,42 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
         }
     }
 
+    func setReaderScrollStyle(style: ScrollStyle) throws {
+            DispatchQueue.main.async {
+                switch style {
+                case ScrollStyle.cover:
+                    InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.cover
+                    break
+                case ScrollStyle.flat:
+                    InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.flat
+                    break
+                case ScrollStyle.cube:
+                    InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.cube
+                    break
+                }
+            }
+        }
+
+        func setReaderPresentationStyle(style: PresentationStyle) throws {
+            DispatchQueue.main.async {
+                switch style {
+                case PresentationStyle.zoom:
+                    InAppStory.shared.presentationStyle =
+                        InAppStorySDK.PresentationStyle.zoom
+                    break
+                case PresentationStyle.modal:
+                    InAppStory.shared.presentationStyle =
+                        InAppStorySDK.PresentationStyle.modal
+                    break
+                case PresentationStyle.fade:
+                    InAppStory.shared.presentationStyle =
+                        InAppStorySDK.PresentationStyle.crossDissolve
+                    break
+                }
+            }
+        }
+
+
     func setHasLike(value: Bool) throws {
         panelSettings.like = value
         InAppStory.shared.panelSettings = panelSettings
