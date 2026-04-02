@@ -1,3 +1,11 @@
+## [0.7.7-rc.1]
+
+## Changed
+
+- BannerPlace stability improvements
+- Updated iOS SDK
+- Updated Android SDK to 1.24.2
+
 ## [0.7.6]
 
 ### Changed
