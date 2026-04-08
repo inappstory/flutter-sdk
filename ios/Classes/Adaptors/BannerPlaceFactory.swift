@@ -1,4 +1,5 @@
 import Flutter
+import Foundation
 @_spi(QAApp) import InAppStorySDK
 @_spi(IAS_API) import InAppStorySDK
 import UIKit
@@ -8,12 +9,19 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
 
     private var bannerManager: BannerPlaceManagerAdaptor
 
-    init(registrar: FlutterPluginRegistrar) {
+    private var ctaAdaptor: CallToActionCallbackAdaptor
+
+    init(
+        registrar: FlutterPluginRegistrar,
+        ctaAdaptor: CallToActionCallbackAdaptor
+    ) {
         self.registrar = registrar
 
         self.bannerManager = BannerPlaceManagerAdaptor(
             binaryMessenger: self.registrar.messenger()
         )
+
+        self.ctaAdaptor = ctaAdaptor
         super.init()
 
         InAppStory.shared.iasBannerEvent = {
@@ -42,6 +50,13 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
                 break
             case .clickOnButton(let bannerData, let link):
                 print("clickOnButton: \(bannerData), \(link)")
+                self.ctaAdaptor.callToActionCallbackFlutterApi.callToAction(
+                    slideData: nil,
+                    url: link,
+                    clickAction: nil,
+                    completion: { _ in }
+                )
+
                 break
             @unknown default:
                 print("default")

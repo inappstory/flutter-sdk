@@ -1,24 +1,31 @@
 import 'dart:ui';
 
+import '../callbacks/call_to_action_callback_impl.dart';
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../callbacks/ias_checkout_callback_impl.dart';
 import '../generated/checkout_generated.g.dart'
     show CheckoutManagerCallbackFlutterApi;
 import '../generated/pigeon_generated.g.dart'
-    show InAppStoryManagerHostApi, SkusCallbackFlutterApi;
+    show
+        InAppStoryManagerHostApi,
+        SkusCallbackFlutterApi,
+        CallToActionCallbackFlutterApi;
 import 'logger.dart';
 
 class InAppStoryManager {
   InAppStoryManager._private() {
     SkusCallbackFlutterApi.setUp(_callbackImpl);
     CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+    CallToActionCallbackFlutterApi.setUp(_ctaCallbackImpl);
   }
 
   final _iasManager = InAppStoryManagerHostApi();
 
   final _callbackImpl = GoodsCallbackFlutterApiImpl();
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
+
+  final _ctaCallbackImpl = CallToActionCallbackImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -102,5 +109,9 @@ class InAppStoryManager {
 
   Future<void> setOptions(Map<String, String> options) async {
     await _iasManager.setOptionKeys(options);
+  }
+
+  void setCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.callback = callback;
   }
 }
