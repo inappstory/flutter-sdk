@@ -114,4 +114,8 @@ class InAppStoryManager {
   void addCallToActionCallback(CallToActionImpl callback) {
     _ctaCallbackImpl.addCallback(callback);
   }
+
+  void removeCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.removeCallback(callback);
+  }
 }
