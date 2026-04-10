@@ -5,15 +5,27 @@ typedef CallToActionImpl = void Function(
     SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
 
 class CallToActionCallbackImpl implements CallToActionCallbackFlutterApi {
-  CallToActionImpl? _callback;
+  final List<CallToActionImpl> _callbacks = [];
 
-  set callback(CallToActionImpl? value) {
-    _callback = value;
+  void addCallback(CallToActionImpl callback) {
+    if (_callbacks.isNotEmpty && _callbacks.contains(callback)) {
+      return;
+    }
+    _callbacks.add(callback);
+  }
+
+  void removeCallback(CallToActionImpl callback) {
+    if (_callbacks.isEmpty) {
+      return;
+    }
+    _callbacks.remove(callback);
   }
 
   @override
   void callToAction(
       SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
-    _callback?.call(slideData, url, clickAction);
+    for (final callback in _callbacks) {
+      callback.call(slideData, url, clickAction);
+    }
   }
 }

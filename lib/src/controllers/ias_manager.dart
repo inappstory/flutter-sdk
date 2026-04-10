@@ -111,7 +111,7 @@ class InAppStoryManager {
     await _iasManager.setOptionKeys(options);
   }
 
-  void setCallToActionCallback(CallToActionImpl callback) {
-    _ctaCallbackImpl.callback = callback;
+  void addCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.addCallback(callback);
   }
 }

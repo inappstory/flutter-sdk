@@ -1,3 +1,13 @@
+## [0.7.8]
+
+### Added
+
+- added CallToAction callback in InAppStoryManager
+
+### Fixed
+
+- Banner clicks do not trigger the CallToAction callback
+
 ## [0.7.7]
 
 ### Added
