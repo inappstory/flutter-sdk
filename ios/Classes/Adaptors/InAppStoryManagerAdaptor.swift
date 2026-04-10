@@ -70,6 +70,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             InAppStory.shared.settings = Settings(
                 userID: userId ?? "",
                 sign: userSign,
+                anonymous: anonymous!,
                 tags: newTags ?? [""],
                 lang: locale
             )
@@ -77,7 +78,6 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             InAppStory.shared.settings = Settings(
                 userID: userId ?? "",
                 sign: userSign,
-                anonymous: anonymous!,
                 tags: newTags ?? [""],
                 lang: locale
             )
