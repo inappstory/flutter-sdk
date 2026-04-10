@@ -7,6 +7,7 @@
 ### Fixed
 
 - Banner clicks do not trigger the CallToAction callback
+- enabling anonymous mode causes the application to crash
 
 ## [0.7.7]
 
