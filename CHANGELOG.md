@@ -1,8 +1,14 @@
+## [0.7.9]
+
+### Fixed
+
+- Fixed build error on iOS arm64 emulators
+
 ## [0.7.8]
 
 ### Added
 
-- added CallToAction callback in InAppStoryManager
+- Added CallToAction callback in InAppStoryManager
 
 ### Fixed
 
