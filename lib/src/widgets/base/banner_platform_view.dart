@@ -12,7 +12,6 @@ class BannerPlatformView extends StatelessWidget {
     required this.autoLoad,
     this.decoration,
     this.bannerDecoration,
-    this.enableVerticalScroll = false,
   });
 
   final String placeId;
@@ -23,7 +22,6 @@ class BannerPlatformView extends StatelessWidget {
 
   final BannerDecoration? bannerDecoration;
   final bool autoLoad;
-  final bool enableVerticalScroll;
 
   final Function() onPlatformViewCreated;
 
