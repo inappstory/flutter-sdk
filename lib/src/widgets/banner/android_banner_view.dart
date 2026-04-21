@@ -14,6 +14,7 @@ class AndroidBannerView extends BannerPlatformView {
     required super.onPlatformViewCreated,
     super.bannerDecoration,
     super.decoration,
+    super.enableVerticalScroll,
   });
 
   @override
@@ -26,7 +27,9 @@ class AndroidBannerView extends BannerPlatformView {
       viewType: viewType,
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
+          () => enableVerticalScroll
+              ? EagerGestureRecognizer()
+              : HorizontalDragGestureRecognizer(),
         ),
       },
       layoutDirection: TextDirection.ltr,

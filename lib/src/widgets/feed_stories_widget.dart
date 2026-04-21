@@ -205,6 +205,15 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant FeedStoriesWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.feed != widget.feed) {
+      _feedController.feed = widget.feed;
+      _feedController.fetchFeedStories();
+    }
+  }
+
+  @override
   void dispose() {
     (_feedStoriesWidgetsStream as FeedStoriesStream).dispose();
     super.dispose();

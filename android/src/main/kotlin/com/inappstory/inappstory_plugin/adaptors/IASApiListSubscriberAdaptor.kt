@@ -78,7 +78,7 @@ open class InAppStoryAPIListSubscriberAdaptor(
             hasAudio = p0.hasAudio,
             videoFilePath = p0.videoFilePath,
             title = p0.title,
-            titleColor = p0.titleColor,
+            titleColor = p0.titleColor ?: "#000000",
             opened = p0.opened,
             storyData = mapStoryData(p0.storyData),
             aspectRatio = aspectRatio.toDouble(),

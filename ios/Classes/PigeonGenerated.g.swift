@@ -1332,6 +1332,7 @@ protocol AppearanceManagerHostApi {
   func setCoverQuality(coverQuality: CoverQuality) throws
   func setReaderScrollStyle(style: ScrollStyle) throws
   func setReaderPresentationStyle(style: PresentationStyle) throws
+  func setNavBarColor(color: Int64, darkColor: Int64?) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1643,6 +1644,22 @@ class AppearanceManagerHostApiSetup {
       }
     } else {
       setReaderPresentationStyleChannel.setMessageHandler(nil)
+    }
+    let setNavBarColorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setNavBarColor\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setNavBarColorChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let colorArg = args[0] as! Int64
+        let darkColorArg: Int64? = nilOrValue(args[1])
+        do {
+          try api.setNavBarColor(color: colorArg, darkColor: darkColorArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setNavBarColorChannel.setMessageHandler(nil)
     }
   }
 }

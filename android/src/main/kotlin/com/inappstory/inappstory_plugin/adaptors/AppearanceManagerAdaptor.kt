@@ -116,12 +116,22 @@ class AppearanceManagerAdaptor(
     override fun setReaderPresentationStyle(style: PresentationStyle) {
         when (style) {
             PresentationStyle.ZOOM -> appearanceManager.csStoryReaderPresentationStyle(
-                AppearanceManager.ZOOM)
+                AppearanceManager.ZOOM
+            )
+
             PresentationStyle.MODAL -> appearanceManager.csStoryReaderPresentationStyle(
-                AppearanceManager.POPUP)
+                AppearanceManager.POPUP
+            )
+
             PresentationStyle.FADE -> appearanceManager.csStoryReaderPresentationStyle(
-                AppearanceManager.FADE)
+                AppearanceManager.FADE
+            )
         }
+    }
+
+    override fun setNavBarColor(color: Long, darkColor: Long?) {
+        appearanceManager.csNavBarColor(color.toInt())
+        appearanceManager.csNightNavBarColor(darkColor?.toInt() ?: 0)
     }
 
     override fun setHasLike(value: Boolean) {

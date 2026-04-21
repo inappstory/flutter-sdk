@@ -32,6 +32,7 @@ class BannerPlace extends StatefulWidget {
     this.onBannerPlaceLoaded,
     this.onBannerPlacePreloaded,
     this.onPreloadedError,
+    this.enableVerticalScroll = false,
   });
 
   final String placeId;
@@ -44,6 +45,7 @@ class BannerPlace extends StatefulWidget {
   final BannerPlaceLoaderBuilder? bannerPlaceLoaderBuilder;
 
   final bool autoLoad;
+  final bool enableVerticalScroll;
 
   final Function(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData)? onActionWith;
@@ -120,6 +122,7 @@ class _BannerPlaceState extends State<BannerPlace>
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
+          enableVerticalScroll: widget.enableVerticalScroll,
           onPlatformViewCreated: () {
             BannerPlaceCallbackFlutterApi.setUp(this,
                 messageChannelSuffix: bannerWidgetId);
@@ -140,6 +143,7 @@ class _BannerPlaceState extends State<BannerPlace>
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
+          enableVerticalScroll: widget.enableVerticalScroll,
           onPlatformViewCreated: () {
             BannerPlaceCallbackFlutterApi.setUp(this,
                 messageChannelSuffix: bannerWidgetId);

@@ -15,6 +15,7 @@ class IosBannerView extends BannerPlatformView {
     required super.autoLoad,
     super.bannerDecoration,
     super.decoration,
+    super.enableVerticalScroll,
   });
 
   @override
@@ -26,7 +27,9 @@ class IosBannerView extends BannerPlatformView {
         hitTestBehavior: PlatformViewHitTestBehavior.opaque,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
           Factory<OneSequenceGestureRecognizer>(
-            () => EagerGestureRecognizer(),
+            () => enableVerticalScroll
+                ? EagerGestureRecognizer()
+                : HorizontalDragGestureRecognizer(),
           ),
         },
         layoutDirection: TextDirection.ltr,

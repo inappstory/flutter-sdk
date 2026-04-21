@@ -1358,6 +1358,7 @@ interface AppearanceManagerHostApi {
   fun setCoverQuality(coverQuality: CoverQuality)
   fun setReaderScrollStyle(style: ScrollStyle)
   fun setReaderPresentationStyle(style: PresentationStyle)
+  fun setNavBarColor(color: Long, darkColor: Long?)
 
   companion object {
     /** The codec used by AppearanceManagerHostApi. */
@@ -1721,6 +1722,25 @@ interface AppearanceManagerHostApi {
             val styleArg = args[0] as PresentationStyle
             val wrapped: List<Any?> = try {
               api.setReaderPresentationStyle(styleArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.AppearanceManagerHostApi.setNavBarColor$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val colorArg = args[0] as Long
+            val darkColorArg = args[1] as Long?
+            val wrapped: List<Any?> = try {
+              api.setNavBarColor(colorArg, darkColorArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
