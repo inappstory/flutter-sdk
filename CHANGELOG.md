@@ -1,3 +1,15 @@
+## [0.7.10]
+
+### Added
+
+- Changing the `feedId` in the story list causes the feed to reload
+- Added ability to change nav bar color in android
+
+### Fixed
+
+- Vertical scrolling on banners blocked scrolling in ScrollView widgets(SingleChildScrollView,
+  ListView, etc.)
+
 ## [0.7.9]
 
 ### Fixed
