@@ -737,14 +737,14 @@ class InappstorySdkModuleHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> initWith(String apiKey, String userID, {bool anonymous = false, String? userSign, String? languageCode, String? languageRegion, String? cacheSize, }) async {
+  Future<void> initWith(String apiKey, String userID, {bool anonymous = false, String? userSign, String? languageCode, String? languageRegion, String? cacheSize, bool isLoggingEnabled = false, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.initWith$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID, anonymous, userSign, languageCode, languageRegion, cacheSize]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID, anonymous, userSign, languageCode, languageRegion, cacheSize, isLoggingEnabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
       throw _createConnectionError(pigeonVar_channelName);

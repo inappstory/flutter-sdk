@@ -1,3 +1,9 @@
+## [0.7.11]
+
+### Changed
+
+- Upgraded Logger
+
 ## [0.7.10]
 
 ### Added

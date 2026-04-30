@@ -46,6 +46,10 @@ class FeedStoriesStream extends StoriesStream {
       ..iasStoryListHostApi = iasStoryListHostApi;
   }
 
+  late final _tag = 'FeedStoriesStream(feed: $feed|uniqueId: $uniqueId)';
+
+  final _iasLogger = InAppStoryManager.instance.logger;
+
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
 
   final FeedStoriesController? feedController;
@@ -78,6 +82,7 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
+    _iasLogger.flutterDebugLog(_tag, 'updateStoriesData: ${list.length}');
     stories = list
         .whereType<StoryAPIDataDto>()
         .map(createStoryFromDto)
@@ -95,7 +100,9 @@ class FeedStoriesStream extends StoriesStream {
       story?.updateStoryData(storyData);
 
       controller.add(combineStoriesAndFavorites());
+      _iasLogger.flutterDebugLog(_tag, 'updateStoryData: ${storyData.id}');
     } catch (e) {
+      _iasLogger.flutterErrorLog(_tag, 'Error updating story data: $e');
       log('[InAppStory]: Error updating story data: $e');
     }
   }
@@ -110,8 +117,10 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) =>
-      onStoriesLoaded?.call(size, feed);
+  void storiesLoaded(int size, String feed) {
+    _iasLogger.flutterDebugLog(_tag, 'storiesLoaded: $size');
+    onStoriesLoaded?.call(size, feed);
+  }
 
   @override
   void scrollToStory(int id, String feed, String uniqueId) {

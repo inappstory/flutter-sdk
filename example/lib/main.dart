@@ -15,17 +15,29 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _inAppStoryPlugin = InAppStoryPlugin();
 
-  final apiKey = '<you-api-key>';
+  final apiKey = 'test-key';
 
   // can be empty
   final userId = '<user-id>';
 
-  final feed = '<feed-id>';
+  final feed = 'flutter';
 
   late final initialization = initSdk();
 
   Future<void> initSdk() async {
-    await _inAppStoryPlugin.initWith(apiKey, userId);
+    await _inAppStoryPlugin.initWith(apiKey, userId,
+        anonymous: false, isLoggingEnabled: true);
+    //await AppearanceManager.instance.setHasFavorites(true);
+
+    InAppStoryManager.instance.logger = IASLogger.create(
+      onDebugLog: (tag, message) {
+        //print('$tag: $message');
+      },
+      onErrorLog: (tag, message) {
+        //print('$tag: $message');
+      },
+      printToConsole: true,
+    );
   }
 
   @override
@@ -48,6 +60,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     FeedStoriesWidget(
                       feed: feed,
                     ),
+                    BannerPlace(placeId: 'mini_banner', height: 120),
                   ],
                 );
               }

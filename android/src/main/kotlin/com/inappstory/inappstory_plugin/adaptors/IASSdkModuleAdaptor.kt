@@ -51,6 +51,7 @@ class InappstorySdkModuleAdaptor(
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        isLoggingEnabled: Boolean,
         callback: (Result<Unit>) -> Unit
     ) {
         try {
@@ -174,7 +175,9 @@ class InappstorySdkModuleAdaptor(
                 bannerFactory?.setAppearanceManager(appearanceManager)
             }
 
-            InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
+            if (isLoggingEnabled) {
+                InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding)
+            }
 
             callback(Result.success(Unit))
         } catch (throwable: Throwable) {

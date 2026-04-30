@@ -19,7 +19,7 @@ final class LoggerCallbackAdaptor: IASLoggerProtocol {
         DispatchQueue.main.async {
             if object.error != nil {
                 self.loggerFlutterApi.errorLog(
-                    tag: nil,
+                    tag: "IAS iOS SDK",
                     message: object.error,
                     completion: { _ in }
                 )
@@ -27,7 +27,7 @@ final class LoggerCallbackAdaptor: IASLoggerProtocol {
             }
             if object.message != nil {
                 self.loggerFlutterApi.debugLog(
-                    tag: nil,
+                    tag: "IAS iOS SDK",
                     message: object.message,
                     completion: { _ in }
                 )
@@ -35,7 +35,7 @@ final class LoggerCallbackAdaptor: IASLoggerProtocol {
             }
             if object.cURL != nil {
                 self.loggerFlutterApi.debugLog(
-                    tag: nil,
+                    tag: "IAS iOS SDK",
                     message: object.cURL,
                     completion: { _ in }
                 )

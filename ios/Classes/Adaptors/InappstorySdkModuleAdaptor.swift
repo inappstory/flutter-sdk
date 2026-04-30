@@ -94,11 +94,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        isLoggingEnabled: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        InAppStory.shared.isLoggingEnabled = true
-        //InAppStory.shared.cellGradientEnabled = true
-        //InAppStory.shared.cellBorderColor = UIColor.blue
+        InAppStory.shared.isLoggingEnabled = isLoggingEnabled
         InAppStory.shared.presentationStyle = .zoom
 
         InAppStory.shared.logger = LoggerCallbackAdaptor(
@@ -123,9 +122,13 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             )
         )
 
-        let gameEventAdaptor = GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
+        let gameEventAdaptor = GameEventCallbackAdaptor(
+            binaryMessenger: binaryMessenger
+        )
 
-        let callbacksAdaptor = CallbacksAdaptor(binaryMessenger: binaryMessenger)
+        let callbacksAdaptor = CallbacksAdaptor(
+            binaryMessenger: binaryMessenger
+        )
 
         let iamCallbackAdaptor = InAppMessageCallbacksAdaptor(
             binaryMessenger: binaryMessenger,

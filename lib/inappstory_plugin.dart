@@ -36,6 +36,7 @@ class InAppStoryPlugin {
     String? userSign,
     Locale? locale,
     CacheSize? cacheSize,
+    bool isLoggingEnabled = false,
   }) async {
     return InappstoryPluginPlatform.instance.initWith(
       apiKey,
@@ -45,6 +46,7 @@ class InAppStoryPlugin {
       languageCode: locale?.languageCode,
       languageRegion: locale?.countryCode,
       cacheSize: cacheSize?.name,
+      isLoggingEnabled: isLoggingEnabled,
     );
   }
 }

@@ -685,7 +685,7 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
-  fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, callback: (Result<Unit>) -> Unit)
+  fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, isLoggingEnabled: Boolean, callback: (Result<Unit>) -> Unit)
   fun createListAdaptor(feed: String, uniqueId: String)
   fun removeListAdaptor(feed: String, uniqueId: String)
 
@@ -710,7 +710,8 @@ interface InappstorySdkModuleHostApi {
             val languageCodeArg = args[4] as String?
             val languageRegionArg = args[5] as String?
             val cacheSizeArg = args[6] as String?
-            api.initWith(apiKeyArg, userIDArg, anonymousArg, userSignArg, languageCodeArg, languageRegionArg, cacheSizeArg) { result: Result<Unit> ->
+            val isLoggingEnabledArg = args[7] as Boolean
+            api.initWith(apiKeyArg, userIDArg, anonymousArg, userSignArg, languageCodeArg, languageRegionArg, cacheSizeArg, isLoggingEnabledArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))

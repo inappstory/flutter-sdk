@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../controllers/ias_manager.dart';
 import '../generated/banner_place_generated.g.dart'
     show BannerViewHostApi, BannerPlaceCallbackFlutterApi, BannerData;
 import '../helpers/id_gen.dart';
@@ -60,16 +61,22 @@ class _BannerPlaceState extends State<BannerPlace>
     implements BannerPlaceCallbackFlutterApi {
   var _bannerPlaceState = BannerPlaceState.none;
 
-  final bannerWidgetId = idGenerator();
+  final _bannerWidgetId = idGenerator();
 
-  bool isVisible = false;
+  bool _isVisible = false;
+
+  late final _tag = 'BannerPlace(${widget.placeId}|$_bannerWidgetId)';
+
+  final _iasLogger = InAppStoryManager.instance.logger;
 
   @override
   void didUpdateWidget(covariant BannerPlace oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.placeId != widget.placeId) {
+      _iasLogger.flutterDebugLog(_tag,
+          'changing banner place id: ${oldWidget.placeId} -> ${widget.placeId}');
       _bannerPlaceState = BannerPlaceState.loading;
-      BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+      BannerViewHostApi(messageChannelSuffix: _bannerWidgetId)
           .changeBannerPlaceId(widget.placeId);
     }
   }
@@ -83,17 +90,17 @@ class _BannerPlaceState extends State<BannerPlace>
       height: widget.height,
       width: MediaQuery.of(context).size.width,
       child: VisibilityDetector(
-        key: ValueKey(bannerWidgetId),
+        key: ValueKey(_bannerWidgetId),
         onVisibilityChanged: (VisibilityInfo info) {
           if (info.visibleFraction > 0.0) {
-            isVisible = true;
+            _isVisible = true;
           } else {
-            isVisible = false;
+            _isVisible = false;
           }
         },
         child: Stack(
           children: [
-            buildPlatformView(context),
+            _buildPlatformView(context),
             if (_bannerPlaceState == BannerPlaceState.loading ||
                 _bannerPlaceState == BannerPlaceState.none)
               Positioned(
@@ -109,23 +116,25 @@ class _BannerPlaceState extends State<BannerPlace>
     );
   }
 
-  Widget buildPlatformView(BuildContext context) {
+  Widget _buildPlatformView(BuildContext context) {
+    _iasLogger.flutterDebugLog(_tag, 'build PlatformView');
     if (Platform.isAndroid) {
       return SizedBox(
         height: widget.height,
         width: MediaQuery.of(context).size.width,
         child: AndroidBannerView(
-          bannerWidgetId: bannerWidgetId,
+          bannerWidgetId: _bannerWidgetId,
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             BannerPlaceCallbackFlutterApi.setUp(this,
-                messageChannelSuffix: bannerWidgetId);
+                messageChannelSuffix: _bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });
+            _iasLogger.flutterDebugLog(_tag, 'PlatformView created');
           },
         ),
       );
@@ -135,17 +144,18 @@ class _BannerPlaceState extends State<BannerPlace>
         height: widget.height,
         width: MediaQuery.of(context).size.width,
         child: IosBannerView(
-          bannerWidgetId: bannerWidgetId,
+          bannerWidgetId: _bannerWidgetId,
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             BannerPlaceCallbackFlutterApi.setUp(this,
-                messageChannelSuffix: bannerWidgetId);
+                messageChannelSuffix: _bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });
+            _iasLogger.flutterDebugLog(_tag, 'PlatformView created');
           },
         ),
       );
@@ -157,16 +167,18 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void dispose() {
-    BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
+    _iasLogger.flutterDebugLog(_tag, 'dispose');
+    BannerViewHostApi(messageChannelSuffix: _bannerWidgetId)
+        .deInitBannerPlace();
     BannerPlaceCallbackFlutterApi.setUp(null,
-        messageChannelSuffix: bannerWidgetId);
+        messageChannelSuffix: _bannerWidgetId);
     super.dispose();
   }
 
   @override
   void onActionWith(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData) {
-    if (isVisible) {
+    if (_isVisible) {
       widget.onActionWith?.call(bannerData, widgetEventName, widgetData);
     }
   }
@@ -191,7 +203,7 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void onBannerScroll(int index) {
-    if (isVisible) {
+    if (_isVisible) {
       widget.onBannerScroll?.call(index);
     }
   }

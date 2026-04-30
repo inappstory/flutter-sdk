@@ -29,6 +29,7 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
+    bool isLoggingEnabled = false,
   }) async {
     await inappstorySdkModuleHostApi.initWith(
       apiKey,
@@ -38,6 +39,7 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
       languageCode: languageCode,
       languageRegion: languageRegion,
       cacheSize: cacheSize,
+      isLoggingEnabled: isLoggingEnabled,
     );
   }
 }

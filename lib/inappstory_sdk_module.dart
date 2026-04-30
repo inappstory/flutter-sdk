@@ -10,5 +10,6 @@ abstract class InAppStorySdkModule {
     String? languageRegion,
     String? userSign,
     String? cacheSize,
+    bool isLoggingEnabled,
   });
 }

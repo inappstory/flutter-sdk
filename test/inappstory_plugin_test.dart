@@ -10,12 +10,16 @@ class MockInappstoryPluginPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
-  Future<void> initWith(String apiKey, String userId,
-      {bool anonymous = false,
-      String? userSign,
-      String? languageCode,
-      String? languageRegion,
-      String? cacheSize}) {
+  Future<void> initWith(
+    String apiKey,
+    String userId, {
+    bool anonymous = false,
+    String? userSign,
+    String? languageCode,
+    String? languageRegion,
+    String? cacheSize,
+    bool isLoggingEnabled = false,
+  }) {
     throw UnimplementedError();
   }
 }

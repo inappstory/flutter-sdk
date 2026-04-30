@@ -688,7 +688,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, anonymous: Bool, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func initWith(apiKey: String, userID: String, anonymous: Bool, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, isLoggingEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
   func createListAdaptor(feed: String, uniqueId: String) throws
   func removeListAdaptor(feed: String, uniqueId: String) throws
 }
@@ -710,7 +710,8 @@ class InappstorySdkModuleHostApiSetup {
         let languageCodeArg: String? = nilOrValue(args[4])
         let languageRegionArg: String? = nilOrValue(args[5])
         let cacheSizeArg: String? = nilOrValue(args[6])
-        api.initWith(apiKey: apiKeyArg, userID: userIDArg, anonymous: anonymousArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg) { result in
+        let isLoggingEnabledArg = args[7] as! Bool
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, anonymous: anonymousArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg, isLoggingEnabled: isLoggingEnabledArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))

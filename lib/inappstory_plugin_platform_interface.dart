@@ -40,5 +40,6 @@ abstract class InappstoryPluginPlatform extends PlatformInterface
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
+    bool isLoggingEnabled,
   });
 }

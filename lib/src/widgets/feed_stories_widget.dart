@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../controllers/feed_stories_controller.dart';
+import '../../inappstory_plugin.dart';
 import '../helpers/id_gen.dart';
-import 'base/default_feed_favorites_widget.dart';
-import 'builders/base_story_builder.dart';
 import 'builders/builders.dart';
-import 'decorators/feed_decorator.dart';
 import 'streams/feed_stories_stream.dart';
 
 /// A widget that displays a feed of stories in a horizontal list.
@@ -100,9 +97,16 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   late final observerController =
       ListObserverController(controller: scrollController);
 
+  late final _tag = 'FeedStoriesWidget(${widget.feed}|$_uniqueId)';
+
+  final _iasLogger = InAppStoryManager.instance.logger;
+
+  final _uniqueId = idGenerator();
+
   @override
   initState() {
     super.initState();
+    _iasLogger.flutterDebugLog(_tag, 'initializing');
     _feedController = widget.controller ?? FeedStoriesController();
     errorBuilder = widget.errorBuilder;
     feedDecorator = widget.decorator ?? FeedStoryDecorator();
@@ -112,12 +116,13 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
     _favoritesBuilder = widget.favoritesBuilder ??
         (favorites) => DefaultGridFeedFavoritesWidget(favorites, widget.feed,
             decorator: feedDecorator);
+    _iasLogger.flutterDebugLog(_tag, 'initialized');
   }
 
   /// Fetches a stream of widgets representing the stories in the feed.
   Stream<Iterable<Widget>> _getStoriesWidgets() {
     return FeedStoriesStream(
-      uniqueId: idGenerator(),
+      uniqueId: _uniqueId,
       feed: widget.feed,
       storyWidgetBuilder: _storyBuilder,
       feedController: _feedController,
@@ -149,6 +154,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       stream: _feedStoriesWidgetsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
+          _iasLogger.flutterDebugLog(_tag, 'waiting for stories');
           if (loaderBuilder == null) {
             return SizedBox.shrink();
           }
@@ -159,6 +165,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         }
 
         if (snapshot.hasError) {
+          _iasLogger.flutterErrorLog(_tag, 'error while loading feed stories');
           log('[InAppStory]: error while loading feed stories: ${snapshot.error}');
           if (widget.errorBuilder == null) {
             return SizedBox.shrink();
@@ -172,10 +179,12 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
         final storiesWidgets = snapshot.data ?? [];
 
         if (storiesWidgets.isEmpty) {
+          _iasLogger.flutterDebugLog(_tag, 'empty feed stories');
           log('[InAppStory]: no stories found in feed: ${widget.feed}');
           return SizedBox.shrink();
         }
 
+        _iasLogger.flutterDebugLog(_tag, 'show stories');
         return SizedBox(
           height: widget.height,
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -209,12 +218,15 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.feed != widget.feed) {
       _feedController.feed = widget.feed;
+      _iasLogger.onDebugLog
+          ?.call(_tag, 'set new feed: ${oldWidget.feed} -> ${widget.feed}');
       _feedController.fetchFeedStories();
     }
   }
 
   @override
   void dispose() {
+    _iasLogger.flutterDebugLog(_tag, 'dispose');
     (_feedStoriesWidgetsStream as FeedStoriesStream).dispose();
     super.dispose();
   }

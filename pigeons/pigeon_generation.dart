@@ -26,6 +26,7 @@ abstract class InappstorySdkModuleHostApi {
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
+    bool isLoggingEnabled = false,
   });
 
   void createListAdaptor(String feed, String uniqueId);

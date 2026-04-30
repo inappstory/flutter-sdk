@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import '../../controllers/ias_manager.dart';
 import '../../data/observable.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../generated/pigeon_generated.g.dart'
@@ -38,19 +39,26 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   List<StoryFromPigeonDto> stories = [];
 
+  late final _iasLogger = InAppStoryManager.instance.logger;
+
+  late final _tag = 'StoriesStream(feed: $feed|uniqueId: $uniqueId)';
+
   late final controller = StreamController<Iterable<Widget>>(
     onListen: onListen,
     onCancel: onCancel,
   );
 
   void onListen() async {
+    _iasLogger.flutterDebugLog(_tag, 'onListen');
     await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
     observableErrorCallback.addObserver(this);
     iasStoryListHostApi.load(feed, uniqueId);
+    _iasLogger.flutterDebugLog(_tag, 'load');
   }
 
   void onCancel() async {
+    _iasLogger.flutterDebugLog(_tag, 'onCancel');
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
     observableErrorCallback.removeObserver(this);
@@ -74,6 +82,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   @override
   void loadListError(String feed) {
     if (feed != this.feed) return;
+    _iasLogger.flutterErrorLog(_tag, 'loadListError');
     controller.addError(Exception('loadListError feed: $feed'));
   }
 

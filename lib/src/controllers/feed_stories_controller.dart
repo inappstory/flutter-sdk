@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:meta/meta.dart';
 
-import '../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
+import '../../inappstory_plugin.dart';
 
 /// A controller for managing feed stories.
 class FeedStoriesController {
@@ -21,8 +21,10 @@ class FeedStoriesController {
     _feed = value;
   }
 
-  /// Loads stories from the current feed.
+  /// Reloads stories from the current feed.
   Future<void> fetchFeedStories() async {
+    InAppStoryManager.instance.logger.flutterDebugLog(
+        'FeedStoriesController', 'reloading feed stories from feed: $_feed');
     // TODO: 08.05.2025 Add Exception
     if (_feed?.isEmpty ?? true) {
       log('[InAppStory]: Feed is not set. Please set the feed before calling fetchFeedStories');
