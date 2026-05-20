@@ -1,3 +1,14 @@
+## [0.7.11]
+
+### Fixed
+
+- fixed the SwipeUP widget blocking
+
+### Changed 
+
+- Updated Android SDK to 1.24.6
+- Updated iOS SDK to 1.27.9
+
 ## [0.7.10]
 
 ### Added
