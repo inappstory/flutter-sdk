@@ -1,3 +1,9 @@
+## [0.7.12]
+
+### Fixed 
+
+- Fixed refresh on BannerPlace widget in iOS devices
+
 ## [0.7.11]
 
 ### Fixed
