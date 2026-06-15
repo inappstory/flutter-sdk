@@ -60,7 +60,7 @@ class _InAppMessagesState extends State<InAppMessages>
                   ElevatedButton(
                     onPressed: () async {
                       final result =
-                      await IASInAppMessagesHostApi().preloadMessages();
+                      await InAppStoryManager.instance.preloadMessages();
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
