@@ -1,5 +1,5 @@
-import UIKit
 import InAppStorySDK
+import UIKit
 
 class CustomIconView: UIView {
     var isHighlighted: Bool = false

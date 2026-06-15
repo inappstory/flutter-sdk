@@ -76,9 +76,11 @@ class BannerView(
     init {
         placeId = creationParams?.get("placeId") as String? ?: "customBannerPlace"
         bannerWidgetId = creationParams?.get("bannerWidgetId") as String? ?: "bannerWidgetId"
-        bannerPlaceCallback = BannerPlaceCallbackFlutterApi(
-            flutterPluginBinding.binaryMessenger, messageChannelSuffix = bannerWidgetId
-        )
+        bannerPlaceCallback =
+            BannerPlaceCallbackFlutterApi(
+                flutterPluginBinding.binaryMessenger,
+                messageChannelSuffix = bannerWidgetId
+            )
 
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger, this, messageChannelSuffix = bannerWidgetId
@@ -209,7 +211,10 @@ class BannerView(
             bannerPlace?.resumeAutoscroll()
         }
         frame.addView(bannerPlace)
-        bannerPlace?.loadBanners()
+        val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
+        if (autoLoad) {
+            bannerPlace?.loadBanners()
+        }
     }
 
     private fun createBannerCarousel(placeId: String) {

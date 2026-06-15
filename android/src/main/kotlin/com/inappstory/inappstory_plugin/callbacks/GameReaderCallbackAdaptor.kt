@@ -38,10 +38,7 @@ class GameReaderCallbackAdaptor(private val flutterPluginBinding: FlutterPluginB
     }
 
     override fun eventGame(
-        contentData: ContentData?,
-        gameId: String?,
-        eventName: String?,
-        payload: String?
+        contentData: ContentData?, gameId: String?, eventName: String?, payload: String?
     ) {
         val contentDataDto = contentData?.let { mapContentDataDto(it) }
         val jsonObject: JsonObject? = payload?.let { Json.parseToJsonElement(it).jsonObject }
@@ -81,10 +78,7 @@ fun JsonElement.toRaw(): Any? {
             if (isString) {
                 content
             } else {
-                booleanOrNull
-                    ?: longOrNull
-                    ?: doubleOrNull
-                    ?: content
+                booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
             }
         }
     }

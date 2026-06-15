@@ -19,7 +19,7 @@ class ErrorCallbackAdaptor {
     private func failureEvent(failure: IASEvent.Failure) {
         DispatchQueue.main.async { [self] in
             switch failure {
-            case .sessionFailure(let message):
+            case .sessionFailure(_):
                 errorCallbackFlutterApi.sessionError { _ in }
             case .storyFailure(let message):
                 singleLoadCallbackFlutterApi.singleLoadError(
@@ -33,9 +33,9 @@ class ErrorCallbackAdaptor {
                     reason: message,
                     completion: { _ in }
                 )
-            case .networkFailure(let message):
+            case .networkFailure(_):
                 errorCallbackFlutterApi.noConnection { _ in }
-            case .requestFailure(let message, let statusCode):
+            case .requestFailure(_, _):
                 errorCallbackFlutterApi.sessionError { _ in }
             @unknown default:
                 NSLog("WARNING: unknown failureEvent")

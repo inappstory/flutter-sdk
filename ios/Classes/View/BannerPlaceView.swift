@@ -34,13 +34,13 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         viewIdentifier viewId: Int64,
         arguments args: Any?,
         bannerPlaceManager bannerManager: BannerPlaceManagerAdaptor,
-        pluginRegistrar registrar: FlutterPluginRegistrar,
+        pluginRegistrar registrar: FlutterPluginRegistrar
     ) {
         _view = UIView()
 
         self.placeId = (args as! [String: Any])["placeId"] as! String
         bannerWidgetId =
-        (args as! [String: Any])["bannerWidgetId"] as! String
+            (args as! [String: Any])["bannerWidgetId"] as! String
 
         self.bannerPlaceManagerAdaptor = bannerManager
 
@@ -51,7 +51,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         if let args = args as? [String: Any] {
             decoration = BannerDecorationDTO(
                 color: args["color"] as? Int64,
-                image: args["image"] as? String,
+                image: args["image"] as? String
             )
         }
 
@@ -177,7 +177,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 self._bannersView?.resume()
             }
         }
-        self.onActionWith = self.bannerPlaceManagerAdaptor?.subscribe(OnActionWith()) {
+        self.onActionWith = self.bannerPlaceManagerAdaptor?.subscribe(
+            OnActionWith()
+        ) {
             [weak self]
             payload in
             guard let self else { return }
@@ -205,7 +207,12 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             _view = UIView()
             createNativeView(view: _view!, args: args! as! [String: Any])
         }
-        self._bannersView?.create()
+        if let args = args as? [String: Any] {
+            let autoLoad = args["autoLoad"] as? Bool ?? true
+            if autoLoad {
+                self._bannersView?.create()
+            }
+        }
     }
 
     func view() -> UIView {

@@ -6,22 +6,107 @@
 
 ### Changed
 
-- Onboardings, In-App-Messages and single stories now opens from `InAppStoryManager`
+- Onboardings, In-App-Messages and single stories now opens from `InAppStoryManager`, please see
+  migration guide
 - `IShowStoryCallbackFlutterApi` changed to `IASShowStoryCallback` mixin
 - `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
-- Updated iOS SDK to 1.27.1
+- Updated iOS SDK to 1.27.10
 
-## [0.7.3-rc4]
+## [0.7.12]
+
+### Fixed
+
+- Fixed refresh on BannerPlace widget in iOS devices
+
+### Changed
+
+- Updated iOS SDK to 1.27.9
+
+## [0.7.11]
+
+### Fixed
+
+- fixed the SwipeUP widget blocking
+
+### Changed
+
+- Updated Android SDK to 1.24.6
+- Updated iOS SDK to 1.27.9
+
+## [0.7.10]
+
+### Added
+
+- Changing the `feedId` in the story list causes the feed to reload
+- Added ability to change nav bar color in android
+
+### Fixed
+
+- Vertical scrolling on banners blocked scrolling in ScrollView widgets(SingleChildScrollView,
+  ListView, etc.)
+
+## [0.7.9]
+
+### Fixed
+
+- Fixed build error on iOS arm64 emulators
+
+## [0.7.8]
+
+### Added
+
+- Added CallToAction callback in InAppStoryManager
+
+### Fixed
+
+- Banner clicks do not trigger the CallToAction callback
+- enabling anonymous mode causes the application to crash
+
+## [0.7.7]
+
+### Added
+
+- Story reader scroll and presentation style
+
+### Changed
+
+- Updated Android SDK to 1.24.2
+- Updated iOS SDK to 1.27.7
 
 ### Fixed
 
 - BannerPlace stability improvements
 
-## [0.7.3-rc3]
+## [0.7.6]
+
+### Changed
+
+- Updated iOS SDK to 1.27.5
+
+## [0.7.5]
+
+### Fixed
+
+- Onboardings on Android running in new activity
+- Build error on iOS devices
+
+## [0.7.4]
+
+### Fixed
+
+- Games on Android running in new activity
+- Game events do not trigger a call to action (CTA)
+
+## [0.7.3]
 
 ### Fixed
 
 - BannerPlace stability improvements
+
+### Changed
+
+- Updated Android native SDK to 1.24.1
+- Updated iOS native SDK to 1.27.4
 
 ## [0.7.2]
 

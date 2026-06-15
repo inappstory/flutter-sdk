@@ -234,6 +234,8 @@ abstract class AppearanceManagerHostApi {
   void setReaderScrollStyle(ScrollStyle style);
 
   void setReaderPresentationStyle(PresentationStyle style);
+
+  void setNavBarColor(int color, int? darkColor);
 }
 
 class GoodsItemDataDto {

@@ -83,7 +83,7 @@ class CallbacksAdaptor {
                 )
             }
             break
-        case .storyWidgetEvent(let slideData, let name, let data):
+        case .storyWidgetEvent(let slideData, _, let data):
             DispatchQueue.main.async { [self] in
                 callbackFlutterApi.onStoryWidgetEvent(
                     slideData: mapSlideData(arg: slideData!),

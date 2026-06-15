@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:async/async.dart';
 
+import '../callbacks/call_to_action_callback_impl.dart';
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../callbacks/ias_checkout_callback_impl.dart';
@@ -15,7 +16,8 @@ import '../generated/pigeon_generated.g.dart'
         SkusCallbackFlutterApi,
         IASInAppMessagesHostApi,
         IASSingleStoryHostApi,
-        IASOnboardingsHostApi;
+        IASOnboardingsHostApi,
+        CallToActionCallbackFlutterApi;
 import '../helpers/id_gen.dart';
 import 'logger.dart';
 
@@ -23,6 +25,7 @@ class InAppStoryManager {
   InAppStoryManager._private() {
     SkusCallbackFlutterApi.setUp(_callbackImpl);
     CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+    CallToActionCallbackFlutterApi.setUp(_ctaCallbackImpl);
   }
 
   final _iasManager = InAppStoryManagerHostApi();
@@ -32,6 +35,8 @@ class InAppStoryManager {
   final _iam = IASInAppMessagesHostApi();
   final _onboardings = IASOnboardingsHostApi();
   final _singleStoryApi = IASSingleStoryHostApi();
+
+  final _ctaCallbackImpl = CallToActionCallbackImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -207,5 +212,13 @@ class InAppStoryManager {
       },
     );
     return operation;
+  }
+
+  void addCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.addCallback(callback);
+  }
+
+  void removeCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.removeCallback(callback);
   }
 }

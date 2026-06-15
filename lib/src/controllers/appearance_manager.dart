@@ -100,4 +100,9 @@ class AppearanceManager {
   Future<void> setReaderPresentationStyle(PresentationStyle style) async {
     await _appearanceManager.setReaderPresentationStyle(style);
   }
+
+  Future<void> setNavBarColor(Color color, {Color? darkColor}) async {
+    await _appearanceManager.setNavBarColor(
+        color.toARGB32(), darkColor?.toARGB32());
+  }
 }

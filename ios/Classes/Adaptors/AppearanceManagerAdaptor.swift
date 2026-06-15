@@ -3,6 +3,7 @@ import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
 class AppearanceManagerAdaptor: AppearanceManagerHostApi {
+
     private var binaryMessenger: FlutterBinaryMessenger
 
     private var pluginRegistrar: FlutterPluginRegistrar
@@ -62,6 +63,10 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
                 break
             }
         }
+    }
+
+    func setNavBarColor(color: Int64, darkColor: Int64?) throws {
+
     }
 
     func setReaderPresentationStyle(style: PresentationStyle) throws {

@@ -37,17 +37,17 @@ class _InAppMessagesState extends State<InAppMessages>
                 children: [
                   ElevatedButton(
                     onPressed:
-                        () => InAppStoryManager.instance.showIAMById(
-                          _inputController.text,
-                          onlyPreloaded: false,
-                        ),
+                        () => IASInAppMessagesHostApi().showById(
+                      _inputController.text,
+                      onlyPreloaded: false,
+                    ),
                     child: const Text("Show by id"),
                   ),
                   ElevatedButton(
                     onPressed:
-                        () => InAppStoryManager.instance.showIAMByEvent(
-                          _inputController.text,
-                        ),
+                        () => IASInAppMessagesHostApi().showByEvent(
+                      _inputController.text,
+                    ),
                     child: const Text("Show by event"),
                   ),
                 ],
@@ -60,8 +60,7 @@ class _InAppMessagesState extends State<InAppMessages>
                   ElevatedButton(
                     onPressed: () async {
                       final result =
-                          await InAppStoryManager.instance
-                              .preloadInAppMessages();
+                      await IASInAppMessagesHostApi().preloadMessages();
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -95,10 +94,10 @@ class _InAppMessagesState extends State<InAppMessages>
 
   @override
   void onInAppMessageWidgetEvent(
-    InAppMessageDataDto? inAppMessageData,
-    String? name,
-    Map<String?, Object?>? data,
-  ) {
+      InAppMessageDataDto? inAppMessageData,
+      String? name,
+      Map<String?, Object?>? data,
+      ) {
     log("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
   }
 }

@@ -121,6 +121,6 @@ class StoryWidgetSingleReader extends StoryWidgetSimpleDecorator {
 
   @override
   void onTap() {
-    InAppStoryManager.instance.showStoryOnce('${story.id}');
+    IASSingleStoryHostApi().showOnce(storyId: '${story.id}');
   }
 }

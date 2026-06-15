@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:meta/meta.dart';
+
 import '../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
 
 /// A controller for managing feed stories.
@@ -8,6 +10,7 @@ class FeedStoriesController {
 
   IASStoryListHostApi? _iasStoryListHostApi;
 
+  @protected
   set iasStoryListHostApi(IASStoryListHostApi hostApi) {
     _iasStoryListHostApi = hostApi;
   }

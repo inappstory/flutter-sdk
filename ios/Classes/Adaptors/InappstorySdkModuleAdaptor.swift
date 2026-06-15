@@ -52,6 +52,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             binaryMessenger: binaryMessenger
         )
 
+        self.ctaAdaptor = CallToActionCallbackAdaptor(
+            binaryMessenger: binaryMessenger
+        )
+
         InappstorySdkModuleHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: self
@@ -77,6 +81,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     var inAppStoryManagerAdaptor: InAppStoryManagerAdaptor
 
     var statManagerAdaptor: IASStatisticsManagerAdaptor
+
+    var ctaAdaptor: CallToActionCallbackAdaptor
 
     var feedStoryListAdaptors: [FeedStoryListAdaptor] = []
 
@@ -117,13 +123,14 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             )
         )
 
-        GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
+        let gameEventAdaptor = GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
 
-        CallbacksAdaptor(binaryMessenger: binaryMessenger)
+        let callbacksAdaptor = CallbacksAdaptor(binaryMessenger: binaryMessenger)
 
-        InAppMessageCallbacksAdaptor(binaryMessenger: binaryMessenger)
-
-        CallToActionCallbackAdaptor(binaryMessenger: binaryMessenger)
+        let iamCallbackAdaptor = InAppMessageCallbacksAdaptor(
+            binaryMessenger: binaryMessenger,
+            ctaCallback: self.ctaAdaptor.callToActionCallbackFlutterApi
+        )
 
         completion(.success(()))
     }

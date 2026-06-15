@@ -70,6 +70,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             InAppStory.shared.settings = Settings(
                 userID: userId ?? "",
                 sign: userSign,
+                anonymous: anonymous!,
                 tags: newTags ?? [""],
                 lang: locale
             )
@@ -77,7 +78,6 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             InAppStory.shared.settings = Settings(
                 userID: userId ?? "",
                 sign: userSign,
-                anonymous: anonymous!,
                 tags: newTags ?? [""],
                 lang: locale
             )
@@ -263,7 +263,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             availability: Int64(offer.availability),
             size: offer.size,
             color: offer.color,
-            quantity: Int64(offer.quantity),
+            quantity: Int64(offer.quantity)
         )
         return offerDTO
     }
