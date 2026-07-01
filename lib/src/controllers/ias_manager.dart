@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:async/async.dart';
+import 'package:flutter/widgets.dart';
 
 import '../callbacks/call_to_action_callback_impl.dart';
 import '../callbacks/callbacks.dart'
@@ -149,11 +149,12 @@ class InAppStoryManager {
   }
 
   CancelableOperation<bool> showIAMById(String id,
-      {bool onlyPreloaded = false}) {
+      {bool onlyPreloaded = false, double? bottomPadding}) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
       _iam
-          .showById(id, uniqueId, onlyPreloaded: onlyPreloaded)
+          .showById(id, uniqueId,
+              onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
           .then((value) => true)
           .catchError((error) {
         log('[InAppStory]: showIAMById finished with error');
@@ -166,10 +167,15 @@ class InAppStoryManager {
     return operation;
   }
 
-  CancelableOperation<bool> showIAMByEvent(String id) {
+  CancelableOperation<bool> showIAMByEvent(String id,
+      {bool onlyPreloaded = false, double? bottomPadding}) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
-      _iam.showByEvent(id, uniqueId).then((value) => true).catchError((error) {
+      _iam
+          .showByEvent(id, uniqueId,
+              onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
+          .then((value) => true)
+          .catchError((error) {
         log('[InAppStory]: showIAMByEvent finished with error');
         return false;
       }),

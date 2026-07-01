@@ -1,7 +1,9 @@
 package com.inappstory.inappstory_plugin.adaptors
 
 import IASInAppMessagesHostApi
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.inappstory.inappstory_plugin.R
 import com.inappstory.inappstory_plugin.activity.BackPressManagerHandler
 import com.inappstory.inappstory_plugin.activity.InAppStoryActivity
 import com.inappstory.sdk.CancellationToken
@@ -46,13 +48,47 @@ class IASMessagesAdaptor(
         }
     }
 
-    override fun showById(messageId: String, token: String, onlyPreloaded: Boolean) {
+    override fun showById(
+        messageId: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?
+    ) {
         val settings =
             InAppMessageOpenSettings().id(messageId.toInt()).showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    override fun showByEvent(
+        event: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?
+    ) {
+        val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    private fun showIAM(
+        settings: InAppMessageOpenSettings,
+        token: String,
+        bottomPadding: Double?
+    ) {
+        val activity = activityHolder.activity as FragmentActivity
+        val containerFragment = Fragment(R.layout.ias_message_container)
+        activity.supportFragmentManager.beginTransaction()
+            .add(FlutterFragmentActivity.FRAGMENT_CONTAINER_ID, containerFragment)
+            .commitNow()
+
+        containerFragment.view?.let { view ->
+            val bottom = ((bottomPadding ?: 0.0) * view.resources.displayMetrics.density).toInt()
+            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottom)
+        }
+
         val cancellationToken = iasMessages.show(
             settings,
-            (activityHolder.activity as FragmentActivity).supportFragmentManager,
-            FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
+            activity.supportFragmentManager,
+            R.id.ias_message_fragment_container,
             object : InAppMessageScreenActions {
                 override fun readerIsOpened() {
                     fragmentActivity?.backPressManager?.isManagerEnabled = true
@@ -60,37 +96,24 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
+                    removeContainer(activity, containerFragment)
                 }
 
                 override fun readerIsClosed() {
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
+                    removeContainer(activity, containerFragment)
                 }
             })
 
         tokenMap[token] = cancellationToken
     }
 
-    override fun showByEvent(event: String, token: String, onlyPreloaded: Boolean) {
-        val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
-        val cancellationToken = iasMessages.show(
-            settings,
-            (activityHolder.activity as FragmentActivity).supportFragmentManager,
-            FlutterFragmentActivity.FRAGMENT_CONTAINER_ID,
-            object : InAppMessageScreenActions {
-                override fun readerIsOpened() {
-                    fragmentActivity?.backPressManager?.isManagerEnabled = true
-                }
-
-                override fun readerOpenError(p0: String?) {
-                    fragmentActivity?.backPressManager?.isManagerEnabled = false
-
-                }
-
-                override fun readerIsClosed() {
-                    fragmentActivity?.backPressManager?.isManagerEnabled = false
-                }
-            })
-        tokenMap[token] = cancellationToken
+    private fun removeContainer(activity: FragmentActivity, fragment: Fragment) {
+        if (fragment.isAdded) {
+            activity.supportFragmentManager.beginTransaction()
+                .remove(fragment)
+                .commitAllowingStateLoss()
+        }
     }
 
     override fun cancelByToken(token: String): Boolean {

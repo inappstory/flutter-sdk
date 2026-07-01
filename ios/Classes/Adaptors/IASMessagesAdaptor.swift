@@ -28,7 +28,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         )
     }
 
-    func showById(messageId: String, token: String, onlyPreloaded: Bool) throws
+    func showById(messageId: String, token: String, onlyPreloaded: Bool, bottomPadding: Double?) throws
     {
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             id: messageId,
@@ -37,7 +37,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         tokenMap[token] = cancellationToken
     }
 
-    func showByEvent(event: String, token: String, onlyPreloaded: Bool) throws {
+    func showByEvent(event: String, token: String, onlyPreloaded: Bool, bottomPadding: Double?) throws {
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             event: event,
             onlyPreloaded: onlyPreloaded

@@ -366,9 +366,11 @@ abstract class IASCallBacksFlutterApi {
 
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void showById(String messageId, String token, {bool onlyPreloaded = false});
+  void showById(String messageId, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
 
-  void showByEvent(String event, String token, {bool onlyPreloaded = false});
+  void showByEvent(String event, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
 
   @async
   bool preloadMessages({List<String>? ids});

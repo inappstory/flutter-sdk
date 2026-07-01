@@ -2485,8 +2485,8 @@ class IASCallBacksFlutterApi: IASCallBacksFlutterApiProtocol {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IASInAppMessagesHostApi {
-  func showById(messageId: String, token: String, onlyPreloaded: Bool) throws
-  func showByEvent(event: String, token: String, onlyPreloaded: Bool) throws
+  func showById(messageId: String, token: String, onlyPreloaded: Bool, bottomPadding: Double?) throws
+  func showByEvent(event: String, token: String, onlyPreloaded: Bool, bottomPadding: Double?) throws
   func preloadMessages(ids: [String]?, completion: @escaping (Result<Bool, Error>) -> Void)
   func cancelByToken(token: String) throws -> Bool
 }
@@ -2504,8 +2504,9 @@ class IASInAppMessagesHostApiSetup {
         let messageIdArg = args[0] as! String
         let tokenArg = args[1] as! String
         let onlyPreloadedArg = args[2] as! Bool
+        let bottomPaddingArg: Double? = nilOrValue(args[3])
         do {
-          try api.showById(messageId: messageIdArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg)
+          try api.showById(messageId: messageIdArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg, bottomPadding: bottomPaddingArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
@@ -2521,8 +2522,9 @@ class IASInAppMessagesHostApiSetup {
         let eventArg = args[0] as! String
         let tokenArg = args[1] as! String
         let onlyPreloadedArg = args[2] as! Bool
+        let bottomPaddingArg: Double? = nilOrValue(args[3])
         do {
-          try api.showByEvent(event: eventArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg)
+          try api.showByEvent(event: eventArg, token: tokenArg, onlyPreloaded: onlyPreloadedArg, bottomPadding: bottomPaddingArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))

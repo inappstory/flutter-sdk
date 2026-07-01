@@ -2624,14 +2624,14 @@ class IASInAppMessagesHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> showById(String messageId, String token, {bool onlyPreloaded = false, }) async {
+  Future<void> showById(String messageId, String token, {bool onlyPreloaded = false, double? bottomPadding, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, token, onlyPreloaded]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[messageId, token, onlyPreloaded, bottomPadding]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -2642,14 +2642,14 @@ class IASInAppMessagesHostApi {
     ;
   }
 
-  Future<void> showByEvent(String event, String token, {bool onlyPreloaded = false, }) async {
+  Future<void> showByEvent(String event, String token, {bool onlyPreloaded = false, double? bottomPadding, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[event, token, onlyPreloaded]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[event, token, onlyPreloaded, bottomPadding]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(

@@ -2596,8 +2596,8 @@ class IASCallBacksFlutterApi(private val binaryMessenger: BinaryMessenger, priva
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface IASInAppMessagesHostApi {
-  fun showById(messageId: String, token: String, onlyPreloaded: Boolean)
-  fun showByEvent(event: String, token: String, onlyPreloaded: Boolean)
+  fun showById(messageId: String, token: String, onlyPreloaded: Boolean, bottomPadding: Double?)
+  fun showByEvent(event: String, token: String, onlyPreloaded: Boolean, bottomPadding: Double?)
   fun preloadMessages(ids: List<String>?, callback: (Result<Boolean>) -> Unit)
   fun cancelByToken(token: String): Boolean
 
@@ -2618,8 +2618,9 @@ interface IASInAppMessagesHostApi {
             val messageIdArg = args[0] as String
             val tokenArg = args[1] as String
             val onlyPreloadedArg = args[2] as Boolean
+            val bottomPaddingArg = args[3] as Double?
             val wrapped: List<Any?> = try {
-              api.showById(messageIdArg, tokenArg, onlyPreloadedArg)
+              api.showById(messageIdArg, tokenArg, onlyPreloadedArg, bottomPaddingArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
@@ -2638,8 +2639,9 @@ interface IASInAppMessagesHostApi {
             val eventArg = args[0] as String
             val tokenArg = args[1] as String
             val onlyPreloadedArg = args[2] as Boolean
+            val bottomPaddingArg = args[3] as Double?
             val wrapped: List<Any?> = try {
-              api.showByEvent(eventArg, tokenArg, onlyPreloadedArg)
+              api.showByEvent(eventArg, tokenArg, onlyPreloadedArg, bottomPaddingArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
