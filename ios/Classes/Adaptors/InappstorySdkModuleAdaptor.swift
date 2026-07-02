@@ -131,7 +131,9 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             binaryMessenger: binaryMessenger,
             ctaCallback: self.ctaAdaptor.callToActionCallbackFlutterApi
         )
-
+        
+        let errorCallbackAdaptor = ErrorCallbackAdaptor(binaryMessenger: binaryMessenger)
+        
         completion(.success(()))
     }
 
