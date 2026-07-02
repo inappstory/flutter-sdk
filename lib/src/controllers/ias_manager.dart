@@ -138,7 +138,7 @@ class InAppStoryManager {
               tags: tags ?? <String>[])
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showIAMById finished with error');
+        log('[InAppStory]: showOnboarding finished with error');
         return false;
       }),
       onCancel: () async {
