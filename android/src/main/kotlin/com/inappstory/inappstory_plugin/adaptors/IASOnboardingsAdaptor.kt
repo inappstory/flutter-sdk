@@ -5,13 +5,12 @@ import com.inappstory.inappstory_plugin.callbacks.OnboardingLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.CancellationToken
 import com.inappstory.sdk.CancellationTokenCancelResult
-import com.inappstory.sdk.externalapi.onboardings.IASOnboardingsExternalAPI
+import com.inappstory.sdk.InAppStoryManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASOnboardingsAdaptor(
     flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
-    private val iasOnboardings: IASOnboardingsExternalAPI,
     private val activityHolder: ActivityHolder,
 ) : IASOnboardingsHostApi {
     private val tokenMap = mutableMapOf<String, CancellationToken>()
@@ -19,18 +18,21 @@ class IASOnboardingsAdaptor(
     init {
         IASOnboardingsHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
 
-        iasOnboardings.loadCallback(OnboardingLoadCallbackAdaptor(flutterPluginBinding))
+        InAppStoryManager.getInstance()
+            ?.setOnboardingLoadCallback(OnboardingLoadCallbackAdaptor(flutterPluginBinding))
     }
 
     override fun show(limit: Long, feed: String, token: String, tags: List<String>) {
-        val cancellationToken = iasOnboardings.show(
-            activityHolder.activity,
-            feed,
-            appearanceManager,
-            tags,
+        val cancellationToken = InAppStoryManager.getInstance()?.showOnboardingStories(
             limit.toInt(),
+            feed,
+            tags,
+            activityHolder.activity,
+            appearanceManager,
         )
-        tokenMap[token] = cancellationToken
+        if (cancellationToken != null) {
+            tokenMap[token] = cancellationToken
+        }
     }
 
     override fun cancelByToken(token: String): Boolean {

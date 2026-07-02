@@ -141,7 +141,6 @@ class InappstorySdkModuleAdaptor(
                 IASOnboardingsAdaptor(
                     flutterPluginBinding,
                     appearanceManager,
-                    inAppStoryAPI.onboardings,
                     activityHolder,
                 )
 
