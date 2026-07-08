@@ -52,7 +52,11 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
 
     func reloadFeed(feed: String) throws {
-        storyListAPI.refresh(feed)
+        if self.feed != feed {
+            storyListAPI.setNewFeed(feed)
+        } else {
+            storyListAPI.refresh(feed)
+        }
     }
 
     func openStoryReader(storyId: Int64, feed: String) throws {
