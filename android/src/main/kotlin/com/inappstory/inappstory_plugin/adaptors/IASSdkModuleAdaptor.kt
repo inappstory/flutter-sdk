@@ -207,6 +207,10 @@ class InappstorySdkModuleAdaptor(
         }
     }
 
+    override fun isInitialized(): Boolean {
+        return InAppStoryManager.getInstance()?.isInitialized == true
+    }
+
     private fun createAnonymousInAppStoryManager(
         apiKey: String?,
         lang: Locale?,

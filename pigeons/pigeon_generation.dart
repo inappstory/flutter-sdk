@@ -31,6 +31,8 @@ abstract class InappstorySdkModuleHostApi {
   void createListAdaptor(String feed, String uniqueId);
 
   void removeListAdaptor(String feed, String uniqueId);
+
+  bool isInitialized();
 }
 
 @HostApi()

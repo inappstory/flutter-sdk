@@ -47,4 +47,8 @@ class InAppStoryPlugin {
       cacheSize: cacheSize?.name,
     );
   }
+
+  Future<bool> isInitialized() async {
+    return InappstoryPluginPlatform.instance.isInitialized();
+  }
 }

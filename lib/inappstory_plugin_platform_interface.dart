@@ -41,4 +41,9 @@ abstract class InappstoryPluginPlatform extends PlatformInterface
     String? languageRegion,
     String? cacheSize,
   });
+
+  @override
+  FutureOr<bool> isInitialized() {
+    throw UnimplementedError('isInitialized() has not been implemented.');
+  }
 }

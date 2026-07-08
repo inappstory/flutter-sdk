@@ -147,4 +147,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     func removeListAdaptor(feed: String, uniqueId: String) {
         feedStoryListAdaptors.removeAll { $0.uniqueId == uniqueId }
     }
+
+    func isInitialized() throws -> Bool {
+        return InAppStory.shared.settings != nil
+    }
 }
