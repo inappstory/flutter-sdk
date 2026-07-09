@@ -1337,9 +1337,6 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol ErrorCallbackFlutterApiProtocol {
-  func loadListError(feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func cacheError(completion: @escaping (Result<Void, PigeonError>) -> Void)
-  func emptyLinkError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func sessionError(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func noConnection(completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
@@ -1352,60 +1349,6 @@ class ErrorCallbackFlutterApi: ErrorCallbackFlutterApiProtocol {
   }
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
-  }
-  func loadListError(feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadListError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([feedArg] as [Any?]) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(()))
-      }
-    }
-  }
-  func cacheError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.cacheError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(()))
-      }
-    }
-  }
-  func emptyLinkError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.emptyLinkError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage(nil) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(()))
-      }
-    }
   }
   func sessionError(completion: @escaping (Result<Void, PigeonError>) -> Void) {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.sessionError\(messageChannelSuffix)"

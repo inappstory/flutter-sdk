@@ -1360,77 +1360,12 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 abstract class ErrorCallbackFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  void loadListError(String feed);
-
-  void cacheError();
-
-  void emptyLinkError();
-
   void sessionError();
 
   void noConnection();
 
   static void setUp(ErrorCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
-    {
-      final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadListError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final String arg_feed = args[0]! as String;
-          try {
-            api.loadListError(arg_feed);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.cacheError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.cacheError();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
-    {
-      final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.emptyLinkError$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
-      if (api == null) {
-        pigeonVar_channel.setMessageHandler(null);
-      } else {
-        pigeonVar_channel.setMessageHandler((Object? message) async {
-          try {
-            api.emptyLinkError();
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
-      }
-    }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.sessionError$messageChannelSuffix', pigeonChannelCodec,

@@ -102,12 +102,6 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
 @FlutterApi()
 abstract class ErrorCallbackFlutterApi {
-  void loadListError(String feed);
-
-  void cacheError();
-
-  void emptyLinkError();
-
   void sessionError();
 
   void noConnection();
