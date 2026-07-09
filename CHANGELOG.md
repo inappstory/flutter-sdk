@@ -1,6 +1,13 @@
+## [0.7.13]
+
+### Fixed
+
+- Fixed a memory leak of story list adaptors not released after the feed widget was disposed (iOS &
+  Android)
+
 ## [0.7.12]
 
-### Fixed 
+### Fixed
 
 - Fixed refresh on BannerPlace widget in iOS devices
 
@@ -10,7 +17,7 @@
 
 - fixed the SwipeUP widget blocking
 
-### Changed 
+### Changed
 
 - Updated Android SDK to 1.24.6
 - Updated iOS SDK to 1.27.9
