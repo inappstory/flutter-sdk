@@ -1,9 +1,9 @@
 PODS:
   - Flutter (1.0.0)
-  - InAppStory (1.27.9)
-  - inappstory_plugin (0.1.42):
+  - InAppStory (1.27.10)
+  - inappstory_plugin (0.1.44):
     - Flutter
-    - InAppStory (= 1.27.9)
+    - InAppStory (= 1.27.10)
   - integration_test (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -37,12 +37,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  InAppStory: a23cc3b12e0db9d4b9e50b94983fb80fc46a6242
-  inappstory_plugin: e6a27fe682293265b013f43dd8c99a5757b1ce58
+  InAppStory: 2199fc2426767e922421dc0d80cdd471e0b808a8
+  inappstory_plugin: 5aaf7afbf93a1632beb39f6cf8cb028e332da1fa
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
   video_player_avfoundation: dd410b52df6d2466a42d28550e33e4146928280a
 
 PODFILE CHECKSUM: 4f1c12611da7338d21589c0b2ecd6bd20b109694
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

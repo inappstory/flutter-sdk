@@ -201,7 +201,9 @@ class InappstorySdkModuleAdaptor(
     override fun removeListAdaptor(feed: String, uniqueId: String) {
         val iterator = feedListAdaptors.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().uniqueId == uniqueId) {
+            val adaptor = iterator.next()
+            if (adaptor.uniqueId == uniqueId) {
+                adaptor.dispose()
                 iterator.remove()
             }
         }

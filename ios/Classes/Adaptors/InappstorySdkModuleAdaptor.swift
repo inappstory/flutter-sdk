@@ -145,6 +145,9 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     }
 
     func removeListAdaptor(feed: String, uniqueId: String) {
+        feedStoryListAdaptors
+            .filter { $0.uniqueId == uniqueId }
+            .forEach { $0.dispose() }
         feedStoryListAdaptors.removeAll { $0.uniqueId == uniqueId }
     }
 
