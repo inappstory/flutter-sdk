@@ -4,13 +4,15 @@ import '../callbacks/call_to_action_callback_impl.dart';
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../callbacks/ias_checkout_callback_impl.dart';
+import '../callbacks/ias_error_callback_impl.dart';
 import '../generated/checkout_generated.g.dart'
     show CheckoutManagerCallbackFlutterApi;
 import '../generated/pigeon_generated.g.dart'
     show
         InAppStoryManagerHostApi,
         SkusCallbackFlutterApi,
-        CallToActionCallbackFlutterApi;
+        CallToActionCallbackFlutterApi,
+        ErrorCallbackFlutterApi;
 import 'logger.dart';
 
 class InAppStoryManager {
@@ -18,6 +20,7 @@ class InAppStoryManager {
     SkusCallbackFlutterApi.setUp(_callbackImpl);
     CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
     CallToActionCallbackFlutterApi.setUp(_ctaCallbackImpl);
+    ErrorCallbackFlutterApi.setUp(_errorCallbackImpl);
   }
 
   final _iasManager = InAppStoryManagerHostApi();
@@ -26,6 +29,7 @@ class InAppStoryManager {
   final _checkoutCallbackImpl = IASCheckoutManagerCallbackImpl();
 
   final _ctaCallbackImpl = CallToActionCallbackImpl();
+  final _errorCallbackImpl = ErrorCallbackFlutterApiImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -117,5 +121,9 @@ class InAppStoryManager {
 
   void removeCallToActionCallback(CallToActionImpl callback) {
     _ctaCallbackImpl.removeCallback(callback);
+  }
+
+  void setErrorCallback(IASErrorCallback callback) {
+    _errorCallbackImpl.callback = callback;
   }
 }

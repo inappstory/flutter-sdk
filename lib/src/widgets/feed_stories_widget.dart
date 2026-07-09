@@ -38,6 +38,7 @@ class FeedStoriesWidget extends StatefulWidget {
     this.storyBuilder,
     this.favoritesBuilder,
     this.storiesLoaded,
+    this.storiesLoadError,
   });
 
   /// The identifier of the feed to fetch stories from.
@@ -65,6 +66,7 @@ class FeedStoriesWidget extends StatefulWidget {
   final FeedFavoritesWidgetBuilder? favoritesBuilder;
 
   final Function(int size, String feed)? storiesLoaded;
+  final Function()? storiesLoadError;
 
   @override
   State<FeedStoriesWidget> createState() => FeedStoriesWidgetState();
@@ -124,6 +126,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
+      onStoriesLoadError: widget.storiesLoadError,
       onScrollToStory: (index, story) async {
         if (feedDecorator?.animateScrollToItems ?? false) {
           observerController.animateTo(

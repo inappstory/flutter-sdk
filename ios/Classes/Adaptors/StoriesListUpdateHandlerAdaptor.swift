@@ -21,10 +21,11 @@ class StoriesListUpdateHandlerAdaptor {
         self.uniqueId = uniqueId
         self.feed = feed
 
-        self.apiListSubscriberFlutterApi = InAppStoryAPIListSubscriberFlutterApi(
-            binaryMessenger: binaryMessenger,
-            messageChannelSuffix: uniqueId
-        )
+        self.apiListSubscriberFlutterApi =
+            InAppStoryAPIListSubscriberFlutterApi(
+                binaryMessenger: binaryMessenger,
+                messageChannelSuffix: uniqueId
+            )
 
         self.storyListAPI = storyListAPI
 
@@ -35,6 +36,8 @@ class StoriesListUpdateHandlerAdaptor {
         storyListAPI.favoritesUpdate = self.favoriteUpdateHandler
 
         storyListAPI.scrollUpdate = self.scrollUpdateHandler
+
+        storyListAPI.storiesUpdateFailure = self.storiesUpdateFailure
     }
 
     private var binaryMessenger: FlutterBinaryMessenger
@@ -44,7 +47,8 @@ class StoriesListUpdateHandlerAdaptor {
 
     private var storyListAPI: StoryListAPI
 
-    internal var apiListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApi
+    internal var apiListSubscriberFlutterApi:
+        InAppStoryAPIListSubscriberFlutterApi
 
     private lazy var _storiesListUpdateHandler: StoriesListUpdateHandler = {
         storiesList,
@@ -117,6 +121,18 @@ class StoriesListUpdateHandlerAdaptor {
         }
     }
 
+    private lazy var storiesUpdateFailure: StoriesUpdateFailure = {
+        feed,
+        error in
+        DispatchQueue.main.async {
+            self.apiListSubscriberFlutterApi.storiesUpdateFailure(
+                feed: feed,
+                reason: error,
+                completion: { _ in }
+            )
+        }
+    }
+
     internal func mapStoryAPIData(arg: StoryCellData) -> StoryAPIDataDto {
         return StoryAPIDataDto(
             id: Int64(arg.storyID)!,
@@ -148,8 +164,9 @@ class StoriesListUpdateHandlerAdaptor {
         switch arg {
         case .story: return StoryTypeDto.cOMMON
         case .storyUGC: return StoryTypeDto.uGC
-        @unknown default:
-            return StoryTypeDto.cOMMON
+        case .iam: return StoryTypeDto.iAM
+        case .banner: return StoryTypeDto.bANNER
+        @unknown default: return StoryTypeDto.cOMMON
         }
     }
 

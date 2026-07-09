@@ -60,6 +60,12 @@ open class InAppStoryAPIListSubscriberAdaptor(
         super.readerIsClosed()
     }
 
+    fun storiesUpdateFailure(feed: String, reason: String?) {
+        flutterPluginBinding.runOnMainThread {
+            storyListSubscriber.storiesUpdateFailure(feed, reason) {}
+        }
+    }
+
     fun scrollToStory(story: StoryDataDto?) {
         flutterPluginBinding.runOnMainThread {
             storyListSubscriber.scrollToStory(

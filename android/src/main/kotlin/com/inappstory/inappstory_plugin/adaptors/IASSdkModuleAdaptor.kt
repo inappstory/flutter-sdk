@@ -109,7 +109,13 @@ class InappstorySdkModuleAdaptor(
                 )
             )
 
-            inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+            inAppStoryManager.setErrorCallback(
+                ErrorCallbackAdaptor(flutterPluginBinding) { feed ->
+                    feedListAdaptors
+                        .filter { it.feed == feed }
+                        .forEach { it.apiSubscriber.storiesUpdateFailure(feed, null) }
+                }
+            )
 
             iasManagerAdaptor =
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)

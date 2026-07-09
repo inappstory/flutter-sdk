@@ -96,6 +96,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void storiesLoaded(int size, String feed);
 
   void scrollToStory(int index, String feed, String uniqueId);
+
+  void storiesUpdateFailure(String feed, String? reason);
 }
 
 @FlutterApi()
@@ -136,7 +138,9 @@ class StoryDataDto {
 
 enum StoryTypeDto {
   COMMON,
-  UGC;
+  UGC,
+  IAM,
+  BANNER;
 }
 
 enum SourceTypeDto {

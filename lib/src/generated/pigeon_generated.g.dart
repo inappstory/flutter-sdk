@@ -110,6 +110,8 @@ int _deepHash(Object? value) {
 enum StoryTypeDto {
   COMMON,
   UGC,
+  IAM,
+  BANNER,
 }
 
 enum SourceTypeDto {
@@ -1218,6 +1220,8 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
 
   void scrollToStory(int index, String feed, String uniqueId);
 
+  void storiesUpdateFailure(String feed, String? reason);
+
   static void setUp(InAppStoryAPIListSubscriberFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -1319,6 +1323,28 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
           final String arg_uniqueId = args[2]! as String;
           try {
             api.scrollToStory(arg_index, arg_feed, arg_uniqueId);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesUpdateFailure$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_feed = args[0]! as String;
+          final String? arg_reason = args[1] as String?;
+          try {
+            api.storiesUpdateFailure(arg_feed, arg_reason);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

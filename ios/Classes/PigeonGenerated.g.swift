@@ -181,6 +181,8 @@ func deepHashPigeonGenerated(value: Any?, hasher: inout Hasher) {
 enum StoryTypeDto: Int {
   case cOMMON = 0
   case uGC = 1
+  case iAM = 2
+  case bANNER = 3
 }
 
 enum SourceTypeDto: Int {
@@ -1212,6 +1214,7 @@ protocol InAppStoryAPIListSubscriberFlutterApiProtocol {
   func updateFavoriteStoriesData(list listArg: [StoryFavoriteItemAPIDataDto], completion: @escaping (Result<Void, PigeonError>) -> Void)
   func storiesLoaded(size sizeArg: Int64, feed feedArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func scrollToStory(index indexArg: Int64, feed feedArg: String, uniqueId uniqueIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func storiesUpdateFailure(feed feedArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -1299,6 +1302,24 @@ class InAppStoryAPIListSubscriberFlutterApi: InAppStoryAPIListSubscriberFlutterA
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([indexArg, feedArg, uniqueIdArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func storiesUpdateFailure(feed feedArg: String, reason reasonArg: String?, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesUpdateFailure\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([feedArg, reasonArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

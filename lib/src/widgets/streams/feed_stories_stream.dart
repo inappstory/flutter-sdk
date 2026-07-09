@@ -9,7 +9,6 @@ import '../../data/feed_favorite.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
-import '../../observable_error_callback_flutter_api.dart';
 import 'stories_stream.dart';
 
 typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(
@@ -33,10 +32,10 @@ class FeedStoriesStream extends StoriesStream {
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
     this.onScrollToStory,
+    this.onStoriesLoadError,
   }) : super(
           observableStoryList:
               InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId),
-          observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
@@ -59,6 +58,8 @@ class FeedStoriesStream extends StoriesStream {
   final _favoritesStreamController = StreamController<List<FavoriteFromDto>>();
 
   final Function(int index, StoryFromPigeonDto story)? onScrollToStory;
+
+  Function()? onStoriesLoadError;
 
   Iterable<Widget> combineStoriesAndFavorites() {
     final feedFavoritesWidgetBuilder = this.feedFavoritesWidgetBuilder;
@@ -112,6 +113,13 @@ class FeedStoriesStream extends StoriesStream {
   @override
   void storiesLoaded(int size, String feed) =>
       onStoriesLoaded?.call(size, feed);
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {
+    if (feed != this.feed) return;
+    onStoriesLoadError?.call();
+    controller.addError(Exception('loadListError feed: $feed'));
+  }
 
   @override
   void scrollToStory(int id, String feed, String uniqueId) {

@@ -6,7 +6,6 @@ import '../../generated/pigeon_generated.g.dart'
     show IASStoryListHostApi, StoryAPIDataDto, StoryFavoriteItemAPIDataDto;
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
-import '../../observable_error_callback_flutter_api.dart';
 import '../decorators/feed_decorator.dart';
 import 'stories_stream.dart';
 
@@ -19,11 +18,11 @@ class FavoritesStoriesStream extends StoriesStream {
     this.feedDecorator,
     this.feedController,
     this.onStoriesLoaded,
+    this.onStoriesLoadError,
   }) : super(
           uniqueId: _uniqueId,
           observableStoryList:
               InAppStoryAPIListSubscriberFlutterApiObservable(_uniqueId),
-          observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
@@ -40,6 +39,8 @@ class FavoritesStoriesStream extends StoriesStream {
   final Function(int size, String feed)? onStoriesLoaded;
 
   final tempStories = <StoryFromPigeonDto>[];
+
+  Function()? onStoriesLoadError;
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
@@ -96,7 +97,6 @@ class FavoritesStoriesStream extends StoriesStream {
   @override
   void onListen() async {
     observableStoryList.addObserver(this);
-    observableErrorCallback.addObserver(this);
     iasStoryListHostApi.load(feed, uniqueId);
   }
 
@@ -104,7 +104,6 @@ class FavoritesStoriesStream extends StoriesStream {
   void onCancel() async {
     //iasStoryListHostApi.removeSubscriber(feed);
     observableStoryList.removeObserver(this);
-    observableErrorCallback.removeObserver(this);
   }
 
   @override
@@ -112,7 +111,12 @@ class FavoritesStoriesStream extends StoriesStream {
       onStoriesLoaded?.call(size, feed);
 
   @override
-  void scrollToStory(int index, String feed, String uniqueId) {
-    // TODO: implement scrollToStory
+  void scrollToStory(int index, String feed, String uniqueId) {}
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {
+    if (feed != this.feed) return;
+    onStoriesLoadError?.call();
+    controller.addError(Exception('loadListError feed: $feed'));
   }
 }

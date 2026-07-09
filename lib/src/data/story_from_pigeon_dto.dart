@@ -101,6 +101,9 @@ class StoryFromPigeonDto
 
   @override
   void scrollToStory(int index, String feed, String uniqueId) {}
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {}
 }
 
 File? nullableFileFromString(String? filePath) {

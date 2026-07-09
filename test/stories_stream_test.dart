@@ -31,7 +31,7 @@ void main() {
         uniqueId: 'uniqueId',
         storyWidgetBuilder: MockStoryWidgetBuilder(),
         observableStoryList: observableStoryList = MockObservable(),
-        observableErrorCallback: observableErrorCallback = MockObservable(),
+        // observableErrorCallback: observableErrorCallback = MockObservable(),
         iasStoryListHostApi: iasStoryListHostApi = MockIASStoryListHostApi(),
         storyDecorator: MockStoryDecorator(),
       );
@@ -45,8 +45,8 @@ void main() {
 
       test('THEN api subscribed', () {
         verify(() => observableStoryList.addObserver(storiesStream)).called(1);
-        verify(() => observableErrorCallback.addObserver(storiesStream))
-            .called(1);
+        // verify(() => observableErrorCallback.addObserver(storiesStream))
+        //     .called(1);
         verify(() => iasStoryListHostApi.load(feed, uniqueId)).called(1);
       });
     });
@@ -54,7 +54,7 @@ void main() {
     group('WHEN no client', () {
       test('THEN api never called', () {
         verifyZeroInteractions(observableStoryList);
-        verifyZeroInteractions(observableErrorCallback);
+        //verifyZeroInteractions(observableErrorCallback);
         verifyZeroInteractions(iasStoryListHostApi);
       });
     });
@@ -66,10 +66,10 @@ void main() {
       group('WHEN client cancels', () {
         setUp(() => subscription.cancel());
 
-        test('THEN api unsubscribed', () {
-          verify(() => observableErrorCallback.removeObserver(storiesStream))
-              .called(1);
-        });
+        // test('THEN api unsubscribed', () {
+        //   verify(() => observableErrorCallback.removeObserver(storiesStream))
+        //       .called(1);
+        // });
       });
     });
   });
@@ -81,7 +81,6 @@ class _TestStoriesStream extends StoriesStream {
     required super.uniqueId,
     required super.storyWidgetBuilder,
     required super.observableStoryList,
-    required super.observableErrorCallback,
     required super.iasStoryListHostApi,
     required super.storyDecorator,
   });
@@ -97,4 +96,7 @@ class _TestStoriesStream extends StoriesStream {
 
   @override
   void scrollToStory(int index, String feed, String uniqueId) {}
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {}
 }

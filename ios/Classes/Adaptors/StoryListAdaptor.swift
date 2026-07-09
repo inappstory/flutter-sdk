@@ -50,6 +50,7 @@ class StoryListAdaptor: IASStoryListHostApi {
         storyListAPI.storyUpdate = nil
         storyListAPI.favoritesUpdate = nil
         storyListAPI.scrollUpdate = nil
+        storyListAPI.storiesUpdateFailure = nil
         updateHandlerAdaptor = nil
     }
 

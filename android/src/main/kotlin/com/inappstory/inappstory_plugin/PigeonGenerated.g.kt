@@ -196,7 +196,9 @@ class FlutterError (
 
 enum class StoryTypeDto(val raw: Int) {
   COMMON(0),
-  UGC(1);
+  UGC(1),
+  IAM(2),
+  BANNER(3);
 
   companion object {
     fun ofRaw(raw: Int): StoryTypeDto? {
@@ -1420,6 +1422,23 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
     val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.scrollToStory$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(indexArg, feedArg, uniqueIdArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  fun storiesUpdateFailure(feedArg: String, reasonArg: String?, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesUpdateFailure$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(feedArg, reasonArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
