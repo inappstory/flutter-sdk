@@ -4,7 +4,7 @@ export 'ias_callback_mixin.dart';
 export 'ias_checkout_callback_impl.dart'
     show GetProductCartStateCallbackImpl, OnProductCartUpdateCallbackImpl;
 export 'ias_checkout_callback_mixin.dart';
-export 'ias_error_callback_impl.dart';
+export 'ias_error_callback_impl.dart' show IASErrorCallback;
 export 'ias_game_reader_callback_mixin.dart';
 export 'ias_good_item_selected_callback.dart';
 export 'ias_in_app_message_callback_mixin.dart';

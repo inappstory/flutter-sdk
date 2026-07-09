@@ -22,7 +22,6 @@ void main() {
     late StoriesStream storiesStream;
     late MockObservable<InAppStoryAPIListSubscriberFlutterApi>
         observableStoryList;
-    late MockObservable<ErrorCallbackFlutterApi> observableErrorCallback;
     late MockIASStoryListHostApi iasStoryListHostApi;
 
     setUp(() {
@@ -31,7 +30,6 @@ void main() {
         uniqueId: 'uniqueId',
         storyWidgetBuilder: MockStoryWidgetBuilder(),
         observableStoryList: observableStoryList = MockObservable(),
-        // observableErrorCallback: observableErrorCallback = MockObservable(),
         iasStoryListHostApi: iasStoryListHostApi = MockIASStoryListHostApi(),
         storyDecorator: MockStoryDecorator(),
       );
@@ -45,8 +43,6 @@ void main() {
 
       test('THEN api subscribed', () {
         verify(() => observableStoryList.addObserver(storiesStream)).called(1);
-        // verify(() => observableErrorCallback.addObserver(storiesStream))
-        //     .called(1);
         verify(() => iasStoryListHostApi.load(feed, uniqueId)).called(1);
       });
     });
@@ -54,7 +50,6 @@ void main() {
     group('WHEN no client', () {
       test('THEN api never called', () {
         verifyZeroInteractions(observableStoryList);
-        //verifyZeroInteractions(observableErrorCallback);
         verifyZeroInteractions(iasStoryListHostApi);
       });
     });
