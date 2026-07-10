@@ -12,6 +12,22 @@
 - `OnboardingLoadCallbackFlutterApi` changed to `IASOnboardingLoadCallback` mixin
 - Updated iOS SDK to 1.27.10
 
+## [0.7.13]
+
+### Added
+
+- `storiesLoadError` callback in `FeedStoriesWidget`
+- Error callback handler in `InAppStoryManager`
+
+### Fixed
+
+- Fixed a memory leak of story list adaptors not released after the feed widget was disposed (iOS &
+  Android)
+
+### Changed
+
+- Updated iOS SDK to 1.27.11
+
 ## [0.7.12]
 
 ### Fixed

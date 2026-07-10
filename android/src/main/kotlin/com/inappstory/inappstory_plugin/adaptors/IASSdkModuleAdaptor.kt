@@ -109,7 +109,13 @@ class InappstorySdkModuleAdaptor(
                 )
             )
 
-            inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+            inAppStoryManager.setErrorCallback(
+                ErrorCallbackAdaptor(flutterPluginBinding) { feed ->
+                    feedListAdaptors
+                        .filter { it.feed == feed }
+                        .forEach { it.apiSubscriber.storiesUpdateFailure(feed, null) }
+                }
+            )
 
             iasManagerAdaptor =
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
@@ -200,10 +206,16 @@ class InappstorySdkModuleAdaptor(
     override fun removeListAdaptor(feed: String, uniqueId: String) {
         val iterator = feedListAdaptors.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().uniqueId == uniqueId) {
+            val adaptor = iterator.next()
+            if (adaptor.uniqueId == uniqueId) {
+                adaptor.dispose()
                 iterator.remove()
             }
         }
+    }
+
+    override fun isInitialized(): Boolean {
+        return InAppStoryManager.getInstance()?.isInitialized == true
     }
 
     private fun createAnonymousInAppStoryManager(

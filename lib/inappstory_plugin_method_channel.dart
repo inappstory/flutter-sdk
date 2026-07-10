@@ -40,4 +40,9 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
       cacheSize: cacheSize,
     );
   }
+
+  @override
+  Future<bool> isInitialized() {
+    return inappstorySdkModuleHostApi.isInitialized();
+  }
 }

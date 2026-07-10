@@ -18,6 +18,7 @@ export 'src/generated/pigeon_generated.g.dart'
         IASSingleStoryHostApi,
         IASInAppMessagesHostApi,
         GameReaderCallbackFlutterApi,
+        ErrorCallbackFlutterApi,
         CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/placeholders/placeholders.dart';
@@ -48,5 +49,9 @@ class InAppStoryPlugin {
       languageRegion: locale?.countryCode,
       cacheSize: cacheSize?.name,
     );
+  }
+
+  Future<bool> isInitialized() async {
+    return InappstoryPluginPlatform.instance.isInitialized();
   }
 }

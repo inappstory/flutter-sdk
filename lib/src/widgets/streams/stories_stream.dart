@@ -17,13 +17,12 @@ import '../builders/builders.dart';
 import '../decorators/feed_decorator.dart';
 
 abstract class StoriesStream extends Stream<Iterable<Widget>>
-    implements InAppStoryAPIListSubscriberFlutterApi, ErrorCallbackFlutterApi {
+    implements InAppStoryAPIListSubscriberFlutterApi {
   StoriesStream({
     required this.feed,
     required this.uniqueId,
     required this.storyWidgetBuilder,
     required this.observableStoryList,
-    required this.observableErrorCallback,
     required this.iasStoryListHostApi,
     required this.storyDecorator,
   });
@@ -31,7 +30,6 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   final String uniqueId;
   final String feed;
   final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
-  final Observable<ErrorCallbackFlutterApi> observableErrorCallback;
   final StoryWidgetBuilder storyWidgetBuilder;
   final IASStoryListHostApi iasStoryListHostApi;
   final FeedStoryDecorator storyDecorator;
@@ -46,14 +44,12 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   void onListen() async {
     await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
-    observableErrorCallback.addObserver(this);
     iasStoryListHostApi.load(feed, uniqueId);
   }
 
   void onCancel() async {
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
-    observableErrorCallback.removeObserver(this);
     await InappstorySdkModuleHostApi().removeListAdaptor(feed, uniqueId);
   }
 
@@ -69,12 +65,6 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
       storyDecorator: storyDecorator,
       key: ValueKey(story.hashCode),
     );
-  }
-
-  @override
-  void loadListError(String feed) {
-    if (feed != this.feed) return;
-    controller.addError(Exception('loadListError feed: $feed'));
   }
 
   @override
@@ -94,16 +84,4 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
       cancelOnError: cancelOnError,
     );
   }
-
-  @override
-  void cacheError() {}
-
-  @override
-  void emptyLinkError() {}
-
-  @override
-  void noConnection() {}
-
-  @override
-  void sessionError() {}
 }

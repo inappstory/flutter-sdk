@@ -196,7 +196,9 @@ class FlutterError (
 
 enum class StoryTypeDto(val raw: Int) {
   COMMON(0),
-  UGC(1);
+  UGC(1),
+  IAM(2),
+  BANNER(3);
 
   companion object {
     fun ofRaw(raw: Int): StoryTypeDto? {
@@ -888,6 +890,7 @@ interface InappstorySdkModuleHostApi {
   fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, callback: (Result<Unit>) -> Unit)
   fun createListAdaptor(feed: String, uniqueId: String)
   fun removeListAdaptor(feed: String, uniqueId: String)
+  fun isInitialized(): Boolean
 
   companion object {
     /** The codec used by InappstorySdkModuleHostApi. */
@@ -952,6 +955,21 @@ interface InappstorySdkModuleHostApi {
             val wrapped: List<Any?> = try {
               api.removeListAdaptor(feedArg, uniqueIdArg)
               listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.isInitialized$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.isInitialized())
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }
@@ -1415,6 +1433,23 @@ class InAppStoryAPIListSubscriberFlutterApi(private val binaryMessenger: BinaryM
       } 
     }
   }
+  fun storiesUpdateFailure(feedArg: String, reasonArg: String?, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.InAppStoryAPIListSubscriberFlutterApi.storiesUpdateFailure$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(feedArg, reasonArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
 class ErrorCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
@@ -1422,57 +1457,6 @@ class ErrorCallbackFlutterApi(private val binaryMessenger: BinaryMessenger, priv
     /** The codec used by ErrorCallbackFlutterApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
-    }
-  }
-  fun loadListError(feedArg: String, callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.loadListError$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(feedArg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
-      } 
-    }
-  }
-  fun cacheError(callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.cacheError$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(null) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
-      } 
-    }
-  }
-  fun emptyLinkError(callback: (Result<Unit>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.inappstory_plugin.ErrorCallbackFlutterApi.emptyLinkError$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(null) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(PigeonGeneratedPigeonUtils.createConnectionError(channelName)))
-      } 
     }
   }
   fun sessionError(callback: (Result<Unit>) -> Unit)

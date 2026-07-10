@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin_method_channel.dart';
 import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
@@ -16,6 +18,11 @@ class MockInappstoryPluginPlatform
       String? languageCode,
       String? languageRegion,
       String? cacheSize}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureOr<bool> isInitialized() {
     throw UnimplementedError();
   }
 }

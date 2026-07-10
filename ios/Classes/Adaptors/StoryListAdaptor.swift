@@ -27,7 +27,7 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
 
     internal func setupAdaptors() {
-        StoriesListUpdateHandlerAdaptor(
+        updateHandlerAdaptor = StoriesListUpdateHandlerAdaptor(
             binaryMessenger: binaryMessenger,
             storyListAPI: storyListAPI,
             feed: feed,
@@ -40,6 +40,20 @@ class StoryListAdaptor: IASStoryListHostApi {
         )
     }
 
+    func dispose() {
+        IASStoryListHostApiSetup.setUp(
+            binaryMessenger: binaryMessenger,
+            api: nil,
+            messageChannelSuffix: uniqueId
+        )
+        storyListAPI.storyListUpdate = nil
+        storyListAPI.storyUpdate = nil
+        storyListAPI.favoritesUpdate = nil
+        storyListAPI.scrollUpdate = nil
+        storyListAPI.storiesUpdateFailure = nil
+        updateHandlerAdaptor = nil
+    }
+
     public var uniqueId: String
     public var feed: String
 
@@ -47,12 +61,20 @@ class StoryListAdaptor: IASStoryListHostApi {
 
     var storyListAPI: StoryListAPI
 
+    /// Strong owner of the update handler; without it the handler survives only
+    /// via a retain cycle with storyListAPI. Cleared in `dispose()`.
+    internal var updateHandlerAdaptor: StoriesListUpdateHandlerAdaptor?
+
     func load(feed: String, uniqueId: String) throws {
         // Noop use impls for Feed & Favorites
     }
 
     func reloadFeed(feed: String) throws {
-        storyListAPI.refresh(feed)
+        if self.feed != feed {
+            storyListAPI.setNewFeed(feed)
+        } else {
+            storyListAPI.refresh(feed)
+        }
     }
 
     func openStoryReader(storyId: Int64, feed: String) throws {
@@ -102,7 +124,7 @@ class FavoritesStoryListAdaptor: StoryListAdaptor {
     }
 
     override func setupAdaptors() {
-        FavoriteStoriesListUpdateHandlerAdaptor(
+        updateHandlerAdaptor = FavoriteStoriesListUpdateHandlerAdaptor(
             binaryMessenger: binaryMessenger,
             storyListAPI: storyListAPI,
             feed: feed,

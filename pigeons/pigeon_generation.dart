@@ -31,6 +31,8 @@ abstract class InappstorySdkModuleHostApi {
   void createListAdaptor(String feed, String uniqueId);
 
   void removeListAdaptor(String feed, String uniqueId);
+
+  bool isInitialized();
 }
 
 @HostApi()
@@ -94,16 +96,12 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void storiesLoaded(int size, String feed);
 
   void scrollToStory(int index, String feed, String uniqueId);
+
+  void storiesUpdateFailure(String feed, String? reason);
 }
 
 @FlutterApi()
 abstract class ErrorCallbackFlutterApi {
-  void loadListError(String feed);
-
-  void cacheError();
-
-  void emptyLinkError();
-
   void sessionError();
 
   void noConnection();
@@ -134,7 +132,9 @@ class StoryDataDto {
 
 enum StoryTypeDto {
   COMMON,
-  UGC;
+  UGC,
+  IAM,
+  BANNER;
 }
 
 enum SourceTypeDto {

@@ -11,4 +11,7 @@ abstract class InAppStorySdkModule {
     String? userSign,
     String? cacheSize,
   });
+
+  /// Returns whether the native SDK has already been initialized.
+  FutureOr<bool> isInitialized();
 }
