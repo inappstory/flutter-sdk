@@ -40,7 +40,7 @@ class FavoritesStoriesStream extends StoriesStream {
 
   final tempStories = <StoryFromPigeonDto>[];
 
-  Function()? onStoriesLoadError;
+  Function(String? reason)? onStoriesLoadError;
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
@@ -116,7 +116,7 @@ class FavoritesStoriesStream extends StoriesStream {
   @override
   void storiesUpdateFailure(String feed, String? reason) {
     if (feed != this.feed) return;
-    onStoriesLoadError?.call();
+    onStoriesLoadError?.call(reason);
     controller.addError(Exception('loadListError feed: $feed'));
   }
 }
