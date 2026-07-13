@@ -59,7 +59,7 @@ class FeedStoriesStream extends StoriesStream {
 
   final Function(int index, StoryFromPigeonDto story)? onScrollToStory;
 
-  Function()? onStoriesLoadError;
+  Function(String? reason)? onStoriesLoadError;
 
   Iterable<Widget> combineStoriesAndFavorites() {
     final feedFavoritesWidgetBuilder = this.feedFavoritesWidgetBuilder;
@@ -117,7 +117,7 @@ class FeedStoriesStream extends StoriesStream {
   @override
   void storiesUpdateFailure(String feed, String? reason) {
     if (feed != this.feed) return;
-    onStoriesLoadError?.call();
+    onStoriesLoadError?.call(reason);
     controller.addError(Exception('loadListError feed: $feed'));
   }
 

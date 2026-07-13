@@ -133,7 +133,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         )
         
         let errorCallbackAdaptor = ErrorCallbackAdaptor(binaryMessenger: binaryMessenger)
-        
         completion(.success(()))
     }
 

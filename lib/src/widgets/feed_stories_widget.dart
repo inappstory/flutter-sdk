@@ -66,7 +66,7 @@ class FeedStoriesWidget extends StatefulWidget {
   final FeedFavoritesWidgetBuilder? favoritesBuilder;
 
   final Function(int size, String feed)? storiesLoaded;
-  final Function()? storiesLoadError;
+  final Function(String? reason)? storiesLoadError;
 
   @override
   State<FeedStoriesWidget> createState() => FeedStoriesWidgetState();
