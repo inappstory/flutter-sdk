@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import '../../controllers/feed_stories_controller.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../generated/pigeon_generated.g.dart'
     show IASStoryListHostApi, StoryAPIDataDto, StoryFavoriteItemAPIDataDto;
@@ -16,7 +15,7 @@ class FavoritesStoriesStream extends StoriesStream {
     required super.feed,
     required super.storyWidgetBuilder,
     this.feedDecorator,
-    this.feedController,
+    super.feedController,
     this.onStoriesLoaded,
     this.onStoriesLoadError,
   }) : super(
@@ -26,13 +25,10 @@ class FavoritesStoriesStream extends StoriesStream {
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: _uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
-        ) {
-    feedController
-      ?..feed = _uniqueId
-      ..iasStoryListHostApi = iasStoryListHostApi;
-  }
+        );
 
-  final FeedStoriesController? feedController;
+  @override
+  Future<void> reload() => iasStoryListHostApi.reloadFeed(_uniqueId);
 
   final FeedStoryDecorator? feedDecorator;
 

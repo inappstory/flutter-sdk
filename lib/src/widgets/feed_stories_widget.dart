@@ -210,9 +210,12 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   @override
   void didUpdateWidget(covariant FeedStoriesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      _feedController = widget.controller ?? FeedStoriesController();
+      _feedStoriesWidgetsStream.feedController = _feedController;
+    }
     if (oldWidget.feed != widget.feed) {
       _feedStoriesWidgetsStream.feed = widget.feed;
-      _feedController.feed = widget.feed;
       _feedController.fetchFeedStories();
     }
   }

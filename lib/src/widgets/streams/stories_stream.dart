@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import '../../controllers/feed_stories_controller.dart';
 import '../../data/observable.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../generated/pigeon_generated.g.dart'
@@ -24,7 +25,10 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     required this.observableStoryList,
     required this.iasStoryListHostApi,
     required this.storyDecorator,
-  });
+    FeedStoriesController? feedController,
+  }) {
+    this.feedController = feedController;
+  }
 
   final String uniqueId;
 
@@ -35,6 +39,23 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   final FeedStoryDecorator storyDecorator;
 
   List<StoryFromPigeonDto> stories = [];
+
+  @protected
+  Future<void> reload() => iasStoryListHostApi.reloadFeed(feed);
+
+  late final FeedReloadCallback _reload = reload;
+
+  FeedStoriesController? _feedController;
+
+  FeedStoriesController? get feedController => _feedController;
+
+  set feedController(FeedStoriesController? controller) {
+    if (identical(_feedController, controller)) return;
+
+    _feedController?.detach(_reload);
+    _feedController = controller;
+    controller?.attach(_reload);
+  }
 
   late final controller = StreamController<Iterable<Widget>>(
     onListen: onListen,

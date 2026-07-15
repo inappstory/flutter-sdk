@@ -28,7 +28,7 @@ class FeedStoriesStream extends StoriesStream {
     required super.storyWidgetBuilder,
     required super.uniqueId,
     this.feedDecorator,
-    this.feedController,
+    super.feedController,
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
     this.onScrollToStory,
@@ -39,15 +39,9 @@ class FeedStoriesStream extends StoriesStream {
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
-        ) {
-    feedController
-      ?..feed = feed
-      ..iasStoryListHostApi = iasStoryListHostApi;
-  }
+        );
 
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
-
-  final FeedStoriesController? feedController;
 
   final FeedStoryDecorator? feedDecorator;
 
@@ -143,7 +137,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   void dispose() {
-    feedController?.detach(iasStoryListHostApi);
+    feedController = null;
     _favoritesStreamController.close();
   }
 }
