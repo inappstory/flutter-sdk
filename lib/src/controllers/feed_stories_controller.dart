@@ -15,6 +15,13 @@ class FeedStoriesController {
     _iasStoryListHostApi = hostApi;
   }
 
+  @protected
+  void detach(IASStoryListHostApi hostApi) {
+    if (identical(_iasStoryListHostApi, hostApi)) {
+      _iasStoryListHostApi = null;
+    }
+  }
+
   String? _feed;
 
   set feed(String value) {

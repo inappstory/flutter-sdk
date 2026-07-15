@@ -143,6 +143,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   void dispose() {
+    feedController?.detach(iasStoryListHostApi);
     _favoritesStreamController.close();
   }
 }

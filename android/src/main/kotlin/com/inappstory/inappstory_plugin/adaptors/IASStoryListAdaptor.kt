@@ -14,7 +14,7 @@ open class IASStoryListAdaptor(
     internal val iASStoryList: IASStoryList,
     private val inAppStoryAPI: InAppStoryAPI,
     internal val activityHolder: ActivityHolder,
-    val feed: String,
+    var feed: String,
     val uniqueId: String = "feed",
 ) : IASStoryListHostApi, DisposableHandle {
 
@@ -39,6 +39,7 @@ open class IASStoryListAdaptor(
     }
 
     override fun reloadFeed(feed: String) {
+        this.feed = feed
         iASStoryList.load(feed, uniqueId, true, false, mutableListOf<String>())
     }
 

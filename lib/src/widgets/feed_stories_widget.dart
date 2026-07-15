@@ -117,7 +117,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   }
 
   /// Fetches a stream of widgets representing the stories in the feed.
-  Stream<Iterable<Widget>> _getStoriesWidgets() {
+  FeedStoriesStream _getStoriesWidgets() {
     return FeedStoriesStream(
       uniqueId: idGenerator(),
       feed: widget.feed,
@@ -211,6 +211,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   void didUpdateWidget(covariant FeedStoriesWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.feed != widget.feed) {
+      _feedStoriesWidgetsStream.feed = widget.feed;
       _feedController.feed = widget.feed;
       _feedController.fetchFeedStories();
     }
@@ -218,7 +219,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
 
   @override
   void dispose() {
-    (_feedStoriesWidgetsStream as FeedStoriesStream).dispose();
+    _feedStoriesWidgetsStream.dispose();
     super.dispose();
   }
 }

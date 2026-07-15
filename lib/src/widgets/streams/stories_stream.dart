@@ -7,7 +7,6 @@ import '../../data/story_from_pigeon_dto.dart';
 import '../../generated/pigeon_generated.g.dart'
     show
         InAppStoryAPIListSubscriberFlutterApi,
-        ErrorCallbackFlutterApi,
         IASStoryListHostApi,
         StoryAPIDataDto,
         StoryFavoriteItemAPIDataDto,
@@ -28,7 +27,8 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   });
 
   final String uniqueId;
-  final String feed;
+
+  String feed;
   final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
   final StoryWidgetBuilder storyWidgetBuilder;
   final IASStoryListHostApi iasStoryListHostApi;
