@@ -46,7 +46,12 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     }
 
     func setTags(tags: [String]) throws {
-        InAppStory.shared.settings?.tags = tags
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] setTags \(tags)")
+        // Settings is a struct, so `settings?.tags = tags` reads it, mutates a
+        // copy and assigns it back — firing the same `settings` setter that
+        // recreates the session, on top of the setTags call below. Only the API
+        // call is needed.
         InAppStory.shared.setTags(tags)
     }
 
@@ -59,6 +64,11 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         newTags: [String]?,
         newPlaceholders: [String: String]?
     ) throws {
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] setUserSettings ENTER userId=\(userId ?? "nil") "
+            + "tags=\(newTags ?? [])")
+        defer { NSLog("[IAS-NATIVE] setUserSettings EXIT") }
+
         var locale: String? = nil
 
         if newLanguageCode != nil && newLanguageRegion != nil {
@@ -93,7 +103,12 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         userSign: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        InAppStory.shared.settings = Settings(userID: userId, sign: userSign)
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] changeUser ENTER userId=\(userId)")
+        InAppStory.shared.settings?.userID = userId
+        InAppStory.shared.settings?.sign = userSign
+       // InAppStory.shared.settings = Settings(userID: userId, sign: userSign)
+        NSLog("[IAS-NATIVE] changeUser EXIT")
 
         completion(.success(()))
     }

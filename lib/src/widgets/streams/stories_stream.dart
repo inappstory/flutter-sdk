@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 
@@ -40,10 +41,55 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   List<StoryFromPigeonDto> stories = [];
 
+  /// How long to wait for the native SDK to report the outcome of a load
+  /// before giving up. The SDK can silently drop a load (e.g. when settings
+  /// change mid-flight) without ever calling back, leaving the UI stuck in
+  /// an infinite loading state; this converts that silence into a failure.
+  static const _loadTimeout = Duration(seconds: 15);
+
+  Timer? _loadWatchdog;
+
+  // TEMP DIAGNOSTIC: remove before release. Traces the native SDK handshake to
+  // find out whether it answers a load at all after a settings change.
+  // Uses print, not log: dart:developer log goes to the VM service only and
+  // never reaches the stdout that `flutter run` prints.
+  // ignore: avoid_print
+  void _trace(String message) =>
+      print('[IAS-TRACE][$feed/$uniqueId] $message @${DateTime.now()}');
+
+  @protected
+  void armLoadWatchdog() {
+    _loadWatchdog?.cancel();
+    _trace('watchdog armed (${_loadTimeout.inSeconds}s)');
+    _loadWatchdog = Timer(_loadTimeout, () {
+      _trace('WATCHDOG FIRED: SDK never answered');
+      storiesUpdateFailure(feed, 'timeout: no response from InAppStory SDK');
+    });
+  }
+
+  @protected
+  void disarmLoadWatchdog() {
+    if (_loadWatchdog != null) _trace('watchdog disarmed (SDK answered)');
+    _loadWatchdog?.cancel();
+    _loadWatchdog = null;
+  }
+
   @protected
   Future<void> reload() => iasStoryListHostApi.reloadFeed(feed);
 
-  late final FeedReloadCallback _reload = reload;
+  Future<void> _reloadAndArm() async {
+    _trace('reload() called by controller');
+    armLoadWatchdog();
+    try {
+      await reload();
+      _trace('reload() channel call returned OK');
+    } catch (e) {
+      _trace('reload() channel call THREW: $e');
+      rethrow;
+    }
+  }
+
+  late final FeedReloadCallback _reload = _reloadAndArm;
 
   FeedStoriesController? _feedController;
 
@@ -63,12 +109,17 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   );
 
   void onListen() async {
+    _trace('onListen: creating list adaptor');
     await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
+    armLoadWatchdog();
+    _trace('onListen: calling load()');
     iasStoryListHostApi.load(feed, uniqueId);
   }
 
   void onCancel() async {
+    _trace('onCancel: tearing down (widget unmounted)');
+    disarmLoadWatchdog();
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
     await InappstorySdkModuleHostApi().removeListAdaptor(feed, uniqueId);

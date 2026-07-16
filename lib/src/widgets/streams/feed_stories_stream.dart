@@ -73,6 +73,9 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
+    // ignore: avoid_print
+    print('[IAS-TRACE][$feed/$uniqueId] <<< updateStoriesData: ${list.length}');
+    disarmLoadWatchdog();
     stories = list
         .whereType<StoryAPIDataDto>()
         .map(createStoryFromDto)
@@ -105,12 +108,25 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) =>
-      onStoriesLoaded?.call(size, feed);
+  void storiesLoaded(int size, String feed) {
+    // ignore: avoid_print
+    print('[IAS-TRACE][${this.feed}/$uniqueId] <<< storiesLoaded: '
+        'size=$size feed=$feed');
+    disarmLoadWatchdog();
+    onStoriesLoaded?.call(size, feed);
+  }
 
   @override
   void storiesUpdateFailure(String feed, String? reason) {
-    if (feed != this.feed) return;
+    // ignore: avoid_print
+    print('[IAS-TRACE][${this.feed}/$uniqueId] <<< storiesUpdateFailure: '
+        'feed=$feed reason=$reason');
+    if (feed != this.feed) {
+      // ignore: avoid_print
+      print('[IAS-TRACE][${this.feed}/$uniqueId] ...ignored (stale feed)');
+      return;
+    }
+    disarmLoadWatchdog();
     onStoriesLoadError?.call(reason);
     controller.addError(Exception('loadListError feed: $feed'));
   }
@@ -137,6 +153,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   void dispose() {
+    disarmLoadWatchdog();
     feedController = null;
     _favoritesStreamController.close();
   }

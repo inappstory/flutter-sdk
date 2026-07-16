@@ -105,6 +105,11 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   @override
   initState() {
     super.initState();
+    // TEMP DIAGNOSTIC: remove before release. print, not log: dart:developer
+    // log never reaches the stdout that `flutter run` prints.
+    // ignore: avoid_print
+    print('[IAS-TRACE][widget] initState feed=${widget.feed} '
+        '@${DateTime.now()}');
     _feedController = widget.controller ?? FeedStoriesController();
     errorBuilder = widget.errorBuilder;
     feedDecorator = widget.decorator ?? FeedStoryDecorator();

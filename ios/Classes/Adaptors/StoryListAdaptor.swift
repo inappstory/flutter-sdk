@@ -24,6 +24,14 @@ class StoryListAdaptor: IASStoryListHostApi {
         self.storyListAPI = storyListAPI
 
         setupAdaptors()
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] StoryListAdaptor INIT feed=\(feed) uid=\(uniqueId)")
+    }
+
+    // TEMP DIAGNOSTIC: remove before release. If this never fires after a feed
+    // is unmounted, the SDK is still holding storyListAPI and the orphan lives.
+    deinit {
+        NSLog("[IAS-NATIVE] StoryListAdaptor DEINIT feed=\(feed) uid=\(uniqueId)")
     }
 
     internal func setupAdaptors() {
@@ -41,6 +49,8 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
 
     func dispose() {
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] dispose feed=\(feed) uid=\(uniqueId)")
         IASStoryListHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
             api: nil,
@@ -70,12 +80,16 @@ class StoryListAdaptor: IASStoryListHostApi {
     }
 
     func reloadFeed(feed: String) throws {
+        // TEMP DIAGNOSTIC: remove before release.
+        NSLog("[IAS-NATIVE] reloadFeed ENTER feed=\(feed) uid=\(uniqueId) "
+            + "self.feed=\(self.feed)")
         if self.feed != feed {
             storyListAPI.setNewFeed(feed)
         } else {
             storyListAPI.refresh(feed)
         }
         self.feed = feed
+        NSLog("[IAS-NATIVE] reloadFeed EXIT uid=\(uniqueId)")
     }
 
     func openStoryReader(storyId: Int64, feed: String) throws {
