@@ -1,3 +1,13 @@
+## [0.8.2]
+
+### Fixed
+
+- Stories list not reloads after changing user
+
+### Changed
+
+- Updated iOS SDK to 1.27.12
+
 ## [0.8.1]
 
 ### Added

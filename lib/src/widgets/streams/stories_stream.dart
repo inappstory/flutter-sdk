@@ -41,10 +41,6 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   List<StoryFromPigeonDto> stories = [];
 
-  /// How long to wait for the native SDK to report the outcome of a load
-  /// before giving up. The SDK can silently drop a load (e.g. when settings
-  /// change mid-flight) without ever calling back, leaving the UI stuck in
-  /// an infinite loading state; this converts that silence into a failure.
   static const _loadTimeout = Duration(seconds: 15);
 
   Timer? _loadWatchdog;
