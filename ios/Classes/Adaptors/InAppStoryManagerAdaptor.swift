@@ -41,17 +41,17 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
 
     }
 
+    private static func localeIdentifier(_ code: String, _ region: String)
+        -> String
+    {
+        return "\(code)-\(region)"
+    }
+
     func setPlaceholders(newPlaceholders: [String: String]) throws {
         InAppStory.shared.placeholders = newPlaceholders
     }
 
     func setTags(tags: [String]) throws {
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] setTags \(tags)")
-        // Settings is a struct, so `settings?.tags = tags` reads it, mutates a
-        // copy and assigns it back — firing the same `settings` setter that
-        // recreates the session, on top of the setTags call below. Only the API
-        // call is needed.
         InAppStory.shared.setTags(tags)
     }
 
@@ -64,37 +64,31 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         newTags: [String]?,
         newPlaceholders: [String: String]?
     ) throws {
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] setUserSettings ENTER userId=\(userId ?? "nil") "
-            + "tags=\(newTags ?? [])")
-        defer { NSLog("[IAS-NATIVE] setUserSettings EXIT") }
-
         var locale: String? = nil
-
-        if newLanguageCode != nil && newLanguageRegion != nil {
-            let str2: String = "_"
-            locale = "\(newLanguageCode)\(str2)\(newLanguageRegion)"
+        if let newLanguageCode, let newLanguageRegion {
+            locale = Self.localeIdentifier(newLanguageCode, newLanguageRegion)
         }
 
-        if anonymous != nil {
-            InAppStory.shared.settings = Settings(
-                userID: userId ?? "",
-                sign: userSign,
-                anonymous: anonymous!,
-                tags: newTags ?? [""],
-                lang: locale
-            )
+        if anonymous == nil, locale == nil,
+            var settings = InAppStory.shared.settings
+        {
+            if let userId { settings.userID = userId }
+            if let userSign { settings.sign = userSign }
+            if let newTags { settings.tags = newTags }
+            InAppStory.shared.settings = settings
         } else {
+            let current = InAppStory.shared.settings
             InAppStory.shared.settings = Settings(
-                userID: userId ?? "",
-                sign: userSign,
-                tags: newTags ?? [""],
+                userID: userId ?? current?.userID ?? "",
+                sign: userSign ?? current?.sign,
+                anonymous: anonymous ?? false,
+                tags: newTags ?? current?.tags ?? [],
                 lang: locale
             )
         }
 
-        if newPlaceholders != nil {
-            InAppStory.shared.placeholders = newPlaceholders!
+        if let newPlaceholders {
+            InAppStory.shared.placeholders = newPlaceholders
         }
     }
 
@@ -103,12 +97,8 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         userSign: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] changeUser ENTER userId=\(userId)")
         InAppStory.shared.settings?.userID = userId
         InAppStory.shared.settings?.sign = userSign
-       // InAppStory.shared.settings = Settings(userID: userId, sign: userSign)
-        NSLog("[IAS-NATIVE] changeUser EXIT")
 
         completion(.success(()))
     }
@@ -132,12 +122,12 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
     }
 
     func setLang(languageCode: String, languageRegion: String) throws {
-        let settings = InAppStory.shared.settings
-        let str2: String = "_"
-        let locale = "\(languageCode)\(str2)\(languageRegion)"
+        let current = InAppStory.shared.settings
         InAppStory.shared.settings = Settings(
-            userID: settings?.userID ?? "",
-            lang: locale
+            userID: current?.userID ?? "",
+            sign: current?.sign,
+            tags: current?.tags ?? [],
+            lang: Self.localeIdentifier(languageCode, languageRegion)
         )
     }
 

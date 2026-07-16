@@ -9,6 +9,8 @@ import 'package:inappstory_plugin/inappstory_plugin.dart'
         FeedStoriesController,
         InAppStoryAPIListSubscriberFlutterApi,
         StoryAPIDataDto;
+import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'
+    show InappstorySdkModuleHostApi;
 import 'package:inappstory_plugin/src/helpers/id_gen.dart';
 import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,6 +18,13 @@ import 'package:mocktail/mocktail.dart';
 import 'mocks.dart';
 
 void main() {
+  // onListen reaches the native side through a pigeon channel, which needs a
+  // binding and a handler standing in for the host.
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() => _stubModuleHostApiChannel());
+  tearDown(() => _stubModuleHostApiChannel(remove: true));
+
   group('GIVEN new instance for feedID', () {
     final feed = 'feedID';
     final uniqueId = idGenerator();
@@ -28,7 +37,7 @@ void main() {
     setUp(() {
       storiesStream = _TestStoriesStream(
         feed: feed,
-        uniqueId: 'uniqueId',
+        uniqueId: uniqueId,
         storyWidgetBuilder: MockStoryWidgetBuilder(),
         observableStoryList: observableStoryList = MockObservable(),
         iasStoryListHostApi: iasStoryListHostApi = MockIASStoryListHostApi(),
@@ -113,6 +122,24 @@ void main() {
       });
     });
   });
+}
+
+/// Stands in for the native side of [InappstorySdkModuleHostApi], which
+/// `onListen`/`onCancel` call directly. Replies `[null]`, the shape pigeon
+/// expects for a successful void call.
+void _stubModuleHostApiChannel({bool remove = false}) {
+  const prefix =
+      'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi';
+  const codec = InappstorySdkModuleHostApi.pigeonChannelCodec;
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+
+  for (final method in ['createListAdaptor', 'removeListAdaptor']) {
+    messenger.setMockMessageHandler(
+      '$prefix.$method',
+      remove ? null : (_) async => codec.encodeMessage(<Object?>[null]),
+    );
+  }
 }
 
 class _TestStoriesStream extends StoriesStream {

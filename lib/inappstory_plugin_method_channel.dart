@@ -30,27 +30,15 @@ class MethodChannelInappstoryPlugin extends InappstoryPluginPlatform {
     String? languageRegion,
     String? cacheSize,
   }) async {
-    // TEMP DIAGNOSTIC: remove before release. print, not log: dart:developer
-    // log never reaches the stdout that `flutter run` prints.
-    // ignore: avoid_print
-    print('[IAS-TRACE][init] >>> initWith userId=$userId @${DateTime.now()}');
-    try {
-      await inappstorySdkModuleHostApi.initWith(
-        apiKey,
-        userId,
-        userSign: userSign,
-        anonymous: anonymous,
-        languageCode: languageCode,
-        languageRegion: languageRegion,
-        cacheSize: cacheSize,
-      );
-      // ignore: avoid_print
-      print('[IAS-TRACE][init] <<< initWith returned OK @${DateTime.now()}');
-    } catch (e) {
-      // ignore: avoid_print
-      print('[IAS-TRACE][init] <<< initWith THREW: $e @${DateTime.now()}');
-      rethrow;
-    }
+    await inappstorySdkModuleHostApi.initWith(
+      apiKey,
+      userId,
+      userSign: userSign,
+      anonymous: anonymous,
+      languageCode: languageCode,
+      languageRegion: languageRegion,
+      cacheSize: cacheSize,
+    );
   }
 
   @override

@@ -49,27 +49,18 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   Timer? _loadWatchdog;
 
-  // TEMP DIAGNOSTIC: remove before release. Traces the native SDK handshake to
-  // find out whether it answers a load at all after a settings change.
-  // Uses print, not log: dart:developer log goes to the VM service only and
-  // never reaches the stdout that `flutter run` prints.
-  // ignore: avoid_print
-  void _trace(String message) =>
-      print('[IAS-TRACE][$feed/$uniqueId] $message @${DateTime.now()}');
-
   @protected
   void armLoadWatchdog() {
     _loadWatchdog?.cancel();
-    _trace('watchdog armed (${_loadTimeout.inSeconds}s)');
     _loadWatchdog = Timer(_loadTimeout, () {
-      _trace('WATCHDOG FIRED: SDK never answered');
+      log('[InAppStory]: feed "$feed" got no response from the native SDK '
+          'within ${_loadTimeout.inSeconds}s, reporting it as a failure');
       storiesUpdateFailure(feed, 'timeout: no response from InAppStory SDK');
     });
   }
 
   @protected
   void disarmLoadWatchdog() {
-    if (_loadWatchdog != null) _trace('watchdog disarmed (SDK answered)');
     _loadWatchdog?.cancel();
     _loadWatchdog = null;
   }
@@ -78,15 +69,8 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   Future<void> reload() => iasStoryListHostApi.reloadFeed(feed);
 
   Future<void> _reloadAndArm() async {
-    _trace('reload() called by controller');
     armLoadWatchdog();
-    try {
-      await reload();
-      _trace('reload() channel call returned OK');
-    } catch (e) {
-      _trace('reload() channel call THREW: $e');
-      rethrow;
-    }
+    await reload();
   }
 
   late final FeedReloadCallback _reload = _reloadAndArm;
@@ -109,16 +93,13 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   );
 
   void onListen() async {
-    _trace('onListen: creating list adaptor');
     await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
     armLoadWatchdog();
-    _trace('onListen: calling load()');
     iasStoryListHostApi.load(feed, uniqueId);
   }
 
   void onCancel() async {
-    _trace('onCancel: tearing down (widget unmounted)');
     disarmLoadWatchdog();
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);

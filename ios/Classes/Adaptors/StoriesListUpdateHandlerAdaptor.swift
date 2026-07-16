@@ -40,11 +40,6 @@ class StoriesListUpdateHandlerAdaptor {
         storyListAPI.storiesUpdateFailure = self.storiesUpdateFailure
     }
 
-    // TEMP DIAGNOSTIC: remove before release.
-    deinit {
-        NSLog("[IAS-NATIVE] UpdateHandler DEINIT uid=\(uniqueId)")
-    }
-
     private var binaryMessenger: FlutterBinaryMessenger
 
     private var feed: String
@@ -59,11 +54,6 @@ class StoriesListUpdateHandlerAdaptor {
         storiesList,
         isFavorite,
         feed in
-        // TEMP DIAGNOSTIC: remove before release. If this fires but Dart never
-        // sees updateStoriesData, the pigeon channel is the broken link; if it
-        // never fires, the SDK itself went silent.
-        NSLog("[IAS-NATIVE] SDK CALLED storyListUpdate feed=\(feed) "
-            + "uid=\(self.uniqueId) count=\(storiesList.count)")
         self.apiListSubscriberFlutterApi.updateStoriesData(
             list: storiesList.map(self.mapStoryAPIData),
             completion: { _ in }
@@ -134,9 +124,6 @@ class StoriesListUpdateHandlerAdaptor {
     private lazy var storiesUpdateFailure: StoriesUpdateFailure = {
         feed,
         error in
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] SDK CALLED storiesUpdateFailure feed=\(feed) "
-            + "uid=\(self.uniqueId) error=\(String(describing: error))")
         DispatchQueue.main.async {
             self.apiListSubscriberFlutterApi.storiesUpdateFailure(
                 feed: feed,

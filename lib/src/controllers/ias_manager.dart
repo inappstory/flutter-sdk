@@ -52,21 +52,12 @@ class InAppStoryManager {
     _logger = value;
   }
 
-  // TEMP DIAGNOSTIC: remove before release. print, not log: dart:developer log
-  // never reaches the stdout that `flutter run` prints.
-  // ignore: avoid_print
-  void _trace(String m) => print('[IAS-TRACE][manager] $m @${DateTime.now()}');
-
   Future<void> setPlaceholders(Map<String, String> placeholders) async {
-    _trace('>>> setPlaceholders');
     await _iasManager.setPlaceholders(placeholders);
-    _trace('<<< setPlaceholders returned');
   }
 
   Future<void> setTags(List<String> tags) async {
-    _trace('>>> setTags $tags');
     await _iasManager.setTags(tags);
-    _trace('<<< setTags returned');
   }
 
   Future<void> setUserSettings({
@@ -77,7 +68,6 @@ class InAppStoryManager {
     List<String>? tags,
     Map<String, String>? placeholders,
   }) async {
-    _trace('>>> setUserSettings userId=$userId tags=$tags');
     await _iasManager.setUserSettings(
       anonymous: anonymous,
       userId: userId,
@@ -87,13 +77,10 @@ class InAppStoryManager {
       newTags: tags,
       newPlaceholders: placeholders,
     );
-    _trace('<<< setUserSettings returned');
   }
 
   Future<void> changeUser(String userId, {String? userSign}) async {
-    _trace('>>> changeUser userId=$userId');
     await _iasManager.changeUser(userId, userSign: userSign);
-    _trace('<<< changeUser returned');
   }
 
   Future<void> userLogout() async {

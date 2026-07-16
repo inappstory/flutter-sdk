@@ -143,9 +143,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             uniqueId: uniqueId
         )
         feedStoryListAdaptors.append(newAdaptor)
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] createListAdaptor feed=\(feed) uid=\(uniqueId) "
-            + "-> live adaptors=\(feedStoryListAdaptors.count)")
     }
 
     func removeListAdaptor(feed: String, uniqueId: String) {
@@ -153,9 +150,6 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
             .filter { $0.uniqueId == uniqueId }
             .forEach { $0.dispose() }
         feedStoryListAdaptors.removeAll { $0.uniqueId == uniqueId }
-        // TEMP DIAGNOSTIC: remove before release.
-        NSLog("[IAS-NATIVE] removeListAdaptor feed=\(feed) uid=\(uniqueId) "
-            + "-> live adaptors=\(feedStoryListAdaptors.count)")
     }
 
     func isInitialized() throws -> Bool {
