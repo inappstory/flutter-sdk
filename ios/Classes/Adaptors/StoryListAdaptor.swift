@@ -75,6 +75,7 @@ class StoryListAdaptor: IASStoryListHostApi {
         } else {
             storyListAPI.refresh(feed)
         }
+        self.feed = feed
     }
 
     func openStoryReader(storyId: Int64, feed: String) throws {

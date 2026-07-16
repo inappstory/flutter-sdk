@@ -28,7 +28,7 @@ class FeedStoriesStream extends StoriesStream {
     required super.storyWidgetBuilder,
     required super.uniqueId,
     this.feedDecorator,
-    this.feedController,
+    super.feedController,
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
     this.onScrollToStory,
@@ -39,15 +39,9 @@ class FeedStoriesStream extends StoriesStream {
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
-        ) {
-    feedController
-      ?..feed = feed
-      ..iasStoryListHostApi = iasStoryListHostApi;
-  }
+        );
 
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
-
-  final FeedStoriesController? feedController;
 
   final FeedStoryDecorator? feedDecorator;
 
@@ -79,6 +73,7 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
+    disarmLoadWatchdog();
     stories = list
         .whereType<StoryAPIDataDto>()
         .map(createStoryFromDto)
@@ -111,12 +106,15 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) =>
-      onStoriesLoaded?.call(size, feed);
+  void storiesLoaded(int size, String feed) {
+    disarmLoadWatchdog();
+    onStoriesLoaded?.call(size, feed);
+  }
 
   @override
   void storiesUpdateFailure(String feed, String? reason) {
     if (feed != this.feed) return;
+    disarmLoadWatchdog();
     onStoriesLoadError?.call(reason);
     controller.addError(Exception('loadListError feed: $feed'));
   }
@@ -143,6 +141,8 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   void dispose() {
+    disarmLoadWatchdog();
+    feedController = null;
     _favoritesStreamController.close();
   }
 }
