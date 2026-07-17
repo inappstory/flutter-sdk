@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 
+import '../../controllers/feed_stories_controller.dart';
 import '../../data/observable.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../generated/pigeon_generated.g.dart'
     show
         InAppStoryAPIListSubscriberFlutterApi,
-        ErrorCallbackFlutterApi,
         IASStoryListHostApi,
         StoryAPIDataDto,
         StoryFavoriteItemAPIDataDto,
@@ -25,16 +26,62 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
     required this.observableStoryList,
     required this.iasStoryListHostApi,
     required this.storyDecorator,
-  });
+    FeedStoriesController? feedController,
+  }) {
+    this.feedController = feedController;
+  }
 
   final String uniqueId;
-  final String feed;
+
+  String feed;
   final Observable<InAppStoryAPIListSubscriberFlutterApi> observableStoryList;
   final StoryWidgetBuilder storyWidgetBuilder;
   final IASStoryListHostApi iasStoryListHostApi;
   final FeedStoryDecorator storyDecorator;
 
   List<StoryFromPigeonDto> stories = [];
+
+  static const _loadTimeout = Duration(seconds: 15);
+
+  Timer? _loadWatchdog;
+
+  @protected
+  void armLoadWatchdog() {
+    _loadWatchdog?.cancel();
+    _loadWatchdog = Timer(_loadTimeout, () {
+      log('[InAppStory]: feed "$feed" got no response from the native SDK '
+          'within ${_loadTimeout.inSeconds}s, reporting it as a failure');
+      storiesUpdateFailure(feed, 'timeout: no response from InAppStory SDK');
+    });
+  }
+
+  @protected
+  void disarmLoadWatchdog() {
+    _loadWatchdog?.cancel();
+    _loadWatchdog = null;
+  }
+
+  @protected
+  Future<void> reload() => iasStoryListHostApi.reloadFeed(feed);
+
+  Future<void> _reloadAndArm() async {
+    armLoadWatchdog();
+    await reload();
+  }
+
+  late final FeedReloadCallback _reload = _reloadAndArm;
+
+  FeedStoriesController? _feedController;
+
+  FeedStoriesController? get feedController => _feedController;
+
+  set feedController(FeedStoriesController? controller) {
+    if (identical(_feedController, controller)) return;
+
+    _feedController?.detach(_reload);
+    _feedController = controller;
+    controller?.attach(_reload);
+  }
 
   late final controller = StreamController<Iterable<Widget>>(
     onListen: onListen,
@@ -44,10 +91,12 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   void onListen() async {
     await InappstorySdkModuleHostApi().createListAdaptor(feed, uniqueId);
     observableStoryList.addObserver(this);
+    armLoadWatchdog();
     iasStoryListHostApi.load(feed, uniqueId);
   }
 
   void onCancel() async {
+    disarmLoadWatchdog();
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
     await InappstorySdkModuleHostApi().removeListAdaptor(feed, uniqueId);
