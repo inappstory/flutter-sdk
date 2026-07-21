@@ -37,6 +37,10 @@ class ErrorCallbackAdaptor {
                 errorCallbackFlutterApi.noConnection { _ in }
             case .requestFailure(_, _):
                 errorCallbackFlutterApi.sessionError { _ in }
+            case .inAppMessageFailure(message: let message):
+                print("error iam:  \(message)")
+            case .bannersFailure(message: let message):
+                print("error banners:  \(message)")
             @unknown default:
                 NSLog("WARNING: unknown failureEvent")
             }

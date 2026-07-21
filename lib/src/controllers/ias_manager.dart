@@ -142,7 +142,7 @@ class InAppStoryManager {
               tags: tags ?? <String>[])
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showOnboarding finished with error');
+        log('[InAppStory]: showOnboarding finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -161,7 +161,7 @@ class InAppStoryManager {
               onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showIAMById finished with error');
+        log('[InAppStory]: showIAMById finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -180,7 +180,7 @@ class InAppStoryManager {
               onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showIAMByEvent finished with error');
+        log('[InAppStory]: showIAMByEvent finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -197,7 +197,7 @@ class InAppStoryManager {
           .show(storyId: id, token: uniqueId)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: ShowStory finished with error');
+        log('[InAppStory]: ShowStory finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -214,7 +214,7 @@ class InAppStoryManager {
           .showOnce(storyId: id, token: uniqueId)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showStoryOnce finished with error');
+        log('[InAppStory]: showStoryOnce finished with error', error: error);
         return false;
       }),
       onCancel: () async {

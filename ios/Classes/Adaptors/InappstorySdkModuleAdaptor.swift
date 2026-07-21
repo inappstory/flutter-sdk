@@ -41,6 +41,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
         self.iasMessagesAdaptor = IASMessagesAdaptor(
             binaryMessenger: binaryMessenger,
+            pluginRegistrar: pluginRegistrar,
             inAppMessagesApi: InAppStoryAPI.shared.inappmessagesAPI
         )
 
