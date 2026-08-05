@@ -58,4 +58,44 @@ void main() {
 
     expect(controller.binds, ['attach', 'detach', 'attach']);
   });
+
+  // The feed stream starts in ConnectionState.waiting on the first frame
+  // (no native emission), so the loading branch is what these exercise.
+  const loaderKey = Key('loader');
+
+  testWidgets('GIVEN a loaderBuilder WHEN the feed is loading '
+      'THEN the loader is shown at the widget height', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: FeedStoriesWidget(
+        feed: 'feedA',
+        height: 200,
+        loaderBuilder: (context) => const SizedBox(key: loaderKey),
+      ),
+    ));
+
+    expect(find.byKey(loaderKey), findsOneWidget);
+    final box = tester.widget<SizedBox>(
+      find
+          .ancestor(of: find.byKey(loaderKey), matching: find.byType(SizedBox))
+          .first,
+    );
+    expect(box.height, 200);
+  });
+
+  testWidgets('GIVEN no loaderBuilder WHEN the feed is loading '
+      'THEN nothing is rendered', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: FeedStoriesWidget(feed: 'feedA'),
+    ));
+
+    // The loading branch collapses to SizedBox.shrink() — no sized content.
+    final shrink = tester.widget<SizedBox>(
+      find.descendant(
+        of: find.byType(FeedStoriesWidget),
+        matching: find.byType(SizedBox),
+      ),
+    );
+    expect(shrink.height, 0);
+    expect(shrink.width, 0);
+  });
 }

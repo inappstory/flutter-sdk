@@ -40,3 +40,19 @@ scripts:
     steps:
       - flutter pub get
       - dart pub publish
+
+  test:
+    description: 🧪 Run all unit tests
+    exec: flutter test
+
+  coverage:
+    description: 📊 Run flutter test with coverage and verify line coverage threshold
+    exec: ./scripts/coverage_check.sh
+
+  quality-report:
+    description: 📋 Generate test density and coverage quality report
+    exec: ./scripts/quality_report.sh
+
+  mutation-test:
+    description: 🔬 Run mutation testing on business logic classes
+    exec: ./scripts/mutation_test.sh

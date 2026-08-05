@@ -25,12 +25,14 @@ class BaseStoryBuilder extends StatelessWidget implements StoryWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showBorder = decorator?.showBorder ?? false;
     return GestureDetector(
       onTap: () => onTap(story),
       child: Container(
         padding: EdgeInsets.all(decorator?.borderPadding ?? 0.0),
-        clipBehavior: Clip.antiAlias,
-        decoration: (decorator?.showBorder ?? false)
+        // Clip.antiAlias requires a non-null decoration; only the border adds one.
+        clipBehavior: showBorder ? Clip.antiAlias : Clip.none,
+        decoration: showBorder
             ? BoxDecoration(
                 border: Border.all(
                   color: story.opened
