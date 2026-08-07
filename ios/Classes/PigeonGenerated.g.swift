@@ -191,6 +191,9 @@ enum SourceTypeDto: Int {
   case lIST = 2
   case fAVORITE = 3
   case sTACK = 4
+  case eVENTINAPPMESSAGE = 5
+  case sINGLEINAPPMESSAGE = 6
+  case bANNERS = 7
 }
 
 enum ClickActionDto: Int {

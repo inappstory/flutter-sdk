@@ -176,6 +176,8 @@ class StoriesListUpdateHandlerAdaptor {
         case .list: return SourceTypeDto.lIST
         case .onboarding: return SourceTypeDto.oNBOARDING
         case .single: return SourceTypeDto.sINGLE
+        case .inAppMessages:
+            return SourceTypeDto.sINGLEINAPPMESSAGE
         @unknown default:
             return SourceTypeDto.sINGLE
         //    case FIXME NO stack: return SourceTypeDto.sTACK

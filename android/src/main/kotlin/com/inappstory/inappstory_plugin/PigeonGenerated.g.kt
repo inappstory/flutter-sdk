@@ -212,7 +212,10 @@ enum class SourceTypeDto(val raw: Int) {
   ONBOARDING(1),
   LIST(2),
   FAVORITE(3),
-  STACK(4);
+  STACK(4),
+  EVENT_IN_APP_MESSAGE(5),
+  SINGLE_IN_APP_MESSAGE(6),
+  BANNERS(7);
 
   companion object {
     fun ofRaw(raw: Int): SourceTypeDto? {

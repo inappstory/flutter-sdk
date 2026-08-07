@@ -142,7 +142,10 @@ enum SourceTypeDto {
   ONBOARDING,
   LIST,
   FAVORITE,
-  STACK;
+  STACK,
+  EVENT_IN_APP_MESSAGE,
+  SINGLE_IN_APP_MESSAGE,
+  BANNERS;
 }
 
 @FlutterApi()
@@ -314,6 +317,7 @@ enum ContentTypeDto {
   STORY,
   UGC,
   IN_APP_MESSAGE,
+
 }
 
 class ContentDataDto {
