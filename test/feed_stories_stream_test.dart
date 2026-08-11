@@ -1,6 +1,5 @@
 // ignore_for_file: implicit_call_tearoffs, invalid_use_of_protected_member
 
-import 'dart:async';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'

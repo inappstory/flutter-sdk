@@ -213,9 +213,8 @@ enum class SourceTypeDto(val raw: Int) {
   LIST(2),
   FAVORITE(3),
   STACK(4),
-  EVENT_IN_APP_MESSAGE(5),
-  SINGLE_IN_APP_MESSAGE(6),
-  BANNERS(7);
+  IN_APP_MESSAGE(5),
+  BANNERS(6);
 
   companion object {
     fun ofRaw(raw: Int): SourceTypeDto? {
@@ -292,6 +291,20 @@ enum class ContentTypeDto(val raw: Int) {
 
   companion object {
     fun ofRaw(raw: Int): ContentTypeDto? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class InAppMessageTypeDto(val raw: Int) {
+  FULL_SCREEN(0),
+  BOTTOM_SHEET(1),
+  POP_UP(2),
+  TOAST(3),
+  UNDEFINED(4);
+
+  companion object {
+    fun ofRaw(raw: Int): InAppMessageTypeDto? {
       return values().firstOrNull { it.raw == raw }
     }
   }
@@ -693,7 +706,8 @@ data class InAppMessageDataDto (
   /** The title of the in-app message, or `null` if not available. */
   val title: String? = null,
   /** The event associated with the in-app message, or `null` if not available. */
-  val event: String? = null
+  val event: String? = null,
+  val messageType: InAppMessageTypeDto? = null
 )
  {
   companion object {
@@ -701,7 +715,8 @@ data class InAppMessageDataDto (
       val id = pigeonVar_list[0] as Long
       val title = pigeonVar_list[1] as String?
       val event = pigeonVar_list[2] as String?
-      return InAppMessageDataDto(id, title, event)
+      val messageType = pigeonVar_list[3] as InAppMessageTypeDto?
+      return InAppMessageDataDto(id, title, event, messageType)
     }
   }
   fun toList(): List<Any?> {
@@ -709,6 +724,7 @@ data class InAppMessageDataDto (
       id,
       title,
       event,
+      messageType,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -719,7 +735,7 @@ data class InAppMessageDataDto (
       return true
     }
     val other = other as InAppMessageDataDto
-    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.event, other.event)
+    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.event, other.event) && PigeonGeneratedPigeonUtils.deepEquals(this.messageType, other.messageType)
   }
 
   override fun hashCode(): Int {
@@ -727,6 +743,7 @@ data class InAppMessageDataDto (
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.id)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.title)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.event)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.messageType)
     return result
   }
 }
@@ -774,41 +791,46 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         }
       }
       137.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          StoryAPIDataDto.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          InAppMessageTypeDto.ofRaw(it.toInt())
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryDataDto.fromList(it)
+          StoryAPIDataDto.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          SlideDataDto.fromList(it)
+          StoryDataDto.fromList(it)
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemAppearanceDto.fromList(it)
+          SlideDataDto.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GoodsItemDataDto.fromList(it)
+          GoodsItemAppearanceDto.fromList(it)
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          StoryFavoriteItemAPIDataDto.fromList(it)
+          GoodsItemDataDto.fromList(it)
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ContentDataDto.fromList(it)
+          StoryFavoriteItemAPIDataDto.fromList(it)
         }
       }
       144.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ContentDataDto.fromList(it)
+        }
+      }
+      145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           InAppMessageDataDto.fromList(it)
         }
@@ -850,36 +872,40 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(136)
         writeValue(stream, value.raw.toLong())
       }
-      is StoryAPIDataDto -> {
+      is InAppMessageTypeDto -> {
         stream.write(137)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is StoryDataDto -> {
+      is StoryAPIDataDto -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is SlideDataDto -> {
+      is StoryDataDto -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is GoodsItemAppearanceDto -> {
+      is SlideDataDto -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is GoodsItemDataDto -> {
+      is GoodsItemAppearanceDto -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is StoryFavoriteItemAPIDataDto -> {
+      is GoodsItemDataDto -> {
         stream.write(142)
         writeValue(stream, value.toList())
       }
-      is ContentDataDto -> {
+      is StoryFavoriteItemAPIDataDto -> {
         stream.write(143)
         writeValue(stream, value.toList())
       }
-      is InAppMessageDataDto -> {
+      is ContentDataDto -> {
         stream.write(144)
+        writeValue(stream, value.toList())
+      }
+      is InAppMessageDataDto -> {
+        stream.write(145)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)

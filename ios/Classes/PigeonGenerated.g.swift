@@ -191,9 +191,8 @@ enum SourceTypeDto: Int {
   case lIST = 2
   case fAVORITE = 3
   case sTACK = 4
-  case eVENTINAPPMESSAGE = 5
-  case sINGLEINAPPMESSAGE = 6
-  case bANNERS = 7
+  case iNAPPMESSAGE = 5
+  case bANNERS = 6
 }
 
 enum ClickActionDto: Int {
@@ -231,6 +230,14 @@ enum ContentTypeDto: Int {
   case sTORY = 0
   case uGC = 1
   case iNAPPMESSAGE = 2
+}
+
+enum InAppMessageTypeDto: Int {
+  case fULLSCREEN = 0
+  case bOTTOMSHEET = 1
+  case pOPUP = 2
+  case tOAST = 3
+  case uNDEFINED = 4
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
@@ -643,6 +650,7 @@ struct InAppMessageDataDto: Hashable {
   var title: String? = nil
   /// The event associated with the in-app message, or `null` if not available.
   var event: String? = nil
+  var messageType: InAppMessageTypeDto? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -650,11 +658,13 @@ struct InAppMessageDataDto: Hashable {
     let id = pigeonVar_list[0] as! Int64
     let title: String? = nilOrValue(pigeonVar_list[1])
     let event: String? = nilOrValue(pigeonVar_list[2])
+    let messageType: InAppMessageTypeDto? = nilOrValue(pigeonVar_list[3])
 
     return InAppMessageDataDto(
       id: id,
       title: title,
-      event: event
+      event: event,
+      messageType: messageType
     )
   }
   func toList() -> [Any?] {
@@ -662,13 +672,14 @@ struct InAppMessageDataDto: Hashable {
       id,
       title,
       event,
+      messageType,
     ]
   }
   static func == (lhs: InAppMessageDataDto, rhs: InAppMessageDataDto) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsPigeonGenerated(lhs.id, rhs.id) && deepEqualsPigeonGenerated(lhs.title, rhs.title) && deepEqualsPigeonGenerated(lhs.event, rhs.event)
+    return deepEqualsPigeonGenerated(lhs.id, rhs.id) && deepEqualsPigeonGenerated(lhs.title, rhs.title) && deepEqualsPigeonGenerated(lhs.event, rhs.event) && deepEqualsPigeonGenerated(lhs.messageType, rhs.messageType)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -676,6 +687,7 @@ struct InAppMessageDataDto: Hashable {
     deepHashPigeonGenerated(value: id, hasher: &hasher)
     deepHashPigeonGenerated(value: title, hasher: &hasher)
     deepHashPigeonGenerated(value: event, hasher: &hasher)
+    deepHashPigeonGenerated(value: messageType, hasher: &hasher)
   }
 }
 
@@ -731,20 +743,26 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
       }
       return nil
     case 137:
-      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return InAppMessageTypeDto(rawValue: enumResultAsInt)
+      }
+      return nil
     case 138:
-      return StoryDataDto.fromList(self.readValue() as! [Any?])
+      return StoryAPIDataDto.fromList(self.readValue() as! [Any?])
     case 139:
-      return SlideDataDto.fromList(self.readValue() as! [Any?])
+      return StoryDataDto.fromList(self.readValue() as! [Any?])
     case 140:
-      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
+      return SlideDataDto.fromList(self.readValue() as! [Any?])
     case 141:
-      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemAppearanceDto.fromList(self.readValue() as! [Any?])
     case 142:
-      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
+      return GoodsItemDataDto.fromList(self.readValue() as! [Any?])
     case 143:
-      return ContentDataDto.fromList(self.readValue() as! [Any?])
+      return StoryFavoriteItemAPIDataDto.fromList(self.readValue() as! [Any?])
     case 144:
+      return ContentDataDto.fromList(self.readValue() as! [Any?])
+    case 145:
       return InAppMessageDataDto.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -778,29 +796,32 @@ private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? ContentTypeDto {
       super.writeByte(136)
       super.writeValue(value.rawValue)
-    } else if let value = value as? StoryAPIDataDto {
+    } else if let value = value as? InAppMessageTypeDto {
       super.writeByte(137)
-      super.writeValue(value.toList())
-    } else if let value = value as? StoryDataDto {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? StoryAPIDataDto {
       super.writeByte(138)
       super.writeValue(value.toList())
-    } else if let value = value as? SlideDataDto {
+    } else if let value = value as? StoryDataDto {
       super.writeByte(139)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemAppearanceDto {
+    } else if let value = value as? SlideDataDto {
       super.writeByte(140)
       super.writeValue(value.toList())
-    } else if let value = value as? GoodsItemDataDto {
+    } else if let value = value as? GoodsItemAppearanceDto {
       super.writeByte(141)
       super.writeValue(value.toList())
-    } else if let value = value as? StoryFavoriteItemAPIDataDto {
+    } else if let value = value as? GoodsItemDataDto {
       super.writeByte(142)
       super.writeValue(value.toList())
-    } else if let value = value as? ContentDataDto {
+    } else if let value = value as? StoryFavoriteItemAPIDataDto {
       super.writeByte(143)
       super.writeValue(value.toList())
-    } else if let value = value as? InAppMessageDataDto {
+    } else if let value = value as? ContentDataDto {
       super.writeByte(144)
+      super.writeValue(value.toList())
+    } else if let value = value as? InAppMessageDataDto {
+      super.writeByte(145)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)

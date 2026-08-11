@@ -64,7 +64,18 @@ class InAppMessageCallbacksAdaptor {
         return InAppMessageDataDto(
             id: Int64(arg.id ?? "0") ?? 0,
             title: nil,
-            event: arg.campaign
+            event: arg.campaign,
+            messageType: mapMessageType(arg.messageType)
         )
+    }
+
+    private func mapMessageType(_ raw: String?) -> InAppMessageTypeDto {
+        switch raw?.lowercased() {
+        case "fullscreen": return .fULLSCREEN
+        case "bottomsheet": return .bOTTOMSHEET
+        case "popup": return .pOPUP
+        case "toast": return .tOAST
+        default: return .uNDEFINED
+        }
     }
 }
