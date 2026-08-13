@@ -142,7 +142,9 @@ enum SourceTypeDto {
   ONBOARDING,
   LIST,
   FAVORITE,
-  STACK;
+  STACK,
+  IN_APP_MESSAGE,
+  BANNERS;
 }
 
 @FlutterApi()
@@ -314,6 +316,7 @@ enum ContentTypeDto {
   STORY,
   UGC,
   IN_APP_MESSAGE,
+
 }
 
 class ContentDataDto {
@@ -364,6 +367,14 @@ abstract class IASCallBacksFlutterApi {
       SlideDataDto? slideData, Map<String?, Object?>? widgetData);
 }
 
+enum InAppMessageTypeDto {
+  FULL_SCREEN,
+  BOTTOM_SHEET,
+  POP_UP,
+  TOAST,
+  UNDEFINED;
+}
+
 @HostApi()
 abstract class IASInAppMessagesHostApi {
   void showById(String messageId, String token,
@@ -391,6 +402,8 @@ class InAppMessageDataDto {
 
   /// The event associated with the in-app message, or `null` if not available.
   late String? event;
+
+  late InAppMessageTypeDto? messageType;
 }
 
 @FlutterApi()

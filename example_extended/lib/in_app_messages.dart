@@ -59,17 +59,16 @@ class _InAppMessagesState extends State<InAppMessages>
                   const Text("InAppMessage preloading"),
                   ElevatedButton(
                     onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
                       final result =
                       await InAppStoryManager.instance.preloadInAppMessages();
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              result ? "Success" : "Error loading messages",
-                            ),
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            result ? "Success" : "Error loading messages",
                           ),
-                        );
-                      }
+                        ),
+                      );
                     },
                     child: const Text("preload"),
                   ),

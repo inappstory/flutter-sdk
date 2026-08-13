@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Mirror the universal agent config from .agents/ into each vendor's folder.
+#
+# .agents/ is the single source of truth and is committed to git.
+# Vendor folders (.claude, .codex, ...) are generated from it and gitignored.
+# Edit .agents/ — never the vendor folders (they get overwritten on every run).
+set -euo pipefail
+cd "$(dirname "$0")/.."   # repo root
+
+# Vendors to populate. Add ".codex" ".cursor" ".gemini" as you adopt them.
+VENDORS=(.claude)
+
+for dir in "${VENDORS[@]}"; do
+  mkdir -p "$dir"
+  # Copy every item in .agents/ except this script.
+  for item in .agents/*; do
+    name="$(basename "$item")"
+    [ "$name" = "setup" ] && continue
+    rm -rf "${dir:?}/$name"
+    cp -R "$item" "$dir/$name"
+  done
+done
+
+# Install committed git hooks into .git/hooks (keeps existing LFS hooks intact).
+if [ -d .git ]; then
+  for hook in scripts/git-hooks/*; do
+    [ -f "$hook" ] || continue
+    cp "$hook" ".git/hooks/$(basename "$hook")"
+    chmod +x ".git/hooks/$(basename "$hook")"
+  done
+fi

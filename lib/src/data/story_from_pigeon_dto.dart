@@ -113,6 +113,7 @@ File? nullableFileFromString(String? filePath) {
 }
 
 Color colorFromString(String string) {
+  if (string.isEmpty) return Color(0x00000000);
   return Color(
     int.parse(
       string.replaceAll(RegExp('^#'), '0xff'),

@@ -33,7 +33,7 @@ class GoodsItemAppearance {
     this.closeButtonImage,
   });
 
-  @protected
+  @internal
   GoodsItemAppearanceDto toDto() {
     return GoodsItemAppearanceDto(
       itemBackgroundColor: itemBackgroundColor?.toARGB32(),

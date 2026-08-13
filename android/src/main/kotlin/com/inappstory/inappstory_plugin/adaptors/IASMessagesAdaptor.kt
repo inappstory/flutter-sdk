@@ -1,5 +1,6 @@
 package com.inappstory.inappstory_plugin.adaptors
 
+import FlutterError
 import IASInAppMessagesHostApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,6 +27,8 @@ class IASMessagesAdaptor(
 ) : IASInAppMessagesHostApi {
 
     private var fragmentActivity: InAppStoryActivity? = null
+
+    private var currentContainer: Fragment? = null
 
     private val tokenMap = mutableMapOf<String, CancellationToken>()
 
@@ -74,11 +77,16 @@ class IASMessagesAdaptor(
         token: String,
         bottomPadding: Double?
     ) {
-        val activity = activityHolder.activity as FragmentActivity
+        val activity = activityHolder.activity as? FragmentActivity
+            ?: throw FlutterError(
+                "no_container",
+                "There is no FragmentActivity to show InAppMessage in"
+            )
         val containerFragment = Fragment(R.layout.ias_message_container)
         activity.supportFragmentManager.beginTransaction()
             .add(FlutterFragmentActivity.FRAGMENT_CONTAINER_ID, containerFragment)
             .commitNow()
+        currentContainer = containerFragment
 
         containerFragment.view?.let { view ->
             val bottom = ((bottomPadding ?: 0.0) * view.resources.displayMetrics.density).toInt()
@@ -96,19 +104,23 @@ class IASMessagesAdaptor(
 
                 override fun readerOpenError(p0: String?) {
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
-                    removeContainer(activity, containerFragment)
+                    removeContainer()
                 }
 
                 override fun readerIsClosed() {
                     fragmentActivity?.backPressManager?.isManagerEnabled = false
-                    removeContainer(activity, containerFragment)
+                    removeContainer()
                 }
             })
 
         tokenMap[token] = cancellationToken
     }
 
-    private fun removeContainer(activity: FragmentActivity, fragment: Fragment) {
+    private fun removeContainer() {
+        val fragment = currentContainer ?: return
+        currentContainer = null
+
+        val activity = activityHolder.activity as? FragmentActivity ?: return
         if (fragment.isAdded) {
             activity.supportFragmentManager.beginTransaction()
                 .remove(fragment)
@@ -120,6 +132,9 @@ class IASMessagesAdaptor(
         if (tokenMap.containsKey(token)) {
             val result = tokenMap[token]?.cancel()
             tokenMap.remove(token)
+            if (result == CancellationTokenCancelResult.SUCCESS) {
+                removeContainer()
+            }
             return result == CancellationTokenCancelResult.SUCCESS
         }
         return false

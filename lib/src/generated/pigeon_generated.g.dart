@@ -120,6 +120,8 @@ enum SourceTypeDto {
   LIST,
   FAVORITE,
   STACK,
+  IN_APP_MESSAGE,
+  BANNERS,
 }
 
 enum ClickActionDto {
@@ -157,6 +159,14 @@ enum ContentTypeDto {
   STORY,
   UGC,
   IN_APP_MESSAGE,
+}
+
+enum InAppMessageTypeDto {
+  FULL_SCREEN,
+  BOTTOM_SHEET,
+  POP_UP,
+  TOAST,
+  UNDEFINED,
 }
 
 class StoryAPIDataDto {
@@ -628,6 +638,7 @@ class InAppMessageDataDto {
     required this.id,
     this.title,
     this.event,
+    this.messageType,
   });
 
   /// The unique identifier of the in-app message.
@@ -639,11 +650,14 @@ class InAppMessageDataDto {
   /// The event associated with the in-app message, or `null` if not available.
   String? event;
 
+  InAppMessageTypeDto? messageType;
+
   List<Object?> _toList() {
     return <Object?>[
       id,
       title,
       event,
+      messageType,
     ];
   }
 
@@ -656,6 +670,7 @@ class InAppMessageDataDto {
       id: result[0]! as int,
       title: result[1] as String?,
       event: result[2] as String?,
+      messageType: result[3] as InAppMessageTypeDto?,
     );
   }
 
@@ -668,7 +683,7 @@ class InAppMessageDataDto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(event, other.event);
+    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(event, other.event) && _deepEquals(messageType, other.messageType);
   }
 
   @override
@@ -708,29 +723,32 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is ContentTypeDto) {
       buffer.putUint8(136);
       writeValue(buffer, value.index);
-    }    else if (value is StoryAPIDataDto) {
+    }    else if (value is InAppMessageTypeDto) {
       buffer.putUint8(137);
-      writeValue(buffer, value.encode());
-    }    else if (value is StoryDataDto) {
+      writeValue(buffer, value.index);
+    }    else if (value is StoryAPIDataDto) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is SlideDataDto) {
+    }    else if (value is StoryDataDto) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is GoodsItemAppearanceDto) {
+    }    else if (value is SlideDataDto) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is GoodsItemDataDto) {
+    }    else if (value is GoodsItemAppearanceDto) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is StoryFavoriteItemAPIDataDto) {
+    }    else if (value is GoodsItemDataDto) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is ContentDataDto) {
+    }    else if (value is StoryFavoriteItemAPIDataDto) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is InAppMessageDataDto) {
+    }    else if (value is ContentDataDto) {
       buffer.putUint8(144);
+      writeValue(buffer, value.encode());
+    }    else if (value is InAppMessageDataDto) {
+      buffer.putUint8(145);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -765,20 +783,23 @@ class _PigeonCodec extends StandardMessageCodec {
         final value = readValue(buffer) as int?;
         return value == null ? null : ContentTypeDto.values[value];
       case 137:
-        return StoryAPIDataDto.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : InAppMessageTypeDto.values[value];
       case 138:
-        return StoryDataDto.decode(readValue(buffer)!);
+        return StoryAPIDataDto.decode(readValue(buffer)!);
       case 139:
-        return SlideDataDto.decode(readValue(buffer)!);
+        return StoryDataDto.decode(readValue(buffer)!);
       case 140:
-        return GoodsItemAppearanceDto.decode(readValue(buffer)!);
+        return SlideDataDto.decode(readValue(buffer)!);
       case 141:
-        return GoodsItemDataDto.decode(readValue(buffer)!);
+        return GoodsItemAppearanceDto.decode(readValue(buffer)!);
       case 142:
-        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
+        return GoodsItemDataDto.decode(readValue(buffer)!);
       case 143:
-        return ContentDataDto.decode(readValue(buffer)!);
+        return StoryFavoriteItemAPIDataDto.decode(readValue(buffer)!);
       case 144:
+        return ContentDataDto.decode(readValue(buffer)!);
+      case 145:
         return InAppMessageDataDto.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

@@ -1,3 +1,11 @@
+# Vendor-specific agent folders — generated from .agents/ by .agents/setup.
+# Source of truth is .agents/ (committed). Do not edit these by hand.
+.claude/
+.codex/
+.cursor/
+.gemini/
+.aider*
+
 # Miscellaneous
 *.class
 *.log
@@ -20,6 +28,10 @@ migrate_working_dir/
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
 #.vscode/
+
+# Generated tooling output
+coverage/
+graphify-out/
 
 # Flutter/Dart/Pub related
 # Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.

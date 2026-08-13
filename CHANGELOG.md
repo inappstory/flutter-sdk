@@ -1,3 +1,15 @@
+## [0.9.0]
+
+### Added
+
+- Toast notifications for in-app messages (iOS & Android)
+
+### Changed
+
+- Updated iOS SDK to 1.29.4
+- Updated Android SDK to 1.25.4
+- Use `@internal` instead of `@protected` for cross-class plugin members
+  
 ## [0.8.2]
 
 ### Fixed

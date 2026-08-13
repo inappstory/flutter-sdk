@@ -10,12 +10,12 @@ class FeedStoriesController {
 
   FeedReloadCallback? _reload;
 
-  @protected
+  @internal
   void attach(FeedReloadCallback reload) {
     _reload = reload;
   }
 
-  @protected
+  @internal
   void detach(FeedReloadCallback reload) {
     if (identical(_reload, reload)) {
       _reload = null;
