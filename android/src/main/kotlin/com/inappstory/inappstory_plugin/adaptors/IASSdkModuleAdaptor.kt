@@ -51,6 +51,7 @@ class InappstorySdkModuleAdaptor(
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        tags: List<String>?,
         callback: (Result<Unit>) -> Unit
     ) {
         try {
@@ -70,11 +71,14 @@ class InappstorySdkModuleAdaptor(
                     CacheSize.MEDIUM
             }
 
+            val tagsNative = tags?.let { ArrayList(it) }
+
             if (anonymous) {
                 inAppStoryManager = createAnonymousInAppStoryManager(
                     apiKey,
                     locale,
                     cacheSizeNative,
+                    tagsNative,
                 )
             } else {
                 inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
@@ -82,7 +86,7 @@ class InappstorySdkModuleAdaptor(
                     userID,
                     userSign,
                     locale,
-                    null,
+                    tagsNative,
                     null,
                     null,
                     null,
@@ -222,6 +226,7 @@ class InappstorySdkModuleAdaptor(
         apiKey: String?,
         lang: Locale?,
         cacheSize: Int?,
+        tags: ArrayList<String>?,
     ): InAppStoryManager {
         var builder = InAppStoryManager.Builder()
         builder.lang(Locale.getDefault())
@@ -232,6 +237,10 @@ class InappstorySdkModuleAdaptor(
 
         if (cacheSize != null) {
             builder = builder.cacheSize(cacheSize)
+        }
+
+        if (tags != null) {
+            builder = builder.tags(tags)
         }
 
         builder = builder.gameDemoMode(false)

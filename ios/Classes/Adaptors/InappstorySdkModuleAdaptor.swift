@@ -95,6 +95,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        tags: [String]?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         InAppStory.shared.isLoggingEnabled = true
@@ -120,6 +121,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
                 userID: userID,
                 sign: userSign,
                 anonymous: anonymous,
+                tags: tags ?? [],
                 lang: locale
             )
         )

@@ -916,7 +916,7 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface InappstorySdkModuleHostApi {
-  fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, callback: (Result<Unit>) -> Unit)
+  fun initWith(apiKey: String, userID: String, anonymous: Boolean, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, tags: List<String>?, callback: (Result<Unit>) -> Unit)
   fun createListAdaptor(feed: String, uniqueId: String)
   fun removeListAdaptor(feed: String, uniqueId: String)
   fun isInitialized(): Boolean
@@ -942,7 +942,8 @@ interface InappstorySdkModuleHostApi {
             val languageCodeArg = args[4] as String?
             val languageRegionArg = args[5] as String?
             val cacheSizeArg = args[6] as String?
-            api.initWith(apiKeyArg, userIDArg, anonymousArg, userSignArg, languageCodeArg, languageRegionArg, cacheSizeArg) { result: Result<Unit> ->
+            val tagsArg = args[7] as List<String>?
+            api.initWith(apiKeyArg, userIDArg, anonymousArg, userSignArg, languageCodeArg, languageRegionArg, cacheSizeArg, tagsArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(PigeonGeneratedPigeonUtils.wrapError(error))
@@ -1015,6 +1016,8 @@ interface InappstorySdkModuleHostApi {
 interface InAppStoryManagerHostApi {
   fun setPlaceholders(newPlaceholders: Map<String, String>)
   fun setTags(tags: List<String>)
+  fun addTags(tags: List<String>)
+  fun removeTags(tags: List<String>)
   fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit)
   fun userLogout()
   fun closeReaders(callback: (Result<Unit>) -> Unit)
@@ -1060,6 +1063,42 @@ interface InAppStoryManagerHostApi {
             val tagsArg = args[0] as List<String>
             val wrapped: List<Any?> = try {
               api.setTags(tagsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.addTags$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val tagsArg = args[0] as List<String>
+            val wrapped: List<Any?> = try {
+              api.addTags(tagsArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.removeTags$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val tagsArg = args[0] as List<String>
+            val wrapped: List<Any?> = try {
+              api.removeTags(tagsArg)
               listOf(null)
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
