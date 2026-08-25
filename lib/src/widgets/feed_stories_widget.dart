@@ -38,6 +38,7 @@ class FeedStoriesWidget extends StatefulWidget {
     this.storyBuilder,
     this.favoritesBuilder,
     this.storiesLoaded,
+    this.storiesLoadError,
   });
 
   /// The identifier of the feed to fetch stories from.
@@ -65,6 +66,7 @@ class FeedStoriesWidget extends StatefulWidget {
   final FeedFavoritesWidgetBuilder? favoritesBuilder;
 
   final Function(int size, String feed)? storiesLoaded;
+  final Function(String? reason)? storiesLoadError;
 
   @override
   State<FeedStoriesWidget> createState() => FeedStoriesWidgetState();
@@ -115,7 +117,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   }
 
   /// Fetches a stream of widgets representing the stories in the feed.
-  Stream<Iterable<Widget>> _getStoriesWidgets() {
+  FeedStoriesStream _getStoriesWidgets() {
     return FeedStoriesStream(
       uniqueId: idGenerator(),
       feed: widget.feed,
@@ -124,6 +126,7 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
       feedFavoritesWidgetBuilder: _favoritesBuilder,
       feedDecorator: feedDecorator,
       onStoriesLoaded: widget.storiesLoaded,
+      onStoriesLoadError: widget.storiesLoadError,
       onScrollToStory: (index, story) async {
         if (feedDecorator?.animateScrollToItems ?? false) {
           observerController.animateTo(
@@ -205,8 +208,21 @@ class FeedStoriesWidgetState extends State<FeedStoriesWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant FeedStoriesWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      _feedController = widget.controller ?? FeedStoriesController();
+      _feedStoriesWidgetsStream.feedController = _feedController;
+    }
+    if (oldWidget.feed != widget.feed) {
+      _feedStoriesWidgetsStream.feed = widget.feed;
+      _feedController.fetchFeedStories();
+    }
+  }
+
+  @override
   void dispose() {
-    (_feedStoriesWidgetsStream as FeedStoriesStream).dispose();
+    _feedStoriesWidgetsStream.dispose();
     super.dispose();
   }
 }

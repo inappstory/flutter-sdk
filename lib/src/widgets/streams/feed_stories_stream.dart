@@ -9,7 +9,6 @@ import '../../data/feed_favorite.dart';
 import '../../data/story_from_pigeon_dto.dart';
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
-import '../../observable_error_callback_flutter_api.dart';
 import 'stories_stream.dart';
 
 typedef FeedFavoritesWidgetBuilder = FeedFavoritesWidget Function(
@@ -29,26 +28,20 @@ class FeedStoriesStream extends StoriesStream {
     required super.storyWidgetBuilder,
     required super.uniqueId,
     this.feedDecorator,
-    this.feedController,
+    super.feedController,
     this.feedFavoritesWidgetBuilder,
     this.onStoriesLoaded,
     this.onScrollToStory,
+    this.onStoriesLoadError,
   }) : super(
           observableStoryList:
               InAppStoryAPIListSubscriberFlutterApiObservable(uniqueId),
-          observableErrorCallback: ObservableErrorCallbackFlutterApi(),
           iasStoryListHostApi: IASStoryListHostApiDecorator(
               IASStoryListHostApi(messageChannelSuffix: uniqueId)),
           storyDecorator: feedDecorator ?? FeedStoryDecorator(),
-        ) {
-    feedController
-      ?..feed = feed
-      ..iasStoryListHostApi = iasStoryListHostApi;
-  }
+        );
 
   final FeedFavoritesWidgetBuilder? feedFavoritesWidgetBuilder;
-
-  final FeedStoriesController? feedController;
 
   final FeedStoryDecorator? feedDecorator;
 
@@ -59,6 +52,8 @@ class FeedStoriesStream extends StoriesStream {
   final _favoritesStreamController = StreamController<List<FavoriteFromDto>>();
 
   final Function(int index, StoryFromPigeonDto story)? onScrollToStory;
+
+  Function(String? reason)? onStoriesLoadError;
 
   Iterable<Widget> combineStoriesAndFavorites() {
     final feedFavoritesWidgetBuilder = this.feedFavoritesWidgetBuilder;
@@ -78,6 +73,7 @@ class FeedStoriesStream extends StoriesStream {
 
   @override
   void updateStoriesData(List<StoryAPIDataDto?> list) {
+    disarmLoadWatchdog();
     stories = list
         .whereType<StoryAPIDataDto>()
         .map(createStoryFromDto)
@@ -110,8 +106,18 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) =>
-      onStoriesLoaded?.call(size, feed);
+  void storiesLoaded(int size, String feed) {
+    disarmLoadWatchdog();
+    onStoriesLoaded?.call(size, feed);
+  }
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {
+    if (feed != this.feed) return;
+    disarmLoadWatchdog();
+    onStoriesLoadError?.call(reason);
+    controller.addError(Exception('loadListError feed: $feed'));
+  }
 
   @override
   void scrollToStory(int id, String feed, String uniqueId) {
@@ -135,6 +141,8 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   void dispose() {
+    disarmLoadWatchdog();
+    feedController = null;
     _favoritesStreamController.close();
   }
 }

@@ -25,6 +25,14 @@ final class LoggerCallbackAdaptor: IASLoggerProtocol {
                 )
                 return
             }
+            if object.warning != nil {
+                self.loggerFlutterApi.debugLog(
+                    tag: nil,
+                    message: object.warning,
+                    completion: { _ in }
+                )
+                return
+            }
             if object.message != nil {
                 self.loggerFlutterApi.debugLog(
                     tag: nil,

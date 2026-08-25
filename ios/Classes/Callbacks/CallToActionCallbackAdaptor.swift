@@ -22,7 +22,7 @@ class CallToActionCallbackAdaptor {
 
     private var binaryMessenger: FlutterBinaryMessenger
 
-    private var callToActionCallbackFlutterApi: CallToActionCallbackFlutterApi
+    public var callToActionCallbackFlutterApi: CallToActionCallbackFlutterApi
 
     private func onActionWith(
         target: String,
@@ -40,7 +40,7 @@ class CallToActionCallbackAdaptor {
     }
 
     private func mapClickActionDto(arg: InAppStorySDK.ActionType)
-        -> ClickActionDto
+        -> ClickActionDto?
     {
         switch arg {
         case .button: return ClickActionDto.bUTTON
@@ -48,7 +48,7 @@ class CallToActionCallbackAdaptor {
         case .game: return ClickActionDto.gAME
         case .swipe: return ClickActionDto.sWIPE
         @unknown default:
-            fatalError()
+            return nil
         }
     }
 }

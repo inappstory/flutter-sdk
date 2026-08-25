@@ -3,6 +3,7 @@ import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
 class AppearanceManagerAdaptor: AppearanceManagerHostApi {
+
     private var binaryMessenger: FlutterBinaryMessenger
 
     private var pluginRegistrar: FlutterPluginRegistrar
@@ -40,10 +41,49 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
             switch coverQuality {
             case CoverQuality.medium:
                 InAppStory.shared.coverQuality = .medium
+                break
             case CoverQuality.high:
                 InAppStory.shared.coverQuality = .high
-            default:
-                InAppStory.shared.coverQuality = .medium
+                break
+            }
+        }
+    }
+
+    func setReaderScrollStyle(style: ScrollStyle) throws {
+        DispatchQueue.main.async {
+            switch style {
+            case ScrollStyle.cover:
+                InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.cover
+                break
+            case ScrollStyle.flat:
+                InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.flat
+                break
+            case ScrollStyle.cube:
+                InAppStory.shared.scrollStyle = InAppStorySDK.ScrollStyle.cube
+                break
+            }
+        }
+    }
+
+    func setNavBarColor(color: Int64, darkColor: Int64?) throws {
+
+    }
+
+    func setReaderPresentationStyle(style: PresentationStyle) throws {
+        DispatchQueue.main.async {
+            switch style {
+            case PresentationStyle.zoom:
+                InAppStory.shared.presentationStyle =
+                    InAppStorySDK.PresentationStyle.zoom
+                break
+            case PresentationStyle.modal:
+                InAppStory.shared.presentationStyle =
+                    InAppStorySDK.PresentationStyle.modal
+                break
+            case PresentationStyle.fade:
+                InAppStory.shared.presentationStyle =
+                    InAppStorySDK.PresentationStyle.crossDissolve
+                break
             }
         }
     }

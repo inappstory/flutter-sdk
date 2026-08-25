@@ -21,7 +21,12 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
 
     syncCalledUpdateIds.clear();
 
-    return decorated.updateVisiblePreviews(ids, feed);
+    try {
+      return await decorated.updateVisiblePreviews(ids, feed);
+    } on PlatformException catch (e) {
+      if (e.code == 'channel-error') return;
+      rethrow;
+    }
   }
 
   @override

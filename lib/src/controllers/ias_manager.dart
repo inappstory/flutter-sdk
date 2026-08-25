@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:async/async.dart';
+import 'package:flutter/widgets.dart';
 
+import '../callbacks/call_to_action_callback_impl.dart';
 import '../callbacks/callbacks.dart'
     show GoodsCallbackFlutterApiImpl, SkusCallbackImpl;
 import '../callbacks/ias_checkout_callback_impl.dart';
+import '../callbacks/ias_error_callback_impl.dart';
 import '../generated/checkout_generated.g.dart'
     show CheckoutManagerCallbackFlutterApi;
 import '../generated/pigeon_generated.g.dart'
@@ -15,14 +17,19 @@ import '../generated/pigeon_generated.g.dart'
         SkusCallbackFlutterApi,
         IASInAppMessagesHostApi,
         IASSingleStoryHostApi,
-        IASOnboardingsHostApi;
+        IASOnboardingsHostApi,
+        CallToActionCallbackFlutterApi,
+        ErrorCallbackFlutterApi;
 import '../helpers/id_gen.dart';
+import '../helpers/tags_validator.dart';
 import 'logger.dart';
 
 class InAppStoryManager {
   InAppStoryManager._private() {
     SkusCallbackFlutterApi.setUp(_callbackImpl);
     CheckoutManagerCallbackFlutterApi.setUp(_checkoutCallbackImpl);
+    CallToActionCallbackFlutterApi.setUp(_ctaCallbackImpl);
+    ErrorCallbackFlutterApi.setUp(_errorCallbackImpl);
   }
 
   final _iasManager = InAppStoryManagerHostApi();
@@ -32,6 +39,9 @@ class InAppStoryManager {
   final _iam = IASInAppMessagesHostApi();
   final _onboardings = IASOnboardingsHostApi();
   final _singleStoryApi = IASSingleStoryHostApi();
+
+  final _ctaCallbackImpl = CallToActionCallbackImpl();
+  final _errorCallbackImpl = ErrorCallbackFlutterApiImpl();
 
   static final instance = InAppStoryManager._private();
 
@@ -47,10 +57,45 @@ class InAppStoryManager {
     await _iasManager.setPlaceholders(placeholders);
   }
 
-  Future<void> setTags(List<String> tags) async {
-    await _iasManager.setTags(tags);
+  /// Replaces the current tags with [tags], returning true when they were
+  /// valid and applied as-is.
+  ///
+  /// Invalid tags are logged and dropped: the tags are cleared (set empty) and
+  /// false is returned instead of throwing.
+  Future<bool> setTags(List<String> tags) async {
+    final valid = checkTags(tags);
+    await _iasManager.setTags(valid ? tags : const <String>[]);
+    return valid;
   }
 
+  /// Adds [tags] to the current tags, returning true when they were valid and
+  /// added.
+  ///
+  /// Invalid tags are logged and dropped: nothing is added and false is
+  /// returned instead of throwing.
+  Future<bool> addTags(List<String> tags) async {
+    if (!checkTags(tags)) {
+      return false;
+    }
+    await _iasManager.addTags(tags);
+    return true;
+  }
+
+  /// Removes [tags] from the current tags, returning true when they were valid
+  /// and removed.
+  ///
+  /// Invalid tags are logged and dropped: nothing is removed and false is
+  /// returned instead of throwing.
+  Future<bool> removeTags(List<String> tags) async {
+    if (!checkTags(tags)) {
+      return false;
+    }
+    await _iasManager.removeTags(tags);
+    return true;
+  }
+
+  /// Invalid [tags] are dropped, so an invalid set clears the tags rather than
+  /// throwing.
   Future<void> setUserSettings({
     bool? anonymous,
     String? userId,
@@ -65,7 +110,7 @@ class InAppStoryManager {
       userSign: userSign,
       newLanguageCode: locale?.languageCode,
       newLanguageRegion: locale?.countryCode,
-      newTags: tags,
+      newTags: tags == null ? null : sanitizeTags(tags),
       newPlaceholders: placeholders,
     );
   }
@@ -133,7 +178,7 @@ class InAppStoryManager {
               tags: tags ?? <String>[])
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showIAMById finished with error');
+        log('[InAppStory]: showOnboarding finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -144,14 +189,15 @@ class InAppStoryManager {
   }
 
   CancelableOperation<bool> showIAMById(String id,
-      {bool onlyPreloaded = false}) {
+      {bool onlyPreloaded = false, double? bottomPadding}) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
       _iam
-          .showById(id, uniqueId, onlyPreloaded: onlyPreloaded)
+          .showById(id, uniqueId,
+              onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showIAMById finished with error');
+        log('[InAppStory]: showIAMById finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -161,11 +207,16 @@ class InAppStoryManager {
     return operation;
   }
 
-  CancelableOperation<bool> showIAMByEvent(String id) {
+  CancelableOperation<bool> showIAMByEvent(String id,
+      {bool onlyPreloaded = false, double? bottomPadding}) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
-      _iam.showByEvent(id, uniqueId).then((value) => true).catchError((error) {
-        log('[InAppStory]: showIAMByEvent finished with error');
+      _iam
+          .showByEvent(id, uniqueId,
+              onlyPreloaded: onlyPreloaded, bottomPadding: bottomPadding)
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: showIAMByEvent finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -182,7 +233,7 @@ class InAppStoryManager {
           .show(storyId: id, token: uniqueId)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: ShowStory finished with error');
+        log('[InAppStory]: ShowStory finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -199,7 +250,7 @@ class InAppStoryManager {
           .showOnce(storyId: id, token: uniqueId)
           .then((value) => true)
           .catchError((error) {
-        log('[InAppStory]: showStoryOnce finished with error');
+        log('[InAppStory]: showStoryOnce finished with error', error: error);
         return false;
       }),
       onCancel: () async {
@@ -207,5 +258,17 @@ class InAppStoryManager {
       },
     );
     return operation;
+  }
+
+  void addCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.addCallback(callback);
+  }
+
+  void removeCallToActionCallback(CallToActionImpl callback) {
+    _ctaCallbackImpl.removeCallback(callback);
+  }
+
+  void setErrorCallback(IASErrorCallback callback) {
+    _errorCallbackImpl.callback = callback;
   }
 }

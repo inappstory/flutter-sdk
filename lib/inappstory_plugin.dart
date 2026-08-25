@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'inappstory_plugin_platform_interface.dart';
 import 'src/data/data.dart' show CacheSize;
+import 'src/helpers/tags_validator.dart';
 
 export 'src/callbacks/callbacks.dart';
 export 'src/controllers/controllers.dart';
@@ -15,12 +16,10 @@ export 'src/generated/pigeon_generated.g.dart'
     hide
         InAppStoryManagerHostApi,
         AppearanceManagerHostApi,
-        GameReaderCallbackFlutterApi,
         IASSingleStoryHostApi,
         IASInAppMessagesHostApi,
-        IASOnboardingsHostApi,
-        IShowStoryCallbackFlutterApi,
-        OnboardingLoadCallbackFlutterApi,
+        GameReaderCallbackFlutterApi,
+        ErrorCallbackFlutterApi,
         CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/placeholders/placeholders.dart';
@@ -34,6 +33,9 @@ class InAppStoryPlugin {
   static InAppStoryPlugin? _singleton;
 
   /// The [InAppStoryPlugin] initialization method.
+  ///
+  /// Invalid [tags] are dropped: initialization then proceeds with no tags
+  /// rather than throwing.
   Future<void> initWith(
     String apiKey,
     String userId, {
@@ -41,8 +43,9 @@ class InAppStoryPlugin {
     String? userSign,
     Locale? locale,
     CacheSize? cacheSize,
+    List<String>? tags,
   }) async {
-    return InappstoryPluginPlatform.instance.initWith(
+    await InappstoryPluginPlatform.instance.initWith(
       apiKey,
       userId,
       anonymous: anonymous,
@@ -50,6 +53,11 @@ class InAppStoryPlugin {
       languageCode: locale?.languageCode,
       languageRegion: locale?.countryCode,
       cacheSize: cacheSize?.name,
+      tags: tags == null ? null : sanitizeTags(tags),
     );
+  }
+
+  Future<bool> isInitialized() async {
+    return InappstoryPluginPlatform.instance.isInitialized();
   }
 }

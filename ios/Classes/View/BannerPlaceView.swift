@@ -213,7 +213,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 self._bannersView?.create()
             }
         }
-
     }
 
     func view() -> UIView {
@@ -378,4 +377,3 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     }
 }
-

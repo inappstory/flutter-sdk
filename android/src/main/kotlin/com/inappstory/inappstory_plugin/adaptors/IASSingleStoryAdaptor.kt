@@ -17,6 +17,7 @@ class IASSingleStoryAdaptor(
 ) : IASSingleStoryHostApi {
 
     private val tokenMap = mutableMapOf<String, CancellationToken>()
+
     private val callback = IShowStoryCallbackAdaptor(flutterPluginBinding)
 
     init {
@@ -55,3 +56,5 @@ class IASSingleStoryAdaptor(
         return false
     }
 }
+
+

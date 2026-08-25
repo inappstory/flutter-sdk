@@ -38,16 +38,16 @@ class _InAppMessagesState extends State<InAppMessages>
                   ElevatedButton(
                     onPressed:
                         () => InAppStoryManager.instance.showIAMById(
-                          _inputController.text,
-                          onlyPreloaded: false,
-                        ),
+                      _inputController.text,
+                      onlyPreloaded: false,
+                    ),
                     child: const Text("Show by id"),
                   ),
                   ElevatedButton(
                     onPressed:
                         () => InAppStoryManager.instance.showIAMByEvent(
-                          _inputController.text,
-                        ),
+                      _inputController.text,
+                    ),
                     child: const Text("Show by event"),
                   ),
                 ],
@@ -59,18 +59,16 @@ class _InAppMessagesState extends State<InAppMessages>
                   const Text("InAppMessage preloading"),
                   ElevatedButton(
                     onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
                       final result =
-                          await InAppStoryManager.instance
-                              .preloadInAppMessages();
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              result ? "Success" : "Error loading messages",
-                            ),
+                      await InAppStoryManager.instance.preloadInAppMessages();
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            result ? "Success" : "Error loading messages",
                           ),
-                        );
-                      }
+                        ),
+                      );
                     },
                     child: const Text("preload"),
                   ),
@@ -95,10 +93,10 @@ class _InAppMessagesState extends State<InAppMessages>
 
   @override
   void onInAppMessageWidgetEvent(
-    InAppMessageDataDto? inAppMessageData,
-    String? name,
-    Map<String?, Object?>? data,
-  ) {
+      InAppMessageDataDto? inAppMessageData,
+      String? name,
+      Map<String?, Object?>? data,
+      ) {
     log("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
   }
 }

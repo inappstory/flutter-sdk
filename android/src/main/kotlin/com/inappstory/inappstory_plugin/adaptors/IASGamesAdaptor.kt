@@ -16,10 +16,15 @@ class IASGamesAdaptor(
         iasGames.callback(GameReaderCallbackAdaptor(flutterPluginBinding))
     }
 
-    override fun openGame(gameId: String) =
+    override fun openGame(gameId: String) {
         iasGames.open(activityHolder.activity ?: flutterPluginBinding.applicationContext, gameId)
+    }
 
-    override fun closeGame() = iasGames.close()
+    override fun closeGame() {
+        iasGames.close()
+    }
 
-    override fun preloadGames() = iasGames.preloadGames()
+    override fun preloadGames() {
+        iasGames.preloadGames()
+    }
 }

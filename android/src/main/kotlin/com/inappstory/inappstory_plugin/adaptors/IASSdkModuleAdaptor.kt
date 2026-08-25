@@ -51,6 +51,7 @@ class InappstorySdkModuleAdaptor(
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        tags: List<String>?,
         callback: (Result<Unit>) -> Unit
     ) {
         try {
@@ -70,11 +71,14 @@ class InappstorySdkModuleAdaptor(
                     CacheSize.MEDIUM
             }
 
+            val tagsNative = tags?.let { ArrayList(it) }
+
             if (anonymous) {
                 inAppStoryManager = createAnonymousInAppStoryManager(
                     apiKey,
                     locale,
                     cacheSizeNative,
+                    tagsNative,
                 )
             } else {
                 inAppStoryManager = inAppStoryAPI.inAppStoryManager.create(
@@ -82,7 +86,7 @@ class InappstorySdkModuleAdaptor(
                     userID,
                     userSign,
                     locale,
-                    null,
+                    tagsNative,
                     null,
                     null,
                     null,
@@ -109,7 +113,13 @@ class InappstorySdkModuleAdaptor(
                 )
             )
 
-            inAppStoryManager.setErrorCallback(ErrorCallbackAdaptor(flutterPluginBinding))
+            inAppStoryManager.setErrorCallback(
+                ErrorCallbackAdaptor(flutterPluginBinding) { feed ->
+                    feedListAdaptors
+                        .filter { it.feed == feed }
+                        .forEach { it.apiSubscriber.storiesUpdateFailure(feed, null) }
+                }
+            )
 
             iasManagerAdaptor =
                 IASManagerAdaptor(flutterPluginBinding, inAppStoryAPI, inAppStoryManager)
@@ -141,8 +151,7 @@ class InappstorySdkModuleAdaptor(
                 IASOnboardingsAdaptor(
                     flutterPluginBinding,
                     appearanceManager,
-                    inAppStoryAPI.onboardings,
-                    activityHolder
+                    activityHolder,
                 )
 
             iasMessages = IASMessagesAdaptor(
@@ -201,16 +210,23 @@ class InappstorySdkModuleAdaptor(
     override fun removeListAdaptor(feed: String, uniqueId: String) {
         val iterator = feedListAdaptors.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next().uniqueId == uniqueId) {
+            val adaptor = iterator.next()
+            if (adaptor.uniqueId == uniqueId) {
+                adaptor.dispose()
                 iterator.remove()
             }
         }
+    }
+
+    override fun isInitialized(): Boolean {
+        return InAppStoryManager.getInstance()?.isInitialized == true
     }
 
     private fun createAnonymousInAppStoryManager(
         apiKey: String?,
         lang: Locale?,
         cacheSize: Int?,
+        tags: ArrayList<String>?,
     ): InAppStoryManager {
         var builder = InAppStoryManager.Builder()
         builder.lang(Locale.getDefault())
@@ -221,6 +237,10 @@ class InappstorySdkModuleAdaptor(
 
         if (cacheSize != null) {
             builder = builder.cacheSize(cacheSize)
+        }
+
+        if (tags != null) {
+            builder = builder.tags(tags)
         }
 
         builder = builder.gameDemoMode(false)

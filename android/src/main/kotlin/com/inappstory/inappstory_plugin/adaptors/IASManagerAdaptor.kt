@@ -44,6 +44,14 @@ class IASManagerAdaptor(
         inAppStoryManager.tags = arrayList
     }
 
+    override fun addTags(tags: List<String>) {
+        inAppStoryManager.addTags(tags)
+    }
+
+    override fun removeTags(tags: List<String>) {
+        inAppStoryManager.removeTags(tags)
+    }
+
     override fun changeUser(userId: String, userSign: String?, callback: (Result<Unit>) -> Unit) {
         inAppStoryManager.setUserId(userId, userSign)
         callback(Result.success(Unit))

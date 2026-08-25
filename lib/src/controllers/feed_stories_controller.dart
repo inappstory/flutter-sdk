@@ -1,35 +1,35 @@
 import 'dart:developer';
 
-import '../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
+import 'package:meta/meta.dart';
+
+typedef FeedReloadCallback = Future<void> Function();
 
 /// A controller for managing feed stories.
 class FeedStoriesController {
   FeedStoriesController();
 
-  IASStoryListHostApi? _iasStoryListHostApi;
+  FeedReloadCallback? _reload;
 
-  set iasStoryListHostApi(IASStoryListHostApi hostApi) {
-    _iasStoryListHostApi = hostApi;
+  @internal
+  void attach(FeedReloadCallback reload) {
+    _reload = reload;
   }
 
-  String? _feed;
-
-  set feed(String value) {
-    _feed = value;
+  @internal
+  void detach(FeedReloadCallback reload) {
+    if (identical(_reload, reload)) {
+      _reload = null;
+    }
   }
 
   /// Loads stories from the current feed.
   Future<void> fetchFeedStories() async {
-    // TODO: 08.05.2025 Add Exception
-    if (_feed?.isEmpty ?? true) {
-      log('[InAppStory]: Feed is not set. Please set the feed before calling fetchFeedStories');
+    final reload = _reload;
+    if (reload == null) {
+      log('[InAppStory]: fetchFeedStories skipped: no FeedStoriesWidget is '
+          'attached to this controller. The feed loads when one mounts.');
       return;
     }
-    if (_iasStoryListHostApi == null) {
-      // TODO: 08.05.2025 Add Exception
-      log('[InAppStory]: Add controller to feed stream before calling fetchFeedStories');
-      return;
-    }
-    _iasStoryListHostApi?.reloadFeed(_feed!);
+    await reload();
   }
 }

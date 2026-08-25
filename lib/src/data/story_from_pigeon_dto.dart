@@ -101,6 +101,9 @@ class StoryFromPigeonDto
 
   @override
   void scrollToStory(int index, String feed, String uniqueId) {}
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {}
 }
 
 File? nullableFileFromString(String? filePath) {
@@ -110,6 +113,7 @@ File? nullableFileFromString(String? filePath) {
 }
 
 Color colorFromString(String string) {
+  if (string.isEmpty) return Color(0x00000000);
   return Color(
     int.parse(
       string.replaceAll(RegExp('^#'), '0xff'),

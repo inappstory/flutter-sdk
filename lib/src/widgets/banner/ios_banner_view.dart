@@ -26,7 +26,7 @@ class IosBannerView extends BannerPlatformView {
         hitTestBehavior: PlatformViewHitTestBehavior.opaque,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
           Factory<OneSequenceGestureRecognizer>(
-            () => EagerGestureRecognizer(),
+            () => HorizontalDragGestureRecognizer(),
           ),
         },
         layoutDirection: TextDirection.ltr,

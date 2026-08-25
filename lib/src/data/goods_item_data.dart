@@ -24,7 +24,7 @@ final class GoodsItemData {
 
   final String? oldPrice;
 
-  @protected
+  @internal
   GoodsItemDataDto toDto() {
     return GoodsItemDataDto(
       sku: sku,

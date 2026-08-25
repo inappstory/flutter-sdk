@@ -26,7 +26,7 @@ class AndroidBannerView extends BannerPlatformView {
       viewType: viewType,
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
+          () => HorizontalDragGestureRecognizer(),
         ),
       },
       layoutDirection: TextDirection.ltr,

@@ -41,6 +41,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
         self.iasMessagesAdaptor = IASMessagesAdaptor(
             binaryMessenger: binaryMessenger,
+            pluginRegistrar: pluginRegistrar,
             inAppMessagesApi: InAppStoryAPI.shared.inappmessagesAPI
         )
 
@@ -49,6 +50,10 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         )
 
         self.statManagerAdaptor = IASStatisticsManagerAdaptor(
+            binaryMessenger: binaryMessenger
+        )
+
+        self.ctaAdaptor = CallToActionCallbackAdaptor(
             binaryMessenger: binaryMessenger
         )
 
@@ -78,6 +83,8 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
 
     var statManagerAdaptor: IASStatisticsManagerAdaptor
 
+    var ctaAdaptor: CallToActionCallbackAdaptor
+
     var feedStoryListAdaptors: [FeedStoryListAdaptor] = []
 
     func initWith(
@@ -88,6 +95,7 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
         languageCode: String?,
         languageRegion: String?,
         cacheSize: String?,
+        tags: [String]?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         InAppStory.shared.isLoggingEnabled = true
@@ -113,18 +121,21 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
                 userID: userID,
                 sign: userSign,
                 anonymous: anonymous,
+                tags: tags ?? [],
                 lang: locale
             )
         )
 
-        GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
+        let gameEventAdaptor = GameEventCallbackAdaptor(binaryMessenger: binaryMessenger)
 
-        CallbacksAdaptor(binaryMessenger: binaryMessenger)
+        let callbacksAdaptor = CallbacksAdaptor(binaryMessenger: binaryMessenger)
 
-        InAppMessageCallbacksAdaptor(binaryMessenger: binaryMessenger)
-
-        CallToActionCallbackAdaptor(binaryMessenger: binaryMessenger)
-
+        let iamCallbackAdaptor = InAppMessageCallbacksAdaptor(
+            binaryMessenger: binaryMessenger,
+            ctaCallback: self.ctaAdaptor.callToActionCallbackFlutterApi
+        )
+        
+        let errorCallbackAdaptor = ErrorCallbackAdaptor(binaryMessenger: binaryMessenger)
         completion(.success(()))
     }
 
@@ -138,6 +149,13 @@ class InappstorySdkModuleAdaptor: InappstorySdkModuleHostApi {
     }
 
     func removeListAdaptor(feed: String, uniqueId: String) {
+        feedStoryListAdaptors
+            .filter { $0.uniqueId == uniqueId }
+            .forEach { $0.dispose() }
         feedStoryListAdaptors.removeAll { $0.uniqueId == uniqueId }
+    }
+
+    func isInitialized() throws -> Bool {
+        return InAppStory.shared.settings != nil
     }
 }

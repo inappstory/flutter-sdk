@@ -26,11 +26,14 @@ abstract class InappstorySdkModuleHostApi {
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
+    List<String>? tags,
   });
 
   void createListAdaptor(String feed, String uniqueId);
 
   void removeListAdaptor(String feed, String uniqueId);
+
+  bool isInitialized();
 }
 
 @HostApi()
@@ -38,6 +41,10 @@ abstract class InAppStoryManagerHostApi {
   void setPlaceholders(Map<String, String> newPlaceholders);
 
   void setTags(List<String> tags);
+
+  void addTags(List<String> tags);
+
+  void removeTags(List<String> tags);
 
   @async
   void changeUser(String userId, {String? userSign});
@@ -94,16 +101,12 @@ abstract class InAppStoryAPIListSubscriberFlutterApi {
   void storiesLoaded(int size, String feed);
 
   void scrollToStory(int index, String feed, String uniqueId);
+
+  void storiesUpdateFailure(String feed, String? reason);
 }
 
 @FlutterApi()
 abstract class ErrorCallbackFlutterApi {
-  void loadListError(String feed);
-
-  void cacheError();
-
-  void emptyLinkError();
-
   void sessionError();
 
   void noConnection();
@@ -134,7 +137,9 @@ class StoryDataDto {
 
 enum StoryTypeDto {
   COMMON,
-  UGC;
+  UGC,
+  IAM,
+  BANNER;
 }
 
 enum SourceTypeDto {
@@ -142,7 +147,9 @@ enum SourceTypeDto {
   ONBOARDING,
   LIST,
   FAVORITE,
-  STACK;
+  STACK,
+  IN_APP_MESSAGE,
+  BANNERS;
 }
 
 @FlutterApi()
@@ -234,6 +241,8 @@ abstract class AppearanceManagerHostApi {
   void setReaderScrollStyle(ScrollStyle style);
 
   void setReaderPresentationStyle(PresentationStyle style);
+
+  void setNavBarColor(int color, int? darkColor);
 }
 
 class GoodsItemDataDto {
@@ -312,6 +321,7 @@ enum ContentTypeDto {
   STORY,
   UGC,
   IN_APP_MESSAGE,
+
 }
 
 class ContentDataDto {
@@ -362,11 +372,21 @@ abstract class IASCallBacksFlutterApi {
       SlideDataDto? slideData, Map<String?, Object?>? widgetData);
 }
 
+enum InAppMessageTypeDto {
+  FULL_SCREEN,
+  BOTTOM_SHEET,
+  POP_UP,
+  TOAST,
+  UNDEFINED;
+}
+
 @HostApi()
 abstract class IASInAppMessagesHostApi {
-  void showById(String messageId, String token, {bool onlyPreloaded = false});
+  void showById(String messageId, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
 
-  void showByEvent(String event, String token, {bool onlyPreloaded = false});
+  void showByEvent(String event, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
 
   @async
   bool preloadMessages({List<String>? ids});
@@ -387,6 +407,8 @@ class InAppMessageDataDto {
 
   /// The event associated with the in-app message, or `null` if not available.
   late String? event;
+
+  late InAppMessageTypeDto? messageType;
 }
 
 @FlutterApi()

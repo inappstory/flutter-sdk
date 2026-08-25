@@ -28,6 +28,7 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
           (story, decorator) => BaseStoryBuilder(story, decorator: decorator),
       feedController: widget.controller,
       feedDecorator: widget.decorator,
+      onStoriesLoadError: widget.storiesLoadError,
     );
   }
 

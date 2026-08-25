@@ -81,10 +81,9 @@ class BannerView(
                 flutterPluginBinding.binaryMessenger,
                 messageChannelSuffix = bannerWidgetId
             )
+
         BannerViewHostApi.setUp(
-            flutterPluginBinding.binaryMessenger,
-            this,
-            messageChannelSuffix = bannerWidgetId
+            flutterPluginBinding.binaryMessenger, this, messageChannelSuffix = bannerWidgetId
         )
 
         bannersData = { bannerData, eventName, widgetData ->
@@ -152,37 +151,35 @@ class BannerView(
             bannerPlace?.reloadBanners()
         }
 
-        preloadBannerPlace =
-            bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
-                if (payload != placeId) {
-                    return@subscribe
-                }
-                InAppStoryManager.getInstance()?.preloadBannerPlace(
-                    BannerPlaceLoadSettings().placeId(placeId),
-                    object : BannerPlacePreloadCallback(placeId) {
-                        override fun bannerPlaceLoaded(
-                            size: Int,
-                            bannerData: List<BannerData>
-                        ) {
-                            flutterPluginBinding.runOnMainThread {
-                                bannerPlaceCallback.onBannerPlacePreloaded() {}
-                            }
-                        }
-
-                        override fun loadError() {
-                            flutterPluginBinding.runOnMainThread {
-                                bannerPlaceCallback.onBannerPlacePreloadedError() {}
-                            }
-                        }
-
-                        override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
-
-                        }
-
-                        override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
-                        }
-                    })
+        preloadBannerPlace = bannerPlaceManagerAdaptor.subscribe(PreloadBannerPlace) { payload ->
+            if (payload != placeId) {
+                return@subscribe
             }
+            InAppStoryManager.getInstance()?.preloadBannerPlace(
+                BannerPlaceLoadSettings().placeId(placeId),
+                object : BannerPlacePreloadCallback(placeId) {
+                    override fun bannerPlaceLoaded(
+                        size: Int, bannerData: List<BannerData>
+                    ) {
+                        flutterPluginBinding.runOnMainThread {
+                            bannerPlaceCallback.onBannerPlacePreloaded() {}
+                        }
+                    }
+
+                    override fun loadError() {
+                        flutterPluginBinding.runOnMainThread {
+                            bannerPlaceCallback.onBannerPlacePreloadedError() {}
+                        }
+                    }
+
+                    override fun bannerContentLoaded(bannerId: Int, isFirst: Boolean) {
+
+                    }
+
+                    override fun bannerContentLoadError(bannerId: Int, isFirst: Boolean) {
+                    }
+                })
+        }
         showNext = bannerPlaceManagerAdaptor.subscribe(ShowNext) { payload ->
             if (payload != placeId) {
                 return@subscribe
@@ -303,9 +300,7 @@ class BannerView(
         bannerPlace?.clear()
         bannerPlace = null
         BannerViewHostApi.setUp(
-            flutterPluginBinding.binaryMessenger,
-            null,
-            messageChannelSuffix = bannerWidgetId
+            flutterPluginBinding.binaryMessenger, null, messageChannelSuffix = bannerWidgetId
         )
         bannerDataListener.removeListener(bannersData)
     }
@@ -400,8 +395,7 @@ class CustomBannerPlaceAppearance(
     private fun createBitmapFromPath(path: String): Bitmap? {
         try {
             val bitmap: Bitmap?
-            val assetPath: String =
-                flutterAssets.getAssetFilePathBySubpath(path)
+            val assetPath: String = flutterAssets.getAssetFilePathBySubpath(path)
             val fd: AssetFileDescriptor =
                 flutterPluginBinding.getApplicationContext().getAssets().openFd(assetPath)
             val inputStream = fd.createInputStream()

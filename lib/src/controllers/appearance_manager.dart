@@ -2,7 +2,12 @@ import 'dart:ui';
 
 import '../data/data.dart' show GoodsItemAppearance;
 import '../generated/pigeon_generated.g.dart'
-    show AppearanceManagerHostApi, Position, CoverQuality, ScrollStyle, PresentationStyle;
+    show
+        AppearanceManagerHostApi,
+        Position,
+        CoverQuality,
+        ScrollStyle,
+        PresentationStyle;
 
 class AppearanceManager {
   AppearanceManager._private();
@@ -94,5 +99,10 @@ class AppearanceManager {
 
   Future<void> setReaderPresentationStyle(PresentationStyle style) async {
     await _appearanceManager.setReaderPresentationStyle(style);
+  }
+
+  Future<void> setNavBarColor(Color color, {Color? darkColor}) async {
+    await _appearanceManager.setNavBarColor(
+        color.toARGB32(), darkColor?.toARGB32());
   }
 }

@@ -66,4 +66,11 @@ class InAppStoryAPIListSubscriberFlutterApiObservable
       it.scrollToStory(index, feed, uniqueId);
     }
   }
+
+  @override
+  void storiesUpdateFailure(String feed, String? reason) {
+    for (final it in observers) {
+      it.storiesUpdateFailure(feed, reason);
+    }
+  }
 }
