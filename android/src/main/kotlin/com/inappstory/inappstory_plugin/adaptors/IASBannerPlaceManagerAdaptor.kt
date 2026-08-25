@@ -112,6 +112,10 @@ class IASBannerPlaceManagerAdaptor(
     override fun resumeAutoscroll(placeId: String) {
         emit(ResumeAutoscroll, placeId)
     }
+
+    override fun setInteraction(placeId: String, isInteractionEnabled: Boolean) {
+        emit(SetInteraction, SetInteractionPayload(placeId, isInteractionEnabled))
+    }
 }
 
 object LoadBannerPlace : EventKey<String>
@@ -123,3 +127,5 @@ data class ShowByIndexPayload(val placeId: String, val index: Long)
 object ShowByIndex : EventKey<ShowByIndexPayload>
 object PauseAutoscroll : EventKey<String>
 object ResumeAutoscroll : EventKey<String>
+data class SetInteractionPayload(val placeId: String, val isInteractionEnabled: Boolean)
+object SetInteraction : EventKey<SetInteractionPayload>

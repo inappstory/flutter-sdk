@@ -42,4 +42,11 @@ class BannerPlaceManager {
   Future<void> preloadBannerPlace(String placeId) async {
     await _bannerPlaceManagerApi.preloadBannerPlace(placeId);
   }
+
+  Future<void> setInteraction({
+    required String placeId,
+    required bool isInteractionEnabled,
+  }) async {
+    await _bannerPlaceManagerApi.setInteraction(placeId, isInteractionEnabled);
+  }
 }

@@ -36,6 +36,18 @@ struct PauseAutoscroll: EventKey {
 struct ResumeAutoscroll: EventKey {
     typealias Payload = String
 }
+struct SetInteraction: EventKey {
+    public struct Payload {
+        public let placeId: String
+        public let isInteractionEnabled: Bool
+
+        public init(placeId: String, isInteractionEnabled: Bool) {
+            self.placeId = placeId
+            self.isInteractionEnabled = isInteractionEnabled
+        }
+        public typealias Payload = SetInteraction.Payload
+    }
+}
 
 public protocol EventKey: Hashable {
     associatedtype Payload
@@ -191,6 +203,16 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
 
     func resumeAutoscroll(placeId: String) throws {
         self.emit(ResumeAutoscroll(), payload: placeId)
+    }
+
+    func setInteraction(placeId: String, isInteractionEnabled: Bool) throws {
+        self.emit(
+            SetInteraction(),
+            payload: SetInteraction.Payload(
+                placeId: placeId,
+                isInteractionEnabled: isInteractionEnabled
+            )
+        )
     }
 
     func onActionWith(

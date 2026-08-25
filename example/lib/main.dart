@@ -15,17 +15,25 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _inAppStoryPlugin = InAppStoryPlugin();
 
-  final apiKey = '<you-api-key>';
+  final _feedStoriesController = FeedStoriesController();
+
+  final apiKey = 'test-key';
 
   // can be empty
   final userId = '<user-id>';
 
-  final feed = '<feed-id>';
+  final feed = 'flutter';
 
   late final initialization = initSdk();
 
   Future<void> initSdk() async {
     await _inAppStoryPlugin.initWith(apiKey, userId);
+  }
+
+  Future<void> _onRefresh() async {
+    InAppStoryManager.instance.showIAMById('1411');
+    await _feedStoriesController.fetchFeedStories();
+    await BannerPlaceManager.instance.reload('app-head');
   }
 
   @override
@@ -43,12 +51,36 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               if (initializationSnapshot.hasError) {
                 return const Text('SDK was not initialized');
               } else {
-                return Column(
-                  children: [
-                    FeedStoriesWidget(
-                      feed: feed,
+                return RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        FeedStoriesWidget(
+                          feed: feed,
+                          controller: _feedStoriesController,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            InAppStoryManager.instance.showIAMById('1411');
+                            // showModalBottomSheet(
+                            //     context: context,
+                            //     builder: (_) {
+                            //       return const SizedBox(
+                            //         height: 200,
+                            //         width: double.infinity,
+                            //         child: Center(child: Text('ff')),
+                            //       );
+                            //     });
+                          },
+                          child: const Text('ggg'),
+                        ),
+                        //const SizedBox(height: 200),
+                        const BannerPlace(placeId: 'app-head', height: 150),
+                      ],
                     ),
-                  ],
+                  ),
                 );
               }
             }

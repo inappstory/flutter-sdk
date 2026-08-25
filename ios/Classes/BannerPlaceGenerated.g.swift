@@ -354,6 +354,7 @@ protocol BannerPlaceManagerHostApi {
   func showByIndex(placeId: String, index: Int64) throws
   func pauseAutoscroll(placeId: String) throws
   func resumeAutoscroll(placeId: String) throws
+  func setInteraction(placeId: String, isInteractionEnabled: Bool) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -483,6 +484,22 @@ class BannerPlaceManagerHostApiSetup {
     } else {
       resumeAutoscrollChannel.setMessageHandler(nil)
     }
+    let setInteractionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.setInteraction\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setInteractionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let placeIdArg = args[0] as! String
+        let isInteractionEnabledArg = args[1] as! Bool
+        do {
+          try api.setInteraction(placeId: placeIdArg, isInteractionEnabled: isInteractionEnabledArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setInteractionChannel.setMessageHandler(nil)
+    }
   }
 }
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
@@ -598,6 +615,7 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
 protocol BannerViewHostApi {
   func changeBannerPlaceId(newPlaceId: String) throws
   func deInitBannerPlace() throws
+  func setInteraction(isInteractionEnabled: Bool) throws
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -633,6 +651,21 @@ class BannerViewHostApiSetup {
       }
     } else {
       deInitBannerPlaceChannel.setMessageHandler(nil)
+    }
+    let setInteractionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.BannerViewHostApi.setInteraction\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setInteractionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let isInteractionEnabledArg = args[0] as! Bool
+        do {
+          try api.setInteraction(isInteractionEnabled: isInteractionEnabledArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      setInteractionChannel.setMessageHandler(nil)
     }
   }
 }
