@@ -18,6 +18,7 @@ import com.inappstory.inappstory_plugin.adaptors.PauseAutoscroll
 import com.inappstory.inappstory_plugin.adaptors.PreloadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.ReloadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.ResumeAutoscroll
+import com.inappstory.inappstory_plugin.adaptors.SetInteraction
 import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
