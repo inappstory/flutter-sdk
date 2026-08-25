@@ -846,7 +846,7 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol InappstorySdkModuleHostApi {
-  func initWith(apiKey: String, userID: String, anonymous: Bool, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func initWith(apiKey: String, userID: String, anonymous: Bool, userSign: String?, languageCode: String?, languageRegion: String?, cacheSize: String?, tags: [String]?, completion: @escaping (Result<Void, Error>) -> Void)
   func createListAdaptor(feed: String, uniqueId: String) throws
   func removeListAdaptor(feed: String, uniqueId: String) throws
   func isInitialized() throws -> Bool
@@ -869,7 +869,8 @@ class InappstorySdkModuleHostApiSetup {
         let languageCodeArg: String? = nilOrValue(args[4])
         let languageRegionArg: String? = nilOrValue(args[5])
         let cacheSizeArg: String? = nilOrValue(args[6])
-        api.initWith(apiKey: apiKeyArg, userID: userIDArg, anonymous: anonymousArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg) { result in
+        let tagsArg: [String]? = nilOrValue(args[7])
+        api.initWith(apiKey: apiKeyArg, userID: userIDArg, anonymous: anonymousArg, userSign: userSignArg, languageCode: languageCodeArg, languageRegion: languageRegionArg, cacheSize: cacheSizeArg, tags: tagsArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -932,6 +933,8 @@ class InappstorySdkModuleHostApiSetup {
 protocol InAppStoryManagerHostApi {
   func setPlaceholders(newPlaceholders: [String: String]) throws
   func setTags(tags: [String]) throws
+  func addTags(tags: [String]) throws
+  func removeTags(tags: [String]) throws
   func changeUser(userId: String, userSign: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func userLogout() throws
   func closeReaders(completion: @escaping (Result<Void, Error>) -> Void)
@@ -978,6 +981,36 @@ class InAppStoryManagerHostApiSetup {
       }
     } else {
       setTagsChannel.setMessageHandler(nil)
+    }
+    let addTagsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.addTags\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      addTagsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let tagsArg = args[0] as! [String]
+        do {
+          try api.addTags(tags: tagsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      addTagsChannel.setMessageHandler(nil)
+    }
+    let removeTagsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.removeTags\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      removeTagsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let tagsArg = args[0] as! [String]
+        do {
+          try api.removeTags(tags: tagsArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      removeTagsChannel.setMessageHandler(nil)
     }
     let changeUserChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.changeUser\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

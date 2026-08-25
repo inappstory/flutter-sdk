@@ -26,6 +26,7 @@ abstract class InappstorySdkModuleHostApi {
     String? languageCode,
     String? languageRegion,
     String? cacheSize,
+    List<String>? tags,
   });
 
   void createListAdaptor(String feed, String uniqueId);
@@ -40,6 +41,10 @@ abstract class InAppStoryManagerHostApi {
   void setPlaceholders(Map<String, String> newPlaceholders);
 
   void setTags(List<String> tags);
+
+  void addTags(List<String> tags);
+
+  void removeTags(List<String> tags);
 
   @async
   void changeUser(String userId, {String? userSign});

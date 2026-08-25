@@ -21,6 +21,7 @@ import '../generated/pigeon_generated.g.dart'
         CallToActionCallbackFlutterApi,
         ErrorCallbackFlutterApi;
 import '../helpers/id_gen.dart';
+import '../helpers/tags_validator.dart';
 import 'logger.dart';
 
 class InAppStoryManager {
@@ -56,10 +57,45 @@ class InAppStoryManager {
     await _iasManager.setPlaceholders(placeholders);
   }
 
-  Future<void> setTags(List<String> tags) async {
-    await _iasManager.setTags(tags);
+  /// Replaces the current tags with [tags], returning true when they were
+  /// valid and applied as-is.
+  ///
+  /// Invalid tags are logged and dropped: the tags are cleared (set empty) and
+  /// false is returned instead of throwing.
+  Future<bool> setTags(List<String> tags) async {
+    final valid = checkTags(tags);
+    await _iasManager.setTags(valid ? tags : const <String>[]);
+    return valid;
   }
 
+  /// Adds [tags] to the current tags, returning true when they were valid and
+  /// added.
+  ///
+  /// Invalid tags are logged and dropped: nothing is added and false is
+  /// returned instead of throwing.
+  Future<bool> addTags(List<String> tags) async {
+    if (!checkTags(tags)) {
+      return false;
+    }
+    await _iasManager.addTags(tags);
+    return true;
+  }
+
+  /// Removes [tags] from the current tags, returning true when they were valid
+  /// and removed.
+  ///
+  /// Invalid tags are logged and dropped: nothing is removed and false is
+  /// returned instead of throwing.
+  Future<bool> removeTags(List<String> tags) async {
+    if (!checkTags(tags)) {
+      return false;
+    }
+    await _iasManager.removeTags(tags);
+    return true;
+  }
+
+  /// Invalid [tags] are dropped, so an invalid set clears the tags rather than
+  /// throwing.
   Future<void> setUserSettings({
     bool? anonymous,
     String? userId,
@@ -74,7 +110,7 @@ class InAppStoryManager {
       userSign: userSign,
       newLanguageCode: locale?.languageCode,
       newLanguageRegion: locale?.countryCode,
-      newTags: tags,
+      newTags: tags == null ? null : sanitizeTags(tags),
       newPlaceholders: placeholders,
     );
   }

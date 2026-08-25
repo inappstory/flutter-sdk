@@ -820,14 +820,14 @@ class InappstorySdkModuleHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> initWith(String apiKey, String userID, {bool anonymous = false, String? userSign, String? languageCode, String? languageRegion, String? cacheSize, }) async {
+  Future<void> initWith(String apiKey, String userID, {bool anonymous = false, String? userSign, String? languageCode, String? languageRegion, String? cacheSize, List<String>? tags, }) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.initWith$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID, anonymous, userSign, languageCode, languageRegion, cacheSize]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[apiKey, userID, anonymous, userSign, languageCode, languageRegion, cacheSize, tags]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -927,6 +927,42 @@ class InAppStoryManagerHostApi {
 
   Future<void> setTags(List<String> tags) async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.setTags$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tags]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<void> addTags(List<String> tags) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.addTags$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[tags]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<void> removeTags(List<String> tags) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.removeTags$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

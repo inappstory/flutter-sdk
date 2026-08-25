@@ -10,6 +10,7 @@ abstract class InAppStorySdkModule {
     String? languageRegion,
     String? userSign,
     String? cacheSize,
+    List<String>? tags,
   });
 
   /// Returns whether the native SDK has already been initialized.

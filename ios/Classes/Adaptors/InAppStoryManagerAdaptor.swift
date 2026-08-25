@@ -55,6 +55,14 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         InAppStory.shared.setTags(tags)
     }
 
+    func addTags(tags: [String]) throws {
+        InAppStory.shared.addTags(tags)
+    }
+
+    func removeTags(tags: [String]) throws {
+        InAppStory.shared.removeTags(tags)
+    }
+
     func setUserSettings(
         anonymous: Bool?,
         userId: String?,
