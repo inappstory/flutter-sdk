@@ -27,7 +27,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var showByIndexToken: UUID?
     private var pauseAutoscrollToken: UUID?
     private var resumeAutoscrollToken: UUID?
+    private var setInteractionToken: UUID?
     private var onActionWith: UUID?
+    private var isInteractionEnabled: Bool = true
 
     init(
         frame: CGRect,
@@ -177,6 +179,16 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 self._bannersView?.resume()
             }
         }
+        self.setInteractionToken = self.bannerPlaceManagerAdaptor?.subscribe(
+            SetInteraction()
+        ) {
+            [weak self]
+            payload in
+            guard let self else { return }
+            if payload.placeId == self.placeId {
+                self.updateInteraction(payload.isInteractionEnabled)
+            }
+        }
         self.onActionWith = self.bannerPlaceManagerAdaptor?.subscribe(
             OnActionWith()
         ) {
@@ -291,6 +303,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             }
         }
 
+        self._bannersView?.isUserInteractionEnabled = self.isInteractionEnabled
         self._bannersView?.bannersDidScroll = { [weak self] index in
             guard let self else { return }
             DispatchQueue.main.async { [weak self] in
@@ -300,6 +313,19 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                     completion: { _ in }
                 )
             }
+        }
+    }
+
+    func setInteraction(isInteractionEnabled: Bool) throws {
+        updateInteraction(isInteractionEnabled)
+    }
+
+    private func updateInteraction(_ isInteractionEnabled: Bool) {
+        self.isInteractionEnabled = isInteractionEnabled
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self._view?.isUserInteractionEnabled = isInteractionEnabled
+            self._bannersView?.isUserInteractionEnabled = isInteractionEnabled
         }
     }
 
@@ -349,6 +375,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         }
         if let resumeAutoscrollToken = self.resumeAutoscrollToken {
             self.bannerPlaceManagerAdaptor?.unsubscribe(resumeAutoscrollToken)
+        }
+        if let setInteractionToken = self.setInteractionToken {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(setInteractionToken)
         }
         if let preloadBannerPlaceToken = self.preloadBannerPlaceToken {
             self.bannerPlaceManagerAdaptor?.unsubscribe(preloadBannerPlaceToken)

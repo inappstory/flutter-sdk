@@ -26,6 +26,7 @@ class BannerPlace extends StatefulWidget {
     this.placeDecoration,
     this.bannerDecoration,
     this.autoLoad = true,
+    this.isInteractionEnabled,
     this.bannerPlaceLoaderBuilder,
     this.onActionWith,
     this.onBannerScroll,
@@ -44,6 +45,7 @@ class BannerPlace extends StatefulWidget {
   final BannerPlaceLoaderBuilder? bannerPlaceLoaderBuilder;
 
   final bool autoLoad;
+  final bool? isInteractionEnabled;
 
   final Function(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData)? onActionWith;
@@ -63,6 +65,54 @@ class _BannerPlaceState extends State<BannerPlace>
   final bannerWidgetId = idGenerator();
 
   bool isVisible = false;
+  ModalRoute<dynamic>? _currentRoute;
+  bool _lastInteractionState = true;
+  bool _platformViewCreated = false;
+
+  void _onRouteAnimationChanged() {
+    _syncInteractionState();
+  }
+
+  void _onRouteStatusChanged(AnimationStatus status) {
+    _syncInteractionState();
+  }
+
+  void _syncInteractionState() {
+    final route = _currentRoute;
+    final isRouteCurrent = route?.isCurrent ?? true;
+    final isSecondaryZero = (route?.secondaryAnimation?.value ?? 0.0) == 0.0;
+    final isRouteActiveAndCurrent = isRouteCurrent && isSecondaryZero;
+
+    final effectiveInteraction =
+        (widget.isInteractionEnabled ?? true) && isRouteActiveAndCurrent;
+
+    if (effectiveInteraction != _lastInteractionState) {
+      _lastInteractionState = effectiveInteraction;
+      if (_platformViewCreated) {
+        try {
+          BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+              .setInteraction(effectiveInteraction);
+        } catch (_) {}
+      }
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (_currentRoute != route) {
+      _currentRoute?.secondaryAnimation
+          ?.removeListener(_onRouteAnimationChanged);
+      _currentRoute?.secondaryAnimation
+          ?.removeStatusListener(_onRouteStatusChanged);
+      _currentRoute = route;
+      _currentRoute?.secondaryAnimation?.addListener(_onRouteAnimationChanged);
+      _currentRoute?.secondaryAnimation
+          ?.addStatusListener(_onRouteStatusChanged);
+    }
+    _syncInteractionState();
+  }
 
   @override
   void didUpdateWidget(covariant BannerPlace oldWidget) {
@@ -71,6 +121,9 @@ class _BannerPlaceState extends State<BannerPlace>
       _bannerPlaceState = BannerPlaceState.loading;
       BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
           .changeBannerPlaceId(widget.placeId);
+    }
+    if (oldWidget.isInteractionEnabled != widget.isInteractionEnabled) {
+      _syncInteractionState();
     }
   }
 
@@ -121,11 +174,16 @@ class _BannerPlaceState extends State<BannerPlace>
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
+            _platformViewCreated = true;
             BannerPlaceCallbackFlutterApi.setUp(this,
                 messageChannelSuffix: bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });
+            if (!_lastInteractionState) {
+              BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+                  .setInteraction(false);
+            }
           },
         ),
       );
@@ -141,11 +199,16 @@ class _BannerPlaceState extends State<BannerPlace>
           bannerDecoration: widget.bannerDecoration,
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
+            _platformViewCreated = true;
             BannerPlaceCallbackFlutterApi.setUp(this,
                 messageChannelSuffix: bannerWidgetId);
             setState(() {
               _bannerPlaceState = BannerPlaceState.loading;
             });
+            if (!_lastInteractionState) {
+              BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+                  .setInteraction(false);
+            }
           },
         ),
       );
@@ -157,6 +220,11 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void dispose() {
+    _currentRoute?.secondaryAnimation
+        ?.removeListener(_onRouteAnimationChanged);
+    _currentRoute?.secondaryAnimation
+        ?.removeStatusListener(_onRouteStatusChanged);
+    _currentRoute = null;
     BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
     BannerPlaceCallbackFlutterApi.setUp(null,
         messageChannelSuffix: bannerWidgetId);

@@ -40,3 +40,4 @@ graphify-out/
 .dart_tool/
 build/
 example_extended/lib/keys.dart
+skills-lock.json

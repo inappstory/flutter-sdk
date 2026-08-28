@@ -27,6 +27,8 @@ abstract class BannerPlaceManagerHostApi {
   void pauseAutoscroll(String placeId);
 
   void resumeAutoscroll(String placeId);
+
+  void setInteraction(String placeId, bool isInteractionEnabled);
 }
 
 class BannerPlaceDecoration {
@@ -55,6 +57,8 @@ abstract class BannerViewHostApi {
   void changeBannerPlaceId(String newPlaceId);
 
   void deInitBannerPlace();
+
+  void setInteraction(bool isInteractionEnabled);
 }
 
 enum GradientType {

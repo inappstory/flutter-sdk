@@ -378,6 +378,7 @@ interface BannerPlaceManagerHostApi {
   fun showByIndex(placeId: String, index: Long)
   fun pauseAutoscroll(placeId: String)
   fun resumeAutoscroll(placeId: String)
+  fun setInteraction(placeId: String, isInteractionEnabled: Boolean)
 
   companion object {
     /** The codec used by BannerPlaceManagerHostApi. */
@@ -533,6 +534,25 @@ interface BannerPlaceManagerHostApi {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.setInteraction$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val placeIdArg = args[0] as String
+            val isInteractionEnabledArg = args[1] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setInteraction(placeIdArg, isInteractionEnabledArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              BannerPlaceGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
     }
   }
 }
@@ -634,6 +654,7 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
 interface BannerViewHostApi {
   fun changeBannerPlaceId(newPlaceId: String)
   fun deInitBannerPlace()
+  fun setInteraction(isInteractionEnabled: Boolean)
 
   companion object {
     /** The codec used by BannerViewHostApi. */
@@ -668,6 +689,24 @@ interface BannerViewHostApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.deInitBannerPlace()
+              listOf(null)
+            } catch (exception: Throwable) {
+              BannerPlaceGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.inappstory_plugin.BannerViewHostApi.setInteraction$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val isInteractionEnabledArg = args[0] as Boolean
+            val wrapped: List<Any?> = try {
+              api.setInteraction(isInteractionEnabledArg)
               listOf(null)
             } catch (exception: Throwable) {
               BannerPlaceGeneratedPigeonUtils.wrapError(exception)
