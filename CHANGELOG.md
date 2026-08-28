@@ -1,3 +1,29 @@
+## [0.9.2]
+
+### Added
+
+- `isInteractionEnabled` parameter in `BannerPlace` widget to control touch interaction
+- `setInteraction` method in `BannerPlaceManager`
+
+### Fixed
+
+- Touch events intercepted by `BannerPlace` when modal routes (bottom sheets, dialogs) are displayed
+- In-app messages on iOS displayed in a separate overlay window above platform views
+
+## [0.9.1]
+
+### Added
+
+- `addTags` and `removeTags` methods in `InAppStoryManager`
+- Optional `tags` parameter to `InAppStoryPlugin().initWith`
+- Tags validation (character set, size limit up to 4096 bytes)
+
+### Changed
+
+- `InAppStoryManager.instance.setTags()` now returns `Future<bool>` indicating whether the tags are valid
+- Invalid tags are dropped instead of throwing during initialization and settings updates
+- Updated iOS SDK to 1.29.5
+
 ## [0.9.0]
 
 ### Added

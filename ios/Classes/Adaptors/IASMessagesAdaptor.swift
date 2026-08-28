@@ -18,6 +18,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
     private var tokenMap: [String: InAppStorySDK.CancellationToken] = [:]
 
     private weak var pluginRegistrar: FlutterPluginRegistrar?
+    private var overlayWindow: UIWindow?
     private weak var containerView: IAMContainerView?
 
     init(
@@ -116,10 +117,36 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
     }
 
     private func makeContainer() throws -> IAMContainerView {
-        guard let host = pluginRegistrar?.viewController?.view else {
+        let window: UIWindow
+        if let existing = overlayWindow {
+            window = existing
+        } else {
+            if #available(iOS 13.0, *),
+               let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive }) {
+                window = UIWindow(windowScene: scene)
+                window.frame = scene.coordinateSpace.bounds
+            } else {
+                let frame = pluginRegistrar?.viewController?.view.window?.bounds
+                    ?? UIScreen.main.bounds
+                window = UIWindow(frame: frame)
+            }
+            let rootVC = UIViewController()
+            rootVC.view.backgroundColor = .clear
+            window.rootViewController = rootVC
+            window.windowLevel = .alert - 1
+            window.backgroundColor = .clear
+            self.overlayWindow = window
+        }
+
+        window.isHidden = false
+        window.isUserInteractionEnabled = true
+
+        guard let host = window.rootViewController?.view else {
             throw PigeonError(
                 code: "no_container",
-                message: "There is no Flutter view to show InAppMessage in",
+                message: "There is no view to show InAppMessage in",
                 details: nil
             )
         }
@@ -132,5 +159,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
     private func removeContainer() {
         containerView?.removeFromSuperview()
         containerView = nil
+        overlayWindow?.isHidden = true
+        overlayWindow = nil
     }
 }

@@ -18,6 +18,7 @@ import com.inappstory.inappstory_plugin.adaptors.PauseAutoscroll
 import com.inappstory.inappstory_plugin.adaptors.PreloadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.ReloadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.ResumeAutoscroll
+import com.inappstory.inappstory_plugin.adaptors.SetInteraction
 import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
@@ -62,6 +63,7 @@ class BannerView(
     private var showByIndex: Subscription
     private var pauseAutoscroll: Subscription
     private var resumeAutoscroll: Subscription
+    private var setInteraction: Subscription
 
     private var bannersData: BannersData
 
@@ -210,11 +212,30 @@ class BannerView(
             }
             bannerPlace?.resumeAutoscroll()
         }
+        setInteraction = bannerPlaceManagerAdaptor.subscribe(SetInteraction) { payload ->
+            if (payload.placeId != placeId) {
+                return@subscribe
+            }
+            updateInteraction(payload.isInteractionEnabled)
+        }
         frame.addView(bannerPlace)
         val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
         if (autoLoad) {
             bannerPlace?.loadBanners()
         }
+    }
+
+    private fun updateInteraction(isInteractionEnabled: Boolean) {
+        flutterPluginBinding.runOnMainThread {
+            frame.isEnabled = isInteractionEnabled
+            frame.isClickable = isInteractionEnabled
+            bannerPlace?.isEnabled = isInteractionEnabled
+            bannerPlace?.isClickable = isInteractionEnabled
+        }
+    }
+
+    override fun setInteraction(isInteractionEnabled: Boolean) {
+        updateInteraction(isInteractionEnabled)
     }
 
     private fun createBannerCarousel(placeId: String) {
@@ -296,6 +317,7 @@ class BannerView(
         showByIndex.unsubscribe()
         pauseAutoscroll.unsubscribe()
         resumeAutoscroll.unsubscribe()
+        setInteraction.unsubscribe()
         frame.removeAllViews()
         bannerPlace?.clear()
         bannerPlace = null
