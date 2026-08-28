@@ -6,7 +6,7 @@ import 'package:pigeon/pigeon.dart';
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/CheckoutGenerated.g.kt',
   kotlinOptions: KotlinOptions(includeErrorClass: false),
-  swiftOut: 'ios/Classes/CheckoutGenerated.g.swift',
+  swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/CheckoutGenerated.g.swift',
   swiftOptions: SwiftOptions(includeErrorClass: false),
 ))
 // BannerPlaceManagerHostApi

@@ -13,7 +13,7 @@ InAppStory SDK Plugin
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'InAppStory' => 'support@inappstory.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'inappstory_plugin/Sources/inappstory_plugin/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
   s.dependency 'InAppStory', '1.29.5'
@@ -27,5 +27,5 @@ InAppStory SDK Plugin
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
   # plugin's privacy impact, and then uncomment this line. For more information,
   # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  # s.resource_bundles = {'inappstory_plugin_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
+  s.resource_bundles = {'inappstory_plugin_privacy' => ['inappstory_plugin/Sources/inappstory_plugin/PrivacyInfo.xcprivacy']}
 end

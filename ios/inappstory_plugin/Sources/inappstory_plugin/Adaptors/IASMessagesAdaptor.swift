@@ -128,9 +128,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
                 window = UIWindow(windowScene: scene)
                 window.frame = scene.coordinateSpace.bounds
             } else {
-                let frame = pluginRegistrar?.viewController?.view.window?.bounds
-                    ?? UIScreen.main.bounds
-                window = UIWindow(frame: frame)
+                window = UIWindow(frame: UIScreen.main.bounds)
             }
             let rootVC = UIViewController()
             rootVC.view.backgroundColor = .clear

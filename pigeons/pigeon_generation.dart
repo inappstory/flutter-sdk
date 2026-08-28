@@ -10,7 +10,7 @@ import 'package:pigeon/pigeon.dart';
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
   kotlinOptions: KotlinOptions(),
-  swiftOut: 'ios/Classes/PigeonGenerated.g.swift',
+  swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/PigeonGenerated.g.swift',
   swiftOptions: SwiftOptions(),
 ))
 // ConfigurePigeon
