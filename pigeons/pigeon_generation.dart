@@ -248,7 +248,7 @@ abstract class AppearanceManagerHostApi {
 class GoodsItemDataDto {
   late String? sku;
   late String? title;
-  late String? description;
+  late String? productDescription;
   late String? image;
   late String? price;
   late String? oldPrice;

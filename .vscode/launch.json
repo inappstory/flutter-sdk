@@ -1,24 +1,6 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
-        {
-            "name": "flutter-sdk",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "flutter-sdk (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "flutter-sdk (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
         {
             "name": "example",
             "cwd": "example",

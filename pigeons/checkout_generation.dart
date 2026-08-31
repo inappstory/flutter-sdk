@@ -33,7 +33,7 @@ class ProductCartOffer {
     required this.quantity,
     required this.availability,
     this.groupId,
-    this.description,
+    this.offerDescription,
     this.url,
     this.coverUrl,
     this.currency,
@@ -47,7 +47,7 @@ class ProductCartOffer {
   String offerId; // product ID
   String? groupId; // product group ID
   String name; // product name
-  String? description; // product description
+  String? offerDescription; // product description
   String? url; // link to external resource for product
   String? coverUrl; // cover image address
   List<String> imageUrls; // list of addresses for product images

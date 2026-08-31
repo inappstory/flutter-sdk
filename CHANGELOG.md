@@ -1,7 +1,19 @@
+## [0.10.0]
+
+### Added
+
+- Swift Package Manager (SPM) support for iOS with dual CocoaPods compatibility
+
+### Changed
+
+- Upgraded Gradle to 8.14, AGP to 8.11.1, and Kotlin to 2.2.20 for Android
+- Renamed `description` field to `productDescription` in `GoodsItemDataDto` and to `offerDescription` in `ProductCartOffer` to resolve Swift property name collisions in Pigeon generation
+
 ## [0.9.2]
 
 ### Added
 
+- Support `Toast` feature
 - `isInteractionEnabled` parameter in `BannerPlace` widget to control touch interaction
 - `setInteraction` method in `BannerPlaceManager`
 

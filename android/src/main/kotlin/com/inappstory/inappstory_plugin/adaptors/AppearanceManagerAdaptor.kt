@@ -486,7 +486,7 @@ class AppearanceManagerAdaptor(
                                 val data = GoodsItemData(
                                     sku,
                                     item.title,
-                                    item.description,
+                                    item.productDescription,
                                     item.image,
                                     item.price,
                                     item.oldPrice,
@@ -511,7 +511,7 @@ class AppearanceManagerAdaptor(
                 val goodsItemDataDto = GoodsItemDataDto(
                     sku = goodsItemData.sku,
                     title = goodsItemData.title,
-                    description = goodsItemData.description,
+                    productDescription = goodsItemData.description,
                     image = goodsItemData.image,
                     price = goodsItemData.price,
                     oldPrice = goodsItemData.oldPrice

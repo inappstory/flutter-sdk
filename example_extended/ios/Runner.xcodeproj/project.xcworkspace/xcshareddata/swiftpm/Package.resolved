@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "ias-ios-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/inappstory/IAS-iOS-SPM.git",
+      "state" : {
+        "revision" : "9407559896a287f2634588e293d6fab2969871cf",
+        "version" : "1.29.5"
+      }
+    }
+  ],
+  "version" : 2
+}
