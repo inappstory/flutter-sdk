@@ -1,3 +1,9 @@
+## [0.9.3]
+
+### Fixed
+
+- In-app messages on iOS blocking tab bar and background touches after being displayed or closed
+
 ## [0.9.2]
 
 ### Added
