@@ -275,6 +275,9 @@ class BannerView(
             }
 
             override fun loadError() {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onBannerPlaceLoadError("Failed to load banner place") {}
+                }
             }
 
             override fun bannerLoaded(p0: Int, p1: Boolean) {

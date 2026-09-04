@@ -36,3 +36,5 @@ flutter:
         pluginClass: InAppStoryPlugin
       ios:
         pluginClass: InappstoryPlugin
+  config:
+      enable-swift-package-manager: false

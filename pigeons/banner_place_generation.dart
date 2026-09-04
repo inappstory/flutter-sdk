@@ -50,6 +50,8 @@ abstract class BannerPlaceCallbackFlutterApi {
   void onBannerPlacePreloaded();
 
   void onBannerPlacePreloadedError();
+
+  void onBannerPlaceLoadError(String message);
 }
 
 @HostApi()

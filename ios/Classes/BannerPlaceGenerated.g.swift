@@ -509,6 +509,7 @@ protocol BannerPlaceCallbackFlutterApiProtocol {
   func onActionWith(bannerData bannerDataArg: BannerData, widgetEventName widgetEventNameArg: String, widgetData widgetDataArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlaceLoadError(message messageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -596,6 +597,24 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onBannerPlaceLoadError(message messageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([messageArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

@@ -29,6 +29,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var resumeAutoscrollToken: UUID?
     private var setInteractionToken: UUID?
     private var onActionWith: UUID?
+    private var loadErrorToken: UUID?
     private var isInteractionEnabled: Bool = true
 
     init(
@@ -50,14 +51,15 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
         var decoration: BannerDecorationDTO?
 
-        if let args = args as? [String: Any] {
+        if let args = args as? [String: Any],
+           let bannerDecoMap = args["bannerDecoration"] as? [String: Any] {
             decoration = BannerDecorationDTO(
-                color: args["color"] as? Int64,
-                image: args["image"] as? String
+                color: bannerDecoMap["color"] as? Int64,
+                image: bannerDecoMap["image"] as? String
             )
         }
 
-        if decoration != nil {
+        if let decoration = decoration, (decoration.color != nil || decoration.image != nil) {
             let placeholder = CustomPlaceholderView()
             placeholder.setDecoration(decoration, registrar: registrar)
             InAppStory.shared.placeholderView = placeholder
@@ -209,6 +211,21 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                 )
             }
         }
+        self.loadErrorToken = self.bannerPlaceManagerAdaptor?.subscribe(
+            BannerPlaceLoadError()
+        ) {
+            [weak self] payload in
+            guard let self else { return }
+            if payload.placeId == nil || payload.placeId == self.placeId {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.callbackFlutterApi?.onBannerPlaceLoadError(
+                        message: payload.message,
+                        completion: { _ in }
+                    )
+                }
+            }
+        }
         self.callbackFlutterApi = BannerPlaceCallbackFlutterApi(
             binaryMessenger: registrar.messenger(),
             messageChannelSuffix: bannerWidgetId
@@ -295,9 +312,11 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             guard let self else { return }
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
+                let finalCount = (isContent && count > 0) ? count : 0
+                let finalHeight = (isContent && count > 0) ? listHeight : 0
                 self.callbackFlutterApi?.onBannerPlaceLoaded(
-                    size: Int64(count),
-                    widgetHeight: Int64(listHeight),
+                    size: Int64(finalCount),
+                    widgetHeight: Int64(finalHeight),
                     completion: { _ in }
                 )
             }
@@ -393,6 +412,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         }
         if let onActionWith = self.onActionWith {
             self.bannerPlaceManagerAdaptor?.unsubscribe(onActionWith)
+        }
+        if let loadErrorToken = self.loadErrorToken {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(loadErrorToken)
         }
         self.bannerPlaceManagerAdaptor = nil
 
