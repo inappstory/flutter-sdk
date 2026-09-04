@@ -268,23 +268,24 @@ class BannerView(
                 size: Int, bannerData: List<BannerData>, widgetHeight: Int
             ) {
                 flutterPluginBinding.runOnMainThread {
+                    frame.visibility = if (size > 0 && bannerData.isNotEmpty()) View.VISIBLE else View.GONE
                     bannerPlaceCallback.onBannerPlaceLoaded(
-                        size.toLong(), context.toDp(widgetHeight).toLong()
+                        if (bannerData.isNotEmpty()) size.toLong() else 0L,
+                        if (bannerData.isNotEmpty()) context.toDp(widgetHeight).toLong() else 0L
                     ) {}
                 }
             }
 
             override fun loadError() {
                 flutterPluginBinding.runOnMainThread {
+                    frame.visibility = View.GONE
                     bannerPlaceCallback.onBannerPlaceLoadError("Failed to load banner place") {}
                 }
             }
 
-            override fun bannerLoaded(p0: Int, p1: Boolean) {
-            }
+            override fun bannerLoaded(p0: Int, p1: Boolean) {}
 
-            override fun bannerLoadError(p0: Int, p1: Boolean) {
-            }
+            override fun bannerLoadError(p0: Int, p1: Boolean) {}
         })
     }
 

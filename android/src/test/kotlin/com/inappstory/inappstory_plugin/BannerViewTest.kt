@@ -90,6 +90,39 @@ class BannerViewTest {
     }
 
     @Test
+    fun bannerPlaceLoadCallback_emptyList_callsOnBannerPlaceLoadedZero() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+
+        val callback = object : BannerPlaceLoadCallback() {
+            override fun bannerPlaceLoaded(
+                size: Int, bannerData: List<BannerData>, widgetHeight: Int
+            ) {
+                if (size <= 0 || bannerData.isEmpty()) {
+                    callbackApi.onBannerPlaceLoaded(0L, 0L) {}
+                } else {
+                    callbackApi.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
+                }
+            }
+
+            override fun loadError() {
+                callbackApi.onBannerPlaceLoadError("Failed to load banner place") {}
+            }
+
+            override fun bannerLoaded(p0: Int, p1: Boolean) {}
+            override fun bannerLoadError(p0: Int, p1: Boolean) {}
+        }
+
+        callback.bannerPlaceLoaded(0, emptyList(), 120)
+
+        assertEquals(1, messenger.sentMessages.size)
+        val (channel, args) = messenger.sentMessages[0]
+        assertTrue(channel.contains("onBannerPlaceLoaded"))
+        assertEquals(0L, args[0])
+        assertEquals(0L, args[1])
+    }
+
+    @Test
     fun bannerPlaceLoadCallback_bannerPlaceLoaded_callsOnBannerPlaceLoadedWithSizeAndHeight() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
