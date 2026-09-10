@@ -30,6 +30,9 @@ class BannerViewFactory(
 
     fun setInAppStoryManager(manager: InAppStoryManager) {
         this.inAppStoryManager = manager
+        if (bannersCallback != null) {
+            manager.setBannerWidgetCallback(bannersCallback)
+        }
     }
 
     fun setAppearanceManager(manager: AppearanceManager) {
@@ -37,10 +40,10 @@ class BannerViewFactory(
     }
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
+        val creationParams = args as? Map<String?, Any>?
         if (bannersCallback == null) {
             createBannersCallback()
         }
-        val creationParams = args as Map<String?, Any>?
         return BannerView(
             context,
             viewId,

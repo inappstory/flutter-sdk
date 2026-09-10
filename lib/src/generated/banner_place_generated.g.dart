@@ -495,6 +495,8 @@ abstract class BannerPlaceCallbackFlutterApi {
 
   void onBannerPlacePreloadedError();
 
+  void onBannerPlaceLoadError(String message);
+
   static void setUp(BannerPlaceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -592,6 +594,27 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           try {
             api.onBannerPlacePreloadedError();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_message = args[0]! as String;
+          try {
+            api.onBannerPlaceLoadError(arg_message);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

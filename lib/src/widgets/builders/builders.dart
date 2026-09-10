@@ -19,3 +19,6 @@ typedef StoryWidgetBuilder = Widget Function(
     Story story, FeedStoryDecorator decorator);
 
 typedef BannerPlaceLoaderBuilder = Widget Function(BuildContext context);
+typedef BannerPlaceErrorBuilder = Widget Function(
+    BuildContext context, String error);
+

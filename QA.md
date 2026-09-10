@@ -25,8 +25,17 @@
 
 ## 4. Running Tests & Quality Commands
 ```bash
-# All unit tests
+# All unit tests (Flutter)
 melos run test
+
+# Android native unit tests (Kotlin / JUnit)
+melos run test:android
+
+# iOS native unit tests (Swift / XCTest)
+melos run test:ios
+
+# All unit tests (Flutter + Android)
+melos run test:all
 
 # Single test file
 flutter test test/observable_test.dart

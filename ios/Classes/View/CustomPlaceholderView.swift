@@ -39,6 +39,7 @@ class CustomPlaceholderView: UIView, PlaceholderProtocol {
     ) {
         self.decoration = decoration
         self.registrar = registrar
+        setupView()
     }
 
     // MARK: - Setup
