@@ -3,6 +3,8 @@
 ### Fixed
 
 - In-app messages on iOS blocking tab bar and background touches after being displayed or closed
+- Fixed banner loading, showing after hot restart/hot reload
+- IAM can't be displayed when a story reader or game reader is open.
 
 ## [0.9.2]
 
