@@ -15,6 +15,7 @@ import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowByIndexPayload
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
+import com.inappstory.inappstory_plugin.views.BannerPlaceLoadCallbackHandler
 import com.inappstory.inappstory_plugin.views.CustomBannerPlaceAppearanceWithoutBannerDecoration
 import com.inappstory.sdk.banners.BannerCarouselNavigationCallback
 import com.inappstory.sdk.banners.BannerData
@@ -65,21 +66,13 @@ class BannerViewTest {
     fun bannerPlaceLoadCallback_loadError_callsOnBannerPlaceLoadError() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
-
-        val callback = object : BannerPlaceLoadCallback() {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {
-                callbackApi.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
-            }
-
-            override fun loadError() {
-                callbackApi.onBannerPlaceLoadError("Failed to load banner place") {}
-            }
-
-            override fun bannerLoaded(p0: Int, p1: Boolean) {}
-            override fun bannerLoadError(p0: Int, p1: Boolean) {}
-        }
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
 
         callback.loadError()
 
@@ -87,31 +80,20 @@ class BannerViewTest {
         val (channel, args) = messenger.sentMessages[0]
         assertTrue(channel.contains("onBannerPlaceLoadError"))
         assertEquals("Failed to load banner place", args[0])
+        assertEquals(false, visibility)
     }
 
     @Test
-    fun bannerPlaceLoadCallback_emptyList_callsOnBannerPlaceLoadedZero() {
+    fun bannerPlaceLoadCallback_emptyList_callsOnBannerPlaceLoadedZeroImmediately() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
-
-        val callback = object : BannerPlaceLoadCallback() {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {
-                if (size <= 0 || bannerData.isEmpty()) {
-                    callbackApi.onBannerPlaceLoaded(0L, 0L) {}
-                } else {
-                    callbackApi.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
-                }
-            }
-
-            override fun loadError() {
-                callbackApi.onBannerPlaceLoadError("Failed to load banner place") {}
-            }
-
-            override fun bannerLoaded(p0: Int, p1: Boolean) {}
-            override fun bannerLoadError(p0: Int, p1: Boolean) {}
-        }
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
 
         callback.bannerPlaceLoaded(0, emptyList(), 120)
 
@@ -120,35 +102,116 @@ class BannerViewTest {
         assertTrue(channel.contains("onBannerPlaceLoaded"))
         assertEquals(0L, args[0])
         assertEquals(0L, args[1])
+        assertEquals(false, visibility)
     }
 
     @Test
-    fun bannerPlaceLoadCallback_bannerPlaceLoaded_callsOnBannerPlaceLoadedWithSizeAndHeight() {
+    fun bannerPlaceLoadCallback_nonEmptyList_waitsForBannerLoadedBeforeCallingOnBannerPlaceLoaded() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
 
-        val callback = object : BannerPlaceLoadCallback() {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {
-                callbackApi.onBannerPlaceLoaded(size.toLong(), widgetHeight.toLong()) {}
-            }
+        val bannerList = listOf(BannerData(1, "test_place"))
+        callback.bannerPlaceLoaded(1, bannerList, 120)
 
-            override fun loadError() {
-                callbackApi.onBannerPlaceLoadError("Failed to load banner place") {}
-            }
+        // Metadata loaded, but content NOT loaded yet: onBannerPlaceLoaded should NOT be sent and visibility should NOT be true
+        assertEquals(0, messenger.sentMessages.size)
+        assertNull(visibility)
 
-            override fun bannerLoaded(p0: Int, p1: Boolean) {}
-            override fun bannerLoadError(p0: Int, p1: Boolean) {}
-        }
-
-        callback.bannerPlaceLoaded(5, emptyList(), 120)
+        // Once content finishes rendering (slideJSStatus == 1):
+        callback.bannerLoaded(1, true)
 
         assertEquals(1, messenger.sentMessages.size)
         val (channel, args) = messenger.sentMessages[0]
         assertTrue(channel.contains("onBannerPlaceLoaded"))
-        assertEquals(5L, args[0])
+        assertEquals(1L, args[0])
         assertEquals(120L, args[1])
+        assertEquals(true, visibility)
+
+        // Subsequent banner loaded should NOT send duplicate onBannerPlaceLoaded
+        callback.bannerLoaded(2, false)
+        assertEquals(1, messenger.sentMessages.size)
+    }
+
+    @Test
+    fun bannerPlaceLoadCallback_bannerLoadError_fallsBackToSendingPendingOnBannerPlaceLoaded() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
+
+        val bannerList = listOf(BannerData(1, "test_place"))
+        callback.bannerPlaceLoaded(1, bannerList, 150)
+        assertEquals(0, messenger.sentMessages.size)
+        assertNull(visibility)
+
+        // If banner content fails to load, reveal the carousel with pending size/height so native retry is shown
+        callback.bannerLoadError(1, true)
+        assertEquals(1, messenger.sentMessages.size)
+        val (channel, args) = messenger.sentMessages[0]
+        assertTrue(channel.contains("onBannerPlaceLoaded"))
+        assertEquals(1L, args[0])
+        assertEquals(150L, args[1])
+        assertEquals(true, visibility)
+    }
+
+    @Test
+    fun bannerPlaceLoadCallback_contentLoadedBeforeMetadata_callsOnBannerPlaceLoadedAndSetsVisibilityTrue() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
+
+        callback.bannerLoaded(1, true)
+        assertEquals(0, messenger.sentMessages.size)
+        assertNull(visibility)
+
+        val bannerList = listOf(BannerData(1, "test_place"))
+        callback.bannerPlaceLoaded(1, bannerList, 140)
+
+        assertEquals(1, messenger.sentMessages.size)
+        val (channel, args) = messenger.sentMessages[0]
+        assertTrue(channel.contains("onBannerPlaceLoaded"))
+        assertEquals(1L, args[0])
+        assertEquals(140L, args[1])
+        assertEquals(true, visibility)
+    }
+
+
+
+    @Test
+    fun bannerPlaceLoadCallback_resetState_clearsFlags() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() }
+        )
+
+        callback.bannerLoaded(1, true)
+        assertTrue(callback.hasBannerContentLoaded)
+
+        callback.resetState()
+        assertFalse(callback.hasBannerContentLoaded)
+        assertFalse(callback.isBannerPlaceLoadedSent)
+        assertNull(callback.pendingBannerPlaceLoaded)
     }
 
     @Test
