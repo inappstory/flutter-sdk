@@ -77,6 +77,10 @@ class IASMessagesAdaptor(
         token: String,
         bottomPadding: Double?
     ) {
+        if (InAppStoryManager.isStoryReaderOpened() || InAppStoryManager.isGameReaderOpened()) {
+            return
+        }
+
         val activity = activityHolder.activity as? FragmentActivity
             ?: throw FlutterError(
                 "no_container",

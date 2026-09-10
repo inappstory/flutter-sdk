@@ -1,5 +1,5 @@
 group = "com.inappstory.inappstory_plugin"
-version = "0.1.50"
+version = "0.1.53"
 
 buildscript {
     ext.kotlin_version = "1.8.22"
@@ -56,6 +56,7 @@ android {
     }
 
     testOptions {
+        unitTests.returnDefaultValues = true
         unitTests.all {
             useJUnitPlatform()
 

@@ -65,6 +65,13 @@ class BannerView(
     private var resumeAutoscroll: Subscription
     private var setInteraction: Subscription
 
+    private var bannerLoadCallbackHandler: BannerPlaceLoadCallbackHandler? = null
+
+    private fun resetLoadState() {
+        bannerLoadCallbackHandler?.resetState()
+        frame.visibility = View.INVISIBLE
+    }
+
     private var bannersData: BannersData
 
     override fun getView(): View {
@@ -111,10 +118,10 @@ class BannerView(
         val decoration: BannerDecorationDTO?
         val bannerAppearance: DefaultBannerCarouselAppearance?
 
-        if (creationParams?.get("bannerDecoration") != null) {
-            decoration = decorationToDTO(
-                creationParams["bannerDecoration"] as Map<String, Any?>
-            )
+        val bannerDecorationMap = creationParams?.get("bannerDecoration") as? Map<*, *>
+        if (bannerDecorationMap != null) {
+            @Suppress("UNCHECKED_CAST")
+            decoration = decorationToDTO(bannerDecorationMap as Map<String, Any?>)
             bannerAppearance = CustomBannerPlaceAppearance(
                 flutterPluginBinding,
                 flutterPluginBinding.getFlutterAssets(),
@@ -136,6 +143,7 @@ class BannerView(
         appearanceManager.csBannerCarouselInterface(bannerAppearance)
 
         frame = FrameLayout(context)
+        frame.visibility = View.INVISIBLE
 
         createBannerCarousel(placeId)
 
@@ -143,6 +151,7 @@ class BannerView(
             if (payload != placeId) {
                 return@subscribe
             }
+            recreateBannerCarousel(placeId)
             bannerPlace?.loadBanners()
         }
 
@@ -150,6 +159,7 @@ class BannerView(
             if (payload != placeId) {
                 return@subscribe
             }
+            recreateBannerCarousel(placeId)
             bannerPlace?.reloadBanners()
         }
 
@@ -247,7 +257,6 @@ class BannerView(
 
         bannerPlace?.setAppearanceManager(appearanceManager)
 
-        bannerPlace?.setPlaceId(placeId)
         bannerPlace?.navigationCallback(object : BannerCarouselNavigationCallback {
             override fun onPageScrolled(
                 position: Int, total: Int, positionOffset: Float, positionOffsetPixels: Int
@@ -263,26 +272,28 @@ class BannerView(
             }
         })
 
-        bannerPlace?.loadCallback(object : BannerPlaceLoadCallback() {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {
-                flutterPluginBinding.runOnMainThread {
-                    bannerPlaceCallback.onBannerPlaceLoaded(
-                        size.toLong(), context.toDp(widgetHeight).toLong()
-                    ) {}
-                }
-            }
+        val loadHandler = BannerPlaceLoadCallbackHandler(
+            placeId = placeId,
+            callbackApi = bannerPlaceCallback,
+            toDp = { px -> context.toDp(px).toLong() },
+            onVisibilityChanged = { visible ->
+                frame.visibility = if (visible) View.VISIBLE else View.GONE
+            },
+            runOnMain = { action -> flutterPluginBinding.runOnMainThread(action) }
+        )
+        bannerLoadCallbackHandler = loadHandler
 
-            override fun loadError() {
-            }
+        bannerPlace?.loadCallback(loadHandler)
+        bannerPlace?.setPlaceId(placeId)
+    }
 
-            override fun bannerLoaded(p0: Int, p1: Boolean) {
-            }
-
-            override fun bannerLoadError(p0: Int, p1: Boolean) {
-            }
-        })
+    private fun recreateBannerCarousel(placeId: String) {
+        val oldBannerPlace = bannerPlace
+        safelyDisposeBannerPlace(oldBannerPlace)
+        frame.removeView(oldBannerPlace)
+        createBannerCarousel(placeId)
+        frame.addView(bannerPlace)
+        updateInteraction(frame.isEnabled)
     }
 
     private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
@@ -300,15 +311,19 @@ class BannerView(
         ) / this.resources.displayMetrics.density
     }
 
+    private fun safelyDisposeBannerPlace(carousel: BannerCarousel?) {
+        carousel?.setPlaceId(null)
+        carousel?.clear()
+    }
+
     override fun changeBannerPlaceId(newPlaceId: String) {
         placeId = newPlaceId
-        frame.removeView(bannerPlace)
-        createBannerCarousel(newPlaceId)
-        frame.addView(bannerPlace)
-        bannerPlace?.loadBanners(true)
+        recreateBannerCarousel(newPlaceId)
+        bannerPlace?.loadBanners()
     }
 
     override fun deInitBannerPlace() {
+        resetLoadState()
         loadBannerPlace.unsubscribe()
         reloadBannerPlace.unsubscribe()
         preloadBannerPlace.unsubscribe()
@@ -319,7 +334,7 @@ class BannerView(
         resumeAutoscroll.unsubscribe()
         setInteraction.unsubscribe()
         frame.removeAllViews()
-        bannerPlace?.clear()
+        safelyDisposeBannerPlace(bannerPlace)
         bannerPlace = null
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger, null, messageChannelSuffix = bannerWidgetId
