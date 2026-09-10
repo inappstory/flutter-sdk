@@ -33,11 +33,6 @@ import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
 import com.inappstory.sdk.banners.ui.carousel.BannerCarousel
 import com.inappstory.sdk.banners.ui.carousel.DefaultBannerCarouselAppearance
-import com.inappstory.sdk.core.IASCore
-import com.inappstory.sdk.core.UseIASCoreCallback
-import com.inappstory.sdk.core.banners.BannersWidgetLoadStates
-import com.inappstory.sdk.network.models.RequestLocalParameters
-import com.inappstory.sdk.stories.api.models.callbacks.OpenSessionCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
 import java.io.IOException
@@ -76,6 +71,7 @@ class BannerView(
         bannerLoadCallbackHandler?.resetState()
         frame.visibility = View.INVISIBLE
     }
+
 
 
     private var bannersData: BannersData
@@ -157,15 +153,15 @@ class BannerView(
             if (payload != placeId) {
                 return@subscribe
             }
-            resetLoadState()
-            loadBannersInternal()
+            recreateBannerCarousel(placeId)
+            bannerPlace?.loadBanners()
         }
 
         reloadBannerPlace = bannerPlaceManagerAdaptor.subscribe(ReloadBannerPlace) { payload ->
             if (payload != placeId) {
                 return@subscribe
             }
-            resetLoadState()
+            recreateBannerCarousel(placeId)
             bannerPlace?.reloadBanners()
         }
 
@@ -237,7 +233,7 @@ class BannerView(
         frame.addView(bannerPlace)
         val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
         if (autoLoad) {
-            loadBannersInternal()
+            bannerPlace?.loadBanners()
         }
     }
 
@@ -293,38 +289,13 @@ class BannerView(
         bannerPlace?.setPlaceId(placeId)
     }
 
-    private fun loadBannersInternal() {
-        InAppStoryManager.useCore(object : UseIASCoreCallback() {
-            override fun use(core: IASCore) {
-                core.sessionManager().useOrOpenSession(object : OpenSessionCallback {
-                    override fun onSuccess(sessionParameters: RequestLocalParameters?) {
-                        flutterPluginBinding.runOnMainThread {
-                            val placeVM = core.widgetViewModels().bannerPlaceViewModels().getContentPlaceViewModel(placeId)
-                            val state = placeVM?.currentBannerPlaceState
-                            val loadState = state?.loadState()
-                            val items = state?.items
-                            if (loadState == BannersWidgetLoadStates.LOADED && !items.isNullOrEmpty()) {
-                                bannerPlace?.loadBanners(false)
-                            } else {
-                                bannerPlace?.reloadBanners()
-                            }
-                        }
-                    }
-
-                    override fun onError() {
-                        flutterPluginBinding.runOnMainThread {
-                            bannerPlace?.reloadBanners()
-                        }
-                    }
-                })
-            }
-
-            override fun error() {
-                flutterPluginBinding.runOnMainThread {
-                    bannerPlace?.reloadBanners()
-                }
-            }
-        })
+    private fun recreateBannerCarousel(placeId: String) {
+        val oldBannerPlace = bannerPlace
+        safelyDisposeBannerPlace(oldBannerPlace)
+        frame.removeView(oldBannerPlace)
+        createBannerCarousel(placeId)
+        frame.addView(bannerPlace)
+        updateInteraction(frame.isEnabled)
     }
 
     private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
@@ -342,33 +313,15 @@ class BannerView(
         ) / this.resources.displayMetrics.density
     }
 
-    private fun safelyDisposeBannerPlace(carousel: BannerCarousel?, placeIdToClear: String) {
-        val currentUniqueId = carousel?.uniqueId()
+    private fun safelyDisposeBannerPlace(carousel: BannerCarousel?) {
         carousel?.setPlaceId(null)
         carousel?.clear()
-        if (!currentUniqueId.isNullOrEmpty()) {
-            InAppStoryManager.useCore(object : UseIASCoreCallback() {
-                override fun use(core: IASCore) {
-                    val holder = core.widgetViewModels().bannerPlaceViewModels()
-                    val vm = holder.get(currentUniqueId)
-                    vm?.clear()
-                    vm?.dataIsCleared()
-                    vm?.placeId("disposed")
-                    holder.changeKey(currentUniqueId, "disposed_" + java.util.UUID.randomUUID().toString())
-                }
-            })
-        }
     }
 
     override fun changeBannerPlaceId(newPlaceId: String) {
-        val oldBannerPlace = bannerPlace
-        safelyDisposeBannerPlace(oldBannerPlace, placeId)
         placeId = newPlaceId
-        resetLoadState()
-        frame.removeView(oldBannerPlace)
-        createBannerCarousel(newPlaceId)
-        frame.addView(bannerPlace)
-        loadBannersInternal()
+        recreateBannerCarousel(newPlaceId)
+        bannerPlace?.loadBanners()
     }
 
     override fun deInitBannerPlace() {
@@ -383,7 +336,7 @@ class BannerView(
         resumeAutoscroll.unsubscribe()
         setInteraction.unsubscribe()
         frame.removeAllViews()
-        safelyDisposeBannerPlace(bannerPlace, placeId)
+        safelyDisposeBannerPlace(bannerPlace)
         bannerPlace = null
         BannerViewHostApi.setUp(
             flutterPluginBinding.binaryMessenger, null, messageChannelSuffix = bannerWidgetId

@@ -22,6 +22,11 @@ open class BannerPlaceLoadCallbackHandler(
         hasBannerContentLoaded = false
     }
 
+    fun prepareForReload() {
+        isBannerPlaceLoadedSent = false
+        pendingBannerPlaceLoaded = null
+    }
+
     override fun bannerPlaceLoaded(
         size: Int, bannerData: List<BannerData>, widgetHeight: Int
     ) {

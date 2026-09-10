@@ -215,6 +215,61 @@ class BannerViewTest {
     }
 
     @Test
+    fun bannerPlaceLoadCallback_prepareForReload_preservesHasBannerContentLoadedAndClearsSentFlag() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() }
+        )
+
+        callback.bannerLoaded(1, true)
+        callback.isBannerPlaceLoadedSent = true
+        assertTrue(callback.hasBannerContentLoaded)
+        assertTrue(callback.isBannerPlaceLoadedSent)
+
+        callback.prepareForReload()
+        assertTrue(callback.hasBannerContentLoaded)
+        assertFalse(callback.isBannerPlaceLoadedSent)
+        assertNull(callback.pendingBannerPlaceLoaded)
+    }
+
+    @Test
+    fun bannerPlaceLoadCallback_reloadWhenContentLoaded_sendsOnBannerPlaceLoadedImmediately() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it }
+        )
+
+        val bannerList = listOf(BannerData(1, "test_place"))
+        // Initial load: metadata + content
+        callback.bannerPlaceLoaded(1, bannerList, 120)
+        callback.bannerLoaded(1, true)
+        assertEquals(1, messenger.sentMessages.size)
+        assertEquals(true, visibility)
+
+        // Reload triggered
+        callback.prepareForReload()
+
+        // New metadata received on reload
+        callback.bannerPlaceLoaded(1, bannerList, 130)
+
+        // Must notify Flutter immediately with new size/height and visibility true without waiting for another bannerLoaded
+        assertEquals(2, messenger.sentMessages.size)
+        val (channel, args) = messenger.sentMessages[1]
+        assertTrue(channel.contains("onBannerPlaceLoaded"))
+        assertEquals(1L, args[0])
+        assertEquals(130L, args[1])
+        assertEquals(true, visibility)
+    }
+
+    @Test
     fun bannerCarouselNavigationCallback_onPageSelected_callsOnBannerScroll() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
