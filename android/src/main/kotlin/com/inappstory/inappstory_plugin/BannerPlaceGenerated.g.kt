@@ -288,7 +288,8 @@ data class BannerDecorationDTO (
 data class BannerData (
   val id: String? = null,
   val bannerPlace: String? = null,
-  val payload: String? = null
+  val payload: String? = null,
+  val extraFields: Map<String, String>? = null
 )
  {
   companion object {
@@ -296,7 +297,8 @@ data class BannerData (
       val id = pigeonVar_list[0] as String?
       val bannerPlace = pigeonVar_list[1] as String?
       val payload = pigeonVar_list[2] as String?
-      return BannerData(id, bannerPlace, payload)
+      val extraFields = pigeonVar_list[3] as Map<String, String>?
+      return BannerData(id, bannerPlace, payload, extraFields)
     }
   }
   fun toList(): List<Any?> {
@@ -304,6 +306,7 @@ data class BannerData (
       id,
       bannerPlace,
       payload,
+      extraFields,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -314,7 +317,7 @@ data class BannerData (
       return true
     }
     val other = other as BannerData
-    return BannerPlaceGeneratedPigeonUtils.deepEquals(this.id, other.id) && BannerPlaceGeneratedPigeonUtils.deepEquals(this.bannerPlace, other.bannerPlace) && BannerPlaceGeneratedPigeonUtils.deepEquals(this.payload, other.payload)
+    return BannerPlaceGeneratedPigeonUtils.deepEquals(this.id, other.id) && BannerPlaceGeneratedPigeonUtils.deepEquals(this.bannerPlace, other.bannerPlace) && BannerPlaceGeneratedPigeonUtils.deepEquals(this.payload, other.payload) && BannerPlaceGeneratedPigeonUtils.deepEquals(this.extraFields, other.extraFields)
   }
 
   override fun hashCode(): Int {
@@ -322,10 +325,11 @@ data class BannerData (
     result = 31 * result + BannerPlaceGeneratedPigeonUtils.deepHash(this.id)
     result = 31 * result + BannerPlaceGeneratedPigeonUtils.deepHash(this.bannerPlace)
     result = 31 * result + BannerPlaceGeneratedPigeonUtils.deepHash(this.payload)
+    result = 31 * result + BannerPlaceGeneratedPigeonUtils.deepHash(this.extraFields)
     return result
   }
   override fun toString(): String {
-    return "BannerData(id=$id, bannerPlace=$bannerPlace, payload=$payload)"
+    return "BannerData(id=$id, bannerPlace=$bannerPlace, payload=$payload, extraFields=$extraFields)"
   }
 }
 private open class BannerPlaceGeneratedPigeonCodec : StandardMessageCodec() {
@@ -647,6 +651,23 @@ class BannerPlaceCallbackFlutterApi(private val binaryMessenger: BinaryMessenger
     val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(BannerPlaceGeneratedPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  fun onBannerPlaceLoadError(messageArg: String, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(messageArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))

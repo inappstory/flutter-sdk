@@ -228,6 +228,7 @@ class BannerData {
     this.id,
     this.bannerPlace,
     this.payload,
+    this.extraFields,
   });
 
   String? id;
@@ -236,11 +237,14 @@ class BannerData {
 
   String? payload;
 
+  Map<String, String>? extraFields;
+
   List<Object?> _toList() {
     return <Object?>[
       id,
       bannerPlace,
       payload,
+      extraFields,
     ];
   }
 
@@ -253,6 +257,7 @@ class BannerData {
       id: result[0] as String?,
       bannerPlace: result[1] as String?,
       payload: result[2] as String?,
+      extraFields: (result[3] as Map<Object?, Object?>?)?.cast<String, String>(),
     );
   }
 
@@ -265,7 +270,7 @@ class BannerData {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(id, other.id) && _deepEquals(bannerPlace, other.bannerPlace) && _deepEquals(payload, other.payload);
+    return _deepEquals(id, other.id) && _deepEquals(bannerPlace, other.bannerPlace) && _deepEquals(payload, other.payload) && _deepEquals(extraFields, other.extraFields);
   }
 
   @override
@@ -274,7 +279,7 @@ class BannerData {
 
   @override
   String toString() {
-    return 'BannerData(id: $id, bannerPlace: $bannerPlace, payload: $payload)';
+    return 'BannerData(id: $id, bannerPlace: $bannerPlace, payload: $payload, extraFields: $extraFields)';
   }
 }
 
@@ -510,6 +515,8 @@ abstract class BannerPlaceCallbackFlutterApi {
 
   void onBannerPlacePreloadedError();
 
+  void onBannerPlaceLoadError(String message);
+
   static void setUp(BannerPlaceCallbackFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
@@ -607,6 +614,27 @@ abstract class BannerPlaceCallbackFlutterApi {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           try {
             api.onBannerPlacePreloadedError();
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_message = args[0]! as String;
+          try {
+            api.onBannerPlaceLoadError(arg_message);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

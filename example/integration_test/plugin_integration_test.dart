@@ -8,6 +8,10 @@
 
 import 'package:integration_test/integration_test.dart';
 
+import 'banner_place_integration_test.dart' as banner_place_test;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  banner_place_test.main();
 }

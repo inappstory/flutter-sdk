@@ -50,6 +50,8 @@ abstract class BannerPlaceCallbackFlutterApi {
   void onBannerPlacePreloaded();
 
   void onBannerPlacePreloadedError();
+
+  void onBannerPlaceLoadError(String message);
 }
 
 @HostApi()
@@ -76,4 +78,5 @@ class BannerData {
   late String? id;
   late String? bannerPlace;
   late String? payload;
+  late Map<String, String>? extraFields;
 }

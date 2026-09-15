@@ -271,6 +271,7 @@ struct BannerData: Hashable, CustomStringConvertible {
   var id: String? = nil
   var bannerPlace: String? = nil
   var payload: String? = nil
+  var extraFields: [String: String]? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -278,11 +279,13 @@ struct BannerData: Hashable, CustomStringConvertible {
     let id: String? = nilOrValue(pigeonVar_list[0])
     let bannerPlace: String? = nilOrValue(pigeonVar_list[1])
     let payload: String? = nilOrValue(pigeonVar_list[2])
+    let extraFields: [String: String]? = nilOrValue(pigeonVar_list[3])
 
     return BannerData(
       id: id,
       bannerPlace: bannerPlace,
-      payload: payload
+      payload: payload,
+      extraFields: extraFields
     )
   }
   func toList() -> [Any?] {
@@ -290,13 +293,14 @@ struct BannerData: Hashable, CustomStringConvertible {
       id,
       bannerPlace,
       payload,
+      extraFields,
     ]
   }
   static func == (lhs: BannerData, rhs: BannerData) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.bannerPlace, rhs.bannerPlace) && BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.payload, rhs.payload)
+    return BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.bannerPlace, rhs.bannerPlace) && BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.payload, rhs.payload) && BannerPlaceGeneratedPigeonInternal.deepEquals(lhs.extraFields, rhs.extraFields)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -304,10 +308,11 @@ struct BannerData: Hashable, CustomStringConvertible {
     BannerPlaceGeneratedPigeonInternal.deepHash(value: id, hasher: &hasher)
     BannerPlaceGeneratedPigeonInternal.deepHash(value: bannerPlace, hasher: &hasher)
     BannerPlaceGeneratedPigeonInternal.deepHash(value: payload, hasher: &hasher)
+    BannerPlaceGeneratedPigeonInternal.deepHash(value: extraFields, hasher: &hasher)
   }
 
   public var description: String {
-    return "BannerData(id: \(String(describing: id)), bannerPlace: \(String(describing: bannerPlace)), payload: \(String(describing: payload)))"
+    return "BannerData(id: \(String(describing: id)), bannerPlace: \(String(describing: bannerPlace)), payload: \(String(describing: payload)), extraFields: \(String(describing: extraFields)))"
   }
 }
 
@@ -532,6 +537,7 @@ protocol BannerPlaceCallbackFlutterApiProtocol {
   func onActionWith(bannerData bannerDataArg: BannerData, widgetEventName widgetEventNameArg: String, widgetData widgetDataArg: [String: Any?]?, completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloaded(completion: @escaping (Result<Void, PigeonError>) -> Void)
   func onBannerPlacePreloadedError(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onBannerPlaceLoadError(message messageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
 class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
@@ -619,6 +625,24 @@ class BannerPlaceCallbackFlutterApi: BannerPlaceCallbackFlutterApiProtocol {
     let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlacePreloadedError\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+  func onBannerPlaceLoadError(message messageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([messageArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return

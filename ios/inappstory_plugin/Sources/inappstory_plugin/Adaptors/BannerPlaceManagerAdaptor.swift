@@ -70,8 +70,22 @@ struct OnActionWith: EventKey {
     }
 }
 
+struct BannerPlaceLoadError: EventKey {
+    public struct Payload {
+        public let placeId: String?
+        public let message: String
+
+        public init(placeId: String?, message: String) {
+            self.placeId = placeId
+            self.message = message
+        }
+    }
+}
+
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     typealias Token = UUID
+
+    static weak var shared: BannerPlaceManagerAdaptor?
 
     private var subscribers: [AnyHashable: [Token: (Any) -> Void]] = [:]
 
@@ -88,6 +102,7 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
         binaryMessenger: FlutterBinaryMessenger
     ) {
         self.binaryMessenger = binaryMessenger
+        BannerPlaceManagerAdaptor.shared = self
 
         BannerPlaceManagerHostApiSetup.setUp(
             binaryMessenger: binaryMessenger,
@@ -226,6 +241,16 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
                 bannerData: bannerData,
                 name: name,
                 data: data
+            )
+        )
+    }
+
+    func emitBannerPlaceLoadError(placeId: String?, message: String) {
+        self.emit(
+            BannerPlaceLoadError(),
+            payload: BannerPlaceLoadError.Payload(
+                placeId: placeId,
+                message: message
             )
         )
     }

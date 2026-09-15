@@ -9,6 +9,14 @@
 - Upgraded Gradle to 8.14, AGP to 8.11.1, and Kotlin to 2.2.20 for Android
 - Renamed `description` field to `productDescription` in `GoodsItemDataDto` and to `offerDescription` in `ProductCartOffer` to resolve Swift property name collisions in Pigeon generation
 
+## [0.9.3]
+
+### Fixed
+
+- In-app messages on iOS blocking tab bar and background touches after being displayed or closed
+- Fixed banner loading, showing after hot restart/hot reload
+- IAM can't be displayed when a story reader or game reader is open.
+
 ## [0.9.2]
 
 ### Added

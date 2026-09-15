@@ -182,7 +182,7 @@ class InAppStoryManager {
         return false;
       }),
       onCancel: () async {
-        return _iam.cancelByToken(token: uniqueId);
+        return _onboardings.cancelByToken(uniqueId);
       },
     );
     return operation;

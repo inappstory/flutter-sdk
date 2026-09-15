@@ -6,12 +6,18 @@ import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
+import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
+import com.inappstory.sdk.InAppStoryManagerInit
+import com.inappstory.sdk.core.IASCore
+import com.inappstory.sdk.core.UseIASCoreCallback
 import com.inappstory.sdk.externalapi.ExternalPlatforms
 import com.inappstory.sdk.externalapi.InAppStoryAPI
 import com.inappstory.sdk.lrudiskcache.CacheSize
+import com.inappstory.sdk.network.models.RequestLocalParameters
+import com.inappstory.sdk.stories.api.models.callbacks.OpenSessionCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import java.util.Locale
 
@@ -72,6 +78,60 @@ class InappstorySdkModuleAdaptor(
             }
 
             val tagsNative = tags?.let { ArrayList(it) }
+
+            var callbackInvoked = false
+            val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+            var timeoutRunnable: Runnable? = null
+
+            fun onSdkReady() {
+                if (callbackInvoked) return
+                InAppStoryManager.useCore(object : UseIASCoreCallback() {
+                    override fun use(core: IASCore) {
+                        core.widgetViewModels().bannerPlaceViewModels().clear()
+                        core.sessionManager().useOrOpenSession(object : OpenSessionCallback {
+                            override fun onSuccess(sessionParameters: RequestLocalParameters?) {
+                                if (callbackInvoked) return
+                                callbackInvoked = true
+                                timeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+                                flutterPluginBinding.runOnMainThread {
+                                    callback(Result.success(Unit))
+                                }
+                            }
+
+                            override fun onError() {
+                                if (callbackInvoked) return
+                                callbackInvoked = true
+                                timeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+                                flutterPluginBinding.runOnMainThread {
+                                    callback(Result.success(Unit))
+                                }
+                            }
+                        })
+                    }
+
+                    override fun error() {
+                        if (callbackInvoked) return
+                        callbackInvoked = true
+                        timeoutRunnable?.let { mainHandler.removeCallbacks(it) }
+                        flutterPluginBinding.runOnMainThread {
+                            callback(Result.success(Unit))
+                        }
+                    }
+                })
+            }
+
+            val isReinit = InAppStoryManager.getInstance() != null
+
+            val runnable = Runnable {
+                if (!callbackInvoked) {
+                    callbackInvoked = true
+                    flutterPluginBinding.runOnMainThread {
+                        callback(Result.success(Unit))
+                    }
+                }
+            }
+            timeoutRunnable = runnable
+            mainHandler.postDelayed(runnable, 5000)
 
             if (anonymous) {
                 inAppStoryManager = createAnonymousInAppStoryManager(
@@ -185,7 +245,22 @@ class InappstorySdkModuleAdaptor(
 
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 
-            callback(Result.success(Unit))
+            if (isReinit) {
+                if (inAppStoryManager.isInitialized) {
+                    onSdkReady()
+                } else {
+                    inAppStoryManager.initCallback(object : InAppStoryManagerInit {
+                        override fun onComplete() {
+                            inAppStoryManager.initCallback(null)
+                            flutterPluginBinding.runOnMainThread {
+                                onSdkReady()
+                            }
+                        }
+                    })
+                }
+            } else {
+                onSdkReady()
+            }
         } catch (throwable: Throwable) {
             callback(Result.failure(throwable))
         }

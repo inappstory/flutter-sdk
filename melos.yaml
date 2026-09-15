@@ -45,6 +45,22 @@ scripts:
     description: 🧪 Run all unit tests
     exec: flutter test
 
+  test:android:
+    description: 🤖 Run Android native unit tests via Gradle
+    steps:
+      - cd example/android && ./gradlew :inappstory_plugin:testDebugUnitTest
+
+  test:ios:
+    description: 🍏 Run iOS native unit tests via xcodebuild
+    steps:
+      - xcodebuild test -workspace example/ios/Runner.xcworkspace -scheme Runner -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:RunnerTests
+
+  test:all:
+    description: 🚀 Run all tests (Flutter + Android unit tests)
+    steps:
+      - melos run test
+      - melos run test:android
+
   coverage:
     description: 📊 Run flutter test with coverage and verify line coverage threshold
     exec: ./scripts/coverage_check.sh

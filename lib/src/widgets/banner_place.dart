@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,8 @@ import '../generated/banner_place_generated.g.dart'
 import '../helpers/id_gen.dart';
 import 'banner/android_banner_view.dart';
 import 'banner/ios_banner_view.dart';
-import 'builders/builders.dart' show BannerPlaceLoaderBuilder;
+import 'builders/builders.dart'
+    show BannerPlaceLoaderBuilder, BannerPlaceErrorBuilder;
 import 'decorators/decorators.dart';
 
 enum BannerPlaceState {
@@ -28,11 +30,15 @@ class BannerPlace extends StatefulWidget {
     this.autoLoad = true,
     this.isInteractionEnabled,
     this.bannerPlaceLoaderBuilder,
+    this.bannerPlaceErrorBuilder,
     this.onActionWith,
     this.onBannerScroll,
     this.onBannerPlaceLoaded,
+    this.onBannerPlaceLoadError,
     this.onBannerPlacePreloaded,
     this.onPreloadedError,
+    this.hideOnEmpty = true,
+    this.loadingTimeout = const Duration(seconds: 10),
   });
 
   final String placeId;
@@ -43,14 +49,18 @@ class BannerPlace extends StatefulWidget {
   final BannerDecoration? bannerDecoration;
 
   final BannerPlaceLoaderBuilder? bannerPlaceLoaderBuilder;
+  final BannerPlaceErrorBuilder? bannerPlaceErrorBuilder;
 
   final bool autoLoad;
   final bool? isInteractionEnabled;
+  final bool hideOnEmpty;
+  final Duration loadingTimeout;
 
   final Function(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData)? onActionWith;
   final Function(int index)? onBannerScroll;
   final Function(int size, int widgetHeight)? onBannerPlaceLoaded;
+  final Function(String message)? onBannerPlaceLoadError;
   final Function()? onBannerPlacePreloaded;
   final Function()? onPreloadedError;
 
@@ -68,6 +78,35 @@ class _BannerPlaceState extends State<BannerPlace>
   ModalRoute<dynamic>? _currentRoute;
   bool _lastInteractionState = true;
   bool _platformViewCreated = false;
+  Timer? _timeoutTimer;
+  int? _loadedSize;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerPlaceState = BannerPlaceState.loading;
+    BannerPlaceCallbackFlutterApi.setUp(this,
+        messageChannelSuffix: bannerWidgetId);
+    _startTimeout();
+  }
+
+  void _startTimeout() {
+    _timeoutTimer?.cancel();
+    if (widget.loadingTimeout > Duration.zero) {
+      _timeoutTimer = Timer(widget.loadingTimeout, () {
+        if (mounted &&
+            (_bannerPlaceState == BannerPlaceState.loading ||
+                _bannerPlaceState == BannerPlaceState.none)) {
+          setState(() {
+            _bannerPlaceState = BannerPlaceState.failed;
+            _errorMessage = 'Banner loading timed out';
+          });
+          widget.onBannerPlaceLoadError?.call('Banner loading timed out');
+        }
+      });
+    }
+  }
 
   void _onRouteAnimationChanged() {
     _syncInteractionState();
@@ -118,7 +157,12 @@ class _BannerPlaceState extends State<BannerPlace>
   void didUpdateWidget(covariant BannerPlace oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.placeId != widget.placeId) {
-      _bannerPlaceState = BannerPlaceState.loading;
+      _loadedSize = null;
+      _errorMessage = null;
+      setState(() {
+        _bannerPlaceState = BannerPlaceState.loading;
+      });
+      _startTimeout();
       BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
           .changeBannerPlaceId(widget.placeId);
     }
@@ -129,9 +173,33 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   Widget build(BuildContext context) {
+    if (_bannerPlaceState == BannerPlaceState.failed) {
+      if (widget.bannerPlaceErrorBuilder != null) {
+        return SizedBox(
+          height: widget.height,
+          width: MediaQuery.of(context).size.width,
+          child: widget.bannerPlaceErrorBuilder!(
+              context, _errorMessage ?? 'Failed to load banner'),
+        );
+      }
+      if (widget.hideOnEmpty) {
+        return const SizedBox.shrink();
+      }
+    }
+
+    if (_bannerPlaceState == BannerPlaceState.loaded &&
+        (_loadedSize == 0) &&
+        widget.hideOnEmpty) {
+      return const SizedBox.shrink();
+    }
+
     Widget? placeholder = widget.bannerPlaceLoaderBuilder != null
         ? widget.bannerPlaceLoaderBuilder!(context)
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
+
+    final bool showLoader = _bannerPlaceState == BannerPlaceState.loading ||
+        _bannerPlaceState == BannerPlaceState.none;
+
     return SizedBox(
       height: widget.height,
       width: MediaQuery.of(context).size.width,
@@ -147,15 +215,16 @@ class _BannerPlaceState extends State<BannerPlace>
         child: Stack(
           children: [
             buildPlatformView(context),
-            if (_bannerPlaceState == BannerPlaceState.loading ||
-                _bannerPlaceState == BannerPlaceState.none)
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: placeholder,
+            Positioned.fill(
+              child: IgnorePointer(
+                ignoring: !showLoader,
+                child: AnimatedOpacity(
+                  opacity: showLoader ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: placeholder,
+                ),
               ),
+            ),
           ],
         ),
       ),
@@ -175,11 +244,6 @@ class _BannerPlaceState extends State<BannerPlace>
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             _platformViewCreated = true;
-            BannerPlaceCallbackFlutterApi.setUp(this,
-                messageChannelSuffix: bannerWidgetId);
-            setState(() {
-              _bannerPlaceState = BannerPlaceState.loading;
-            });
             if (!_lastInteractionState) {
               BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
                   .setInteraction(false);
@@ -200,11 +264,6 @@ class _BannerPlaceState extends State<BannerPlace>
           autoLoad: widget.autoLoad,
           onPlatformViewCreated: () {
             _platformViewCreated = true;
-            BannerPlaceCallbackFlutterApi.setUp(this,
-                messageChannelSuffix: bannerWidgetId);
-            setState(() {
-              _bannerPlaceState = BannerPlaceState.loading;
-            });
             if (!_lastInteractionState) {
               BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
                   .setInteraction(false);
@@ -220,6 +279,7 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void dispose() {
+    _timeoutTimer?.cancel();
     _currentRoute?.secondaryAnimation
         ?.removeListener(_onRouteAnimationChanged);
     _currentRoute?.secondaryAnimation
@@ -241,10 +301,26 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   void onBannerPlaceLoaded(int size, int widgetHeight) {
+    _timeoutTimer?.cancel();
+    _loadedSize = size;
     widget.onBannerPlaceLoaded?.call(size, widgetHeight);
-    setState(() {
-      _bannerPlaceState = BannerPlaceState.loaded;
-    });
+    if (mounted) {
+      setState(() {
+        _bannerPlaceState = BannerPlaceState.loaded;
+      });
+    }
+  }
+
+  @override
+  void onBannerPlaceLoadError(String message) {
+    _timeoutTimer?.cancel();
+    _errorMessage = message;
+    widget.onBannerPlaceLoadError?.call(message);
+    if (mounted) {
+      setState(() {
+        _bannerPlaceState = BannerPlaceState.failed;
+      });
+    }
   }
 
   @override

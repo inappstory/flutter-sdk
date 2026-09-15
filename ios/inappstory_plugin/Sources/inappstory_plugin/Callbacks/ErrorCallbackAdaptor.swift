@@ -41,6 +41,10 @@ class ErrorCallbackAdaptor {
                 print("error iam:  \(message)")
             case .bannersFailure(message: let message):
                 print("error banners:  \(message)")
+                BannerPlaceManagerAdaptor.shared?.emitBannerPlaceLoadError(
+                    placeId: nil,
+                    message: message
+                )
             @unknown default:
                 NSLog("WARNING: unknown failureEvent")
             }
