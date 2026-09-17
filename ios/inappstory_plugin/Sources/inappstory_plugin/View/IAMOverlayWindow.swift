@@ -9,7 +9,7 @@ final class IAMOverlayWindow: UIWindow {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard let passthrough = passthroughView else {
-            return super.hitTest(point, with: event)
+            return nil
         }
         let localPoint = passthrough.convert(point, from: self)
         return passthrough.hitTest(localPoint, with: event)
@@ -47,12 +47,12 @@ final class IAMPassthroughView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hit = super.hitTest(point, with: event)
-        if hit === self {
-            // Touch landed on the container itself (empty area / background).
-            // For toast: pass through (return nil).
-            // For all other IAM types: block touches/gestures (return self).
-            return isPassthroughEnabled ? nil : self
+        guard isPassthroughEnabled else {
+            return hit === self ? self : hit
         }
-        return hit
+        guard let hit, hit !== self, !subviews.contains(hit) else {
+            return nil
+        }
+        return hit.bounds.size == bounds.size ? nil : hit
     }
 }

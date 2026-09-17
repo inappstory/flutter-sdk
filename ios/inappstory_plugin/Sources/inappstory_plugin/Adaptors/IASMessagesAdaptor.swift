@@ -49,6 +49,26 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         InAppStory.shared.inAppMessageDidClose = { [weak self] in
             self?.dismissOverlay()
         }
+
+        InAppStory.shared.storyReaderWillShow = { [weak self] _ in
+            self?.overlayWindow?.isHidden = true
+        }
+
+        InAppStory.shared.gameReaderWillShow = { [weak self] in
+            self?.overlayWindow?.isHidden = true
+        }
+
+        InAppStory.shared.storyReaderDidClose = { [weak self] _ in
+            if self?.overlayContainerView?.subviews.isEmpty == false {
+                self?.overlayWindow?.isHidden = false
+            }
+        }
+
+        InAppStory.shared.gameReaderDidClose = { [weak self] in
+            if self?.overlayContainerView?.subviews.isEmpty == false {
+                self?.overlayWindow?.isHidden = false
+            }
+        }
     }
 
     func showById(
@@ -57,6 +77,9 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         onlyPreloaded: Bool,
         bottomPadding: Double?
     ) throws {
+        if InAppStory.shared.isReaderOpen {
+            return
+        }
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             id: messageId,
@@ -74,6 +97,9 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         onlyPreloaded: Bool,
         bottomPadding: Double?
     ) throws {
+        if InAppStory.shared.isReaderOpen {
+            return
+        }
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             event: event,
@@ -179,8 +205,10 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
     }
 
     private func dismissOverlay() {
-        overlayContainerView?.subviews.forEach { $0.removeFromSuperview() }
-        overlayWindow?.isUserInteractionEnabled = false
-        overlayWindow?.isHidden = true
+        DispatchQueue.main.async { [weak self] in
+            self?.overlayContainerView?.subviews.forEach { $0.removeFromSuperview() }
+            self?.overlayWindow?.isUserInteractionEnabled = false
+            self?.overlayWindow?.isHidden = true
+        }
     }
 }
