@@ -175,6 +175,8 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         self.overlayWindow = window
         self.overlayContainerView = container
 
+        window.layoutIfNeeded()
+
         return container
     }
 
