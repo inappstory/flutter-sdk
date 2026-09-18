@@ -180,9 +180,15 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         return container
     }
 
+    /// Tears the overlay down completely so the next IAM gets a fresh window.
+    /// A reused window keeps its rootVC's presented game/story reader,
+    /// which then covers the IAM on the next show.
     private func dismissOverlay() {
+        overlayWindow?.rootViewController?.presentedViewController?.dismiss(animated: false)
         overlayContainerView?.subviews.forEach { $0.removeFromSuperview() }
-        overlayWindow?.isUserInteractionEnabled = false
+        overlayContainerView?.removeFromSuperview()
         overlayWindow?.isHidden = true
+        overlayWindow = nil
+        overlayContainerView = nil
     }
 }
