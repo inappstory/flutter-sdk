@@ -97,6 +97,8 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
 
   void onCancel() async {
     disarmLoadWatchdog();
+    _feedController?.detach(_reload);
+    _feedController = null;
     iasStoryListHostApi.removeSubscriber(uniqueId);
     observableStoryList.removeObserver(this);
     await InappstorySdkModuleHostApi().removeListAdaptor(feed, uniqueId);

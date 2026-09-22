@@ -1,6 +1,11 @@
 package com.inappstory.inappstory_plugin.adaptors
 
+import IASGamesHostApi
+import IASInAppMessagesHostApi
+import IASOnboardingsHostApi
+import IASSingleStoryHostApi
 import InappstorySdkModuleHostApi
+import android.util.Log
 import com.inappstory.inappstory_plugin.callbacks.CallToActionCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.ErrorCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
@@ -48,6 +53,98 @@ class InappstorySdkModuleAdaptor(
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
     private var bannerFactory: BannerViewFactory? = null
+
+    init {
+        IASInAppMessagesHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            object : IASInAppMessagesHostApi {
+                override fun showById(
+                    messageId: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
+                    bottomPadding: Double?
+                ) {
+                    Log.w("InAppStory", "IASInAppMessagesHostApi.showById called before initWith")
+                }
+
+                override fun showByEvent(
+                    event: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
+                    bottomPadding: Double?
+                ) {
+                    Log.w("InAppStory", "IASInAppMessagesHostApi.showByEvent called before initWith")
+                }
+
+                override fun preloadMessages(
+                    ids: List<String>?,
+                    callback: (Result<Boolean>) -> Unit
+                ) {
+                    Log.w("InAppStory", "IASInAppMessagesHostApi.preloadMessages called before initWith")
+                    callback(Result.success(false))
+                }
+
+                override fun cancelByToken(token: String): Boolean {
+                    Log.w("InAppStory", "IASInAppMessagesHostApi.cancelByToken called before initWith")
+                    return false
+                }
+            }
+        )
+
+        IASSingleStoryHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            object : IASSingleStoryHostApi {
+                override fun showOnce(storyId: String, token: String) {
+                    Log.w("InAppStory", "IASSingleStoryHostApi.showOnce called before initWith")
+                }
+
+                override fun show(storyId: String, token: String) {
+                    Log.w("InAppStory", "IASSingleStoryHostApi.show called before initWith")
+                }
+
+                override fun cancelByToken(token: String): Boolean {
+                    Log.w("InAppStory", "IASSingleStoryHostApi.cancelByToken called before initWith")
+                    return false
+                }
+            }
+        )
+
+        IASOnboardingsHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            object : IASOnboardingsHostApi {
+                override fun show(
+                    limit: Long,
+                    feed: String,
+                    token: String,
+                    tags: List<String>
+                ) {
+                    Log.w("InAppStory", "IASOnboardingsHostApi.show called before initWith")
+                }
+
+                override fun cancelByToken(token: String): Boolean {
+                    Log.w("InAppStory", "IASOnboardingsHostApi.cancelByToken called before initWith")
+                    return false
+                }
+            }
+        )
+
+        IASGamesHostApi.setUp(
+            flutterPluginBinding.binaryMessenger,
+            object : IASGamesHostApi {
+                override fun openGame(gameId: String) {
+                    Log.w("InAppStory", "IASGamesHostApi.openGame called before initWith")
+                }
+
+                override fun closeGame() {
+                    Log.w("InAppStory", "IASGamesHostApi.closeGame called before initWith")
+                }
+
+                override fun preloadGames() {
+                    Log.w("InAppStory", "IASGamesHostApi.preloadGames called before initWith")
+                }
+            }
+        )
+    }
 
     override fun initWith(
         apiKey: String,

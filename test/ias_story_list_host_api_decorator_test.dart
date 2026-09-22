@@ -7,6 +7,8 @@ import 'package:mocktail/mocktail.dart';
 import 'mocks.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('$IASStoryListHostApiDecorator', () {
     late MockIASStoryListHostApi mockDecorated;
     late IASStoryListHostApiDecorator decorator;
@@ -61,12 +63,24 @@ void main() {
           verify(() => mockDecorated.updateVisiblePreviews([1], 'feed')).called(1);
         });
       });
+
+      test('WHEN reloadFeed THEN error is suppressed and completed normally', () async {
+        when(() => mockDecorated.reloadFeed(any())).thenThrow(PlatformException(code: 'channel-error'));
+        await expectLater(decorator.reloadFeed('feed'), completes);
+        verify(() => mockDecorated.reloadFeed('feed')).called(1);
+      });
     });
 
     group('GIVEN decorated throws PlatformException with other code', () {
       test('WHEN updateVisiblePreviews THEN error is rethrown', () async {
         when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenThrow(PlatformException(code: 'other-error'));
         final future = decorator.updateVisiblePreviews([1], 'feed');
+        await expectLater(future, throwsA(isA<PlatformException>()));
+      });
+
+      test('WHEN reloadFeed THEN error is rethrown', () async {
+        when(() => mockDecorated.reloadFeed(any())).thenThrow(PlatformException(code: 'other-error'));
+        final future = decorator.reloadFeed('feed');
         await expectLater(future, throwsA(isA<PlatformException>()));
       });
     });

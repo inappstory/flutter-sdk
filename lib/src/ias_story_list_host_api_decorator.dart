@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 
 import '../inappstory_plugin.dart' show IASStoryListHostApi;
+import 'controllers/ias_manager.dart';
 
 class IASStoryListHostApiDecorator implements IASStoryListHostApi {
   IASStoryListHostApiDecorator(this.decorated);
@@ -55,7 +58,18 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
 
   @override
   Future<void> reloadFeed(String feed) async {
-    return await decorated.reloadFeed(feed);
+    try {
+      return await decorated.reloadFeed(feed);
+    } on PlatformException catch (e) {
+      if (e.code == 'channel-error') {
+        final message =
+            'reloadFeed "$feed" skipped: native list adaptor is gone';
+        log('[InAppStory]: $message', error: e);
+        InAppStoryManager.instance.logger.errorLog('IASStoryList', message);
+        return;
+      }
+      rethrow;
+    }
   }
 
   @override
