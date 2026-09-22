@@ -364,6 +364,13 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     func deInitBannerPlace() throws {
         clearBannerPlaceView()
+        if let registrar = self.registrar {
+            BannerViewHostApiSetup.setUp(
+                binaryMessenger: registrar.messenger(),
+                api: nil,
+                messageChannelSuffix: self.bannerWidgetId
+            )
+        }
     }
 
     deinit {
@@ -417,14 +424,5 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             self.bannerPlaceManagerAdaptor?.unsubscribe(loadErrorToken)
         }
         self.bannerPlaceManagerAdaptor = nil
-
-        if let registrar = self.registrar {
-            BannerViewHostApiSetup.setUp(
-                binaryMessenger: registrar.messenger(),
-                api: nil,
-                messageChannelSuffix: self.bannerWidgetId
-            )
-        }
-
     }
 }

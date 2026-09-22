@@ -226,7 +226,7 @@ void main() {
                 height: 140,
                 autoLoad: false,
                 hideOnEmpty: true,
-                loadingTimeout: Duration(milliseconds: 50),
+                loadingTimeout: const Duration(milliseconds: 50),
               ),
             ),
           ),
@@ -234,12 +234,48 @@ void main() {
 
         await tester.pump(const Duration(milliseconds: 100));
 
-        final sizedBox = tester.widget<SizedBox>(
-          find.byWidgetPredicate(
-            (w) => w is SizedBox && w.width == 0.0 && w.height == 0.0,
+        expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
+      });
+
+      testWidgets(
+          'WHEN hidden after an error and native later reports loaded banners THEN the same platform view is shown',
+          (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: BannerPlace(
+                placeId: 'test_place',
+                height: 140,
+                autoLoad: false,
+                hideOnEmpty: true,
+                loadingTimeout: Duration(milliseconds: 50),
+              ),
+            ),
           ),
         );
-        expect(sizedBox, isNotNull);
+        // Off-platform the platform view slot renders this text.
+        final platformView = find.text('Unknown platform', skipOffstage: false);
+        final elementBefore = tester.element(platformView);
+
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
+        expect(tester.element(platformView), same(elementBefore));
+
+        final detector = tester.widget<VisibilityDetector>(
+          find.byType(VisibilityDetector, skipOffstage: false),
+        );
+        final bannerWidgetId = (detector.key as ValueKey<String>).value;
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded.$bannerWidgetId',
+          BannerPlaceCallbackFlutterApi.pigeonChannelCodec
+              .encodeMessage(<Object?>[30, 140]),
+          (reply) {},
+        );
+        await tester.pump();
+
+        expect(tester.getSize(find.byType(BannerPlace)).height, 140);
+        expect(tester.element(platformView), same(elementBefore));
       });
 
       testWidgets(
@@ -316,12 +352,7 @@ void main() {
         await tester.pump();
 
         expect(reportedSize, 0);
-        final sizedBox = tester.widget<SizedBox>(
-          find.byWidgetPredicate(
-            (w) => w is SizedBox && w.width == 0.0 && w.height == 0.0,
-          ),
-        );
-        expect(sizedBox, isNotNull);
+        expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
       });
 
       testWidgets(

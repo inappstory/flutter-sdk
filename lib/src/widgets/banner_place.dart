@@ -173,25 +173,12 @@ class _BannerPlaceState extends State<BannerPlace>
 
   @override
   Widget build(BuildContext context) {
-    if (_bannerPlaceState == BannerPlaceState.failed) {
-      if (widget.bannerPlaceErrorBuilder != null) {
-        return SizedBox(
-          height: widget.height,
-          width: MediaQuery.of(context).size.width,
-          child: widget.bannerPlaceErrorBuilder!(
-              context, _errorMessage ?? 'Failed to load banner'),
-        );
-      }
-      if (widget.hideOnEmpty) {
-        return const SizedBox.shrink();
-      }
-    }
-
-    if (_bannerPlaceState == BannerPlaceState.loaded &&
-        (_loadedSize == 0) &&
-        widget.hideOnEmpty) {
-      return const SizedBox.shrink();
-    }
+    final bool showError = _bannerPlaceState == BannerPlaceState.failed &&
+        widget.bannerPlaceErrorBuilder != null;
+    final bool isHidden = !showError &&
+        widget.hideOnEmpty &&
+        (_bannerPlaceState == BannerPlaceState.failed ||
+            (_bannerPlaceState == BannerPlaceState.loaded && _loadedSize == 0));
 
     Widget? placeholder = widget.bannerPlaceLoaderBuilder != null
         ? widget.bannerPlaceLoaderBuilder!(context)
@@ -200,32 +187,40 @@ class _BannerPlaceState extends State<BannerPlace>
     final bool showLoader = _bannerPlaceState == BannerPlaceState.loading ||
         _bannerPlaceState == BannerPlaceState.none;
 
-    return SizedBox(
-      height: widget.height,
-      width: MediaQuery.of(context).size.width,
-      child: VisibilityDetector(
-        key: ValueKey(bannerWidgetId),
-        onVisibilityChanged: (VisibilityInfo info) {
-          if (info.visibleFraction > 0.0) {
-            isVisible = true;
-          } else {
-            isVisible = false;
-          }
-        },
-        child: Stack(
-          children: [
-            buildPlatformView(context),
-            Positioned.fill(
-              child: IgnorePointer(
-                ignoring: !showLoader,
-                child: AnimatedOpacity(
-                  opacity: showLoader ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: placeholder,
+    return Offstage(
+      offstage: isHidden,
+      child: SizedBox(
+        height: widget.height,
+        width: MediaQuery.of(context).size.width,
+        child: VisibilityDetector(
+          key: ValueKey(bannerWidgetId),
+          onVisibilityChanged: (VisibilityInfo info) {
+            if (info.visibleFraction > 0.0) {
+              isVisible = true;
+            } else {
+              isVisible = false;
+            }
+          },
+          child: Stack(
+            children: [
+              buildPlatformView(context),
+              Positioned.fill(
+                child: IgnorePointer(
+                  ignoring: !showLoader,
+                  child: AnimatedOpacity(
+                    opacity: showLoader ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: placeholder,
+                  ),
                 ),
               ),
-            ),
-          ],
+              if (showError)
+                Positioned.fill(
+                  child: widget.bannerPlaceErrorBuilder!(
+                      context, _errorMessage ?? 'Failed to load banner'),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -280,8 +275,7 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void dispose() {
     _timeoutTimer?.cancel();
-    _currentRoute?.secondaryAnimation
-        ?.removeListener(_onRouteAnimationChanged);
+    _currentRoute?.secondaryAnimation?.removeListener(_onRouteAnimationChanged);
     _currentRoute?.secondaryAnimation
         ?.removeStatusListener(_onRouteStatusChanged);
     _currentRoute = null;

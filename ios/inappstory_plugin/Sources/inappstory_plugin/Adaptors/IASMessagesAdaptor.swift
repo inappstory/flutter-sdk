@@ -49,26 +49,6 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         InAppStory.shared.inAppMessageDidClose = { [weak self] in
             self?.dismissOverlay()
         }
-
-        InAppStory.shared.storyReaderWillShow = { [weak self] _ in
-            self?.overlayWindow?.isHidden = true
-        }
-
-        InAppStory.shared.gameReaderWillShow = { [weak self] in
-            self?.overlayWindow?.isHidden = true
-        }
-
-        InAppStory.shared.storyReaderDidClose = { [weak self] _ in
-            if self?.overlayContainerView?.subviews.isEmpty == false {
-                self?.overlayWindow?.isHidden = false
-            }
-        }
-
-        InAppStory.shared.gameReaderDidClose = { [weak self] in
-            if self?.overlayContainerView?.subviews.isEmpty == false {
-                self?.overlayWindow?.isHidden = false
-            }
-        }
     }
 
     func showById(
@@ -77,9 +57,6 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         onlyPreloaded: Bool,
         bottomPadding: Double?
     ) throws {
-        if InAppStory.shared.isReaderOpen {
-            return
-        }
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             id: messageId,
@@ -97,9 +74,6 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         onlyPreloaded: Bool,
         bottomPadding: Double?
     ) throws {
-        if InAppStory.shared.isReaderOpen {
-            return
-        }
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             event: event,
@@ -155,7 +129,7 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         guard let host = pluginRegistrar?.viewController?.view else {
             throw PigeonError(
                 code: "no_container",
-                message: "There is no Flutter view to show InAppMessage in",
+                message: "There is no view to show InAppMessage in",
                 details: nil
             )
         }
@@ -201,14 +175,20 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         self.overlayWindow = window
         self.overlayContainerView = container
 
+        window.layoutIfNeeded()
+
         return container
     }
 
+    /// Tears the overlay down completely so the next IAM gets a fresh window.
+    /// A reused window keeps its rootVC's presented game/story reader,
+    /// which then covers the IAM on the next show.
     private func dismissOverlay() {
-        DispatchQueue.main.async { [weak self] in
-            self?.overlayContainerView?.subviews.forEach { $0.removeFromSuperview() }
-            self?.overlayWindow?.isUserInteractionEnabled = false
-            self?.overlayWindow?.isHidden = true
-        }
+        overlayWindow?.rootViewController?.presentedViewController?.dismiss(animated: false)
+        overlayContainerView?.subviews.forEach { $0.removeFromSuperview() }
+        overlayContainerView?.removeFromSuperview()
+        overlayWindow?.isHidden = true
+        overlayWindow = nil
+        overlayContainerView = nil
     }
 }
