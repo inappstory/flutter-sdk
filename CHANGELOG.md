@@ -1,6 +1,18 @@
+## [0.9.5]
+
+### Fixed
+
+- Fixed crash on reloadFeed after native adapter disposal.
+- Fixed empty favorites list navigation behavior.
+- Added Android pre-init safety for host APIs.
+
+### Changed
+
+- Updated Android SDK to 1.25.6 and iOS SDK to 1.29.8
+
 ## [0.9.4]
 
-## Fixed
+### Fixed
 
 - Improved In App Messages stability
 - Banners caused app to crash after a failed load and reload
