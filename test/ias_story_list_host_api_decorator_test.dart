@@ -52,6 +52,12 @@ void main() {
         await decorator.reloadFeed('feed');
         verify(() => mockDecorated.reloadFeed('feed')).called(1);
       });
+
+      test('WHEN showFavoriteItem called THEN delegates to decorated', () async {
+        when(() => mockDecorated.showFavoriteItem('feed')).thenAnswer((_) async {});
+        await decorator.showFavoriteItem('feed');
+        verify(() => mockDecorated.showFavoriteItem('feed')).called(1);
+      });
     });
 
     group('GIVEN decorated throws PlatformException with channel-error', () {
@@ -69,6 +75,12 @@ void main() {
         await expectLater(decorator.reloadFeed('feed'), completes);
         verify(() => mockDecorated.reloadFeed('feed')).called(1);
       });
+
+      test('WHEN showFavoriteItem THEN error is suppressed and completed normally', () async {
+        when(() => mockDecorated.showFavoriteItem(any())).thenThrow(PlatformException(code: 'channel-error'));
+        await expectLater(decorator.showFavoriteItem('feed'), completes);
+        verify(() => mockDecorated.showFavoriteItem('feed')).called(1);
+      });
     });
 
     group('GIVEN decorated throws PlatformException with other code', () {
@@ -81,6 +93,12 @@ void main() {
       test('WHEN reloadFeed THEN error is rethrown', () async {
         when(() => mockDecorated.reloadFeed(any())).thenThrow(PlatformException(code: 'other-error'));
         final future = decorator.reloadFeed('feed');
+        await expectLater(future, throwsA(isA<PlatformException>()));
+      });
+
+      test('WHEN showFavoriteItem THEN error is rethrown', () async {
+        when(() => mockDecorated.showFavoriteItem(any())).thenThrow(PlatformException(code: 'other-error'));
+        final future = decorator.showFavoriteItem('feed');
         await expectLater(future, throwsA(isA<PlatformException>()));
       });
     });
