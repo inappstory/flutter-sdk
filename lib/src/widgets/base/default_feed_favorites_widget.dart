@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/feed_stories_controller.dart';
 import '../feed_list_favorites_item_widget.dart';
 import '../grid_view_favourites_widget.dart';
 
@@ -22,6 +23,8 @@ class DefaultGridFeedFavoritesWidget extends FeedFavoritesItemWidget {
   }
 
   Future<void> showFavoritesBottomSheet(BuildContext context) async {
+    final controller = FeedStoriesController();
+
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -30,6 +33,7 @@ class DefaultGridFeedFavoritesWidget extends FeedFavoritesItemWidget {
         height: MediaQuery.of(context).size.height * 0.75,
         child: GridViewFavouritesWidget(
           feed: feed,
+          controller: controller,
           decorator: decorator,
           loaderBuilder: (context) {
             return Center(

@@ -27,6 +27,7 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
       (widget as GridViewFavouritesWidget).storiesStream ??
           _getFavouritesStoriesWidgets();
 
+  bool _hasDisplayedFavorites = false;
   bool _isClosing = false;
 
   Stream<Iterable<Widget>> _getFavouritesStoriesWidgets() {
@@ -40,8 +41,8 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
     );
   }
 
-  void _closeRouteIfEmpty() {
-    if (_isClosing) return;
+  void _closeRouteIfFavoritesWereRemoved() {
+    if (!_hasDisplayedFavorites || _isClosing) return;
     _isClosing = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -66,19 +67,30 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
         }
 
         if (snapshot.hasError) {
-          if (widget.errorBuilder == null) {
-            return const SizedBox.shrink();
+          final errorBuilder = widget.errorBuilder;
+          if (errorBuilder != null) {
+            return errorBuilder(context, snapshot.error);
           }
-          return super.errorBuilder!(context, snapshot.error);
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Не удалось загрузить избранное'),
+                TextButton(
+                  onPressed: widget.controller?.fetchFeedStories,
+                  child: const Text('Повторить'),
+                ),
+              ],
+            ),
+          );
         }
 
         final stories = snapshot.data;
         if (stories == null || stories.isEmpty) {
-          _closeRouteIfEmpty();
+          _closeRouteIfFavoritesWereRemoved();
           return const SizedBox.shrink();
         }
-
-        _isClosing = false;
+        _hasDisplayedFavorites = true;
 
         return GridView.builder(
           itemCount: stories.length,
