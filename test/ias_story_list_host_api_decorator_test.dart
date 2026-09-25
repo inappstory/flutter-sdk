@@ -16,32 +16,47 @@ void main() {
       decorator = IASStoryListHostApiDecorator(mockDecorated);
     });
 
+    TestWidgetsFlutterBinding.ensureInitialized();
+
     group('GIVEN decorator', () {
-      test('WHEN updateVisiblePreviews called once THEN decorated receives the ids after microtask', () {
+      test(
+          'WHEN updateVisiblePreviews called once THEN decorated receives the ids after microtask',
+          () {
         fakeAsync((async) {
-          when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenAnswer((_) async {});
+          when(() => mockDecorated.updateVisiblePreviews(any(), any()))
+              .thenAnswer((_) async {});
           decorator.updateVisiblePreviews([1, 2], 'feed');
           async.elapse(Duration.zero);
-          verify(() => mockDecorated.updateVisiblePreviews([1, 2], 'feed')).called(1);
+          verify(() => mockDecorated.updateVisiblePreviews([1, 2], 'feed'))
+              .called(1);
         });
       });
 
-      test('WHEN updateVisiblePreviews called twice synchronously THEN decorated receives batched ids in single call', () {
+      test(
+          'WHEN updateVisiblePreviews called twice synchronously THEN decorated receives batched ids in single call',
+          () {
         fakeAsync((async) {
-          when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenAnswer((_) async {});
+          when(() => mockDecorated.updateVisiblePreviews(any(), any()))
+              .thenAnswer((_) async {});
           decorator.updateVisiblePreviews([1, 2], 'feed');
           decorator.updateVisiblePreviews([3, 4], 'feed');
           async.elapse(Duration.zero);
-          verify(() => mockDecorated.updateVisiblePreviews([1, 2, 3, 4], 'feed')).called(1);
+          verify(() =>
+                  mockDecorated.updateVisiblePreviews([1, 2, 3, 4], 'feed'))
+              .called(1);
         });
       });
 
-      test('WHEN updateVisiblePreviews called with list containing nulls THEN null values are filtered out', () {
+      test(
+          'WHEN updateVisiblePreviews called with list containing nulls THEN null values are filtered out',
+          () {
         fakeAsync((async) {
-          when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenAnswer((_) async {});
+          when(() => mockDecorated.updateVisiblePreviews(any(), any()))
+              .thenAnswer((_) async {});
           decorator.updateVisiblePreviews([1, null, 2], 'feed');
           async.elapse(Duration.zero);
-          verify(() => mockDecorated.updateVisiblePreviews([1, 2], 'feed')).called(1);
+          verify(() => mockDecorated.updateVisiblePreviews([1, 2], 'feed'))
+              .called(1);
         });
       });
 
@@ -50,24 +65,72 @@ void main() {
         await decorator.reloadFeed('feed');
         verify(() => mockDecorated.reloadFeed('feed')).called(1);
       });
+
+      test('WHEN showFavoriteItem called THEN delegates to decorated',
+          () async {
+        when(() => mockDecorated.showFavoriteItem('feed'))
+            .thenAnswer((_) async {});
+        await decorator.showFavoriteItem('feed');
+        verify(() => mockDecorated.showFavoriteItem('feed')).called(1);
+      });
     });
 
     group('GIVEN decorated throws PlatformException with channel-error', () {
-      test('WHEN updateVisiblePreviews THEN error is suppressed and completed normally', () {
+      test(
+          'WHEN updateVisiblePreviews THEN error is suppressed and completed normally',
+          () {
         fakeAsync((async) {
-          when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenThrow(PlatformException(code: 'channel-error'));
+          when(() => mockDecorated.updateVisiblePreviews(any(), any()))
+              .thenThrow(PlatformException(code: 'channel-error'));
           decorator.updateVisiblePreviews([1], 'feed');
           async.elapse(Duration.zero);
-          verify(() => mockDecorated.updateVisiblePreviews([1], 'feed')).called(1);
+          verify(() => mockDecorated.updateVisiblePreviews([1], 'feed'))
+              .called(1);
         });
+      });
+
+      test('WHEN reloadFeed THEN error is suppressed and completes normally',
+          () async {
+        when(() => mockDecorated.reloadFeed(any()))
+            .thenThrow(PlatformException(code: 'channel-error'));
+        await expectLater(decorator.reloadFeed('feed'), completes);
+        verify(() => mockDecorated.reloadFeed('feed')).called(1);
+      });
+
+      test(
+          'WHEN showFavoriteItem THEN error is suppressed and completes normally',
+          () async {
+        when(() => mockDecorated.showFavoriteItem(any()))
+            .thenThrow(PlatformException(code: 'channel-error'));
+        await expectLater(decorator.showFavoriteItem('feed'), completes);
+        verify(() => mockDecorated.showFavoriteItem('feed')).called(1);
       });
     });
 
     group('GIVEN decorated throws PlatformException with other code', () {
       test('WHEN updateVisiblePreviews THEN error is rethrown', () async {
-        when(() => mockDecorated.updateVisiblePreviews(any(), any())).thenThrow(PlatformException(code: 'other-error'));
+        when(() => mockDecorated.updateVisiblePreviews(any(), any()))
+            .thenThrow(PlatformException(code: 'other-error'));
         final future = decorator.updateVisiblePreviews([1], 'feed');
         await expectLater(future, throwsA(isA<PlatformException>()));
+      });
+
+      test('WHEN reloadFeed THEN other errors are rethrown', () async {
+        when(() => mockDecorated.reloadFeed(any()))
+            .thenThrow(PlatformException(code: 'other-error'));
+        await expectLater(
+          decorator.reloadFeed('feed'),
+          throwsA(isA<PlatformException>()),
+        );
+      });
+
+      test('WHEN showFavoriteItem THEN other errors are rethrown', () async {
+        when(() => mockDecorated.showFavoriteItem(any()))
+            .thenThrow(PlatformException(code: 'other-error'));
+        await expectLater(
+          decorator.showFavoriteItem('feed'),
+          throwsA(isA<PlatformException>()),
+        );
       });
     });
   });

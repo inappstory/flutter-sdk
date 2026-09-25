@@ -4,6 +4,14 @@
 
 - Swift Package Manager (SPM) support for iOS with dual CocoaPods compatibility
 
+## [0.9.5]
+
+### Fixed
+
+- Fixed reloads after the native list adapter is disposed.
+- Fixed empty favorites list navigation behavior.
+- Added Android pre-init safety for host APIs.
+
 ### Changed
 
 - Upgraded Gradle to 8.14, AGP to 8.11.1, and Kotlin to 2.2.20 for Android

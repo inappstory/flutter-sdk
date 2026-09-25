@@ -46,6 +46,10 @@ void main() {
 
       when(() => iasStoryListHostApi.load(feed, uniqueId))
           .thenAnswer((_) async {});
+      when(() => iasStoryListHostApi.load(any(), any()))
+          .thenAnswer((_) async {});
+      when(() => iasStoryListHostApi.removeSubscriber(any()))
+          .thenAnswer((_) async {});
     });
 
     group('WHEN got client', () {
@@ -81,6 +85,20 @@ void main() {
 
           verify(() => iasStoryListHostApi.reloadFeed('otherFeedID')).called(1);
           verifyNever(() => iasStoryListHostApi.reloadFeed(feed));
+        });
+
+        group('AND the stream is listened and cancelled', () {
+          setUp(() async {
+            final subscription = storiesStream.listen((_) {});
+            await subscription.cancel();
+          });
+
+          test('WHEN fetchFeedStories is called THEN reloadFeed is not called',
+              () async {
+            await feedController.fetchFeedStories();
+
+            verifyNever(() => iasStoryListHostApi.reloadFeed(any()));
+          });
         });
       });
     });

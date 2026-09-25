@@ -12,14 +12,22 @@ class GridViewFavouritesWidget extends FeedStoriesWidget {
     super.errorBuilder,
     super.decorator,
     super.storyBuilder,
+    @visibleForTesting this.storiesStream,
   });
+
+  @visibleForTesting
+  final Stream<Iterable<Widget>>? storiesStream;
 
   @override
   FeedStoriesWidgetState createState() => _GridViewFavouritesWidgetState();
 }
 
 class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
-  late final _favoritesStoriesWidgetsStream = _getFavouritesStoriesWidgets();
+  late final Stream<Iterable<Widget>> _favoritesStoriesWidgetsStream =
+      (widget as GridViewFavouritesWidget).storiesStream ??
+          _getFavouritesStoriesWidgets();
+
+  bool _isClosing = false;
 
   Stream<Iterable<Widget>> _getFavouritesStoriesWidgets() {
     return FavoritesStoriesStream(
@@ -32,9 +40,22 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
     );
   }
 
+  void _closeRouteIfEmpty() {
+    if (_isClosing) return;
+    _isClosing = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final route = ModalRoute.of(context);
+      if (route != null && route.isActive && route.isCurrent) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<Iterable<Widget>>(
       stream: _favoritesStoriesWidgetsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -51,19 +72,22 @@ class _GridViewFavouritesWidgetState extends FeedStoriesWidgetState {
           return super.errorBuilder!(context, snapshot.error);
         }
 
-        if ((snapshot.data?.length ?? 0) == 0) {
-          Navigator.of(context).pop();
-          return SizedBox.shrink();
+        final stories = snapshot.data;
+        if (stories == null || stories.isEmpty) {
+          _closeRouteIfEmpty();
+          return const SizedBox.shrink();
         }
 
+        _isClosing = false;
+
         return GridView.builder(
-          itemCount: snapshot.data?.length ?? 0,
+          itemCount: stories.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             childAspectRatio: widget.decorator?.favouriteAspectRatio ?? 1.0,
           ),
           itemBuilder: (context, index) {
-            return snapshot.requireData.elementAt(index);
+            return stories.elementAt(index);
           },
         );
       },

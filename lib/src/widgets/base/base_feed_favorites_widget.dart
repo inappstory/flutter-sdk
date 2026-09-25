@@ -22,8 +22,11 @@ class BaseFeedFavoritesWidget extends StatelessWidget {
   final IASStoryListHostApi iasStoryListHostApi;
   final FeedFavoritesWidgetBuilder favoritesWidgetBuilder;
 
-  void onVisibilityChanged(VisibilityInfo info) =>
+  void onVisibilityChanged(VisibilityInfo info) {
+    if (info.visibleFraction > 0) {
       iasStoryListHostApi.showFavoriteItem(feed);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
