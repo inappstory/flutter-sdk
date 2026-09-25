@@ -105,7 +105,8 @@ class CallbacksAdaptor {
             feed: arg.feed,
             sourceType: mapStorySource(arg: arg.source),
             slidesCount: Int64(arg.slidesCount),
-            storyType: mapStoryType(arg: arg.type)
+            storyType: mapStoryType(arg: arg.type),
+            extraFields: arg.extraFields
         )
     }
 

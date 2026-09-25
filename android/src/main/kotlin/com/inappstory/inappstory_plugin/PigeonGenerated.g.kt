@@ -391,7 +391,8 @@ data class StoryDataDto (
   val feed: String? = null,
   val sourceType: SourceTypeDto? = null,
   val slidesCount: Long,
-  val storyType: StoryTypeDto? = null
+  val storyType: StoryTypeDto? = null,
+  val extraFields: Map<String, String>? = null
 )
  {
   companion object {
@@ -403,7 +404,8 @@ data class StoryDataDto (
       val sourceType = pigeonVar_list[4] as SourceTypeDto?
       val slidesCount = pigeonVar_list[5] as Long
       val storyType = pigeonVar_list[6] as StoryTypeDto?
-      return StoryDataDto(id, title, tags, feed, sourceType, slidesCount, storyType)
+      val extraFields = pigeonVar_list[7] as Map<String, String>?
+      return StoryDataDto(id, title, tags, feed, sourceType, slidesCount, storyType, extraFields)
     }
   }
   fun toList(): List<Any?> {
@@ -415,6 +417,7 @@ data class StoryDataDto (
       sourceType,
       slidesCount,
       storyType,
+      extraFields,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -425,7 +428,7 @@ data class StoryDataDto (
       return true
     }
     val other = other as StoryDataDto
-    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.tags, other.tags) && PigeonGeneratedPigeonUtils.deepEquals(this.feed, other.feed) && PigeonGeneratedPigeonUtils.deepEquals(this.sourceType, other.sourceType) && PigeonGeneratedPigeonUtils.deepEquals(this.slidesCount, other.slidesCount) && PigeonGeneratedPigeonUtils.deepEquals(this.storyType, other.storyType)
+    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.tags, other.tags) && PigeonGeneratedPigeonUtils.deepEquals(this.feed, other.feed) && PigeonGeneratedPigeonUtils.deepEquals(this.sourceType, other.sourceType) && PigeonGeneratedPigeonUtils.deepEquals(this.slidesCount, other.slidesCount) && PigeonGeneratedPigeonUtils.deepEquals(this.storyType, other.storyType) && PigeonGeneratedPigeonUtils.deepEquals(this.extraFields, other.extraFields)
   }
 
   override fun hashCode(): Int {
@@ -437,10 +440,11 @@ data class StoryDataDto (
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.sourceType)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.slidesCount)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.storyType)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.extraFields)
     return result
   }
   override fun toString(): String {
-    return "StoryDataDto(id=$id, title=$title, tags=$tags, feed=$feed, sourceType=$sourceType, slidesCount=$slidesCount, storyType=$storyType)"
+    return "StoryDataDto(id=$id, title=$title, tags=$tags, feed=$feed, sourceType=$sourceType, slidesCount=$slidesCount, storyType=$storyType, extraFields=$extraFields)"
   }
 }
 
@@ -728,7 +732,8 @@ data class InAppMessageDataDto (
   val title: String? = null,
   /** The event associated with the in-app message, or `null` if not available. */
   val event: String? = null,
-  val messageType: InAppMessageTypeDto? = null
+  val messageType: InAppMessageTypeDto? = null,
+  val extraFields: Map<String, String>? = null
 )
  {
   companion object {
@@ -737,7 +742,8 @@ data class InAppMessageDataDto (
       val title = pigeonVar_list[1] as String?
       val event = pigeonVar_list[2] as String?
       val messageType = pigeonVar_list[3] as InAppMessageTypeDto?
-      return InAppMessageDataDto(id, title, event, messageType)
+      val extraFields = pigeonVar_list[4] as Map<String, String>?
+      return InAppMessageDataDto(id, title, event, messageType, extraFields)
     }
   }
   fun toList(): List<Any?> {
@@ -746,6 +752,7 @@ data class InAppMessageDataDto (
       title,
       event,
       messageType,
+      extraFields,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -756,7 +763,7 @@ data class InAppMessageDataDto (
       return true
     }
     val other = other as InAppMessageDataDto
-    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.event, other.event) && PigeonGeneratedPigeonUtils.deepEquals(this.messageType, other.messageType)
+    return PigeonGeneratedPigeonUtils.deepEquals(this.id, other.id) && PigeonGeneratedPigeonUtils.deepEquals(this.title, other.title) && PigeonGeneratedPigeonUtils.deepEquals(this.event, other.event) && PigeonGeneratedPigeonUtils.deepEquals(this.messageType, other.messageType) && PigeonGeneratedPigeonUtils.deepEquals(this.extraFields, other.extraFields)
   }
 
   override fun hashCode(): Int {
@@ -765,10 +772,11 @@ data class InAppMessageDataDto (
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.title)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.event)
     result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.messageType)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.extraFields)
     return result
   }
   override fun toString(): String {
-    return "InAppMessageDataDto(id=$id, title=$title, event=$event, messageType=$messageType)"
+    return "InAppMessageDataDto(id=$id, title=$title, event=$event, messageType=$messageType, extraFields=$extraFields)"
   }
 }
 private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {

@@ -10,7 +10,8 @@ import 'package:pigeon/pigeon.dart';
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGenerated.g.kt',
   kotlinOptions: KotlinOptions(),
-  swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/PigeonGenerated.g.swift',
+  swiftOut:
+      'ios/inappstory_plugin/Sources/inappstory_plugin/PigeonGenerated.g.swift',
   swiftOptions: SwiftOptions(),
 ))
 // ConfigurePigeon
@@ -133,6 +134,7 @@ class StoryDataDto {
   late SourceTypeDto? sourceType;
   late int slidesCount;
   late StoryTypeDto? storyType;
+  late Map<String, String>? extraFields;
 }
 
 enum StoryTypeDto {
@@ -321,7 +323,6 @@ enum ContentTypeDto {
   STORY,
   UGC,
   IN_APP_MESSAGE,
-
 }
 
 class ContentDataDto {
@@ -409,6 +410,8 @@ class InAppMessageDataDto {
   late String? event;
 
   late InAppMessageTypeDto? messageType;
+
+  late Map<String, String>? extraFields;
 }
 
 @FlutterApi()

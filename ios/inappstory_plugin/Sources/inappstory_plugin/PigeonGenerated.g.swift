@@ -339,6 +339,7 @@ struct StoryDataDto: Hashable, CustomStringConvertible {
   var sourceType: SourceTypeDto? = nil
   var slidesCount: Int64
   var storyType: StoryTypeDto? = nil
+  var extraFields: [String: String]? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -350,6 +351,7 @@ struct StoryDataDto: Hashable, CustomStringConvertible {
     let sourceType: SourceTypeDto? = nilOrValue(pigeonVar_list[4])
     let slidesCount = pigeonVar_list[5] as! Int64
     let storyType: StoryTypeDto? = nilOrValue(pigeonVar_list[6])
+    let extraFields: [String: String]? = nilOrValue(pigeonVar_list[7])
 
     return StoryDataDto(
       id: id,
@@ -358,7 +360,8 @@ struct StoryDataDto: Hashable, CustomStringConvertible {
       feed: feed,
       sourceType: sourceType,
       slidesCount: slidesCount,
-      storyType: storyType
+      storyType: storyType,
+      extraFields: extraFields
     )
   }
   func toList() -> [Any?] {
@@ -370,13 +373,14 @@ struct StoryDataDto: Hashable, CustomStringConvertible {
       sourceType,
       slidesCount,
       storyType,
+      extraFields,
     ]
   }
   static func == (lhs: StoryDataDto, rhs: StoryDataDto) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return PigeonGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && PigeonGeneratedPigeonInternal.deepEquals(lhs.title, rhs.title) && PigeonGeneratedPigeonInternal.deepEquals(lhs.tags, rhs.tags) && PigeonGeneratedPigeonInternal.deepEquals(lhs.feed, rhs.feed) && PigeonGeneratedPigeonInternal.deepEquals(lhs.sourceType, rhs.sourceType) && PigeonGeneratedPigeonInternal.deepEquals(lhs.slidesCount, rhs.slidesCount) && PigeonGeneratedPigeonInternal.deepEquals(lhs.storyType, rhs.storyType)
+    return PigeonGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && PigeonGeneratedPigeonInternal.deepEquals(lhs.title, rhs.title) && PigeonGeneratedPigeonInternal.deepEquals(lhs.tags, rhs.tags) && PigeonGeneratedPigeonInternal.deepEquals(lhs.feed, rhs.feed) && PigeonGeneratedPigeonInternal.deepEquals(lhs.sourceType, rhs.sourceType) && PigeonGeneratedPigeonInternal.deepEquals(lhs.slidesCount, rhs.slidesCount) && PigeonGeneratedPigeonInternal.deepEquals(lhs.storyType, rhs.storyType) && PigeonGeneratedPigeonInternal.deepEquals(lhs.extraFields, rhs.extraFields)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -388,10 +392,11 @@ struct StoryDataDto: Hashable, CustomStringConvertible {
     PigeonGeneratedPigeonInternal.deepHash(value: sourceType, hasher: &hasher)
     PigeonGeneratedPigeonInternal.deepHash(value: slidesCount, hasher: &hasher)
     PigeonGeneratedPigeonInternal.deepHash(value: storyType, hasher: &hasher)
+    PigeonGeneratedPigeonInternal.deepHash(value: extraFields, hasher: &hasher)
   }
 
   public var description: String {
-    return "StoryDataDto(id: \(String(describing: id)), title: \(String(describing: title)), tags: \(String(describing: tags)), feed: \(String(describing: feed)), sourceType: \(String(describing: sourceType)), slidesCount: \(String(describing: slidesCount)), storyType: \(String(describing: storyType)))"
+    return "StoryDataDto(id: \(String(describing: id)), title: \(String(describing: title)), tags: \(String(describing: tags)), feed: \(String(describing: feed)), sourceType: \(String(describing: sourceType)), slidesCount: \(String(describing: slidesCount)), storyType: \(String(describing: storyType)), extraFields: \(String(describing: extraFields)))"
   }
 }
 
@@ -689,6 +694,7 @@ struct InAppMessageDataDto: Hashable, CustomStringConvertible {
   /// The event associated with the in-app message, or `null` if not available.
   var event: String? = nil
   var messageType: InAppMessageTypeDto? = nil
+  var extraFields: [String: String]? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -697,12 +703,14 @@ struct InAppMessageDataDto: Hashable, CustomStringConvertible {
     let title: String? = nilOrValue(pigeonVar_list[1])
     let event: String? = nilOrValue(pigeonVar_list[2])
     let messageType: InAppMessageTypeDto? = nilOrValue(pigeonVar_list[3])
+    let extraFields: [String: String]? = nilOrValue(pigeonVar_list[4])
 
     return InAppMessageDataDto(
       id: id,
       title: title,
       event: event,
-      messageType: messageType
+      messageType: messageType,
+      extraFields: extraFields
     )
   }
   func toList() -> [Any?] {
@@ -711,13 +719,14 @@ struct InAppMessageDataDto: Hashable, CustomStringConvertible {
       title,
       event,
       messageType,
+      extraFields,
     ]
   }
   static func == (lhs: InAppMessageDataDto, rhs: InAppMessageDataDto) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return PigeonGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && PigeonGeneratedPigeonInternal.deepEquals(lhs.title, rhs.title) && PigeonGeneratedPigeonInternal.deepEquals(lhs.event, rhs.event) && PigeonGeneratedPigeonInternal.deepEquals(lhs.messageType, rhs.messageType)
+    return PigeonGeneratedPigeonInternal.deepEquals(lhs.id, rhs.id) && PigeonGeneratedPigeonInternal.deepEquals(lhs.title, rhs.title) && PigeonGeneratedPigeonInternal.deepEquals(lhs.event, rhs.event) && PigeonGeneratedPigeonInternal.deepEquals(lhs.messageType, rhs.messageType) && PigeonGeneratedPigeonInternal.deepEquals(lhs.extraFields, rhs.extraFields)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -726,10 +735,11 @@ struct InAppMessageDataDto: Hashable, CustomStringConvertible {
     PigeonGeneratedPigeonInternal.deepHash(value: title, hasher: &hasher)
     PigeonGeneratedPigeonInternal.deepHash(value: event, hasher: &hasher)
     PigeonGeneratedPigeonInternal.deepHash(value: messageType, hasher: &hasher)
+    PigeonGeneratedPigeonInternal.deepHash(value: extraFields, hasher: &hasher)
   }
 
   public var description: String {
-    return "InAppMessageDataDto(id: \(String(describing: id)), title: \(String(describing: title)), event: \(String(describing: event)), messageType: \(String(describing: messageType)))"
+    return "InAppMessageDataDto(id: \(String(describing: id)), title: \(String(describing: title)), event: \(String(describing: event)), messageType: \(String(describing: messageType)), extraFields: \(String(describing: extraFields)))"
   }
 }
 

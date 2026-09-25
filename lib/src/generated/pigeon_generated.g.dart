@@ -268,6 +268,7 @@ class StoryDataDto {
     this.sourceType,
     required this.slidesCount,
     this.storyType,
+    this.extraFields,
   });
 
   int id;
@@ -284,6 +285,8 @@ class StoryDataDto {
 
   StoryTypeDto? storyType;
 
+  Map<String, String>? extraFields;
+
   List<Object?> _toList() {
     return <Object?>[
       id,
@@ -293,6 +296,7 @@ class StoryDataDto {
       sourceType,
       slidesCount,
       storyType,
+      extraFields,
     ];
   }
 
@@ -309,6 +313,7 @@ class StoryDataDto {
       sourceType: result[4] as SourceTypeDto?,
       slidesCount: result[5]! as int,
       storyType: result[6] as StoryTypeDto?,
+      extraFields: (result[7] as Map<Object?, Object?>?)?.cast<String, String>(),
     );
   }
 
@@ -321,7 +326,7 @@ class StoryDataDto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(tags, other.tags) && _deepEquals(feed, other.feed) && _deepEquals(sourceType, other.sourceType) && _deepEquals(slidesCount, other.slidesCount) && _deepEquals(storyType, other.storyType);
+    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(tags, other.tags) && _deepEquals(feed, other.feed) && _deepEquals(sourceType, other.sourceType) && _deepEquals(slidesCount, other.slidesCount) && _deepEquals(storyType, other.storyType) && _deepEquals(extraFields, other.extraFields);
   }
 
   @override
@@ -330,7 +335,7 @@ class StoryDataDto {
 
   @override
   String toString() {
-    return 'StoryDataDto(id: $id, title: $title, tags: $tags, feed: $feed, sourceType: $sourceType, slidesCount: $slidesCount, storyType: $storyType)';
+    return 'StoryDataDto(id: $id, title: $title, tags: $tags, feed: $feed, sourceType: $sourceType, slidesCount: $slidesCount, storyType: $storyType, extraFields: $extraFields)';
   }
 }
 
@@ -674,6 +679,7 @@ class InAppMessageDataDto {
     this.title,
     this.event,
     this.messageType,
+    this.extraFields,
   });
 
   /// The unique identifier of the in-app message.
@@ -687,12 +693,15 @@ class InAppMessageDataDto {
 
   InAppMessageTypeDto? messageType;
 
+  Map<String, String>? extraFields;
+
   List<Object?> _toList() {
     return <Object?>[
       id,
       title,
       event,
       messageType,
+      extraFields,
     ];
   }
 
@@ -706,6 +715,7 @@ class InAppMessageDataDto {
       title: result[1] as String?,
       event: result[2] as String?,
       messageType: result[3] as InAppMessageTypeDto?,
+      extraFields: (result[4] as Map<Object?, Object?>?)?.cast<String, String>(),
     );
   }
 
@@ -718,7 +728,7 @@ class InAppMessageDataDto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(event, other.event) && _deepEquals(messageType, other.messageType);
+    return _deepEquals(id, other.id) && _deepEquals(title, other.title) && _deepEquals(event, other.event) && _deepEquals(messageType, other.messageType) && _deepEquals(extraFields, other.extraFields);
   }
 
   @override
@@ -727,7 +737,7 @@ class InAppMessageDataDto {
 
   @override
   String toString() {
-    return 'InAppMessageDataDto(id: $id, title: $title, event: $event, messageType: $messageType)';
+    return 'InAppMessageDataDto(id: $id, title: $title, event: $event, messageType: $messageType, extraFields: $extraFields)';
   }
 }
 
