@@ -9,6 +9,10 @@
 
 - Avoid closing favorites sheet on initial empty state
 
+### Fixed
+
+- Avoid closing favorites sheet on initial empty state
+
 ## [0.9.5]
 
 ### Fixed
