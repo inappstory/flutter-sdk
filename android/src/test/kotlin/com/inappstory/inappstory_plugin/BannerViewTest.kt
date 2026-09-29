@@ -117,7 +117,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place"))
+        val bannerList = listOf(BannerData(1, "test_place", ""))
         callback.bannerPlaceLoaded(1, bannerList, 120)
 
         // Metadata loaded, but content NOT loaded yet: onBannerPlaceLoaded should NOT be sent and visibility should NOT be true
@@ -151,7 +151,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place"))
+        val bannerList = listOf(BannerData(1, "test_place", ""))
         callback.bannerPlaceLoaded(1, bannerList, 150)
         assertEquals(0, messenger.sentMessages.size)
         assertNull(visibility)
@@ -182,7 +182,7 @@ class BannerViewTest {
         assertEquals(0, messenger.sentMessages.size)
         assertNull(visibility)
 
-        val bannerList = listOf(BannerData(1, "test_place"))
+        val bannerList = listOf(BannerData(1, "test_place", ""))
         callback.bannerPlaceLoaded(1, bannerList, 140)
 
         assertEquals(1, messenger.sentMessages.size)
@@ -247,7 +247,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place"))
+        val bannerList = listOf(BannerData(1, "test_place", ""))
         // Initial load: metadata + content
         callback.bannerPlaceLoaded(1, bannerList, 120)
         callback.bannerLoaded(1, true)
@@ -364,4 +364,59 @@ class BannerViewTest {
         assertEquals(12, appearance.cornerRadius())
         assertTrue(appearance.loop())
     }
+
+    @Test
+    fun dummyBannerPlaceLoadCallback_hasNonNullBannerPlaceAndSafeCallbacks() {
+        val dummy = object : BannerPlaceLoadCallback("") {
+            override fun bannerPlaceLoaded(
+                size: Int, bannerData: List<BannerData>, widgetHeight: Int
+            ) {}
+
+            override fun loadError() {}
+            override fun bannerLoaded(p0: Int, p1: Boolean) {}
+            override fun bannerLoadError(p0: Int, p1: Boolean) {}
+        }
+
+        // Must be non-null so BannerCarousel.loadCallback does not throw NullPointerException on callback.bannerPlace()
+        assertEquals("", dummy.bannerPlace())
+        dummy.bannerPlaceLoaded(0, emptyList(), 0)
+        dummy.loadError()
+        dummy.bannerLoaded(1, true)
+        dummy.bannerLoadError(1, false)
+    }
+
+    @Test
+    fun bannerDecoration_withIntegerColor_decodesCorrectly() {
+        // Flutter StandardMessageCodec decodes small/32-bit ints (like Colors.transparent = 0) as java.lang.Integer
+        val map = mapOf<String, Any?>(
+            "color" to 0,
+            "image" to null
+        )
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
+        assertEquals(0L, dto.color)
+        assertNull(dto.image)
+    }
+
+    @Test
+    fun bannerDecoration_withLongColor_decodesCorrectly() {
+        val map = mapOf<String, Any?>(
+            "color" to 4294967295L,
+            "image" to "assets/bg.png"
+        )
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
+        assertEquals(4294967295L, dto.color)
+        assertEquals("assets/bg.png", dto.image)
+    }
+
+    @Test
+    fun bannerDecoration_withNullValues_decodesCorrectly() {
+        val map = mapOf<String, Any?>(
+            "color" to null,
+            "image" to null
+        )
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
+        assertNull(dto.color)
+        assertNull(dto.image)
+    }
 }
+

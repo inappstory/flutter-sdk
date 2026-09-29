@@ -15,11 +15,11 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private var inAppStoryManager: InAppStoryManager,
-    private var appearanceManager: AppearanceManager
+    private val appearanceManager: AppearanceManager,
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
+    private var inAppStoryManager: InAppStoryManager? = null
 
     private var bannerPlaceManagerAdaptor: IASBannerPlaceManagerAdaptor =
         IASBannerPlaceManagerAdaptor(flutterPluginBinding)
@@ -30,13 +30,7 @@ class BannerViewFactory(
 
     fun setInAppStoryManager(manager: InAppStoryManager) {
         this.inAppStoryManager = manager
-        if (bannersCallback != null) {
-            manager.setBannerWidgetCallback(bannersCallback)
-        }
-    }
-
-    fun setAppearanceManager(manager: AppearanceManager) {
-        this.appearanceManager = manager
+        bannersCallback?.let(manager::setBannerWidgetCallback)
     }
 
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
@@ -67,7 +61,7 @@ class BannerViewFactory(
                 }
             }
         }
-        inAppStoryManager.setBannerWidgetCallback(bannersCallback)
+        inAppStoryManager?.setBannerWidgetCallback(bannersCallback)
     }
 
     private fun bannerDataToDto(data: BannerData): BannerDataDto {

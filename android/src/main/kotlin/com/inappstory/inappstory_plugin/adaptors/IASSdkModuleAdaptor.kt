@@ -52,9 +52,17 @@ class InappstorySdkModuleAdaptor(
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
-    private var bannerFactory: BannerViewFactory? = null
+    private val bannerFactory = BannerViewFactory(
+        flutterPluginBinding,
+        appearanceManager,
+    )
 
     init {
+        flutterPluginBinding.platformViewRegistry.registerViewFactory(
+            "banner-view",
+            bannerFactory,
+        )
+
         IASInAppMessagesHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
             object : IASInAppMessagesHostApi {
@@ -64,7 +72,7 @@ class InappstorySdkModuleAdaptor(
                     onlyPreloaded: Boolean,
                     bottomPadding: Double?
                 ) {
-                    Log.w("InAppStory", "IASInAppMessagesHostApi.showById called before initWith")
+                    Log.w("InAppStory", "showById called before initWith")
                 }
 
                 override fun showByEvent(
@@ -73,19 +81,19 @@ class InappstorySdkModuleAdaptor(
                     onlyPreloaded: Boolean,
                     bottomPadding: Double?
                 ) {
-                    Log.w("InAppStory", "IASInAppMessagesHostApi.showByEvent called before initWith")
+                    Log.w("InAppStory", "showByEvent called before initWith")
                 }
 
                 override fun preloadMessages(
                     ids: List<String>?,
                     callback: (Result<Boolean>) -> Unit
                 ) {
-                    Log.w("InAppStory", "IASInAppMessagesHostApi.preloadMessages called before initWith")
+                    Log.w("InAppStory", "preloadMessages called before initWith")
                     callback(Result.success(false))
                 }
 
                 override fun cancelByToken(token: String): Boolean {
-                    Log.w("InAppStory", "IASInAppMessagesHostApi.cancelByToken called before initWith")
+                    Log.w("InAppStory", "cancelByToken called before initWith")
                     return false
                 }
             }
@@ -95,15 +103,15 @@ class InappstorySdkModuleAdaptor(
             flutterPluginBinding.binaryMessenger,
             object : IASSingleStoryHostApi {
                 override fun showOnce(storyId: String, token: String) {
-                    Log.w("InAppStory", "IASSingleStoryHostApi.showOnce called before initWith")
+                    Log.w("InAppStory", "showOnce called before initWith")
                 }
 
                 override fun show(storyId: String, token: String) {
-                    Log.w("InAppStory", "IASSingleStoryHostApi.show called before initWith")
+                    Log.w("InAppStory", "show story by id called before initWith")
                 }
 
                 override fun cancelByToken(token: String): Boolean {
-                    Log.w("InAppStory", "IASSingleStoryHostApi.cancelByToken called before initWith")
+                    Log.w("InAppStory", "cancelByToken called before initWith")
                     return false
                 }
             }
@@ -118,11 +126,11 @@ class InappstorySdkModuleAdaptor(
                     token: String,
                     tags: List<String>
                 ) {
-                    Log.w("InAppStory", "IASOnboardingsHostApi.show called before initWith")
+                    Log.w("InAppStory", "show called before initWith")
                 }
 
                 override fun cancelByToken(token: String): Boolean {
-                    Log.w("InAppStory", "IASOnboardingsHostApi.cancelByToken called before initWith")
+                    Log.w("InAppStory", "cancelByToken called before initWith")
                     return false
                 }
             }
@@ -132,15 +140,15 @@ class InappstorySdkModuleAdaptor(
             flutterPluginBinding.binaryMessenger,
             object : IASGamesHostApi {
                 override fun openGame(gameId: String) {
-                    Log.w("InAppStory", "IASGamesHostApi.openGame called before initWith")
+                    Log.w("InAppStory", "openGame called before initWith")
                 }
 
                 override fun closeGame() {
-                    Log.w("InAppStory", "IASGamesHostApi.closeGame called before initWith")
+                    Log.w("InAppStory", "closeGame called before initWith")
                 }
 
                 override fun preloadGames() {
-                    Log.w("InAppStory", "IASGamesHostApi.preloadGames called before initWith")
+                    Log.w("InAppStory", "preloadGames called before initWith")
                 }
             }
         )
@@ -320,25 +328,7 @@ class InappstorySdkModuleAdaptor(
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, activityHolder, inAppStoryAPI.games)
 
-            if (bannerFactory == null) {
-                bannerFactory = BannerViewFactory(
-                    flutterPluginBinding,
-                    inAppStoryManager,
-                    appearanceManager
-                )
-            }
-
-            val registered = flutterPluginBinding
-                .platformViewRegistry
-                .registerViewFactory(
-                    "banner-view",
-                    bannerFactory!!,
-                )
-
-            if (!registered) {
-                bannerFactory?.setInAppStoryManager(inAppStoryManager)
-                bannerFactory?.setAppearanceManager(appearanceManager)
-            }
+            bannerFactory.setInAppStoryManager(inAppStoryManager)
 
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 

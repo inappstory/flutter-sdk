@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/generated/banner_place_generated.g.dart';
@@ -11,18 +12,19 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   VisibilityDetectorController.instance.updateInterval = Duration.zero;
 
-Future<void> _sendPlatformMessage(
-  String channelName,
-  List<Object?> message,
-  MessageCodec<Object?> codec,
-) async {
-  final encoded = codec.encodeMessage(message);
-  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .handlePlatformMessage(channelName, encoded, (reply) {});
-}
+  Future<void> _sendPlatformMessage(
+    String channelName,
+    List<Object?> message,
+    MessageCodec<Object?> codec,
+  ) async {
+    final encoded = codec.encodeMessage(message);
+    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage(channelName, encoded, (reply) {});
+  }
 
   group('BannerPlace Integration (Flutter ↔ Pigeon ↔ Native)', () {
-    testWidgets('GIVEN BannerPlace mounted WHEN initialized THEN platform view renders and loader shows',
+    testWidgets(
+        'GIVEN BannerPlace mounted WHEN initialized THEN platform view renders and loader shows',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -44,7 +46,8 @@ Future<void> _sendPlatformMessage(
       expect(find.text('Integration Banner Loader'), findsOneWidget);
     });
 
-    testWidgets('GIVEN BannerPlace WHEN loadingTimeout expires THEN onBannerPlaceLoadError is invoked and errorBuilder renders',
+    testWidgets(
+        'GIVEN BannerPlace WHEN loadingTimeout expires THEN onBannerPlaceLoadError is invoked and errorBuilder renders',
         (WidgetTester tester) async {
       String? errorMessage;
 
@@ -71,10 +74,12 @@ Future<void> _sendPlatformMessage(
       await tester.pumpAndSettle();
 
       expect(errorMessage, 'Banner loading timed out');
-      expect(find.text('Banner Error: Banner loading timed out'), findsOneWidget);
+      expect(
+          find.text('Banner Error: Banner loading timed out'), findsOneWidget);
     });
 
-    testWidgets('GIVEN BannerPlace with hideOnEmpty WHEN loading times out THEN it collapses to shrink size',
+    testWidgets(
+        'GIVEN BannerPlace with hideOnEmpty WHEN loading times out THEN it collapses to shrink size',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -93,15 +98,11 @@ Future<void> _sendPlatformMessage(
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
 
-      final sizedBox = tester.widget<SizedBox>(
-        find.byWidgetPredicate(
-          (w) => w is SizedBox && w.width == 0.0 && w.height == 0.0,
-        ),
-      );
-      expect(sizedBox, isNotNull);
+      expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
     });
 
-    testWidgets('GIVEN BannerPlace WHEN native sends onBannerPlaceLoadError THEN onBannerPlaceLoadError fires',
+    testWidgets(
+        'GIVEN BannerPlace WHEN native sends onBannerPlaceLoadError THEN onBannerPlaceLoadError fires',
         (WidgetTester tester) async {
       String? receivedError;
 
@@ -138,10 +139,12 @@ Future<void> _sendPlatformMessage(
       await tester.pumpAndSettle();
 
       expect(receivedError, 'Banners failed from native SDK');
-      expect(find.text('Native Failure: Banners failed from native SDK'), findsOneWidget);
+      expect(find.text('Native Failure: Banners failed from native SDK'),
+          findsOneWidget);
     });
 
-    testWidgets('GIVEN BannerPlace with hideOnEmpty WHEN native sends onBannerPlaceLoaded with size 0 THEN widget shrinks',
+    testWidgets(
+        'GIVEN BannerPlace with hideOnEmpty WHEN native sends onBannerPlaceLoaded with size 0 THEN widget shrinks',
         (WidgetTester tester) async {
       int? receivedSize;
 
@@ -173,15 +176,11 @@ Future<void> _sendPlatformMessage(
       await tester.pumpAndSettle();
 
       expect(receivedSize, 0);
-      final sizedBox = tester.widget<SizedBox>(
-        find.byWidgetPredicate(
-          (w) => w is SizedBox && w.width == 0.0 && w.height == 0.0,
-        ),
-      );
-      expect(sizedBox, isNotNull);
+      expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
     });
 
-    testWidgets('GIVEN BannerPlace WHEN native sends onBannerPlaceLoaded with content THEN loader fades out and callback receives size',
+    testWidgets(
+        'GIVEN BannerPlace WHEN native sends onBannerPlaceLoaded with content THEN loader fades out and callback receives size',
         (WidgetTester tester) async {
       int? loadedSize;
       int? loadedHeight;
@@ -231,7 +230,8 @@ Future<void> _sendPlatformMessage(
       expect(animatedOpacity.opacity, 0.0);
     });
 
-    testWidgets('GIVEN BannerPlace WHEN native sends onBannerScroll THEN onBannerScroll fires with index',
+    testWidgets(
+        'GIVEN BannerPlace WHEN native sends onBannerScroll THEN onBannerScroll fires with index',
         (WidgetTester tester) async {
       int? scrolledIndex;
 
@@ -266,7 +266,8 @@ Future<void> _sendPlatformMessage(
       expect(scrolledIndex, 2);
     });
 
-    testWidgets('GIVEN BannerPlace WHEN native sends onActionWith THEN onActionWith callback fires',
+    testWidgets(
+        'GIVEN BannerPlace WHEN native sends onActionWith THEN onActionWith callback fires',
         (WidgetTester tester) async {
       BannerData? actionBannerData;
       String? actionEventName;
@@ -322,7 +323,8 @@ Future<void> _sendPlatformMessage(
       expect(actionData?['key'], 'value');
     });
 
-    testWidgets('GIVEN BannerPlace WHEN placeId changes THEN changeBannerPlaceId host call is sent',
+    testWidgets(
+        'GIVEN BannerPlace WHEN placeId changes THEN changeBannerPlaceId host call is sent',
         (WidgetTester tester) async {
       String? capturedNewPlaceId;
 
@@ -376,7 +378,8 @@ Future<void> _sendPlatformMessage(
       expect(capturedNewPlaceId, 'place_v2');
     });
 
-    testWidgets('GIVEN BannerPlace WHEN disposed THEN deInitBannerPlace is invoked and channels cleaned up',
+    testWidgets(
+        'GIVEN BannerPlace WHEN disposed THEN deInitBannerPlace is invoked and channels cleaned up',
         (WidgetTester tester) async {
       bool deInitCalled = false;
 
@@ -426,11 +429,13 @@ Future<void> _sendPlatformMessage(
       expect(deInitCalled, isTrue);
     });
 
-    testWidgets('GIVEN BannerPlaceManager WHEN host API methods called THEN Pigeon requests are dispatched',
+    testWidgets(
+        'GIVEN BannerPlaceManager WHEN host API methods called THEN Pigeon requests are dispatched',
         (WidgetTester tester) async {
       final List<String> dispatchedCalls = [];
       final managerCodec = BannerPlaceManagerHostApi.pigeonChannelCodec;
-      final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
       final methods = [
         'loadBannerPlace',
@@ -477,16 +482,19 @@ Future<void> _sendPlatformMessage(
         },
       );
 
-      final manager = BannerPlaceManager();
-      await manager.loadBannerPlace('test_p');
-      await manager.reloadBannerPlace('test_p');
+      final manager = BannerPlaceManager.instance;
+      await manager.load('test_p');
+      await manager.reload('test_p');
       await manager.preloadBannerPlace('test_p');
       await manager.pauseAutoscroll('test_p');
       await manager.resumeAutoscroll('test_p');
       await manager.showNext('test_p');
       await manager.showPrevious('test_p');
-      await manager.showByIndex('test_p', 1);
-      await manager.setInteraction('test_p', true);
+      await manager.showByIndex(placeId: 'test_p', index: 1);
+      await manager.setInteraction(
+        placeId: 'test_p',
+        isInteractionEnabled: true,
+      );
 
       expect(dispatchedCalls, [
         'loadBannerPlace',

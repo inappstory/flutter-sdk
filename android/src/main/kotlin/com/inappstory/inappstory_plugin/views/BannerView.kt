@@ -4,7 +4,6 @@ import BannerDecorationDTO
 import BannerPlaceCallbackFlutterApi
 import BannerViewHostApi
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.TypedValue
@@ -35,11 +34,10 @@ import com.inappstory.sdk.banners.ui.carousel.BannerCarousel
 import com.inappstory.sdk.banners.ui.carousel.DefaultBannerCarouselAppearance
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
-import java.io.IOException
 
 class BannerView(
     private val context: Context,
-    id: Int,
+    private val id: Int,
     creationParams: Map<String?, Any?>?,
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
@@ -110,9 +108,9 @@ class BannerView(
         bannerDataListener.addListener(listener = this.bannersData)
 
         val loop: Boolean? = creationParams?.get("loop") as? Boolean?
-        val bannerOffset: Int? = creationParams?.get("bannerOffset") as? Int?
-        val bannersGap: Int? = creationParams?.get("bannersGap") as? Int?
-        val cornerRadius: Int? = creationParams?.get("cornerRadius") as? Int?
+        val bannerOffset: Int? = (creationParams?.get("bannerOffset") as? Number)?.toInt()
+        val bannersGap: Int? = (creationParams?.get("bannersGap") as? Number)?.toInt()
+        val cornerRadius: Int? = (creationParams?.get("cornerRadius") as? Number)?.toInt()
 
 
         val decoration: BannerDecorationDTO?
@@ -231,7 +229,7 @@ class BannerView(
         frame.addView(bannerPlace)
         val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
         if (autoLoad) {
-            bannerPlace?.loadBanners()
+            bannerPlace?.reloadBanners()
         }
     }
 
@@ -296,13 +294,15 @@ class BannerView(
         updateInteraction(frame.isEnabled)
     }
 
-    private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
-        val color: Long? = map["color"]?.let { it as Long }
-        val image: String? = map["image"]?.let { it as String }
-        return BannerDecorationDTO(
-            color = color,
-            image = image,
-        )
+    companion object {
+        internal fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
+            val color: Long? = (map["color"] as? Number)?.toLong()
+            val image: String? = map["image"] as? String
+            return BannerDecorationDTO(
+                color = color,
+                image = image,
+            )
+        }
     }
 
     fun Context.toDp(px: Int): Float {
@@ -312,14 +312,30 @@ class BannerView(
     }
 
     private fun safelyDisposeBannerPlace(carousel: BannerCarousel?) {
-        carousel?.setPlaceId(null)
-        carousel?.clear()
+        try {
+            carousel?.loadCallback(object : BannerPlaceLoadCallback("") {
+                override fun bannerPlaceLoaded(
+                    size: Int, bannerData: List<BannerData>, widgetHeight: Int
+                ) {}
+
+                override fun loadError() {}
+                override fun bannerLoaded(p0: Int, p1: Boolean) {}
+                override fun bannerLoadError(p0: Int, p1: Boolean) {}
+            })
+        } catch (_: Throwable) {}
+        try {
+            carousel?.navigationCallback(null)
+        } catch (_: Throwable) {}
+        try {
+            carousel?.setPlaceId(null)
+            carousel?.clear()
+        } catch (_: Throwable) {}
     }
 
     override fun changeBannerPlaceId(newPlaceId: String) {
         placeId = newPlaceId
         recreateBannerCarousel(newPlaceId)
-        bannerPlace?.loadBanners()
+        bannerPlace?.reloadBanners()
     }
 
     override fun deInitBannerPlace() {
@@ -400,8 +416,9 @@ class CustomBannerPlaceAppearance(
     }
 
     override fun loadingPlaceholder(context: Context?): View {
-        if (bannerDecoration != null) {
-            val placeholderView = FrameLayout(context!!)
+        val ctx = context ?: return super.loadingPlaceholder(null)
+        if (bannerDecoration != null && (bannerDecoration.color != null || bannerDecoration.image != null)) {
+            val placeholderView = FrameLayout(ctx)
             val layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
             )
@@ -412,16 +429,18 @@ class CustomBannerPlaceAppearance(
 
             if (bannerDecoration.image != null) {
                 val bitmap = createBitmapFromPath(bannerDecoration.image)
-                val imageView = AppCompatImageView(context)
-                imageView.layoutParams = FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
-                )
-                val params = imageView.layoutParams as FrameLayout.LayoutParams
-                params.gravity = Gravity.CENTER
-                imageView.layoutParams = params
-                imageView.setImageBitmap(bitmap)
+                if (bitmap != null) {
+                    val imageView = AppCompatImageView(ctx)
+                    val params = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER
+                    }
+                    imageView.layoutParams = params
+                    imageView.setImageBitmap(bitmap)
 
-                placeholderView.addView(imageView)
+                    placeholderView.addView(imageView)
+                }
             }
             return placeholderView
         } else {
@@ -430,17 +449,13 @@ class CustomBannerPlaceAppearance(
     }
 
     private fun createBitmapFromPath(path: String): Bitmap? {
-        try {
-            val bitmap: Bitmap?
+        return try {
             val assetPath: String = flutterAssets.getAssetFilePathBySubpath(path)
-            val fd: AssetFileDescriptor =
-                flutterPluginBinding.getApplicationContext().getAssets().openFd(assetPath)
-            val inputStream = fd.createInputStream()
-            bitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
-            return bitmap
-        } catch (_: IOException) {
-            return null
+            flutterPluginBinding.applicationContext.assets.open(assetPath).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 }

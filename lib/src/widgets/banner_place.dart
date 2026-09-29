@@ -7,6 +7,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../generated/banner_place_generated.g.dart'
     show BannerViewHostApi, BannerPlaceCallbackFlutterApi, BannerData;
 import '../helpers/id_gen.dart';
+import '../../inappstory_plugin_platform_interface.dart';
 import 'banner/android_banner_view.dart';
 import 'banner/ios_banner_view.dart';
 import 'builders/builders.dart'
@@ -78,6 +79,7 @@ class _BannerPlaceState extends State<BannerPlace>
   ModalRoute<dynamic>? _currentRoute;
   bool _lastInteractionState = true;
   bool _platformViewCreated = false;
+  bool _sdkInitialized = false;
   Timer? _timeoutTimer;
   int? _loadedSize;
   String? _errorMessage;
@@ -88,7 +90,34 @@ class _BannerPlaceState extends State<BannerPlace>
     _bannerPlaceState = BannerPlaceState.loading;
     BannerPlaceCallbackFlutterApi.setUp(this,
         messageChannelSuffix: bannerWidgetId);
-    _startTimeout();
+    _checkSdkInitialization();
+  }
+
+  Future<void> _checkSdkInitialization() async {
+    try {
+      final initialized =
+          await InappstoryPluginPlatform.instance.isInitialized();
+      if (!initialized) {
+        _showInitializationError('InAppStory SDK is not initialized');
+        return;
+      }
+      if (mounted) {
+        setState(() {
+          _sdkInitialized = true;
+          _bannerPlaceState = BannerPlaceState.loading;
+          _errorMessage = null;
+        });
+        _startTimeout();
+      }
+    } catch (error) {
+      _showInitializationError(
+          'Failed to check InAppStory SDK initialization: $error');
+    }
+  }
+
+  void _showInitializationError(String message) {
+    debugPrint(message);
+    onBannerPlaceLoadError(message);
   }
 
   void _startTimeout() {
@@ -128,10 +157,9 @@ class _BannerPlaceState extends State<BannerPlace>
     if (effectiveInteraction != _lastInteractionState) {
       _lastInteractionState = effectiveInteraction;
       if (_platformViewCreated) {
-        try {
-          BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-              .setInteraction(effectiveInteraction);
-        } catch (_) {}
+        BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+            .setInteraction(effectiveInteraction)
+            .ignore();
       }
     }
   }
@@ -156,6 +184,9 @@ class _BannerPlaceState extends State<BannerPlace>
   @override
   void didUpdateWidget(covariant BannerPlace oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (!_sdkInitialized) {
+      _checkSdkInitialization();
+    }
     if (oldWidget.placeId != widget.placeId) {
       _loadedSize = null;
       _errorMessage = null;
@@ -164,7 +195,8 @@ class _BannerPlaceState extends State<BannerPlace>
       });
       _startTimeout();
       BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-          .changeBannerPlaceId(widget.placeId);
+          .changeBannerPlaceId(widget.placeId)
+          .ignore();
     }
     if (oldWidget.isInteractionEnabled != widget.isInteractionEnabled) {
       _syncInteractionState();
@@ -203,7 +235,7 @@ class _BannerPlaceState extends State<BannerPlace>
           },
           child: Stack(
             children: [
-              buildPlatformView(context),
+              if (_sdkInitialized) buildPlatformView(context),
               Positioned.fill(
                 child: IgnorePointer(
                   ignoring: !showLoader,
@@ -241,7 +273,8 @@ class _BannerPlaceState extends State<BannerPlace>
             _platformViewCreated = true;
             if (!_lastInteractionState) {
               BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-                  .setInteraction(false);
+                  .setInteraction(false)
+                  .ignore();
             }
           },
         ),
@@ -261,7 +294,8 @@ class _BannerPlaceState extends State<BannerPlace>
             _platformViewCreated = true;
             if (!_lastInteractionState) {
               BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-                  .setInteraction(false);
+                  .setInteraction(false)
+                  .ignore();
             }
           },
         ),
@@ -279,7 +313,9 @@ class _BannerPlaceState extends State<BannerPlace>
     _currentRoute?.secondaryAnimation
         ?.removeStatusListener(_onRouteStatusChanged);
     _currentRoute = null;
-    BannerViewHostApi(messageChannelSuffix: bannerWidgetId).deInitBannerPlace();
+    BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
+        .deInitBannerPlace()
+        .ignore();
     BannerPlaceCallbackFlutterApi.setUp(null,
         messageChannelSuffix: bannerWidgetId);
     super.dispose();

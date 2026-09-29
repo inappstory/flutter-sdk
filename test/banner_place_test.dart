@@ -5,6 +5,17 @@ import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/generated/banner_place_generated.g.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+void mockSdkInitialized(bool? value) {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockDecodedMessageHandler<Object?>(
+    BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.isInitialized',
+      InappstorySdkModuleHostApi.pigeonChannelCodec,
+    ),
+    value == null ? null : (message) async => <Object?>[value],
+  );
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   VisibilityDetectorController.instance.updateInterval = Duration.zero;
@@ -13,6 +24,7 @@ void main() {
     late List<Map<String, dynamic>> binaryMessengerCalls;
 
     setUp(() {
+      mockSdkInitialized(true);
       binaryMessengerCalls = [];
       final codec = BannerViewHostApi.pigeonChannelCodec;
 
@@ -52,6 +64,7 @@ void main() {
     });
 
     tearDown(() {
+      mockSdkInitialized(null);
       final codec = BannerViewHostApi.pigeonChannelCodec;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockDecodedMessageHandler<Object?>(
@@ -226,7 +239,7 @@ void main() {
                 height: 140,
                 autoLoad: false,
                 hideOnEmpty: true,
-                loadingTimeout: const Duration(milliseconds: 50),
+                loadingTimeout: Duration(milliseconds: 50),
               ),
             ),
           ),
@@ -253,6 +266,7 @@ void main() {
             ),
           ),
         );
+        await tester.pump();
         // Off-platform the platform view slot renders this text.
         final platformView = find.text('Unknown platform', skipOffstage: false);
         final elementBefore = tester.element(platformView);
@@ -509,6 +523,108 @@ void main() {
         );
 
         expect(deInitCalled, isTrue);
+      });
+
+      testWidgets(
+          'WHEN widget is disposed without native channel listener THEN it does not throw unhandled exception',
+          (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: BannerPlace(
+                placeId: 'unconnected_place',
+                height: 140,
+                autoLoad: false,
+              ),
+            ),
+          ),
+        );
+
+        // Intentionally no handler registered on BinaryMessenger for deInitBannerPlace.
+        // Disposing the widget triggers deInitBannerPlace channel-error which must be ignored.
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: SizedBox.shrink(),
+            ),
+          ),
+        );
+        await tester.pump();
+      });
+
+      testWidgets(
+          'WHEN two BannerPlace widgets are built THEN both render and have distinct suffixes',
+          (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: Column(
+                children: [
+                  BannerPlace(
+                    placeId: 'place_1',
+                    height: 140,
+                    autoLoad: false,
+                  ),
+                  BannerPlace(
+                    placeId: 'place_2',
+                    height: 140,
+                    autoLoad: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        final detectors = tester
+            .widgetList<VisibilityDetector>(find.byType(VisibilityDetector))
+            .toList();
+        expect(detectors.length, 2);
+        final id1 = (detectors[0].key as ValueKey<String>).value;
+        final id2 = (detectors[1].key as ValueKey<String>).value;
+        expect(id1, isNotEmpty);
+        expect(id2, isNotEmpty);
+        expect(id1, isNot(equals(id2)));
+        expect(find.text('Unknown platform'), findsNWidgets(2));
+      });
+
+      testWidgets(
+          'WHEN built before SDK initialized AND updated after initialization THEN platform view renders',
+          (tester) async {
+        mockSdkInitialized(false);
+
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: BannerPlace(
+                placeId: 'test_place',
+                height: 140,
+                autoLoad: false,
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.text('Unknown platform'), findsNothing);
+
+        mockSdkInitialized(true);
+
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: BannerPlace(
+                placeId: 'test_place',
+                height: 140,
+                autoLoad: false,
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.text('Unknown platform'), findsOneWidget);
       });
     });
   });

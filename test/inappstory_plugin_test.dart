@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart'
-    show InAppStoryPlugin;
+import 'package:inappstory_plugin/inappstory_plugin.dart' show InAppStoryPlugin;
 import 'package:inappstory_plugin/inappstory_plugin_method_channel.dart';
 import 'package:inappstory_plugin/inappstory_plugin_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
