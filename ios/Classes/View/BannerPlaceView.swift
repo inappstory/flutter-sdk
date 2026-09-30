@@ -30,6 +30,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var setInteractionToken: UUID?
     private var onActionWith: UUID?
     private var loadErrorToken: UUID?
+    private var preloadErrorToken: UUID?
     private var isInteractionEnabled: Bool = true
 
     init(
@@ -221,6 +222,20 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
                     guard let self else { return }
                     self.callbackFlutterApi?.onBannerPlaceLoadError(
                         message: payload.message,
+                        completion: { _ in }
+                    )
+                }
+            }
+        }
+        self.preloadErrorToken = self.bannerPlaceManagerAdaptor?.subscribe(
+            BannerPlacePreloadError()
+        ) {
+            [weak self] payload in
+            guard let self else { return }
+            if payload == self.placeId {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.callbackFlutterApi?.onBannerPlacePreloadedError(
                         completion: { _ in }
                     )
                 }
@@ -422,6 +437,9 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         }
         if let loadErrorToken = self.loadErrorToken {
             self.bannerPlaceManagerAdaptor?.unsubscribe(loadErrorToken)
+        }
+        if let preloadErrorToken = self.preloadErrorToken {
+            self.bannerPlaceManagerAdaptor?.unsubscribe(preloadErrorToken)
         }
         self.bannerPlaceManagerAdaptor = nil
     }

@@ -82,6 +82,10 @@ struct BannerPlaceLoadError: EventKey {
     }
 }
 
+struct BannerPlacePreloadError: EventKey {
+    typealias Payload = String
+}
+
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     typealias Token = UUID
 
@@ -185,27 +189,64 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
         }
     }
 
+    private var isSdkInitialized: Bool {
+        return InAppStory.shared.settings != nil
+    }
+
     func loadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("loadBannerPlace called before initWith")
+            self.emitBannerPlaceLoadError(
+                placeId: placeId,
+                message: "InAppStory SDK is not initialized"
+            )
+            return
+        }
         self.emit(LoadBannerPlace(), payload: placeId)
     }
 
     func reloadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("reloadBannerPlace called before initWith")
+            self.emitBannerPlaceLoadError(
+                placeId: placeId,
+                message: "InAppStory SDK is not initialized"
+            )
+            return
+        }
         self.emit(ReloadBannerPlace(), payload: placeId)
     }
 
     func preloadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("preloadBannerPlace called before initWith")
+            self.emitBannerPlacePreloadError(placeId: placeId)
+            return
+        }
         self.emit(PreloadBannerPlace(), payload: placeId)
     }
 
     func showNext(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("showNext called before initWith")
+            return
+        }
         self.emit(ShowNext(), payload: placeId)
     }
 
     func showPrevious(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("showPrevious called before initWith")
+            return
+        }
         self.emit(ShowPrevious(), payload: placeId)
     }
 
     func showByIndex(placeId: String, index: Int64) throws {
+        guard isSdkInitialized else {
+            NSLog("showByIndex called before initWith")
+            return
+        }
         self.emit(
             ShowByIndex(),
             payload: ShowByIndex.Payload(placeId: placeId, index: index)
@@ -213,14 +254,26 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     }
 
     func pauseAutoscroll(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("pauseAutoscroll called before initWith")
+            return
+        }
         self.emit(PauseAutoscroll(), payload: placeId)
     }
 
     func resumeAutoscroll(placeId: String) throws {
+        guard isSdkInitialized else {
+            NSLog("resumeAutoscroll called before initWith")
+            return
+        }
         self.emit(ResumeAutoscroll(), payload: placeId)
     }
 
     func setInteraction(placeId: String, isInteractionEnabled: Bool) throws {
+        guard isSdkInitialized else {
+            NSLog("setInteraction called before initWith")
+            return
+        }
         self.emit(
             SetInteraction(),
             payload: SetInteraction.Payload(
@@ -252,6 +305,13 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
                 placeId: placeId,
                 message: message
             )
+        )
+    }
+
+    func emitBannerPlacePreloadError(placeId: String) {
+        self.emit(
+            BannerPlacePreloadError(),
+            payload: placeId
         )
     }
 }

@@ -11,6 +11,8 @@ import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
+import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadError
+import com.inappstory.inappstory_plugin.adaptors.BannerPlacePreloadError
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.adaptors.LoadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.PauseAutoscroll
@@ -62,6 +64,8 @@ class BannerView(
     private var pauseAutoscroll: Subscription
     private var resumeAutoscroll: Subscription
     private var setInteraction: Subscription
+    private var loadError: Subscription
+    private var preloadError: Subscription
 
     private var bannerLoadCallbackHandler: BannerPlaceLoadCallbackHandler? = null
 
@@ -226,6 +230,21 @@ class BannerView(
             }
             updateInteraction(payload.isInteractionEnabled)
         }
+        loadError = bannerPlaceManagerAdaptor.subscribe(BannerPlaceLoadError) { payload ->
+            if (payload.placeId == null || payload.placeId == placeId) {
+                flutterPluginBinding.runOnMainThread {
+                    resetLoadState()
+                    bannerPlaceCallback.onBannerPlaceLoadError(payload.message) {}
+                }
+            }
+        }
+        preloadError = bannerPlaceManagerAdaptor.subscribe(BannerPlacePreloadError) { payload ->
+            if (payload == placeId) {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onBannerPlacePreloadedError {}
+                }
+            }
+        }
         frame.addView(bannerPlace)
         val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
         if (autoLoad) {
@@ -349,6 +368,8 @@ class BannerView(
         pauseAutoscroll.unsubscribe()
         resumeAutoscroll.unsubscribe()
         setInteraction.unsubscribe()
+        loadError.unsubscribe()
+        preloadError.unsubscribe()
         frame.removeAllViews()
         safelyDisposeBannerPlace(bannerPlace)
         bannerPlace = null

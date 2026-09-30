@@ -106,5 +106,26 @@ void main() {
         });
       });
     });
+
+    group('GIVEN host api throws an error', () {
+      test('WHEN load is called THEN error is rethrown', () async {
+        final codec = BannerPlaceManagerHostApi.pigeonChannelCodec;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(
+          BasicMessageChannel<Object?>(
+            'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.loadBannerPlace',
+            codec,
+          ),
+          (message) async {
+            throw PlatformException(code: 'error');
+          },
+        );
+
+        expect(
+          BannerPlaceManager.instance.load('test_place'),
+          throwsA(isA<PlatformException>()),
+        );
+      });
+    });
   });
 }

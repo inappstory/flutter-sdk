@@ -3,6 +3,9 @@ package com.inappstory.inappstory_plugin
 import BannerDecorationDTO
 import BannerPlaceCallbackFlutterApi
 import BannerData as PigeonBannerData
+import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadError
+import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadErrorPayload
+import com.inappstory.inappstory_plugin.adaptors.BannerPlacePreloadError
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.adaptors.LoadBannerPlace
 import com.inappstory.inappstory_plugin.adaptors.PauseAutoscroll
@@ -418,5 +421,81 @@ class BannerViewTest {
         assertNull(dto.color)
         assertNull(dto.image)
     }
+
+    @Test
+    fun bannerPlaceManagerAdaptor_beforeSdkInit_doesNotEmitEvents() {
+        val binding = org.mockito.Mockito.mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        val messenger = FakeBinaryMessenger()
+        org.mockito.Mockito.`when`(binding.binaryMessenger).thenReturn(messenger)
+
+        val adaptor = IASBannerPlaceManagerAdaptor(binding)
+        var loadEventReceived = false
+        var reloadEventReceived = false
+        var preloadEventReceived = false
+        var showNextEventReceived = false
+        var showPreviousEventReceived = false
+        var showByIndexEventReceived = false
+        var pauseAutoscrollEventReceived = false
+        var resumeAutoscrollEventReceived = false
+        var setInteractionEventReceived = false
+
+        adaptor.subscribe(LoadBannerPlace) { loadEventReceived = true }
+        adaptor.subscribe(ReloadBannerPlace) { reloadEventReceived = true }
+        adaptor.subscribe(PreloadBannerPlace) { preloadEventReceived = true }
+        adaptor.subscribe(ShowNext) { showNextEventReceived = true }
+        adaptor.subscribe(ShowPrevious) { showPreviousEventReceived = true }
+        adaptor.subscribe(ShowByIndex) { showByIndexEventReceived = true }
+        adaptor.subscribe(PauseAutoscroll) { pauseAutoscrollEventReceived = true }
+        adaptor.subscribe(ResumeAutoscroll) { resumeAutoscrollEventReceived = true }
+        adaptor.subscribe(SetInteraction) { setInteractionEventReceived = true }
+
+        adaptor.loadBannerPlace("test_place")
+        adaptor.reloadBannerPlace("test_place")
+        adaptor.preloadBannerPlace("test_place")
+        adaptor.showNext("test_place")
+        adaptor.showPrevious("test_place")
+        adaptor.showByIndex("test_place", 0)
+        adaptor.pauseAutoscroll("test_place")
+        adaptor.resumeAutoscroll("test_place")
+        adaptor.setInteraction("test_place", false)
+
+        assertFalse(loadEventReceived)
+        assertFalse(reloadEventReceived)
+        assertFalse(preloadEventReceived)
+        assertFalse(showNextEventReceived)
+        assertFalse(showPreviousEventReceived)
+        assertFalse(showByIndexEventReceived)
+        assertFalse(pauseAutoscrollEventReceived)
+        assertFalse(resumeAutoscrollEventReceived)
+        assertFalse(setInteractionEventReceived)
+    }
+
+    @Test
+    fun bannerPlaceManagerAdaptor_beforeSdkInit_emitsLoadAndPreloadErrors() {
+        val binding = org.mockito.Mockito.mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        val messenger = FakeBinaryMessenger()
+        org.mockito.Mockito.`when`(binding.binaryMessenger).thenReturn(messenger)
+
+        val adaptor = IASBannerPlaceManagerAdaptor(binding)
+        val loadErrors = mutableListOf<BannerPlaceLoadErrorPayload>()
+        val preloadErrors = mutableListOf<String>()
+
+        adaptor.subscribe(BannerPlaceLoadError) { loadErrors.add(it) }
+        adaptor.subscribe(BannerPlacePreloadError) { preloadErrors.add(it) }
+
+        adaptor.loadBannerPlace("test_place_1")
+        adaptor.reloadBannerPlace("test_place_2")
+        adaptor.preloadBannerPlace("test_place_3")
+
+        assertEquals(2, loadErrors.size)
+        assertEquals("test_place_1", loadErrors[0].placeId)
+        assertEquals("InAppStory SDK is not initialized", loadErrors[0].message)
+        assertEquals("test_place_2", loadErrors[1].placeId)
+        assertEquals("InAppStory SDK is not initialized", loadErrors[1].message)
+
+        assertEquals(1, preloadErrors.size)
+        assertEquals("test_place_3", preloadErrors[0])
+    }
 }
+
 

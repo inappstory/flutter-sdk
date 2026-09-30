@@ -1,10 +1,18 @@
+## [0.9.6-rc.1]
+
+### Fixed
+- Fixed Android crash when disposing `BannerPlace` widgets
+- Fixed `BannerDecoration` color decoding and numeric parameter parsing on Android
+- Added safety check for SDK initialization before rendering `BannerPlace`
+- Suppressed unhandled channel errors on banner platform view disposal
+
 ## [0.9.5]
 
 ### Fixed
 
-- Fixed crash on reloadFeed after native adapter disposal.
-- Fixed empty favorites list navigation behavior.
-- Added Android pre-init safety for host APIs.
+- Fixed crash on reloadFeed after native adapter disposal
+- Fixed empty favorites list navigation behavior
+- Added Android pre-init safety for host APIs
 
 ### Changed
 
