@@ -1,4 +1,4 @@
-## [0.9.6-rc.1]
+## [0.9.6]
 
 ### Fixed
 - Fixed Android crash when disposing `BannerPlace` widgets
