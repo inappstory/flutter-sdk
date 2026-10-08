@@ -52,9 +52,17 @@ class InappstorySdkModuleAdaptor(
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
-    private var bannerFactory: BannerViewFactory? = null
+    private val bannerFactory = BannerViewFactory(
+        flutterPluginBinding,
+        appearanceManager,
+    )
 
     init {
+        flutterPluginBinding.platformViewRegistry.registerViewFactory(
+            "banner-view",
+            bannerFactory,
+        )
+
         IASInAppMessagesHostApi.setUp(
             flutterPluginBinding.binaryMessenger,
             object : IASInAppMessagesHostApi {
@@ -320,25 +328,7 @@ class InappstorySdkModuleAdaptor(
 
             iasGames = IASGamesAdaptor(flutterPluginBinding, activityHolder, inAppStoryAPI.games)
 
-            if (bannerFactory == null) {
-                bannerFactory = BannerViewFactory(
-                    flutterPluginBinding,
-                    inAppStoryManager,
-                    appearanceManager
-                )
-            }
-
-            val registered = flutterPluginBinding
-                .platformViewRegistry
-                .registerViewFactory(
-                    "banner-view",
-                    bannerFactory!!,
-                )
-
-            if (!registered) {
-                bannerFactory?.setInAppStoryManager(inAppStoryManager)
-                bannerFactory?.setAppearanceManager(appearanceManager)
-            }
+            bannerFactory.setInAppStoryManager(inAppStoryManager)
 
             InAppStoryManager.logger = IASLoggerImpl(flutterPluginBinding);
 

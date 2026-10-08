@@ -23,6 +23,8 @@ import com.inappstory.inappstory_plugin.adaptors.ShowByIndex
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
 import com.inappstory.inappstory_plugin.adaptors.Subscription
+import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadError
+import com.inappstory.inappstory_plugin.adaptors.BannerPlacePreloadError
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
@@ -54,6 +56,9 @@ class BannerView(
     private val frame: FrameLayout
 
     private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
+
+    private var loadError: Subscription
+    private var preloadError: Subscription
 
     private var loadBannerPlace: Subscription
     private var reloadBannerPlace: Subscription
@@ -228,10 +233,26 @@ class BannerView(
             }
             updateInteraction(payload.isInteractionEnabled)
         }
+
+        loadError = bannerPlaceManagerAdaptor.subscribe(BannerPlaceLoadError) { payload ->
+            if (payload.placeId == null || payload.placeId == placeId) {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onBannerPlaceLoadError(payload.message) {}
+                }
+            }
+        }
+        preloadError = bannerPlaceManagerAdaptor.subscribe(BannerPlacePreloadError) { payload ->
+            if (payload == placeId) {
+                flutterPluginBinding.runOnMainThread {
+                    bannerPlaceCallback.onBannerPlacePreloadedError {}
+                }
+            }
+        }
+
         frame.addView(bannerPlace)
         val autoLoad: Boolean = creationParams?.get("autoLoad") as? Boolean? ?: true
         if (autoLoad) {
-            bannerPlace?.loadBanners()
+            bannerPlace?.reloadBanners()
         }
     }
 
@@ -296,13 +317,15 @@ class BannerView(
         updateInteraction(frame.isEnabled)
     }
 
-    private fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
-        val color: Long? = map["color"]?.let { it as Long }
-        val image: String? = map["image"]?.let { it as String }
-        return BannerDecorationDTO(
-            color = color,
-            image = image,
-        )
+    companion object {
+        internal fun decorationToDTO(map: Map<String, Any?>): BannerDecorationDTO {
+            val color: Long? = (map["color"] as? Number)?.toLong()
+            val image: String? = map["image"] as? String
+            return BannerDecorationDTO(
+                color = color,
+                image = image,
+            )
+        }
     }
 
     fun Context.toDp(px: Int): Float {
@@ -312,14 +335,30 @@ class BannerView(
     }
 
     private fun safelyDisposeBannerPlace(carousel: BannerCarousel?) {
-        carousel?.setPlaceId(null)
-        carousel?.clear()
+        try {
+            carousel?.loadCallback(object : BannerPlaceLoadCallback("") {
+                override fun bannerPlaceLoaded(
+                    size: Int, bannerData: List<BannerData>, widgetHeight: Int
+                ) {}
+
+                override fun loadError() {}
+                override fun bannerLoaded(p0: Int, p1: Boolean) {}
+                override fun bannerLoadError(p0: Int, p1: Boolean) {}
+            })
+        } catch (_: Throwable) {}
+        try {
+            carousel?.navigationCallback(null)
+        } catch (_: Throwable) {}
+        try {
+            carousel?.setPlaceId(null)
+            carousel?.clear()
+        } catch (_: Throwable) {}
     }
 
     override fun changeBannerPlaceId(newPlaceId: String) {
         placeId = newPlaceId
         recreateBannerCarousel(newPlaceId)
-        bannerPlace?.loadBanners()
+        bannerPlace?.reloadBanners()
     }
 
     override fun deInitBannerPlace() {
@@ -333,6 +372,8 @@ class BannerView(
         pauseAutoscroll.unsubscribe()
         resumeAutoscroll.unsubscribe()
         setInteraction.unsubscribe()
+        loadError.unsubscribe()
+        preloadError.unsubscribe()
         frame.removeAllViews()
         safelyDisposeBannerPlace(bannerPlace)
         bannerPlace = null
@@ -400,8 +441,9 @@ class CustomBannerPlaceAppearance(
     }
 
     override fun loadingPlaceholder(context: Context?): View {
-        if (bannerDecoration != null) {
-            val placeholderView = FrameLayout(context!!)
+        val ctx = context ?: return super.loadingPlaceholder(null)
+        if (bannerDecoration != null && (bannerDecoration.color != null || bannerDecoration.image != null)) {
+            val placeholderView = FrameLayout(ctx)
             val layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
             )
@@ -412,16 +454,18 @@ class CustomBannerPlaceAppearance(
 
             if (bannerDecoration.image != null) {
                 val bitmap = createBitmapFromPath(bannerDecoration.image)
-                val imageView = AppCompatImageView(context)
-                imageView.layoutParams = FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
-                )
-                val params = imageView.layoutParams as FrameLayout.LayoutParams
-                params.gravity = Gravity.CENTER
-                imageView.layoutParams = params
-                imageView.setImageBitmap(bitmap)
+                if (bitmap != null) {
+                    val imageView = AppCompatImageView(ctx)
+                    val params = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER
+                    }
+                    imageView.layoutParams = params
+                    imageView.setImageBitmap(bitmap)
 
-                placeholderView.addView(imageView)
+                    placeholderView.addView(imageView)
+                }
             }
             return placeholderView
         } else {
@@ -430,17 +474,13 @@ class CustomBannerPlaceAppearance(
     }
 
     private fun createBitmapFromPath(path: String): Bitmap? {
-        try {
-            val bitmap: Bitmap?
+        return try {
             val assetPath: String = flutterAssets.getAssetFilePathBySubpath(path)
-            val fd: AssetFileDescriptor =
-                flutterPluginBinding.getApplicationContext().getAssets().openFd(assetPath)
-            val inputStream = fd.createInputStream()
-            bitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
-            return bitmap
-        } catch (_: IOException) {
-            return null
+            flutterPluginBinding.applicationContext.assets.open(assetPath).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+        } catch (_: Exception) {
+            null
         }
     }
 }

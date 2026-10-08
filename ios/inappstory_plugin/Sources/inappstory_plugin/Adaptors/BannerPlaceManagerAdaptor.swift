@@ -82,6 +82,10 @@ struct BannerPlaceLoadError: EventKey {
     }
 }
 
+struct BannerPlacePreloadError: EventKey {
+    typealias Payload = String
+}
+
 class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     typealias Token = UUID
 
@@ -185,27 +189,49 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
         }
     }
 
+    private var isSdkInitialized: Bool {
+        return InAppStory.shared.isInit == true
+    }
+
     func loadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            print("InAppStory: loadBannerPlace called before initWith")
+            emitBannerPlaceLoadError(placeId: placeId, message: "InAppStory SDK is not initialized")
+            return
+        }
         self.emit(LoadBannerPlace(), payload: placeId)
     }
 
     func reloadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            print("InAppStory: reloadBannerPlace called before initWith")
+            emitBannerPlaceLoadError(placeId: placeId, message: "InAppStory SDK is not initialized")
+            return
+        }
         self.emit(ReloadBannerPlace(), payload: placeId)
     }
 
     func preloadBannerPlace(placeId: String) throws {
+        guard isSdkInitialized else {
+            print("InAppStory: preloadBannerPlace called before initWith")
+            emitBannerPlacePreloadError(placeId: placeId)
+            return
+        }
         self.emit(PreloadBannerPlace(), payload: placeId)
     }
 
     func showNext(placeId: String) throws {
+        guard isSdkInitialized else { return }
         self.emit(ShowNext(), payload: placeId)
     }
 
     func showPrevious(placeId: String) throws {
+        guard isSdkInitialized else { return }
         self.emit(ShowPrevious(), payload: placeId)
     }
 
     func showByIndex(placeId: String, index: Int64) throws {
+        guard isSdkInitialized else { return }
         self.emit(
             ShowByIndex(),
             payload: ShowByIndex.Payload(placeId: placeId, index: index)
@@ -213,14 +239,17 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     }
 
     func pauseAutoscroll(placeId: String) throws {
+        guard isSdkInitialized else { return }
         self.emit(PauseAutoscroll(), payload: placeId)
     }
 
     func resumeAutoscroll(placeId: String) throws {
+        guard isSdkInitialized else { return }
         self.emit(ResumeAutoscroll(), payload: placeId)
     }
 
     func setInteraction(placeId: String, isInteractionEnabled: Bool) throws {
+        guard isSdkInitialized else { return }
         self.emit(
             SetInteraction(),
             payload: SetInteraction.Payload(
@@ -253,5 +282,9 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
                 message: message
             )
         )
+    }
+
+    func emitBannerPlacePreloadError(placeId: String) {
+        self.emit(BannerPlacePreloadError(), payload: placeId)
     }
 }

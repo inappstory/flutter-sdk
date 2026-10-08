@@ -21,7 +21,26 @@ Future<void> sendPlatformMessage(
       .handlePlatformMessage(channelName, encoded, (reply) {});
 }
 
+void mockSdkInitialized(bool? value) {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockDecodedMessageHandler<Object?>(
+    BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.isInitialized',
+      InappstorySdkModuleHostApi.pigeonChannelCodec,
+    ),
+    value == null ? null : (message) async => <Object?>[value],
+  );
+}
+
   group('BannerPlace Integration (Flutter ↔ Pigeon ↔ Native)', () {
+    setUp(() {
+      mockSdkInitialized(true);
+    });
+
+    tearDown(() {
+      mockSdkInitialized(null);
+    });
+
     testWidgets('GIVEN BannerPlace mounted WHEN initialized THEN platform view renders and loader shows',
         (WidgetTester tester) async {
       await tester.pumpWidget(

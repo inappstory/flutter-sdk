@@ -370,4 +370,52 @@ class BannerViewTest {
         assertEquals(12, appearance.cornerRadius())
         assertTrue(appearance.loop())
     }
+
+    @Test
+    fun decorationToDTO_handlesDoubleAndIntColors() {
+        val dto1 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to 4294967295.0))
+        assertEquals(4294967295L, dto1.color)
+
+        val dto2 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to -1))
+        assertEquals(-1L, dto2.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesInt32ColorAsLong() {
+        // StandardMessageCodec sends ARGB32 values that fit in 32 bits as
+        // java.lang.Integer; alpha < 0x80 lands here and used to throw
+        // ClassCastException on the former `it as Long` cast.
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x33FFFFFF))
+
+        assertEquals(0x33FFFFFFL, dto.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesColorAcrossTheInt32Boundary() {
+        val belowBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x7F000000))
+        assertEquals(0x7F000000L, belowBoundary.color)
+
+        val aboveBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x80000000L))
+        assertEquals(0x80000000L, aboveBoundary.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesOpaqueColorSentAsLong() {
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0xFF000000L))
+
+        assertEquals(0xFF000000L, dto.color)
+    }
+
+    @Test
+    fun decorationToDTO_returnsNullColorAndImageWhenAbsent() {
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(emptyMap())
+
+        assertNull(dto.color)
+        assertNull(dto.image)
+    }
 }

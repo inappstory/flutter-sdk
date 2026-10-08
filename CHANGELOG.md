@@ -8,27 +8,32 @@
 ### Fixed
 
 - Avoid closing favorites sheet on initial empty state
+- Fixed Android crash on `BannerDecoration` color decoding: colors with alpha < 0x80 arrive as `java.lang.Integer` and used to crash platform view creation with `ClassCastException`
+- Added pre-init safety and stability improvements for BannerPlaces (ported from 0.9.x)
+
+## [0.9.6]
 
 ### Fixed
-
-- Avoid closing favorites sheet on initial empty state
+- Fixed Android crash when disposing `BannerPlace` widgets
+- Fixed `BannerDecoration` color decoding and numeric parameter parsing on Android
+- Added safety check for SDK initialization before rendering `BannerPlace`
+- Suppressed unhandled channel errors on banner platform view disposal
 
 ## [0.9.5]
 
 ### Fixed
 
-- Fixed reloads after the native list adapter is disposed.
-- Fixed empty favorites list navigation behavior.
-- Added Android pre-init safety for host APIs.
+- Fixed crash on reloadFeed after native adapter disposal
+- Fixed empty favorites list navigation behavior
+- Added Android pre-init safety for host APIs
 
 ### Changed
 
-- Upgraded Gradle to 8.14, AGP to 8.11.1, and Kotlin to 2.2.20 for Android
-- Renamed `description` field to `productDescription` in `GoodsItemDataDto` and to `offerDescription` in `ProductCartOffer` to resolve Swift property name collisions in Pigeon generation
+- Updated Android SDK to 1.25.6 and iOS SDK to 1.29.8
 
 ## [0.9.4]
 
-## Fixed
+### Fixed
 
 - Improved In App Messages stability
 - Banners caused app to crash after a failed load and reload
