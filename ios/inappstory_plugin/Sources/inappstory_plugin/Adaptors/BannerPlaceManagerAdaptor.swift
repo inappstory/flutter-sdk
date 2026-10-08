@@ -190,7 +190,7 @@ class BannerPlaceManagerAdaptor: BannerPlaceManagerHostApi {
     }
 
     private var isSdkInitialized: Bool {
-        return InAppStory.shared.isInit == true
+        return InAppStory.shared.settings != nil
     }
 
     func loadBannerPlace(placeId: String) throws {
