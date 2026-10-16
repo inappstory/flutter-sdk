@@ -8,7 +8,7 @@ import 'package:pigeon/pigeon.dart';
   kotlinOptions: KotlinOptions(
     includeErrorClass: false,
   ),
-  swiftOut: 'ios/Classes/Generated/AppearanceManagerGenerated.g.swift',
+  swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/Generated/AppearanceManagerGenerated.g.swift',
   swiftOptions: SwiftOptions(
     includeErrorClass: false,
   ),

@@ -1,3 +1,14 @@
+## [0.10.0]
+
+### Added
+
+- Swift Package Manager (SPM) support for iOS with dual CocoaPods compatibility
+- Extra Fields feature
+
+### Fixed
+
+- Avoid closing favorites sheet on initial empty state
+
 ## [0.9.6]
 
 ### Fixed
@@ -37,6 +48,7 @@
 
 ### Added
 
+- Support `Toast` feature
 - `isInteractionEnabled` parameter in `BannerPlace` widget to control touch interaction
 - `setInteraction` method in `BannerPlaceManager`
 

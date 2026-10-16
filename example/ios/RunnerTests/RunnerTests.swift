@@ -46,13 +46,13 @@ class MockRegistrar: NSObject, FlutterPluginRegistrar {
   func register(_ delegate: FlutterPlugin) {}
   func addMethodCallDelegate(_ delegate: FlutterPlugin, channel: FlutterMethodChannel) {}
   func addApplicationDelegate(_ delegate: FlutterPlugin) {}
-  func addSceneDelegate(_ delegate: FlutterSceneLifeCycleDelegate) {}
   func lookupKey(forAsset asset: String) -> String { asset }
   func lookupKey(forAsset asset: String, fromPackage package: String) -> String { asset }
-  func register(_ factory: FlutterPlatformViewFactory, withId factoryId: String) {}
-  func register(_ factory: FlutterPlatformViewFactory, withId factoryId: String, gestureRecognizersBlockingPolicy: FlutterPlatformViewGestureRecognizersBlockingPolicy) {}
   func publish(_ value: NSObject) {}
   func valuePublished(byPlugin pluginKey: String) -> NSObject? { nil }
+  func addSceneDelegate(_ delegate: any FlutterSceneLifeCycleDelegate) {}
+  func register(_ factory: FlutterPlatformViewFactory, withId factoryId: String) {}
+  func register(_ factory: FlutterPlatformViewFactory, withId factoryId: String, gestureRecognizersBlockingPolicy: FlutterPlatformViewGestureRecognizersBlockingPolicy) {}
 }
 
 class BannerPlaceTests: XCTestCase {

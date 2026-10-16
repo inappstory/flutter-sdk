@@ -6,7 +6,7 @@ import 'package:pigeon/pigeon.dart';
   kotlinOut:
       'android/src/main/kotlin/com/inappstory/inappstory_plugin/PigeonGeneratedPrivate.g.kt',
   kotlinOptions: KotlinOptions(includeErrorClass: false),
-  swiftOut: 'ios/Classes/PigeonGeneratedPrivate.g.swift',
+  swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/PigeonGeneratedPrivate.g.swift',
   swiftOptions: SwiftOptions(includeErrorClass: false),
 ))
 

@@ -127,7 +127,7 @@ class IASManagerAdaptor(
                                     offerId = offer.offerId,
                                     groupId = offer.groupId,
                                     name = offer.name,
-                                    description = offer.description,
+                                    offerDescription = offer.description,
                                     url = offer.url,
                                     coverUrl = offer.coverUrl,
                                     imageUrls = offer.imageUrls,
@@ -196,7 +196,7 @@ class IASManagerAdaptor(
         result.offerId = offerFlutter.offerId
         result.groupId = offerFlutter.groupId
         result.name = offerFlutter.name
-        result.description = offerFlutter.description
+        result.description = offerFlutter.offerDescription
         result.url = offerFlutter.url
         result.coverUrl = offerFlutter.coverUrl
         result.imageUrls = offerFlutter.imageUrls

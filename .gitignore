@@ -41,3 +41,11 @@ graphify-out/
 build/
 example_extended/lib/keys.dart
 skills-lock.json
+
+# Swift Package Manager
+.build/
+.swiftpm/
+ios/FlutterFramework
+
+
+

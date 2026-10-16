@@ -65,6 +65,7 @@ fun mapStoryData(storyData: StoryData): StoryDataDto {
         slidesCount = storyData.slidesCount().toLong(),
         storyType = storyData.contentType()?.toStoryTypeDto(),
         sourceType = storyData.sourceType()?.toDto(),
+        extraFields = storyData.extraFields(),
     )
 }
 
@@ -88,6 +89,7 @@ fun mapInAppMessageDataDto(inAppMessageData: InAppMessageData): InAppMessageData
         id = inAppMessageData.id().toLong(),
         title = inAppMessageData.title(),
         event = inAppMessageData.event(),
-        messageType = inAppMessageData.messageType()?.toDto()
+        messageType = inAppMessageData.messageType()?.toDto(),
+        extraFields = inAppMessageData.extraFields(),
     )
 }

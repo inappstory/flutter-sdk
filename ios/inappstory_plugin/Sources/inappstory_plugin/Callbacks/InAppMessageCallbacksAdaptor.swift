@@ -65,7 +65,8 @@ class InAppMessageCallbacksAdaptor {
             id: Int64(arg.id ?? "0") ?? 0,
             title: nil,
             event: arg.campaign,
-            messageType: mapMessageType(arg.messageType)
+            messageType: mapMessageType(arg.messageType),
+            extraFields: arg.extraFields
         )
     }
 

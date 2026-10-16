@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inappstory_plugin/src/controllers/feed_stories_controller.dart';
 import 'package:inappstory_plugin/src/widgets/grid_view_favourites_widget.dart';
 
 class _TrackingNavigatorObserver extends NavigatorObserver {
-  final poppedRoutes = <Route<dynamic>>[];
   int popCount = 0;
+  final poppedRoutes = <Route<dynamic>>[];
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
@@ -33,6 +34,7 @@ void main() {
 
       Future<void> pumpHarness(
         WidgetTester tester, {
+        FeedStoriesController? feedController,
         Widget Function(BuildContext)? loaderBuilder,
         Widget Function(BuildContext, Object?)? errorBuilder,
       }) async {
@@ -48,6 +50,7 @@ void main() {
                         builder: (_) => Scaffold(
                           body: GridViewFavouritesWidget(
                             feed: 'feedA',
+                            controller: feedController,
                             storiesStream: controller.stream,
                             loaderBuilder: loaderBuilder,
                             errorBuilder: errorBuilder,
@@ -96,6 +99,26 @@ void main() {
         expect(navObserver.popCount, 0);
       });
 
+      testWidgets('WHEN favorites fail to load THEN retry reloads the feed',
+          (tester) async {
+        var reloadCount = 0;
+        final feedController = FeedStoriesController()
+          ..attach(() async => reloadCount++);
+
+        await pumpHarness(tester, feedController: feedController);
+
+        controller.addError(Exception('load failed'));
+        await tester.pump();
+        expect(find.text('Не удалось загрузить избранное'), findsOneWidget);
+        expect(navObserver.popCount, 0);
+
+        await tester.tap(find.text('Повторить'));
+        await tester.pump();
+
+        expect(reloadCount, 1);
+        expect(navObserver.popCount, 0);
+      });
+
       testWidgets(
           'WHEN stream emits non-empty list '
           'THEN items are displayed and route remains open', (tester) async {
@@ -114,12 +137,33 @@ void main() {
       });
 
       testWidgets(
-          'WHEN empty favorites list is emitted '
-          'THEN the route closes without throwing setState during build',
-          (tester) async {
+          'WHEN initial empty favorites list is emitted '
+          'THEN route remains open', (tester) async {
         await pumpHarness(tester);
 
         expect(find.byType(GridViewFavouritesWidget), findsOneWidget);
+
+        controller.add(<Widget>[]);
+        await tester.pump();
+
+        expect(find.byType(GridViewFavouritesWidget), findsOneWidget);
+        expect(navObserver.popCount, 0);
+      });
+
+      testWidgets(
+          'WHEN favorites arrive after an empty update and are removed '
+          'THEN the route closes', (tester) async {
+        await pumpHarness(tester);
+
+        controller.add(<Widget>[]);
+        await tester.pump();
+        expect(navObserver.popCount, 0);
+
+        controller.add(<Widget>[const SizedBox(key: ValueKey('favorite'))]);
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+        expect(navObserver.popCount, 0);
+        expect(find.byKey(const ValueKey('favorite')), findsOneWidget);
 
         controller.add(<Widget>[]);
         await tester.pump();
@@ -156,6 +200,11 @@ void main() {
           (tester) async {
         await pumpHarness(tester);
 
+        // Display items first
+        controller.add([const Text('Story 1')]);
+        await tester.pump();
+        expect(find.text('Story 1'), findsOneWidget);
+
         // Multiple empty events in quick succession.
         controller.add(<Widget>[]);
         controller.add(<Widget>[]);
@@ -175,6 +224,10 @@ void main() {
           'WHEN another route is pushed on top '
           'THEN emitting empty does not pop the foreign route', (tester) async {
         await pumpHarness(tester);
+
+        // Display item first
+        controller.add([const Text('Story 1')]);
+        await tester.pump();
 
         // Push another dialog/route on top of the favorites widget.
         final context = tester.element(find.byType(GridViewFavouritesWidget));
@@ -200,6 +253,10 @@ void main() {
           'WHEN the route is already popped '
           'THEN emitting empty does not pop again', (tester) async {
         await pumpHarness(tester);
+
+        // Display item first
+        controller.add([const Text('Story 1')]);
+        await tester.pump();
 
         // User pops the route.
         Navigator.of(tester.element(find.byType(GridViewFavouritesWidget)))

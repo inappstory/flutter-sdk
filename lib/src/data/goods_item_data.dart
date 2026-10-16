@@ -29,7 +29,7 @@ final class GoodsItemData {
     return GoodsItemDataDto(
       sku: sku,
       title: title,
-      description: description,
+      productDescription: description,
       image: image,
       oldPrice: oldPrice,
       price: price,

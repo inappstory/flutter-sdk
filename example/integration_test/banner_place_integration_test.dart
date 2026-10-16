@@ -1,30 +1,47 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/generated/banner_place_generated.g.dart';
 import 'package:integration_test/integration_test.dart';
+// ignore: depend_on_referenced_packages
 import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   VisibilityDetectorController.instance.updateInterval = Duration.zero;
 
-  Future<void> _sendPlatformMessage(
-    String channelName,
-    List<Object?> message,
-    MessageCodec<Object?> codec,
-  ) async {
-    final encoded = codec.encodeMessage(message);
-    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage(channelName, encoded, (reply) {});
-  }
+Future<void> sendPlatformMessage(
+  String channelName,
+  List<Object?> message,
+  MessageCodec<Object?> codec,
+) async {
+  final encoded = codec.encodeMessage(message);
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(channelName, encoded, (reply) {});
+}
+
+void mockSdkInitialized(bool? value) {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockDecodedMessageHandler<Object?>(
+    BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.isInitialized',
+      InappstorySdkModuleHostApi.pigeonChannelCodec,
+    ),
+    value == null ? null : (message) async => <Object?>[value],
+  );
+}
 
   group('BannerPlace Integration (Flutter ↔ Pigeon ↔ Native)', () {
-    testWidgets(
-        'GIVEN BannerPlace mounted WHEN initialized THEN platform view renders and loader shows',
+    setUp(() {
+      mockSdkInitialized(true);
+    });
+
+    tearDown(() {
+      mockSdkInitialized(null);
+    });
+
+    testWidgets('GIVEN BannerPlace mounted WHEN initialized THEN platform view renders and loader shows',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -127,11 +144,11 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+      const codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
 
       final channelName =
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError.$bannerWidgetId';
-      await _sendPlatformMessage(
+      await sendPlatformMessage(
         channelName,
         <Object?>['Banners failed from native SDK'],
         codec,
@@ -168,11 +185,11 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+      const codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
 
       final channelName =
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded.$bannerWidgetId';
-      await _sendPlatformMessage(channelName, <Object?>[0, 0], codec);
+      await sendPlatformMessage(channelName, <Object?>[0, 0], codec);
       await tester.pumpAndSettle();
 
       expect(receivedSize, 0);
@@ -213,11 +230,11 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+      const codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
 
       final channelName =
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded.$bannerWidgetId';
-      await _sendPlatformMessage(channelName, <Object?>[5, 140], codec);
+      await sendPlatformMessage(channelName, <Object?>[5, 140], codec);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 250));
 
@@ -256,11 +273,11 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+      const codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
 
       final channelName =
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerScroll.$bannerWidgetId';
-      await _sendPlatformMessage(channelName, <Object?>[2], codec);
+      await sendPlatformMessage(channelName, <Object?>[2], codec);
       await tester.pump();
 
       expect(scrolledIndex, 2);
@@ -296,7 +313,7 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+      const codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
 
       final testBannerData = BannerData(
         id: 'banner_123',
@@ -306,7 +323,7 @@ void main() {
 
       final channelName =
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith.$bannerWidgetId';
-      await _sendPlatformMessage(
+      await sendPlatformMessage(
         channelName,
         <Object?>[
           testBannerData,
@@ -346,7 +363,7 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final hostCodec = BannerViewHostApi.pigeonChannelCodec;
+      const hostCodec = BannerViewHostApi.pigeonChannelCodec;
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockDecodedMessageHandler<Object?>(
@@ -401,7 +418,7 @@ void main() {
         find.byType(VisibilityDetector),
       );
       final bannerWidgetId = (detector.key as ValueKey<String>).value;
-      final hostCodec = BannerViewHostApi.pigeonChannelCodec;
+      const hostCodec = BannerViewHostApi.pigeonChannelCodec;
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockDecodedMessageHandler<Object?>(
@@ -433,9 +450,8 @@ void main() {
         'GIVEN BannerPlaceManager WHEN host API methods called THEN Pigeon requests are dispatched',
         (WidgetTester tester) async {
       final List<String> dispatchedCalls = [];
-      final managerCodec = BannerPlaceManagerHostApi.pigeonChannelCodec;
-      final messenger =
-          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      const managerCodec = BannerPlaceManagerHostApi.pigeonChannelCodec;
+      final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
       final methods = [
         'loadBannerPlace',
@@ -461,7 +477,7 @@ void main() {
       }
 
       messenger.setMockDecodedMessageHandler<Object?>(
-        BasicMessageChannel<Object?>(
+        const BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.showByIndex',
           managerCodec,
         ),
@@ -472,7 +488,7 @@ void main() {
       );
 
       messenger.setMockDecodedMessageHandler<Object?>(
-        BasicMessageChannel<Object?>(
+        const BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.inappstory_plugin.BannerPlaceManagerHostApi.setInteraction',
           managerCodec,
         ),
@@ -491,10 +507,7 @@ void main() {
       await manager.showNext('test_p');
       await manager.showPrevious('test_p');
       await manager.showByIndex(placeId: 'test_p', index: 1);
-      await manager.setInteraction(
-        placeId: 'test_p',
-        isInteractionEnabled: true,
-      );
+      await manager.setInteraction(placeId: 'test_p', isInteractionEnabled: true);
 
       expect(dispatchedCalls, [
         'loadBannerPlace',

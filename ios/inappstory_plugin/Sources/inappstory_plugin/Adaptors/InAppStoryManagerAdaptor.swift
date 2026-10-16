@@ -156,7 +156,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
                             let goodObject = GoodObject(
                                 sku: item.sku!,
                                 title: item.title,
-                                subtitle: item.description,
+                                subtitle: item.productDescription,
                                 imageURL: URL(string: item.image ?? ""),
                                 price: item.price,
                                 oldPrice: item.oldPrice
@@ -265,7 +265,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             offerId: offer.offerId,
             groupId: offer.groupId,
             name: offer.name ?? "",
-            description: offer.description,
+            offerDescription: offer.description,
             url: offer.url,
             coverUrl: offer.coverUrl,
             imageUrls: offer.imageUrls,
@@ -288,7 +288,7 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
                 offerId: offer.offerId,
                 groupId: offer.groupId,
                 name: offer.name,
-                description: offer.description,
+                description: offer.offerDescription,
                 url: offer.url,
                 coverUrl: offer.coverUrl,
                 imageUrls: offer.imageUrls,

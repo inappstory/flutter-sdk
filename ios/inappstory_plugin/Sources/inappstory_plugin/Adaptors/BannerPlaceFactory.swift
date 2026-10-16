@@ -87,7 +87,8 @@ class BannerPlaceFactory: NSObject, FlutterPlatformViewFactory {
         return BannerData(
             id: data.id,
             bannerPlace: data.placeID,
-            payload: nil
+            payload: nil,
+            extraFields: data.extraFields
         )
     }
 }

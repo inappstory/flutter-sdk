@@ -55,6 +55,9 @@ class BannerView(
 
     private var bannerPlaceCallback: BannerPlaceCallbackFlutterApi
 
+    private var loadError: Subscription
+    private var preloadError: Subscription
+
     private var loadBannerPlace: Subscription
     private var reloadBannerPlace: Subscription
     private var preloadBannerPlace: Subscription
@@ -64,8 +67,6 @@ class BannerView(
     private var pauseAutoscroll: Subscription
     private var resumeAutoscroll: Subscription
     private var setInteraction: Subscription
-    private var loadError: Subscription
-    private var preloadError: Subscription
 
     private var bannerLoadCallbackHandler: BannerPlaceLoadCallbackHandler? = null
 

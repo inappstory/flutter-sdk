@@ -266,13 +266,14 @@ void main() {
             ),
           ),
         );
-        await tester.pump();
+        await tester.pump(); // wait for SDK initialization
         // Off-platform the platform view slot renders this text.
         final platformView = find.text('Unknown platform', skipOffstage: false);
         final elementBefore = tester.element(platformView);
 
         await tester.pump(const Duration(milliseconds: 100));
         expect(tester.getSize(find.byType(BannerPlace)), Size.zero);
+        await tester.pump();
         expect(tester.element(platformView), same(elementBefore));
 
         final detector = tester.widget<VisibilityDetector>(
@@ -625,6 +626,62 @@ void main() {
         await tester.pump();
 
         expect(find.text('Unknown platform'), findsOneWidget);
+      });
+      testWidgets(
+          'WHEN native calls onActionWith THEN onActionWith callback is invoked with BannerData including extraFields',
+          (tester) async {
+        BannerData? receivedBanner;
+        String? receivedEventName;
+        Map<String, Object?>? receivedWidgetData;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: BannerPlace(
+                placeId: 'test_place',
+                height: 140,
+                autoLoad: false,
+                onActionWith: (bannerData, widgetEventName, widgetData) {
+                  receivedBanner = bannerData;
+                  receivedEventName = widgetEventName;
+                  receivedWidgetData = widgetData;
+                },
+              ),
+            ),
+          ),
+        );
+
+        final detector = tester.widget<VisibilityDetector>(
+          find.byType(VisibilityDetector),
+        );
+        final bannerWidgetId = (detector.key as ValueKey<String>).value;
+        final codec = BannerPlaceCallbackFlutterApi.pigeonChannelCodec;
+
+        final bannerData = BannerData(
+          id: '123',
+          bannerPlace: 'test_place',
+          payload: 'test_payload',
+          extraFields: <String, String>{'promo_code': 'SUMMER2026'},
+        );
+
+        final channelName =
+            'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onActionWith.$bannerWidgetId';
+        final encoded = codec.encodeMessage(<Object?>[
+          bannerData,
+          'BANNER_CLICK',
+          <String, Object?>{'element': 'button'},
+        ]);
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(channelName, encoded, (reply) {});
+        await tester.pump();
+
+        expect(receivedBanner, isNotNull);
+        expect(receivedBanner!.id, '123');
+        expect(receivedBanner!.bannerPlace, 'test_place');
+        expect(receivedBanner!.payload, 'test_payload');
+        expect(receivedBanner!.extraFields, {'promo_code': 'SUMMER2026'});
+        expect(receivedEventName, 'BANNER_CLICK');
+        expect(receivedWidgetData, {'element': 'button'});
       });
     });
   });

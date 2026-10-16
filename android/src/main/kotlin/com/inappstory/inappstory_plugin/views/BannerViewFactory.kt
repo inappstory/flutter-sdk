@@ -15,7 +15,7 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val appearanceManager: AppearanceManager,
+    private val appearanceManager: AppearanceManager
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -68,7 +68,8 @@ class BannerViewFactory(
         return BannerDataDto(
             id = data.id().toString(),
             bannerPlace = data.bannerPlace(),
-            payload = data.payload()
+            payload = data.payload(),
+            extraFields = data.extraFields()
         )
     }
 }

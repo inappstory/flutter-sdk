@@ -120,7 +120,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place", ""))
+        val bannerList = listOf(BannerData(1, "test_place", null))
         callback.bannerPlaceLoaded(1, bannerList, 120)
 
         // Metadata loaded, but content NOT loaded yet: onBannerPlaceLoaded should NOT be sent and visibility should NOT be true
@@ -154,7 +154,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place", ""))
+        val bannerList = listOf(BannerData(1, "test_place", null))
         callback.bannerPlaceLoaded(1, bannerList, 150)
         assertEquals(0, messenger.sentMessages.size)
         assertNull(visibility)
@@ -185,7 +185,7 @@ class BannerViewTest {
         assertEquals(0, messenger.sentMessages.size)
         assertNull(visibility)
 
-        val bannerList = listOf(BannerData(1, "test_place", ""))
+        val bannerList = listOf(BannerData(1, "test_place", null))
         callback.bannerPlaceLoaded(1, bannerList, 140)
 
         assertEquals(1, messenger.sentMessages.size)
@@ -250,7 +250,7 @@ class BannerViewTest {
             onVisibilityChanged = { visibility = it }
         )
 
-        val bannerList = listOf(BannerData(1, "test_place", ""))
+        val bannerList = listOf(BannerData(1, "test_place", null))
         // Initial load: metadata + content
         callback.bannerPlaceLoaded(1, bannerList, 120)
         callback.bannerLoaded(1, true)
@@ -334,7 +334,12 @@ class BannerViewTest {
             }
         }
 
-        val matchingBanner = PigeonBannerData(id = "1", bannerPlace = "matching_place", payload = null)
+        val matchingBanner = PigeonBannerData(
+            id = "1",
+            bannerPlace = "matching_place",
+            payload = null,
+            extraFields = mapOf("key" to "value")
+        )
         val mismatchedBanner = PigeonBannerData(id = "2", bannerPlace = "other_place", payload = null)
 
         // Action with mismatched placeId should not invoke callback
@@ -349,6 +354,7 @@ class BannerViewTest {
         val banner = args[0] as PigeonBannerData
         assertEquals("1", banner.id)
         assertEquals("matching_place", banner.bannerPlace)
+        assertEquals(mapOf("key" to "value"), banner.extraFields)
         assertEquals("CLICK", args[1])
     }
 
@@ -495,6 +501,54 @@ class BannerViewTest {
 
         assertEquals(1, preloadErrors.size)
         assertEquals("test_place_3", preloadErrors[0])
+    }
+
+    @Test
+    fun decorationToDTO_handlesDoubleAndIntColors() {
+        val dto1 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to 4294967295.0))
+        assertEquals(4294967295L, dto1.color)
+
+        val dto2 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to -1))
+        assertEquals(-1L, dto2.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesInt32ColorAsLong() {
+        // StandardMessageCodec sends ARGB32 values that fit in 32 bits as
+        // java.lang.Integer; alpha < 0x80 lands here and used to throw
+        // ClassCastException on the former `it as Long` cast.
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x33FFFFFF))
+
+        assertEquals(0x33FFFFFFL, dto.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesColorAcrossTheInt32Boundary() {
+        val belowBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x7F000000))
+        assertEquals(0x7F000000L, belowBoundary.color)
+
+        val aboveBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0x80000000L))
+        assertEquals(0x80000000L, aboveBoundary.color)
+    }
+
+    @Test
+    fun decorationToDTO_decodesOpaqueColorSentAsLong() {
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(mapOf("color" to 0xFF000000L))
+
+        assertEquals(0xFF000000L, dto.color)
+    }
+
+    @Test
+    fun decorationToDTO_returnsNullColorAndImageWhenAbsent() {
+        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
+            .decorationToDTO(emptyMap())
+
+        assertNull(dto.color)
+        assertNull(dto.image)
     }
 }
 
