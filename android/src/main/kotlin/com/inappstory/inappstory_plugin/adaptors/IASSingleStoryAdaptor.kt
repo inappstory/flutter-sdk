@@ -6,12 +6,15 @@ import com.inappstory.inappstory_plugin.callbacks.SingleLoadCallbackAdaptor
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.CancellationToken
 import com.inappstory.sdk.CancellationTokenCancelResult
+import com.inappstory.sdk.InAppStoryManager
 import com.inappstory.sdk.externalapi.single.IASSingleStoryExternalAPI
+import com.inappstory.sdk.stories.api.models.TargetingBodyObject
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class IASSingleStoryAdaptor(
     flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
+    private val iasManager: InAppStoryManager,
     private val iasSingleStory: IASSingleStoryExternalAPI,
     private val activityHolder: ActivityHolder,
 ) : IASSingleStoryHostApi {
@@ -30,20 +33,32 @@ class IASSingleStoryAdaptor(
         val cancelToken = iasSingleStory.showOnce(
             activityHolder.activity,
             storyId,
+            TargetingBodyObject().apply { targeting = false },
             appearanceManager,
             callback,
         )
         tokenMap[token] = cancelToken
     }
 
-    override fun show(storyId: String, token: String) {
-        val cancelToken = iasSingleStory.show(
-            activityHolder.activity,
-            storyId,
-            appearanceManager,
-            callback,
-            null,
-        )
+    override fun show(storyId: String, token: String, tags: List<String>?) {
+        val cancelToken = if (tags != null) {
+            iasManager.showStoryWithTargeting(
+                storyId,
+                tags,
+                activityHolder.activity,
+                appearanceManager,
+                callback,
+            )
+        } else {
+            iasSingleStory.show(
+                activityHolder.activity,
+                storyId,
+                TargetingBodyObject().apply { targeting = false },
+                appearanceManager,
+                callback,
+                null,
+            )
+        }
         tokenMap[token] = cancelToken
     }
 
@@ -56,5 +71,3 @@ class IASSingleStoryAdaptor(
         return false
     }
 }
-
-

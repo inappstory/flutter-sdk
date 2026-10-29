@@ -82,21 +82,21 @@ class _InAppMessagesState extends State<InAppMessages>
   }
 
   @override
-  void onShowInAppMessage(InAppMessageDataDto? inAppMessageData) {
+  Future<void> onShowInAppMessage(InAppMessageData? inAppMessageData) async {
     log("IAM: onShowInAppMessage: ${inAppMessageData?.id}");
   }
 
   @override
-  void onCloseInAppMessage(InAppMessageDataDto? inAppMessageData) {
+  Future<void> onCloseInAppMessage(InAppMessageData? inAppMessageData) async {
     log("IAM: onCloseInAppMessage: ${inAppMessageData?.id}");
   }
 
   @override
-  void onInAppMessageWidgetEvent(
-      InAppMessageDataDto? inAppMessageData,
+  Future<void> onInAppMessageWidgetEvent(
+      InAppMessageData? inAppMessageData,
       String? name,
       Map<String?, Object?>? data,
-      ) {
+      ) async {
     log("IAM: onInAppMessageWidgetEvent: ${inAppMessageData?.id}");
   }
 }

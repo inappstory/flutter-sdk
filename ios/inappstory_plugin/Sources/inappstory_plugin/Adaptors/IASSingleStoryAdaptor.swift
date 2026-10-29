@@ -38,11 +38,20 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
         tokenMap[token] = cancellationToken
     }
 
-    func show(storyId: String, token: String) throws {
-        let cancellationToken = singleStoryAPI.showStory(
-            with: storyId,
-            complete: showComplete
-        )
+    func show(storyId: String, token: String, tags: [String]?) throws {
+        let cancellationToken: InAppStorySDK.CancellationToken?
+        if let tags {
+            cancellationToken = singleStoryAPI.showStoryWithTargeting(
+                with: storyId,
+                tags: tags,
+                complete: showComplete
+            )
+        } else {
+            cancellationToken = singleStoryAPI.showStory(
+                with: storyId,
+                complete: showComplete
+            )
+        }
         tokenMap[token] = cancellationToken
     }
 

@@ -5,6 +5,7 @@ import CoverQuality
 import GoodsItemAppearanceDto
 import GoodsItemDataDto
 import GoodsItemSelectedCallbackFlutterApi
+import PlaceholderDecorationDto
 import Position
 import PresentationStyle
 import ScrollStyle
@@ -36,6 +37,9 @@ import com.inappstory.sdk.ICustomIconState
 import com.inappstory.sdk.core.network.content.models.Image.QUALITY_HIGH
 import com.inappstory.sdk.core.network.content.models.Image.QUALITY_MEDIUM
 import com.inappstory.sdk.stories.ui.reader.StoriesGradientObject
+import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
+import com.inappstory.inappstory_plugin.views.buildPlaceholderView
+import com.inappstory.sdk.stories.ui.views.IStoryReaderLoaderView
 import com.inappstory.sdk.stories.ui.views.goodswidget.GetGoodsDataCallback
 import com.inappstory.sdk.stories.ui.views.goodswidget.GoodsItemData
 import com.inappstory.sdk.stories.ui.views.goodswidget.GoodsWidgetAppearanceAdapter
@@ -50,6 +54,7 @@ class AppearanceManagerAdaptor(
     private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     private val appearanceManager: AppearanceManager,
     private val activityHolder: ActivityHolder,
+    private val bannerPlaceholderStore: BannerPlaceholderStore,
 ) : AppearanceManagerHostApi {
     init {
         AppearanceManagerHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -576,5 +581,27 @@ class AppearanceManagerAdaptor(
             sp,
             activityHolder.activity?.applicationContext?.resources?.displayMetrics
         ).toInt()
+    }
+
+    override fun setStoriesPlaceholder(decoration: PlaceholderDecorationDto?) {
+        val color = decoration?.color
+        val image = decoration?.image
+        if (color != null || image != null) {
+            appearanceManager.csStoryLoaderView(IStoryReaderLoaderView { context ->
+                buildPlaceholderView(
+                    context,
+                    color,
+                    image,
+                    flutterPluginBinding.flutterAssets,
+                    flutterPluginBinding.applicationContext,
+                )
+            })
+        } else {
+            appearanceManager.csStoryLoaderView(null)
+        }
+    }
+
+    override fun setBannersPlaceholder(decoration: PlaceholderDecorationDto?) {
+        bannerPlaceholderStore.decoration = decoration
     }
 }

@@ -5,12 +5,12 @@ import 'dart:async';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart'
+    show FeedStoriesController;
+import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'
     show
-        FeedStoriesController,
+        InappstorySdkModuleHostApi,
         InAppStoryAPIListSubscriberFlutterApi,
         StoryAPIDataDto;
-import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'
-    show InappstorySdkModuleHostApi;
 import 'package:inappstory_plugin/src/helpers/id_gen.dart';
 import 'package:inappstory_plugin/src/widgets/streams/stories_stream.dart';
 import 'package:mocktail/mocktail.dart';
@@ -185,18 +185,18 @@ class _TestStoriesStream extends StoriesStream {
   final void Function(String feed, String? reason)? onFailure;
 
   @override
-  void updateStoriesData(List<StoryAPIDataDto?> list) {}
+  Future<void> updateStoriesData(List<StoryAPIDataDto?> list) async {}
 
   @override
-  void updateStoryData(StoryAPIDataDto story) {}
+  Future<void> updateStoryData(StoryAPIDataDto story) async {}
 
   @override
-  void storiesLoaded(int size, String feed) {}
+  Future<void> storiesLoaded(int size, String feed) async {}
 
   @override
-  void scrollToStory(int index, String feed, String uniqueId) {}
+  Future<void> scrollToStory(int index, String feed, String uniqueId) async {}
 
   @override
-  void storiesUpdateFailure(String feed, String? reason) =>
+  Future<void> storiesUpdateFailure(String feed, String? reason) async =>
       onFailure?.call(feed, reason);
 }

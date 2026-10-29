@@ -12,7 +12,8 @@ class AndroidBannerView extends BannerPlatformView {
     required super.autoLoad,
     required super.placeId,
     required super.onPlatformViewCreated,
-    super.bannerDecoration,
+    super.layoutType,
+    super.gridDecoration,
     super.decoration,
   });
 

@@ -1,22 +1,36 @@
 import 'package:flutter/widgets.dart';
 
-import '../generated/pigeon_generated.g.dart'
+import '../data/goods_item_data.dart';
+import '../generated/appearance_manager.g.dart'
     show GoodsItemDataDto, GoodsItemSelectedCallbackFlutterApi;
 
-mixin IASGoodItemSelectedCallback<T extends StatefulWidget> on State<T>
-    implements GoodsItemSelectedCallbackFlutterApi {
+mixin IASGoodItemSelectedCallback<T extends StatefulWidget> on State<T> {
+  _IASGoodItemSelectedBridge? _bridge;
+
   @override
   void initState() {
     super.initState();
-    GoodsItemSelectedCallbackFlutterApi.setUp(this);
+    _bridge = _IASGoodItemSelectedBridge(this);
+    GoodsItemSelectedCallbackFlutterApi.setUp(_bridge);
   }
 
   @override
   void dispose() {
     GoodsItemSelectedCallbackFlutterApi.setUp(null);
+    _bridge = null;
     super.dispose();
   }
 
+  Future<void> goodsItemSelected(GoodsItemData item) async {}
+}
+
+class _IASGoodItemSelectedBridge implements GoodsItemSelectedCallbackFlutterApi {
+  _IASGoodItemSelectedBridge(this._target);
+
+  final IASGoodItemSelectedCallback _target;
+
   @override
-  void goodsItemSelected(GoodsItemDataDto item) {}
+  Future<void> goodsItemSelected(GoodsItemDataDto item) {
+    return _target.goodsItemSelected(GoodsItemData.fromDto(item));
+  }
 }

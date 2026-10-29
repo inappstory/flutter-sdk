@@ -1,3 +1,28 @@
+## [0.11.0]
+
+### Added
+
+- Optional targeting tags for single-story and in-app-message display
+- `BannerGrid` widget for two-column banner layouts, configured with `BannerGridDecoration` (gaps and corner radius)
+- `AppearanceManager.setBannersPlaceholder` to set the banner loading placeholder once for all banner places
+- `InAppStoryManager.openGame`, `closeGame` and `preloadGames` to control games
+
+### Changed
+
+- Updated Android SDK to 1.26.0 and iOS SDK to 1.29.9
+
+### Removed
+
+- `IASGamesHostApi` is no longer exported. Use `InAppStoryManager.instance.openGame` instead
+
+### Deprecated
+
+- `BannerDecoration` and `BannerPlace.bannerDecoration` are now ignored. Call `AppearanceManager.instance.setBannersPlaceholder` instead
+
+### Fixed
+
+- Creating a `BannerPlace` no longer overrides the global iOS banner loading placeholder
+
 ## [0.10.0]
 
 ### Added

@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(url: "https://github.com/inappstory/IAS-iOS-SPM.git", exact: "1.29.8")
+        .package(url: "https://github.com/inappstory/IAS-iOS-SPM.git", exact: "1.29.9")
     ],
     targets: [
         .target(

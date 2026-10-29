@@ -5,6 +5,7 @@
 .cursor/
 .gemini/
 .aider*
+.github/
 
 # Miscellaneous
 *.class
@@ -49,3 +50,5 @@ ios/FlutterFramework
 
 
 
+# Widget Preview related
+.widget_preview/

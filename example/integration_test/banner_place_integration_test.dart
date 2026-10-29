@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/generated/banner_place_generated.g.dart';
+import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'
+    show InappstorySdkModuleHostApi;
 import 'package:integration_test/integration_test.dart';
 // ignore: depend_on_referenced_packages
 import 'package:visibility_detector/visibility_detector.dart';
@@ -24,7 +26,7 @@ Future<void> sendPlatformMessage(
 void mockSdkInitialized(bool? value) {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockDecodedMessageHandler<Object?>(
-    BasicMessageChannel<Object?>(
+    const BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.inappstory_plugin.InappstorySdkModuleHostApi.isInitialized',
       InappstorySdkModuleHostApi.pigeonChannelCodec,
     ),

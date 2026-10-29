@@ -5,8 +5,8 @@ import '../generated/pigeon_generated.g.dart' show StoryFavoriteItemAPIDataDto;
 import 'feed_favorite.dart';
 import 'story_from_pigeon_dto.dart';
 
-class FavoriteFromDto implements FeedFavorite {
-  FavoriteFromDto(this.dto);
+class PigeonFavorite implements FeedFavorite {
+  PigeonFavorite(this.dto);
 
   final StoryFavoriteItemAPIDataDto dto;
 
@@ -19,7 +19,7 @@ class FavoriteFromDto implements FeedFavorite {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FavoriteFromDto &&
+      other is PigeonFavorite &&
           runtimeType == other.runtimeType &&
           dto.id == other.dto.id;
 
@@ -29,3 +29,5 @@ class FavoriteFromDto implements FeedFavorite {
   @override
   int get id => dto.id;
 }
+
+typedef FavoriteFromDto = PigeonFavorite;

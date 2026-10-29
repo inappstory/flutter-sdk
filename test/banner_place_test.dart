@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/generated/banner_place_generated.g.dart';
+import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart'
+    show InappstorySdkModuleHostApi;
 import 'package:visibility_detector/visibility_detector.dart';
 
 void mockSdkInitialized(bool? value) {
@@ -93,7 +95,9 @@ void main() {
     });
 
     group('GIVEN a BannerPlace widget', () {
-      testWidgets('WHEN built with default settings THEN it renders without error', (tester) async {
+      testWidgets(
+          'WHEN built with default settings THEN it renders without error',
+          (tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: Scaffold(
@@ -109,7 +113,9 @@ void main() {
         expect(find.byType(BannerPlace), findsOneWidget);
       });
 
-      testWidgets('WHEN a modal bottom sheet is pushed on top THEN interaction is disabled', (tester) async {
+      testWidgets(
+          'WHEN a modal bottom sheet is pushed on top THEN interaction is disabled',
+          (tester) async {
         late BuildContext savedContext;
 
         await tester.pumpWidget(
@@ -132,7 +138,8 @@ void main() {
         // Open modal bottom sheet
         showModalBottomSheet<void>(
           context: savedContext,
-          builder: (_) => const SizedBox(height: 200, child: Text('Modal Content')),
+          builder: (_) =>
+              const SizedBox(height: 200, child: Text('Modal Content')),
         );
 
         await tester.pump();
@@ -148,7 +155,9 @@ void main() {
         expect(find.text('Modal Content'), findsNothing);
       });
 
-      testWidgets('WHEN isInteractionEnabled is updated THEN widget syncs interaction', (tester) async {
+      testWidgets(
+          'WHEN isInteractionEnabled is updated THEN widget syncs interaction',
+          (tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: Scaffold(
@@ -323,7 +332,8 @@ void main() {
 
         final channelName =
             'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoadError.$bannerWidgetId';
-        final encoded = codec.encodeMessage(<Object?>['Network connection failed']);
+        final encoded =
+            codec.encodeMessage(<Object?>['Network connection failed']);
         await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(channelName, encoded, (reply) {});
         await tester.pump();
@@ -684,9 +694,89 @@ void main() {
         expect(receivedWidgetData, {'element': 'button'});
       });
     });
+
+    group('GIVEN a BannerGrid widget', () {
+      testWidgets(
+          'WHEN built with a grid decoration THEN it keeps its fixed height',
+          (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: BannerGrid(
+                placeId: 'test_place',
+                height: 180,
+                autoLoad: false,
+                gridDecoration: BannerGridDecoration(
+                  horizontalGap: 12,
+                  verticalGap: 16,
+                  cornerRadius: 4,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(tester.getSize(find.byType(BannerGrid)).height, 180);
+      });
+
+      test('WHEN created without a decoration THEN uses the SDK defaults', () {
+        const grid = BannerGrid(placeId: 'test_place', height: 180);
+
+        expect(
+          grid.gridDecoration,
+          const BannerGridDecoration(
+            horizontalGap: 8,
+            verticalGap: 8,
+            cornerRadius: 16,
+          ),
+        );
+      });
+
+      testWidgets(
+          'WHEN native reports loaded content THEN it forwards the full content height',
+          (tester) async {
+        int? reportedSize;
+        int? reportedHeight;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: BannerGrid(
+                placeId: 'test_place',
+                height: 420,
+                autoLoad: false,
+                onBannerPlaceLoaded: (size, height) {
+                  reportedSize = size;
+                  reportedHeight = height;
+                },
+              ),
+            ),
+          ),
+        );
+
+        final detector = tester.widget<VisibilityDetector>(
+          find.byType(VisibilityDetector),
+        );
+        final bannerWidgetId = (detector.key as ValueKey<String>).value;
+        final channelName =
+            'dev.flutter.pigeon.inappstory_plugin.BannerPlaceCallbackFlutterApi.onBannerPlaceLoaded.$bannerWidgetId';
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          channelName,
+          BannerPlaceCallbackFlutterApi.pigeonChannelCodec
+              .encodeMessage(<Object?>[4, 612]),
+          (reply) {},
+        );
+        await tester.pump();
+
+        expect(reportedSize, 4);
+        expect(reportedHeight, 612);
+        expect(tester.getSize(find.byType(BannerGrid)).height, 420);
+      });
+    });
   });
 }
 
 Widget _testLoaderBuilder(BuildContext context) =>
     const Center(child: Text('Banner Loader'));
-

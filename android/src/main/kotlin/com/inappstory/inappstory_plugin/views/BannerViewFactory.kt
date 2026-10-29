@@ -15,7 +15,8 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val appearanceManager: AppearanceManager
+    private val appearanceManager: AppearanceManager,
+    private val placeholderStore: BannerPlaceholderStore,
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -38,15 +39,27 @@ class BannerViewFactory(
         if (bannersCallback == null) {
             createBannersCallback()
         }
-        return BannerView(
-            context,
-            viewId,
-            creationParams,
-            flutterPluginBinding,
-            appearanceManager,
-            bannerPlaceManagerAdaptor,
-            bannerDataListener,
-        )
+        return if (creationParams?.get("layoutType") == "grid") {
+            BannerGridView(
+                context,
+                creationParams,
+                flutterPluginBinding,
+                appearanceManager,
+                bannerPlaceManagerAdaptor,
+                bannerDataListener,
+                placeholderStore,
+            )
+        } else {
+            BannerCarouselView(
+                context,
+                creationParams,
+                flutterPluginBinding,
+                appearanceManager,
+                bannerPlaceManagerAdaptor,
+                bannerDataListener,
+                placeholderStore,
+            )
+        }
     }
 
     private fun createBannersCallback() {

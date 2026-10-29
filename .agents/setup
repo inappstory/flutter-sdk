@@ -7,8 +7,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   # repo root
 
-# Vendors to populate. Add ".codex" ".cursor" ".gemini" as you adopt them.
-VENDORS=(.claude)
+# Vendors to populate. Add ".codex" ".cursor" as you adopt them.
+VENDORS=(.claude .gemini)
 
 for dir in "${VENDORS[@]}"; do
   mkdir -p "$dir"

@@ -119,7 +119,7 @@ abstract class StoriesStream extends Stream<Iterable<Widget>>
   }
 
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {}
+  Future<void> updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) async {}
 
   @override
   StreamSubscription<Iterable<Widget>> listen(

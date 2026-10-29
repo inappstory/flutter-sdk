@@ -55,10 +55,13 @@ class IASMessagesAdaptor(
         messageId: String,
         token: String,
         onlyPreloaded: Boolean,
-        bottomPadding: Double?
+        bottomPadding: Double?,
+        tags: List<String>?
     ) {
-        val settings =
-            InAppMessageOpenSettings().id(messageId.toInt()).showOnlyIfLoaded(onlyPreloaded)
+        val settings = InAppMessageOpenSettings()
+            .id(messageId.toInt())
+            .showOnlyIfLoaded(onlyPreloaded)
+            .apply { if (tags != null) tags(tags) }
         showIAM(settings, token, bottomPadding)
     }
 
@@ -66,9 +69,13 @@ class IASMessagesAdaptor(
         event: String,
         token: String,
         onlyPreloaded: Boolean,
-        bottomPadding: Double?
+        bottomPadding: Double?,
+        tags: List<String>?
     ) {
-        val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
+        val settings = InAppMessageOpenSettings()
+            .event(event)
+            .showOnlyIfLoaded(onlyPreloaded)
+            .apply { if (tags != null) tags(tags) }
         showIAM(settings, token, bottomPadding)
     }
 

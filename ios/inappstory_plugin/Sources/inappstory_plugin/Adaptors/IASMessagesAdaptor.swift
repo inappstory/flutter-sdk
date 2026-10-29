@@ -55,15 +55,29 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         messageId: String,
         token: String,
         onlyPreloaded: Bool,
-        bottomPadding: Double?
+        bottomPadding: Double?,
+        tags: [String]?
     ) throws {
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
-        let cancellationToken = inAppMessagesApi.showInAppMessageWith(
-            id: messageId,
-            targetView: try flutterHostView(),
-            onlyPreloaded: onlyPreloaded
-        ) { [weak self] show in
+        let completion: (Bool) -> Void = { [weak self] show in
             if !show { self?.dismissOverlay() }
+        }
+        let cancellationToken: InAppStorySDK.CancellationToken?
+        if let tags {
+            cancellationToken = inAppMessagesApi.showInAppMessageWithTargeting(
+                id: messageId,
+                targetView: try flutterHostView(),
+                onlyPreloaded: onlyPreloaded,
+                tags: tags,
+                completion: completion
+            )
+        } else {
+            cancellationToken = inAppMessagesApi.showInAppMessageWith(
+                id: messageId,
+                targetView: try flutterHostView(),
+                onlyPreloaded: onlyPreloaded,
+                completion: completion
+            )
         }
         tokenMap[token] = cancellationToken
     }
@@ -72,13 +86,15 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         event: String,
         token: String,
         onlyPreloaded: Bool,
-        bottomPadding: Double?
+        bottomPadding: Double?,
+        tags: [String]?
     ) throws {
         pendingBottomPadding = CGFloat(bottomPadding ?? 0)
         let cancellationToken = inAppMessagesApi.showInAppMessageWith(
             event: event,
             targetView: try flutterHostView(),
-            onlyPreloaded: onlyPreloaded
+            onlyPreloaded: onlyPreloaded,
+            tags: tags
         ) { [weak self] show in
             if !show { self?.dismissOverlay() }
         }

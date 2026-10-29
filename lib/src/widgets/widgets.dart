@@ -1,4 +1,5 @@
-export 'banner_place.dart';
+export 'banner_place.dart' show BannerPlace, BannerPlaceState, BannerDecoration;
+export 'banner_grid.dart' show BannerGrid;
 export 'base/base_feed_favorites_widget.dart';
 export 'base/default_feed_favorites_widget.dart';
 export 'base/feed_favorite_widget.dart';

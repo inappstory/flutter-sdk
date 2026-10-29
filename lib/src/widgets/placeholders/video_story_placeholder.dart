@@ -6,15 +6,24 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import 'story_placeholder.dart';
 
-/// A widget that displays a video story placeholder.
+/// Plays a story's video cover, or shows its background color while the
+/// video is loading.
+///
+/// The video plays muted and in a loop, and pauses when it is not visible.
 class VideoStoryPlaceholder extends StatefulWidget {
+  /// Creates a placeholder that plays [videoFile].
+  ///
+  /// [storyBackgroundColor] is shown while the video is loading.
   const VideoStoryPlaceholder({
     super.key,
     required this.videoFile,
     required this.storyBackgroundColor,
   });
 
+  /// The video file played muted and in a loop.
   final File videoFile;
+
+  /// The background color shown until the video is ready.
   final Color storyBackgroundColor;
 
   @override

@@ -1,382 +1,67 @@
-import 'dart:async';
-import 'dart:io';
+import 'base/banner_place_base.dart';
 
-import 'package:flutter/material.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+export 'base/banner_place_base.dart' show BannerPlaceState, BannerDecoration;
 
-import '../generated/banner_place_generated.g.dart'
-    show BannerViewHostApi, BannerPlaceCallbackFlutterApi, BannerData;
-import '../helpers/id_gen.dart';
-import '../../inappstory_plugin_platform_interface.dart';
-import 'banner/android_banner_view.dart';
-import 'banner/ios_banner_view.dart';
-import 'builders/builders.dart'
-    show BannerPlaceLoaderBuilder, BannerPlaceErrorBuilder;
-import 'decorators/decorators.dart';
-
-enum BannerPlaceState {
-  none,
-  loading,
-  loaded,
-  failed,
-}
-
-class BannerPlace extends StatefulWidget {
+/// Displays the banners of a banner place as a horizontal carousel.
+///
+/// The banners are configured in the InAppStory console and controlled with
+/// `BannerPlaceManager`.
+class BannerPlace extends BannerPlaceBase {
+  /// Creates a banner carousel for the banner place [placeId].
+  ///
+  /// * [placeId]: the ID of the banner place in the InAppStory console.
+  /// * [height]: the height of the widget, in logical pixels.
+  /// * [autoLoad]: whether banners load when the widget is created. If
+  ///   `false`, load them with `BannerPlaceManager.instance.load`.
+  /// * [placeDecoration]: the appearance of the carousel.
+  /// * [isInteractionEnabled]: whether the user can tap and swipe banners.
+  ///   Defaults to `true`.
+  /// * [bannerPlaceLoaderBuilder]: builds the widget shown while loading.
+  /// * [bannerPlaceErrorBuilder]: builds the widget shown if loading fails.
+  /// * [onActionWith]: called when a widget inside a banner sends an event.
+  /// * [onBannerScroll]: called with the index of the banner scrolled to.
+  /// * [onBannerPlaceLoaded]: called with the number of banners and the
+  ///   content height after loading.
+  /// * [onBannerPlaceLoadError]: called with the error message if loading
+  ///   fails or takes longer than [loadingTimeout].
+  /// * [onBannerPlacePreloaded]: called when preloading succeeds.
+  /// * [onPreloadedError]: called when preloading fails.
+  /// * [hideOnEmpty]: whether the widget is hidden when there are no banners
+  ///   or loading fails without a [bannerPlaceErrorBuilder]. Defaults to
+  ///   `true`.
+  /// * [loadingTimeout]: how long to wait for banners before reporting an
+  ///   error. Defaults to 10 seconds; [Duration.zero] disables the timeout.
   const BannerPlace({
     super.key,
-    required this.placeId,
-    required this.height,
-    this.placeDecoration,
+    required super.placeId,
+    required super.height,
+    super.placeDecoration,
+    @Deprecated(
+      'Ignored since 0.11.0. Use '
+      'AppearanceManager.instance.setBannersPlaceholder instead.',
+    )
     this.bannerDecoration,
-    this.autoLoad = true,
-    this.isInteractionEnabled,
-    this.bannerPlaceLoaderBuilder,
-    this.bannerPlaceErrorBuilder,
-    this.onActionWith,
-    this.onBannerScroll,
-    this.onBannerPlaceLoaded,
-    this.onBannerPlaceLoadError,
-    this.onBannerPlacePreloaded,
-    this.onPreloadedError,
-    this.hideOnEmpty = true,
-    this.loadingTimeout = const Duration(seconds: 10),
+    super.autoLoad,
+    super.isInteractionEnabled,
+    super.bannerPlaceLoaderBuilder,
+    super.bannerPlaceErrorBuilder,
+    super.onActionWith,
+    super.onBannerScroll,
+    super.onBannerPlaceLoaded,
+    super.onBannerPlaceLoadError,
+    super.onBannerPlacePreloaded,
+    super.onPreloadedError,
+    super.hideOnEmpty,
+    super.loadingTimeout,
   });
 
-  final String placeId;
-
-  final double height;
-
-  final BannerPlaceDecoration? placeDecoration;
+  /// No longer has any effect: the banner loading placeholder is global.
+  @Deprecated(
+    'Ignored since 0.11.0. Use '
+    'AppearanceManager.instance.setBannersPlaceholder instead.',
+  )
   final BannerDecoration? bannerDecoration;
 
-  final BannerPlaceLoaderBuilder? bannerPlaceLoaderBuilder;
-  final BannerPlaceErrorBuilder? bannerPlaceErrorBuilder;
-
-  final bool autoLoad;
-  final bool? isInteractionEnabled;
-  final bool hideOnEmpty;
-  final Duration loadingTimeout;
-
-  final Function(BannerData bannerData, String widgetEventName,
-      Map<String, Object?>? widgetData)? onActionWith;
-  final Function(int index)? onBannerScroll;
-  final Function(int size, int widgetHeight)? onBannerPlaceLoaded;
-  final Function(String message)? onBannerPlaceLoadError;
-  final Function()? onBannerPlacePreloaded;
-  final Function()? onPreloadedError;
-
   @override
-  State<BannerPlace> createState() => _BannerPlaceState();
-}
-
-class _BannerPlaceState extends State<BannerPlace>
-    implements BannerPlaceCallbackFlutterApi {
-  var _bannerPlaceState = BannerPlaceState.none;
-
-  final bannerWidgetId = idGenerator();
-
-  bool isVisible = false;
-  ModalRoute<dynamic>? _currentRoute;
-  bool _lastInteractionState = true;
-  bool _platformViewCreated = false;
-  bool _sdkInitialized = false;
-  Timer? _timeoutTimer;
-  int? _loadedSize;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _bannerPlaceState = BannerPlaceState.loading;
-    BannerPlaceCallbackFlutterApi.setUp(this,
-        messageChannelSuffix: bannerWidgetId);
-    _checkSdkInitialization();
-  }
-
-  Future<void> _checkSdkInitialization() async {
-    try {
-      final initialized =
-          await InappstoryPluginPlatform.instance.isInitialized();
-      if (!initialized) {
-        _showInitializationError('InAppStory SDK is not initialized');
-        return;
-      }
-      if (mounted) {
-        setState(() {
-          _sdkInitialized = true;
-          _bannerPlaceState = BannerPlaceState.loading;
-          _errorMessage = null;
-        });
-        _startTimeout();
-      }
-    } catch (error) {
-      _showInitializationError(
-          'Failed to check InAppStory SDK initialization: $error');
-    }
-  }
-
-  void _showInitializationError(String message) {
-    debugPrint(message);
-    onBannerPlaceLoadError(message);
-  }
-
-  void _startTimeout() {
-    _timeoutTimer?.cancel();
-    if (widget.loadingTimeout > Duration.zero) {
-      _timeoutTimer = Timer(widget.loadingTimeout, () {
-        if (mounted &&
-            (_bannerPlaceState == BannerPlaceState.loading ||
-                _bannerPlaceState == BannerPlaceState.none)) {
-          setState(() {
-            _bannerPlaceState = BannerPlaceState.failed;
-            _errorMessage = 'Banner loading timed out';
-          });
-          widget.onBannerPlaceLoadError?.call('Banner loading timed out');
-        }
-      });
-    }
-  }
-
-  void _onRouteAnimationChanged() {
-    _syncInteractionState();
-  }
-
-  void _onRouteStatusChanged(AnimationStatus status) {
-    _syncInteractionState();
-  }
-
-  void _syncInteractionState() {
-    final route = _currentRoute;
-    final isRouteCurrent = route?.isCurrent ?? true;
-    final isSecondaryZero = (route?.secondaryAnimation?.value ?? 0.0) == 0.0;
-    final isRouteActiveAndCurrent = isRouteCurrent && isSecondaryZero;
-
-    final effectiveInteraction =
-        (widget.isInteractionEnabled ?? true) && isRouteActiveAndCurrent;
-
-    if (effectiveInteraction != _lastInteractionState) {
-      _lastInteractionState = effectiveInteraction;
-      if (_platformViewCreated) {
-        BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-            .setInteraction(effectiveInteraction)
-            .ignore();
-      }
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    if (_currentRoute != route) {
-      _currentRoute?.secondaryAnimation
-          ?.removeListener(_onRouteAnimationChanged);
-      _currentRoute?.secondaryAnimation
-          ?.removeStatusListener(_onRouteStatusChanged);
-      _currentRoute = route;
-      _currentRoute?.secondaryAnimation?.addListener(_onRouteAnimationChanged);
-      _currentRoute?.secondaryAnimation
-          ?.addStatusListener(_onRouteStatusChanged);
-    }
-    _syncInteractionState();
-  }
-
-  @override
-  void didUpdateWidget(covariant BannerPlace oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!_sdkInitialized) {
-      _checkSdkInitialization();
-    }
-    if (oldWidget.placeId != widget.placeId) {
-      _loadedSize = null;
-      _errorMessage = null;
-      setState(() {
-        _bannerPlaceState = BannerPlaceState.loading;
-      });
-      _startTimeout();
-      BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-          .changeBannerPlaceId(widget.placeId)
-          .ignore();
-    }
-    if (oldWidget.isInteractionEnabled != widget.isInteractionEnabled) {
-      _syncInteractionState();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool showError = _bannerPlaceState == BannerPlaceState.failed &&
-        widget.bannerPlaceErrorBuilder != null;
-    final bool isHidden = !showError &&
-        widget.hideOnEmpty &&
-        (_bannerPlaceState == BannerPlaceState.failed ||
-            (_bannerPlaceState == BannerPlaceState.loaded && _loadedSize == 0));
-
-    Widget? placeholder = widget.bannerPlaceLoaderBuilder != null
-        ? widget.bannerPlaceLoaderBuilder!(context)
-        : const SizedBox.shrink();
-
-    final bool showLoader = _bannerPlaceState == BannerPlaceState.loading ||
-        _bannerPlaceState == BannerPlaceState.none;
-
-    return Offstage(
-      offstage: isHidden,
-      child: SizedBox(
-        height: widget.height,
-        width: MediaQuery.of(context).size.width,
-        child: VisibilityDetector(
-          key: ValueKey(bannerWidgetId),
-          onVisibilityChanged: (VisibilityInfo info) {
-            if (info.visibleFraction > 0.0) {
-              isVisible = true;
-            } else {
-              isVisible = false;
-            }
-          },
-          child: Stack(
-            children: [
-              if (_sdkInitialized) buildPlatformView(context),
-              Positioned.fill(
-                child: IgnorePointer(
-                  ignoring: !showLoader,
-                  child: AnimatedOpacity(
-                    opacity: showLoader ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: placeholder,
-                  ),
-                ),
-              ),
-              if (showError)
-                Positioned.fill(
-                  child: widget.bannerPlaceErrorBuilder!(
-                      context, _errorMessage ?? 'Failed to load banner'),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildPlatformView(BuildContext context) {
-    if (Platform.isAndroid) {
-      return SizedBox(
-        height: widget.height,
-        width: MediaQuery.of(context).size.width,
-        child: AndroidBannerView(
-          bannerWidgetId: bannerWidgetId,
-          placeId: widget.placeId,
-          decoration: widget.placeDecoration,
-          bannerDecoration: widget.bannerDecoration,
-          autoLoad: widget.autoLoad,
-          onPlatformViewCreated: () {
-            _platformViewCreated = true;
-            if (!_lastInteractionState) {
-              BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-                  .setInteraction(false)
-                  .ignore();
-            }
-          },
-        ),
-      );
-    }
-    if (Platform.isIOS) {
-      return SizedBox(
-        height: widget.height,
-        width: MediaQuery.of(context).size.width,
-        child: IosBannerView(
-          bannerWidgetId: bannerWidgetId,
-          placeId: widget.placeId,
-          decoration: widget.placeDecoration,
-          bannerDecoration: widget.bannerDecoration,
-          autoLoad: widget.autoLoad,
-          onPlatformViewCreated: () {
-            _platformViewCreated = true;
-            if (!_lastInteractionState) {
-              BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-                  .setInteraction(false)
-                  .ignore();
-            }
-          },
-        ),
-      );
-    }
-    return const Center(
-      child: Text('Unknown platform'),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timeoutTimer?.cancel();
-    _currentRoute?.secondaryAnimation?.removeListener(_onRouteAnimationChanged);
-    _currentRoute?.secondaryAnimation
-        ?.removeStatusListener(_onRouteStatusChanged);
-    _currentRoute = null;
-    BannerViewHostApi(messageChannelSuffix: bannerWidgetId)
-        .deInitBannerPlace()
-        .ignore();
-    BannerPlaceCallbackFlutterApi.setUp(null,
-        messageChannelSuffix: bannerWidgetId);
-    super.dispose();
-  }
-
-  @override
-  void onActionWith(BannerData bannerData, String widgetEventName,
-      Map<String, Object?>? widgetData) {
-    if (isVisible) {
-      widget.onActionWith?.call(bannerData, widgetEventName, widgetData);
-    }
-  }
-
-  @override
-  void onBannerPlaceLoaded(int size, int widgetHeight) {
-    _timeoutTimer?.cancel();
-    _loadedSize = size;
-    widget.onBannerPlaceLoaded?.call(size, widgetHeight);
-    if (mounted) {
-      setState(() {
-        _bannerPlaceState = BannerPlaceState.loaded;
-      });
-    }
-  }
-
-  @override
-  void onBannerPlaceLoadError(String message) {
-    _timeoutTimer?.cancel();
-    _errorMessage = message;
-    widget.onBannerPlaceLoadError?.call(message);
-    if (mounted) {
-      setState(() {
-        _bannerPlaceState = BannerPlaceState.failed;
-      });
-    }
-  }
-
-  @override
-  void onBannerPlacePreloaded() {
-    widget.onBannerPlacePreloaded?.call();
-  }
-
-  @override
-  void onBannerPlacePreloadedError() {
-    widget.onPreloadedError?.call();
-  }
-
-  @override
-  void onBannerScroll(int index) {
-    if (isVisible) {
-      widget.onBannerScroll?.call(index);
-    }
-  }
-}
-
-class BannerDecoration {
-  Color? color;
-  String? image;
-
-  BannerDecoration({
-    this.color,
-    this.image,
-  });
+  bool get isGrid => false;
 }

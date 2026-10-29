@@ -20,7 +20,8 @@ class CustomPlaceholderView: UIView, PlaceholderProtocol {
 
     private weak var registrar: FlutterPluginRegistrar?
 
-    private var decoration: BannerDecorationDTO?
+    private var color: Int64?
+    private var image: String?
 
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -34,44 +35,32 @@ class CustomPlaceholderView: UIView, PlaceholderProtocol {
     }
 
     public func setDecoration(
-        _ decoration: BannerDecorationDTO?,
+        color: Int64?,
+        image: String?,
         registrar: FlutterPluginRegistrar
     ) {
-        self.decoration = decoration
+        self.color = color
+        self.image = image
         self.registrar = registrar
         setupView()
     }
 
     // MARK: - Setup
     private func setupView() {
+        if let color {
+            backgroundColor = uiColorFromInt64(hexValue: color)
+        }
+        if let image, let uiImage = getUIImage(path: image) {
+            let imageView = UIImageView(image: uiImage)
+            imageView.contentMode = .center
+            imageView.image = uiImage.imageFlippedForRightToLeftLayoutDirection()
+            imageView.translatesAutoresizingMaskIntoConstraints = false
 
-        if decoration != nil {
-            if (decoration?.color) != nil {
-                backgroundColor = uiColorFromInt64(
-                    hexValue: (decoration?.color)!
-                )
-            }
-            if (decoration?.image) != nil {
-                let image = getUIImage(path: (decoration?.image!)!)
-                if image != nil {
-                    let imageView = UIImageView(image: image!)
-                    imageView.contentMode = .center
-                    imageView.image =
-                        image!.imageFlippedForRightToLeftLayoutDirection()
-                    imageView.translatesAutoresizingMaskIntoConstraints = false
-
-                    addSubview(imageView)
-                    NSLayoutConstraint.activate([
-                        imageView.centerXAnchor.constraint(
-                            equalTo: centerXAnchor
-                        ),
-                        imageView.centerYAnchor.constraint(
-                            equalTo: centerYAnchor
-                        ),
-
-                    ])
-                }
-            }
+            addSubview(imageView)
+            NSLayoutConstraint.activate([
+                imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            ])
         }
     }
 

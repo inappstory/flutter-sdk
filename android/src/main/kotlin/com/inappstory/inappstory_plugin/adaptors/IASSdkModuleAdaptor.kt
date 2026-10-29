@@ -12,6 +12,7 @@ import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.inappstory_plugin.runOnMainThread
+import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
 import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
@@ -52,9 +53,12 @@ class InappstorySdkModuleAdaptor(
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
+    private val bannerPlaceholderStore = BannerPlaceholderStore(flutterPluginBinding)
+
     private val bannerFactory = BannerViewFactory(
         flutterPluginBinding,
         appearanceManager,
+        bannerPlaceholderStore,
     )
 
     init {
@@ -70,7 +74,8 @@ class InappstorySdkModuleAdaptor(
                     messageId: String,
                     token: String,
                     onlyPreloaded: Boolean,
-                    bottomPadding: Double?
+                    bottomPadding: Double?,
+                    tags: List<String>?
                 ) {
                     Log.w("InAppStory", "showById called before initWith")
                 }
@@ -79,7 +84,8 @@ class InappstorySdkModuleAdaptor(
                     event: String,
                     token: String,
                     onlyPreloaded: Boolean,
-                    bottomPadding: Double?
+                    bottomPadding: Double?,
+                    tags: List<String>?
                 ) {
                     Log.w("InAppStory", "showByEvent called before initWith")
                 }
@@ -106,7 +112,7 @@ class InappstorySdkModuleAdaptor(
                     Log.w("InAppStory", "showOnce called before initWith")
                 }
 
-                override fun show(storyId: String, token: String) {
+                override fun show(storyId: String, token: String, tags: List<String>?) {
                     Log.w("InAppStory", "show story by id called before initWith")
                 }
 
@@ -303,11 +309,17 @@ class InappstorySdkModuleAdaptor(
                 InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
 
             appearanceManagerAdaptor =
-                AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager, activityHolder)
+                AppearanceManagerAdaptor(
+                    flutterPluginBinding,
+                    appearanceManager,
+                    activityHolder,
+                    bannerPlaceholderStore,
+                )
 
             singleStoryApi = IASSingleStoryAdaptor(
                 flutterPluginBinding,
                 appearanceManager,
+                inAppStoryManager,
                 inAppStoryAPI.singleStory,
                 activityHolder,
             )

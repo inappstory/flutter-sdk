@@ -9,7 +9,8 @@ open class BannerPlaceLoadCallbackHandler(
     private val callbackApi: BannerPlaceCallbackFlutterApi,
     private val toDp: (Int) -> Long,
     private val onVisibilityChanged: (Boolean) -> Unit = {},
-    private val runOnMain: (() -> Unit) -> Unit = { it() }
+    private val runOnMain: (() -> Unit) -> Unit = { it() },
+    private val waitForContentLoaded: Boolean = true
 ) : BannerPlaceLoadCallback(placeId) {
 
     var isBannerPlaceLoadedSent = false
@@ -37,9 +38,11 @@ open class BannerPlaceLoadCallbackHandler(
                 onVisibilityChanged(false)
                 callbackApi.onBannerPlaceLoaded(0L, 0L) {}
             } else {
-                val heightDp = toDp(widgetHeight)
+                val heightDp = if (widgetHeight > 0) toDp(widgetHeight) else 0L
                 pendingBannerPlaceLoaded = Pair(size.toLong(), heightDp)
-                if (hasBannerContentLoaded && !isBannerPlaceLoadedSent) {
+                if ((!waitForContentLoaded || hasBannerContentLoaded) &&
+                    !isBannerPlaceLoadedSent
+                ) {
                     isBannerPlaceLoadedSent = true
                     onVisibilityChanged(true)
                     callbackApi.onBannerPlaceLoaded(size.toLong(), heightDp) {}

@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/inappstory/IAS-iOS-SPM.git",
       "state" : {
-        "revision" : "dba5f75186e6d3da9a0d8144067699a0987895f6",
-        "version" : "1.29.8"
+        "revision" : "0c73fc430ffa791075b10a55a47d605aed5d604a",
+        "version" : "1.29.9"
       }
     }
   ],

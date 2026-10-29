@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../generated/pigeon_generated.g.dart' show GoodsItemDataDto;
+import '../generated/appearance_manager.g.dart' show GoodsItemDataDto;
 
 final class GoodsItemData {
   const GoodsItemData({
@@ -23,6 +23,18 @@ final class GoodsItemData {
   final String? price;
 
   final String? oldPrice;
+
+  @internal
+  factory GoodsItemData.fromDto(GoodsItemDataDto dto) {
+    return GoodsItemData(
+      sku: dto.sku ?? '',
+      title: dto.title,
+      description: dto.productDescription,
+      image: dto.image,
+      price: dto.price,
+      oldPrice: dto.oldPrice,
+    );
+  }
 
   @internal
   GoodsItemDataDto toDto() {

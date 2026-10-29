@@ -14,8 +14,8 @@ class ErrorCallbackFlutterApiImpl implements ErrorCallbackFlutterApi {
   IASErrorCallback? callback;
 
   @override
-  void sessionError() => callback?.sessionError?.call();
+  Future<void> sessionError() async => callback?.sessionError?.call();
 
   @override
-  void noConnection() => callback?.noConnection?.call();
+  Future<void> noConnection() async => callback?.noConnection?.call();
 }

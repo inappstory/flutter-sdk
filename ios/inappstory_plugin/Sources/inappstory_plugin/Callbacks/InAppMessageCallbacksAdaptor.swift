@@ -72,11 +72,11 @@ class InAppMessageCallbacksAdaptor {
 
     private func mapMessageType(_ raw: String?) -> InAppMessageTypeDto {
         switch raw?.lowercased() {
-        case "fullscreen": return .fULLSCREEN
-        case "bottomsheet": return .bOTTOMSHEET
-        case "popup": return .pOPUP
-        case "toast": return .tOAST
-        default: return .uNDEFINED
+        case "fullscreen": return .fullScreen
+        case "bottomsheet": return .bottomSheet
+        case "popup": return .popUp
+        case "toast": return .toast
+        default: return .undefined
         }
     }
 }

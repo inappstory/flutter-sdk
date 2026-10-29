@@ -55,24 +55,24 @@ class GameEventCallbackAdaptor {
 
     private func mapContentType(arg: StoryType?) -> ContentTypeDto {
         switch arg {
-        case .story: return ContentTypeDto.sTORY
-        case .iam: return ContentTypeDto.iNAPPMESSAGE
-        case .storyUGC: return ContentTypeDto.uGC
+        case .story: return ContentTypeDto.story
+        case .iam: return ContentTypeDto.inAppMessage
+        case .storyUGC: return ContentTypeDto.ugc
         @unknown default:
             NSLog("WARNING: unknown StoryType")
-            return ContentTypeDto.sTORY
+            return ContentTypeDto.story
         }
     }
 
     private func mapSourceType(arg: StorySource?) -> SourceTypeDto {
         switch arg {
-        case .single: return SourceTypeDto.sINGLE
-        case .onboarding: return SourceTypeDto.oNBOARDING
-        case .favorite: return SourceTypeDto.fAVORITE
-        case .list: return SourceTypeDto.lIST
+        case .single: return SourceTypeDto.single
+        case .onboarding: return SourceTypeDto.onboarding
+        case .favorite: return SourceTypeDto.favorite
+        case .list: return SourceTypeDto.list
         @unknown default:
             NSLog("WARNING: unknown StorySource")
-            return SourceTypeDto.sINGLE
+            return SourceTypeDto.single
         }
     }
 

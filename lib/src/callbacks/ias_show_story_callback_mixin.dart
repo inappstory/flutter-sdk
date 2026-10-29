@@ -17,11 +17,11 @@ mixin IASShowStoryCallback<T extends StatefulWidget> on State<T>
   }
 
   @override
-  void alreadyShown() {}
+  Future<void> alreadyShown() async {}
 
   @override
-  void onError() {}
+  Future<void> onError() async {}
 
   @override
-  void onShow() {}
+  Future<void> onShow() async {}
 }

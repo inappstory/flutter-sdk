@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:meta/meta.dart';
 
-import '../generated/pigeon_generated.g.dart' show GoodsItemAppearanceDto;
+import '../generated/appearance_manager.g.dart' show GoodsItemAppearanceDto;
 
 class GoodsItemAppearance {
   final Color? itemBackgroundColor;
