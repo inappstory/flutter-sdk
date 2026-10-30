@@ -14,7 +14,6 @@ dependencies:
   plugin_platform_interface: ^2.1.8
   visibility_detector: ^0.4.0+2
   video_player: ^2.10.1
-  shimmer: ^3.0.0
   meta: ^1.18.0
   scrollview_observer: ^1.26.2
   async: ^2.13.1

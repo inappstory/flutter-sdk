@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "command": "bash .agents/setup",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}

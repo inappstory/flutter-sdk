@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+
+import '../../helpers/shimmer.dart';
 
 class BannerPlacePlaceholder extends StatelessWidget {
   /// Creates a [BannerPlacePlaceholder].

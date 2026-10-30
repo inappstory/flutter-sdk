@@ -5,7 +5,7 @@
 - Optional targeting tags for single-story and in-app-message display
 - `BannerGrid` widget for two-column banner layouts, configured with `BannerGridDecoration` (gaps and corner radius)
 - `AppearanceManager.setBannersPlaceholder` to set the banner loading placeholder once for all banner places
-- `InAppStoryManager.openGame`, `closeGame` and `preloadGames` to control games
+- `InAppStoryManager.instance.openGame`, `closeGame` and `preloadGames` to control games
 
 ### Changed
 
