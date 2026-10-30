@@ -17,6 +17,30 @@ void main() {
     final messenger =
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
+    List<List<Object?>> captureStoryCalls(String method) {
+      final channel =
+          'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.$method';
+      final calls = <List<Object?>>[];
+      messenger.setMockMessageHandler(channel, (data) async {
+        calls.add(codec.decodeMessage(data)! as List<Object?>);
+        return codec.encodeMessage(<Object?>[]);
+      });
+      addTearDown(() => messenger.setMockMessageHandler(channel, null));
+      return calls;
+    }
+
+    List<List<Object?>> captureIAMCalls(String method) {
+      final channel =
+          'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.$method';
+      final calls = <List<Object?>>[];
+      messenger.setMockMessageHandler(channel, (data) async {
+        calls.add(codec.decodeMessage(data)! as List<Object?>);
+        return codec.encodeMessage(<Object?>[]);
+      });
+      addTearDown(() => messenger.setMockMessageHandler(channel, null));
+      return calls;
+    }
+
     group('GIVEN the logger', () {
       test('WHEN unset THEN a logger is created', () {
         expect(manager.logger, isA<IASLogger>());
@@ -50,85 +74,155 @@ void main() {
       });
     });
 
-    group('WHEN showing a story with tags', () {
-      test('THEN it forwards tags to the existing native API', () async {
-        Object? message;
-        const channel =
-            'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show';
-        messenger.setMockMessageHandler(channel, (data) async {
-          message = codec.decodeMessage(data);
-          return codec.encodeMessage(<Object?>[]);
-        });
-        addTearDown(() => messenger.setMockMessageHandler(channel, null));
-
-        final operation = manager.showStory('story-id', tags: const ['promo']);
-
-        expect(await operation.value, isTrue);
-        final arguments = message! as List<Object?>;
-        expect(arguments[0], 'story-id');
-        expect(arguments[2], ['promo']);
-      });
-
-      test('THEN it preserves the old call when tags are omitted', () async {
-        Object? message;
-        const channel =
-            'dev.flutter.pigeon.inappstory_plugin.IASSingleStoryHostApi.show';
-        messenger.setMockMessageHandler(channel, (data) async {
-          message = codec.decodeMessage(data);
-          return codec.encodeMessage(<Object?>[]);
-        });
-        addTearDown(() => messenger.setMockMessageHandler(channel, null));
+    group('WHEN showing a story', () {
+      test('THEN it calls the native show API without targeting tags',
+          () async {
+        final calls = captureStoryCalls('show');
 
         final operation = manager.showStory('story-id');
 
         expect(await operation.value, isTrue);
-        expect((message! as List<Object?>)[2], isNull);
+        expect(calls, [
+          ['story-id', isA<String>()],
+        ]);
       });
     });
 
-    group('WHEN showing an in-app message by ID with tags', () {
-      test('THEN it forwards tags to the existing native API', () async {
-        Object? message;
-        const channel =
-            'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showById';
-        messenger.setMockMessageHandler(channel, (data) async {
-          message = codec.decodeMessage(data);
-          return codec.encodeMessage(<Object?>[]);
-        });
-        addTearDown(() => messenger.setMockMessageHandler(channel, null));
+    group('WHEN showing a story with targeting', () {
+      test('THEN it forwards the tags to the native targeting API', () async {
+        final calls = captureStoryCalls('showWithTargeting');
 
-        final operation = manager.showIAMById(
+        final operation = manager.showStoryWithTargeting(
+          'story-id',
+          tags: const ['promo'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          [
+            'story-id',
+            isA<String>(),
+            ['promo'],
+          ],
+        ]);
+      });
+
+      test('THEN it sends no tags when they are omitted', () async {
+        final calls = captureStoryCalls('showWithTargeting');
+
+        final operation = manager.showStoryWithTargeting('story-id');
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['story-id', isA<String>(), null],
+        ]);
+      });
+
+      test('THEN it replaces invalid tags with an empty list', () async {
+        final calls = captureStoryCalls('showWithTargeting');
+
+        final operation = manager.showStoryWithTargeting(
+          'story-id',
+          tags: const ['not valid'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['story-id', isA<String>(), <String>[]],
+        ]);
+      });
+    });
+
+    group('WHEN showing an in-app message by ID', () {
+      test('THEN it calls the native API without targeting tags', () async {
+        final calls = captureIAMCalls('showById');
+
+        final operation = manager.showIAMById('message-id');
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['message-id', isA<String>(), false, null],
+        ]);
+      });
+
+      test('THEN the targeting method forwards tags', () async {
+        final calls = captureIAMCalls('showByIdWithTargeting');
+
+        final operation = manager.showIAMByIdWithTargeting(
           'message-id',
           tags: const ['promo'],
         );
 
         expect(await operation.value, isTrue);
-        final arguments = message! as List<Object?>;
-        expect(arguments[0], 'message-id');
-        expect(arguments[4], ['promo']);
+        expect(calls, [
+          [
+            'message-id',
+            isA<String>(),
+            false,
+            null,
+            ['promo']
+          ],
+        ]);
+      });
+
+      test('THEN the targeting method sends null when tags are omitted',
+          () async {
+        final calls = captureIAMCalls('showByIdWithTargeting');
+
+        final operation = manager.showIAMByIdWithTargeting('message-id');
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['message-id', isA<String>(), false, null, null],
+        ]);
+      });
+
+      test('THEN the targeting method replaces invalid tags with an empty list',
+          () async {
+        final calls = captureIAMCalls('showByIdWithTargeting');
+
+        final operation = manager.showIAMByIdWithTargeting(
+          'message-id',
+          tags: const ['not valid'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['message-id', isA<String>(), false, null, <String>[]],
+        ]);
       });
     });
 
-    group('WHEN showing an in-app message by event with tags', () {
-      test('THEN it forwards tags to the existing native API', () async {
-        Object? message;
-        const channel =
-            'dev.flutter.pigeon.inappstory_plugin.IASInAppMessagesHostApi.showByEvent';
-        messenger.setMockMessageHandler(channel, (data) async {
-          message = codec.decodeMessage(data);
-          return codec.encodeMessage(<Object?>[]);
-        });
-        addTearDown(() => messenger.setMockMessageHandler(channel, null));
+    group('WHEN showing an in-app message by event', () {
+      test('THEN it calls the native API without tags', () async {
+        final calls = captureIAMCalls('showByEvent');
 
-        final operation = manager.showIAMByEvent(
+        final operation = manager.showIAMByEvent('welcome');
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          ['welcome', isA<String>(), false, null],
+        ]);
+      });
+
+      test('THEN the targeting method forwards tags', () async {
+        final calls = captureIAMCalls('showByEventWithTargeting');
+
+        final operation = manager.showIAMByEventWithTargeting(
           'welcome',
           tags: const ['promo'],
         );
 
         expect(await operation.value, isTrue);
-        final arguments = message! as List<Object?>;
-        expect(arguments[0], 'welcome');
-        expect(arguments[4], ['promo']);
+        expect(calls, [
+          [
+            'welcome',
+            isA<String>(),
+            false,
+            null,
+            ['promo']
+          ],
+        ]);
       });
     });
 

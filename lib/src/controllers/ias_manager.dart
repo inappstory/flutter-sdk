@@ -30,6 +30,13 @@ import 'logger.dart';
 /// content such as single stories, onboardings, in-app messages and games.
 ///
 /// Use the shared [InAppStoryManager.instance].
+///
+/// Show methods return a [CancelableOperation] whose value reports completion
+/// of the native call, not whether content was displayed. A native-call error
+/// is logged and reported as `false`; otherwise the value is `true`.
+///
+/// Cancelling a pending operation requests native cancellation. It does not
+/// guarantee that already displayed content is closed.
 class InAppStoryManager {
   InAppStoryManager._private() {
     SkusCallbackFlutterApi.setUp(_callbackImpl);
@@ -71,22 +78,22 @@ class InAppStoryManager {
     await _iasManager.setPlaceholders(placeholders);
   }
 
-  /// Replaces the current tags with [tags], returning true when they were
+  /// Replaces the current tags with [tags], returning `true` when they were
   /// valid and applied as-is.
   ///
-  /// Invalid tags are logged and dropped: the tags are cleared (set empty) and
-  /// false is returned instead of throwing.
+  /// If validation fails, the entire tag list is cleared and `false` is
+  /// returned. Validation failures are logged; native-call errors propagate.
   Future<bool> setTags(List<String> tags) async {
     final valid = checkTags(tags);
     await _iasManager.setTags(valid ? tags : const <String>[]);
     return valid;
   }
 
-  /// Adds [tags] to the current tags, returning true when they were valid and
+  /// Adds [tags] to the current tags, returning `true` when they were valid and
   /// added.
   ///
-  /// Invalid tags are logged and dropped: nothing is added and false is
-  /// returned instead of throwing.
+  /// If validation fails, nothing is added and `false` is returned.
+  /// Validation failures are logged; native-call errors propagate.
   Future<bool> addTags(List<String> tags) async {
     if (!checkTags(tags)) {
       return false;
@@ -95,11 +102,11 @@ class InAppStoryManager {
     return true;
   }
 
-  /// Removes [tags] from the current tags, returning true when they were valid
+  /// Removes [tags] from the current tags, returning `true` when they were valid
   /// and removed.
   ///
-  /// Invalid tags are logged and dropped: nothing is removed and false is
-  /// returned instead of throwing.
+  /// If validation fails, nothing is removed and `false` is returned.
+  /// Validation failures are logged; native-call errors propagate.
   Future<bool> removeTags(List<String> tags) async {
     if (!checkTags(tags)) {
       return false;
@@ -209,11 +216,13 @@ class InAppStoryManager {
     return await _iam.preloadMessages(ids: ids);
   }
 
-  /// Shows onboarding stories from [feed], up to [limit] stories.
+  /// Requests onboarding stories from [feed], up to [limit] stories.
   ///
   /// [feed] defaults to `'onboarding'`. Non-null [tags] filter the stories.
-  /// Completes with `true` on success and `false` on error. Cancel the
-  /// operation to stop showing the onboarding.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that any stories were displayed.
+  /// Cancel a pending operation to request native cancellation.
   CancelableOperation<bool> showOnboarding(int limit,
       {String? feed, List<String>? tags}) {
     final uniqueId = idGenerator();
@@ -236,83 +245,151 @@ class InAppStoryManager {
     return operation;
   }
 
-  /// Shows the in-app message with ID [id].
+  /// Requests the in-app message with ID [id] without targeting checks.
   ///
-  /// If [onlyPreloaded] is `true`, the message is shown only if it was
-  /// preloaded. [bottomPadding] is the space, in logical pixels, between the
-  /// message and the bottom of the screen. Non-null [tags] are used for
-  /// targeting. Completes with `true` on success and `false` on error. Cancel
-  /// the operation to stop showing the message.
+  /// Use [showIAMByIdWithTargeting] to check targeting filters, including when
+  /// no request-specific tags are supplied.
+  ///
+  /// [onlyPreloaded] requires the message to have been preloaded.
+  /// [bottomPadding] is the space between the message and the bottom of the
+  /// screen, in logical pixels; `null` is treated as zero.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the message was displayed.
+  /// Cancel a pending operation to request native cancellation.
   CancelableOperation<bool> showIAMById(
     String id, {
     bool onlyPreloaded = false,
     double? bottomPadding,
-    List<String>? tags,
-  }) {
-    final uniqueId = idGenerator();
-    var operation = CancelableOperation.fromFuture(
-      _iam
-          .showById(id, uniqueId,
-              onlyPreloaded: onlyPreloaded,
-              bottomPadding: bottomPadding,
-              tags: tags == null ? null : sanitizeTags(tags))
-          .then((value) => true)
-          .catchError((error) {
-        log('[InAppStory]: showIAMById finished with error', error: error);
-        return false;
-      }),
-      onCancel: () async {
-        return _iam.cancelByToken(token: uniqueId);
-      },
-    );
-    return operation;
-  }
+  }) =>
+      _showIAM(
+        (token) => _iam.showById(
+          id,
+          token,
+          onlyPreloaded: onlyPreloaded,
+          bottomPadding: bottomPadding,
+        ),
+      );
 
-  /// Shows the in-app message triggered by the event [id].
+  /// Requests the in-app message with ID [id] with targeting enabled.
   ///
-  /// If [onlyPreloaded] is `true`, the message is shown only if it was
-  /// preloaded. [bottomPadding] is the space, in logical pixels, between the
-  /// message and the bottom of the screen. Non-null [tags] are used for
-  /// targeting. Completes with `true` on success and `false` on error. Cancel
-  /// the operation to stop showing the message.
-  CancelableOperation<bool> showIAMByEvent(
+  /// Targeting is enabled by choosing this method, even when [tags] is `null`.
+  /// Use [showIAMById] to skip targeting checks.
+  ///
+  /// Non-null [tags] override the tags for this request without changing SDK
+  /// settings. An empty list explicitly requests no tags. Validation failures
+  /// are logged and the entire invalid list is replaced with an empty list.
+  /// A `null` value is passed through for the native SDK to handle.
+  ///
+  /// [onlyPreloaded] requires the message to have been preloaded; it does not
+  /// bypass targeting checks or guarantee offline operation. [bottomPadding]
+  /// is the bottom spacing in logical pixels; `null` is treated as zero.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the message was displayed.
+  /// Cancel a pending operation to request native cancellation.
+  CancelableOperation<bool> showIAMByIdWithTargeting(
     String id, {
     bool onlyPreloaded = false,
     double? bottomPadding,
     List<String>? tags,
-  }) {
+  }) =>
+      _showIAM(
+        (token) => _iam.showByIdWithTargeting(
+          id,
+          token,
+          onlyPreloaded: onlyPreloaded,
+          bottomPadding: bottomPadding,
+          tags: tags == null ? null : sanitizeTags(tags),
+        ),
+      );
+
+  /// Requests an in-app message for the event named [id].
+  ///
+  /// The native SDK always applies targeting to event requests. This method
+  /// does not supply a request-specific tag override; use
+  /// [showIAMByEventWithTargeting] to supply one.
+  ///
+  /// [onlyPreloaded] requires the message to have been preloaded.
+  /// [bottomPadding] is the space between the message and the bottom of the
+  /// screen, in logical pixels; `null` is treated as zero.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the message was displayed.
+  /// Cancel a pending operation to request native cancellation.
+  CancelableOperation<bool> showIAMByEvent(
+    String id, {
+    bool onlyPreloaded = false,
+    double? bottomPadding,
+  }) =>
+      _showIAM(
+        (token) => _iam.showByEvent(
+          id,
+          token,
+          onlyPreloaded: onlyPreloaded,
+          bottomPadding: bottomPadding,
+        ),
+      );
+
+  /// Requests an in-app message for the event named [id] with optional tags.
+  ///
+  /// Like [showIAMByEvent], this always uses native event targeting.
+  /// Supplying [tags] changes the request's tags, not whether targeting runs.
+  ///
+  /// Non-null [tags] override the tags for this request without changing SDK
+  /// settings. An empty list explicitly requests no tags. Validation failures
+  /// are logged and the entire invalid list is replaced with an empty list.
+  /// A `null` value is passed through for the native SDK to handle.
+  ///
+  /// [onlyPreloaded] requires the message to have been preloaded.
+  /// [bottomPadding] is the bottom spacing in logical pixels; `null` is treated
+  /// as zero.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the message was displayed.
+  /// Cancel a pending operation to request native cancellation.
+  CancelableOperation<bool> showIAMByEventWithTargeting(
+    String id, {
+    bool onlyPreloaded = false,
+    double? bottomPadding,
+    List<String>? tags,
+  }) =>
+      _showIAM(
+        (token) => _iam.showByEventWithTargeting(
+          id,
+          token,
+          onlyPreloaded: onlyPreloaded,
+          bottomPadding: bottomPadding,
+          tags: tags == null ? null : sanitizeTags(tags),
+        ),
+      );
+
+  CancelableOperation<bool> _showIAM(
+    Future<void> Function(String token) show,
+  ) {
     final uniqueId = idGenerator();
-    var operation = CancelableOperation.fromFuture(
-      _iam
-          .showByEvent(id, uniqueId,
-              onlyPreloaded: onlyPreloaded,
-              bottomPadding: bottomPadding,
-              tags: tags == null ? null : sanitizeTags(tags))
-          .then((value) => true)
-          .catchError((error) {
-        log('[InAppStory]: showIAMByEvent finished with error', error: error);
+    return CancelableOperation.fromFuture(
+      show(uniqueId).then((_) => true).catchError((error) {
+        log('[InAppStory]: In-app message request failed', error: error);
         return false;
       }),
-      onCancel: () async {
-        return _iam.cancelByToken(token: uniqueId);
-      },
+      onCancel: () async => _iam.cancelByToken(token: uniqueId),
     );
-    return operation;
   }
 
-  /// Opens the story with ID [id] in the reader.
+  /// Requests the story with ID [id] without targeting checks.
   ///
-  /// Non-null [tags] are used for targeting. Completes with `true` on success
-  /// and `false` on error. Cancel the operation to stop opening the story.
-  CancelableOperation<bool> showStory(String id, {List<String>? tags}) {
+  /// Use [showStoryWithTargeting] to check targeting filters, including when
+  /// no request-specific tags are supplied.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the story was displayed.
+  /// Cancel a pending operation to request native cancellation.
+  CancelableOperation<bool> showStory(String id) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
       _singleStoryApi
-          .show(
-            storyId: id,
-            token: uniqueId,
-            tags: tags == null ? null : sanitizeTags(tags),
-          )
+          .show(storyId: id, token: uniqueId)
           .then((value) => true)
           .catchError((error) {
         log('[InAppStory]: ShowStory finished with error', error: error);
@@ -325,10 +402,13 @@ class InAppStoryManager {
     return operation;
   }
 
-  /// Opens the story with ID [id] only if the user has not seen it yet.
+  /// Requests the story with ID [id] only if the user has not seen it yet.
   ///
-  /// Completes with `true` on success and `false` on error. Cancel the
-  /// operation to stop opening the story.
+  /// Targeting is not applied.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the story was displayed.
+  /// Cancel a pending operation to request native cancellation.
   CancelableOperation<bool> showStoryOnce(String id) {
     final uniqueId = idGenerator();
     var operation = CancelableOperation.fromFuture(
@@ -346,8 +426,47 @@ class InAppStoryManager {
     return operation;
   }
 
-  /// Opens the game with [gameId]. Game lifecycle events are delivered to
-  /// [IASGameReaderCallback].
+  /// Requests the story with ID [id] with targeting enabled.
+  ///
+  /// Targeting is enabled by choosing this method, even when [tags] is `null`.
+  /// Use [showStory] to skip targeting checks.
+  ///
+  /// Non-null [tags] override the tags for this request without changing SDK
+  /// settings. An empty list explicitly requests no tags. Validation failures
+  /// are logged and the entire invalid list is replaced with an empty list.
+  /// A `null` value is passed through for the native SDK to handle.
+  ///
+  /// Completes with `true` if the native call returns without error, or `false`
+  /// if it fails. This does not confirm that the story was displayed.
+  /// Cancel a pending operation to request native cancellation.
+  CancelableOperation<bool> showStoryWithTargeting(
+    String id, {
+    List<String>? tags,
+  }) {
+    final uniqueId = idGenerator();
+    var operation = CancelableOperation.fromFuture(
+      _singleStoryApi
+          .showWithTargeting(
+            storyId: id,
+            token: uniqueId,
+            tags: tags == null ? null : sanitizeTags(tags),
+          )
+          .then((value) => true)
+          .catchError((error) {
+        log('[InAppStory]: showStoryWithTargeting finished with error',
+            error: error);
+        return false;
+      }),
+      onCancel: () async {
+        return _singleStoryApi.cancelByToken(token: uniqueId);
+      },
+    );
+    return operation;
+  }
+
+  /// Opens the game with [gameId].
+  ///
+  /// Game lifecycle events are reported through the registered game callbacks.
   Future<void> openGame(String gameId) async {
     await _games.openGame(gameId);
   }

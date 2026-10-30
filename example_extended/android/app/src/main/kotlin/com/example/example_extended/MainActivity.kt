@@ -1,5 +1,5 @@
 package com.example.example_extended
 
-import io.flutter.embedding.android.FlutterActivity
+import com.inappstory.inappstory_plugin.activity.InAppStoryActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : InAppStoryActivity()

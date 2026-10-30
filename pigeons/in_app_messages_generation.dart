@@ -17,9 +17,15 @@ enum InAppMessageTypeDto { fullScreen, bottomSheet, popUp, toast, undefined }
 @HostApi()
 abstract class IASInAppMessagesHostApi {
   void showById(String messageId, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
+
+  void showByIdWithTargeting(String messageId, String token,
       {bool onlyPreloaded = false, double? bottomPadding, List<String>? tags});
 
   void showByEvent(String event, String token,
+      {bool onlyPreloaded = false, double? bottomPadding});
+
+  void showByEventWithTargeting(String event, String token,
       {bool onlyPreloaded = false, double? bottomPadding, List<String>? tags});
 
   @asyncCallback

@@ -40,25 +40,26 @@ class IASSingleStoryAdaptor(
         tokenMap[token] = cancelToken
     }
 
-    override fun show(storyId: String, token: String, tags: List<String>?) {
-        val cancelToken = if (tags != null) {
-            iasManager.showStoryWithTargeting(
-                storyId,
-                tags,
-                activityHolder.activity,
-                appearanceManager,
-                callback,
-            )
-        } else {
-            iasSingleStory.show(
-                activityHolder.activity,
-                storyId,
-                TargetingBodyObject().apply { targeting = false },
-                appearanceManager,
-                callback,
-                null,
-            )
-        }
+    override fun show(storyId: String, token: String) {
+        val cancelToken = iasSingleStory.show(
+            activityHolder.activity,
+            storyId,
+            TargetingBodyObject().apply { targeting = false },
+            appearanceManager,
+            callback,
+            null,
+        )
+        tokenMap[token] = cancelToken
+    }
+
+    override fun showWithTargeting(storyId: String, token: String, tags: List<String>?) {
+        val cancelToken = iasManager.showStoryWithTargeting(
+            storyId,
+            tags,
+            activityHolder.activity,
+            appearanceManager,
+            callback,
+        )
         tokenMap[token] = cancelToken
     }
 

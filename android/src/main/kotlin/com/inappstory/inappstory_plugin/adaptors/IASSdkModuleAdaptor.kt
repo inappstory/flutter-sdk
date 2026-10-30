@@ -74,20 +74,38 @@ class InappstorySdkModuleAdaptor(
                     messageId: String,
                     token: String,
                     onlyPreloaded: Boolean,
+                    bottomPadding: Double?
+                ) {
+                    Log.w("InAppStory", "showById called before initWith")
+                }
+
+                override fun showByIdWithTargeting(
+                    messageId: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
                     bottomPadding: Double?,
                     tags: List<String>?
                 ) {
-                    Log.w("InAppStory", "showById called before initWith")
+                    Log.w("InAppStory", "showByIdWithTargeting called before initWith")
                 }
 
                 override fun showByEvent(
                     event: String,
                     token: String,
                     onlyPreloaded: Boolean,
+                    bottomPadding: Double?
+                ) {
+                    Log.w("InAppStory", "showByEvent called before initWith")
+                }
+
+                override fun showByEventWithTargeting(
+                    event: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
                     bottomPadding: Double?,
                     tags: List<String>?
                 ) {
-                    Log.w("InAppStory", "showByEvent called before initWith")
+                    Log.w("InAppStory", "showByEventWithTargeting called before initWith")
                 }
 
                 override fun preloadMessages(
@@ -112,8 +130,16 @@ class InappstorySdkModuleAdaptor(
                     Log.w("InAppStory", "showOnce called before initWith")
                 }
 
-                override fun show(storyId: String, token: String, tags: List<String>?) {
+                override fun show(storyId: String, token: String) {
                     Log.w("InAppStory", "show story by id called before initWith")
+                }
+
+                override fun showWithTargeting(
+                    storyId: String,
+                    token: String,
+                    tags: List<String>?
+                ) {
+                    Log.w("InAppStory", "show story with targeting called before initWith")
                 }
 
                 override fun cancelByToken(token: String): Boolean {

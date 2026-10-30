@@ -18,7 +18,9 @@ import 'story_list_generation.dart';
 abstract class IASSingleStoryHostApi {
   void showOnce({required String storyId, required String token});
 
-  void show({
+  void show({required String storyId, required String token});
+
+  void showWithTargeting({
     required String storyId,
     required String token,
     List<String>? tags,

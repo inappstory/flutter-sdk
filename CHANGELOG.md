@@ -2,7 +2,8 @@
 
 ### Added
 
-- Optional targeting tags for single-story and in-app-message display
+- `InAppStoryManager.instance.showIAMByIdWithTargeting` and `showIAMByEventWithTargeting` for in-app-message targeting
+- `InAppStoryManager.instance.showStoryWithTargeting` to open a story with targeting, optionally with tags for this request only
 - `BannerGrid` widget for two-column banner layouts, configured with `BannerGridDecoration` (gaps and corner radius)
 - `AppearanceManager.setBannersPlaceholder` to set the banner loading placeholder once for all banner places
 - `InAppStoryManager.instance.openGame`, `closeGame` and `preloadGames` to control games

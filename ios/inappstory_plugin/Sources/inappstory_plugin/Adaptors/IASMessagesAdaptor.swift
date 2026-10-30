@@ -55,6 +55,25 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         messageId: String,
         token: String,
         onlyPreloaded: Bool,
+        bottomPadding: Double?
+    ) throws {
+        pendingBottomPadding = CGFloat(bottomPadding ?? 0)
+        let completion: (Bool) -> Void = { [weak self] show in
+            if !show { self?.dismissOverlay() }
+        }
+        let cancellationToken = inAppMessagesApi.showInAppMessageWith(
+            id: messageId,
+            targetView: try flutterHostView(),
+            onlyPreloaded: onlyPreloaded,
+            completion: completion
+        )
+        tokenMap[token] = cancellationToken
+    }
+
+    func showByIdWithTargeting(
+        messageId: String,
+        token: String,
+        onlyPreloaded: Bool,
         bottomPadding: Double?,
         tags: [String]?
     ) throws {
@@ -62,27 +81,35 @@ class IASMessagesAdaptor: IASInAppMessagesHostApi {
         let completion: (Bool) -> Void = { [weak self] show in
             if !show { self?.dismissOverlay() }
         }
-        let cancellationToken: InAppStorySDK.CancellationToken?
-        if let tags {
-            cancellationToken = inAppMessagesApi.showInAppMessageWithTargeting(
-                id: messageId,
-                targetView: try flutterHostView(),
-                onlyPreloaded: onlyPreloaded,
-                tags: tags,
-                completion: completion
-            )
-        } else {
-            cancellationToken = inAppMessagesApi.showInAppMessageWith(
-                id: messageId,
-                targetView: try flutterHostView(),
-                onlyPreloaded: onlyPreloaded,
-                completion: completion
-            )
-        }
+        let cancellationToken = inAppMessagesApi.showInAppMessageWithTargeting(
+            id: messageId,
+            targetView: try flutterHostView(),
+            onlyPreloaded: onlyPreloaded,
+            tags: tags,
+            completion: completion
+        )
         tokenMap[token] = cancellationToken
     }
 
     func showByEvent(
+        event: String,
+        token: String,
+        onlyPreloaded: Bool,
+        bottomPadding: Double?
+    ) throws {
+        pendingBottomPadding = CGFloat(bottomPadding ?? 0)
+        let cancellationToken = inAppMessagesApi.showInAppMessageWith(
+            event: event,
+            targetView: try flutterHostView(),
+            onlyPreloaded: onlyPreloaded,
+            tags: nil
+        ) { [weak self] show in
+            if !show { self?.dismissOverlay() }
+        }
+        tokenMap[token] = cancellationToken
+    }
+
+    func showByEventWithTargeting(
         event: String,
         token: String,
         onlyPreloaded: Bool,

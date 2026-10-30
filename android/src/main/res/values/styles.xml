@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Only AppCompat-namespaced attributes: nothing the host theme already defines is changed. -->
+    <style name="InAppStoryAppCompatFallback">
+        <item name="windowActionBar">false</item>
+        <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
+    </style>
+</resources>

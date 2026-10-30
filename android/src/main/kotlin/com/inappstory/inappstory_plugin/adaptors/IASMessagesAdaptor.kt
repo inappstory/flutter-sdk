@@ -56,16 +56,43 @@ class IASMessagesAdaptor(
         token: String,
         onlyPreloaded: Boolean,
         bottomPadding: Double?,
+    ) {
+        val settings = InAppMessageOpenSettings()
+            .id(messageId.toInt())
+            .showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    override fun showByIdWithTargeting(
+        messageId: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?,
         tags: List<String>?
     ) {
         val settings = InAppMessageOpenSettings()
             .id(messageId.toInt())
             .showOnlyIfLoaded(onlyPreloaded)
-            .apply { if (tags != null) tags(tags) }
+            .apply {
+                useTargeting()
+                if (tags != null) tags(tags)
+            }
         showIAM(settings, token, bottomPadding)
     }
 
     override fun showByEvent(
+        event: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?
+    ) {
+        val settings = InAppMessageOpenSettings()
+            .event(event)
+            .showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    override fun showByEventWithTargeting(
         event: String,
         token: String,
         onlyPreloaded: Boolean,
