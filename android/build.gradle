@@ -48,11 +48,14 @@ android {
 
     defaultConfig {
         minSdk = 21
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     dependencies {
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
+        androidTestImplementation("androidx.test:runner:1.6.2")
+        androidTestImplementation("androidx.test.ext:junit:1.2.1")
     }
 
     testOptions {

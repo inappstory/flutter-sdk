@@ -31,6 +31,11 @@ melos run test
 # Android native unit tests (Kotlin / JUnit)
 melos run test:android
 
+# Android input-dialog theme regression tests (requires a device/emulator)
+cd example/android
+./gradlew :inappstory_plugin:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.inappstory.inappstory_plugin.InputDialogThemeTest
+cd ../..
+
 # iOS native unit tests (Swift / XCTest)
 melos run test:ios
 
@@ -66,6 +71,7 @@ melos run mutation-test  # or ./scripts/mutation_test.sh
 - [ ] Banner places load and rotate
 - [ ] Onboarding stories show correctly
 - [ ] In-app messages display and dismiss
+- [ ] Rate us comment fields open the keyboard on tap and accept text with the default Flutter Android theme
 - [ ] Error states handled gracefully (no connection, timeout)
 - [ ] Deep links work correctly
 - [ ] Video stories play with sound control

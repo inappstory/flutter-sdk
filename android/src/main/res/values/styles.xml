@@ -4,5 +4,6 @@
     <style name="InAppStoryAppCompatFallback">
         <item name="windowActionBar">false</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.DayNight.Dialog.Alert</item>
+        <item name="editTextStyle">@style/Widget.AppCompat.EditText</item>
     </style>
 </resources>
