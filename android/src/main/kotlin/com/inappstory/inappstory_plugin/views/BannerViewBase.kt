@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.views
 import BannerPlaceCallbackFlutterApi
 import BannerViewHostApi
 import android.content.Context
+import android.os.Handler
 import android.view.View
 import android.widget.FrameLayout
 import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadError
@@ -26,6 +27,7 @@ import com.inappstory.sdk.banners.BannerPlaceLoadSettings
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.platform.PlatformView
+import kotlin.math.ceil
 
 abstract class BannerViewBase(
     protected val context: Context,
@@ -80,6 +82,7 @@ abstract class BannerViewBase(
     protected abstract fun resumeBanners()
     protected abstract fun disposeBannerView(view: View?)
     protected open val waitForContentLoaded: Boolean = true
+    protected open val waitForLayout: Boolean = false
     protected open fun showNext() {}
     protected open fun showPrevious() {}
     protected open fun showByIndex(index: Int) {}
@@ -106,15 +109,21 @@ abstract class BannerViewBase(
     override fun dispose() = deInitBannerPlace()
 
     private fun createLoadCallback(placeId: String): BannerPlaceLoadCallbackHandler {
+        val mainHandler = Handler(context.mainLooper)
         return BannerPlaceLoadCallbackHandler(
             placeId = placeId,
             callbackApi = bannerPlaceCallback,
-            toDp = { px -> context.toDp(px).toLong() },
+            toDp = { px ->
+                val dp = context.toDp(px)
+                if (waitForLayout) ceil(dp.toDouble()).toLong() else dp.toLong()
+            },
             onVisibilityChanged = { visible ->
                 frame.visibility = if (visible) View.VISIBLE else View.GONE
             },
-            runOnMain = { action -> flutterPluginBinding.runOnMainThread(action) },
-            waitForContentLoaded = waitForContentLoaded
+            runOnMain = { action -> mainHandler.post(action) },
+            waitForContentLoaded = waitForContentLoaded,
+            waitForLayout = waitForLayout,
+            cancelPendingCallbacks = { mainHandler.removeCallbacksAndMessages(null) }
         ).also { bannerLoadCallbackHandler = it }
     }
 
@@ -212,6 +221,8 @@ abstract class BannerViewBase(
     }
 
     private fun recreateBannerView(placeId: String) {
+        bannerLoadCallbackHandler?.dispose()
+        if (waitForLayout) frame.visibility = View.INVISIBLE
         val oldView = nativeBannerView
         disposeBannerView(oldView)
         frame.removeView(oldView)
@@ -226,6 +237,7 @@ abstract class BannerViewBase(
     }
 
     override fun deInitBannerPlace() {
+        bannerLoadCallbackHandler?.dispose()
         resetLoadState()
         loadBannerPlace.unsubscribe()
         reloadBannerPlace.unsubscribe()

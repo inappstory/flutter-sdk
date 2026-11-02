@@ -19,12 +19,12 @@ import com.inappstory.inappstory_plugin.adaptors.ShowByIndexPayload
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
 import com.inappstory.inappstory_plugin.views.BannerPlaceLoadCallbackHandler
+import com.inappstory.inappstory_plugin.views.InactiveBannerPlaceLoadCallback
 import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
 import com.inappstory.inappstory_plugin.views.CustomBannerCarouselAppearance
 import com.inappstory.inappstory_plugin.views.CustomBannerGridAppearance
 import com.inappstory.sdk.banners.BannerCarouselNavigationCallback
 import com.inappstory.sdk.banners.BannerData
-import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
 import android.content.Context
 import android.view.View
@@ -226,24 +226,24 @@ class BannerViewTest {
     }
 
     @Test
-    fun bannerPlaceLoadCallback_negativeWidgetHeight_sendsZeroHeight() {
+    fun givenNonEmptyGrid_whenNativeHeightIsMatchParent_thenNoCollapsedHeightIsSent() {
         val messenger = FakeBinaryMessenger()
         val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
         val callback = BannerPlaceLoadCallbackHandler(
             placeId = "test_place",
             callbackApi = callbackApi,
             toDp = { it.toLong() },
-            waitForContentLoaded = false
+            waitForContentLoaded = false,
+            waitForLayout = true
         )
 
         val bannerList = listOf(BannerData(1, "test_place", null))
         callback.bannerPlaceLoaded(1, bannerList, -1)
 
-        assertEquals(1, messenger.sentMessages.size)
-        val (channel, args) = messenger.sentMessages[0]
-        assertTrue(channel.contains("onBannerPlaceLoaded"))
-        assertEquals(1L, args[0])
-        assertEquals(0L, args[1])
+        assertTrue(messenger.sentMessages.isEmpty(), "Wait for the full grid layout, not height 0")
+
+        callback.onContentLayout(420)
+        assertEquals(listOf(1L, 420L), messenger.sentMessages.single().second)
     }
 
     @Test
@@ -519,15 +519,7 @@ class BannerViewTest {
 
     @Test
     fun dummyBannerPlaceLoadCallback_hasNonNullBannerPlaceAndSafeCallbacks() {
-        val dummy = object : BannerPlaceLoadCallback("") {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {}
-
-            override fun loadError() {}
-            override fun bannerLoaded(p0: Int, p1: Boolean) {}
-            override fun bannerLoadError(p0: Int, p1: Boolean) {}
-        }
+        val dummy = InactiveBannerPlaceLoadCallback
 
         // Must be non-null so BannerCarousel.loadCallback does not throw NullPointerException on callback.bannerPlace()
         assertEquals("", dummy.bannerPlace())

@@ -6,8 +6,6 @@ import android.widget.FrameLayout
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.banners.BannerCarouselNavigationCallback
-import com.inappstory.sdk.banners.BannerData
-import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.ui.carousel.BannerCarousel
 import com.inappstory.sdk.banners.ui.carousel.DefaultBannerCarouselAppearance
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
@@ -108,17 +106,7 @@ class BannerCarouselView(
     override fun disposeBannerView(view: View?) {
         val carousel = view as? BannerCarousel ?: return
         try {
-            carousel.loadCallback(object : BannerPlaceLoadCallback("") {
-                override fun bannerPlaceLoaded(
-                    size: Int,
-                    bannerData: List<BannerData>,
-                    widgetHeight: Int
-                ) {}
-
-                override fun loadError() {}
-                override fun bannerLoaded(p0: Int, p1: Boolean) {}
-                override fun bannerLoadError(p0: Int, p1: Boolean) {}
-            })
+            carousel.loadCallback(InactiveBannerPlaceLoadCallback)
         } catch (_: Throwable) {
         }
         try {

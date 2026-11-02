@@ -3,8 +3,8 @@ import 'decorators/banner_grid_decoration.dart';
 
 /// Displays banners in a two-column grid without internal scrolling.
 ///
-/// [height] must be large enough for all rows. Use an outer scrollable when the
-/// grid content may exceed the available screen space.
+/// Update [height] from [onBannerPlaceLoaded] to fit all rows. Use an outer
+/// scrollable when the grid content may exceed the available screen space.
 class BannerGrid extends BannerPlaceBase {
   /// Creates a grid of banners from the banner place [placeId].
   ///
@@ -18,8 +18,10 @@ class BannerGrid extends BannerPlaceBase {
   /// * [bannerPlaceErrorBuilder]: builds the widget shown if loading fails.
   /// * [onActionWith]: called when a widget inside a banner sends an event.
   /// * [gridDecoration]: the gaps and corner radius of the grid.
-  /// * [onBannerPlaceLoaded]: called with the number of banners and the
-  ///   content height after loading.
+  /// * [onBannerPlaceLoaded]: called with the number of banners and the full
+  ///   content height in logical pixels, including all rows and gaps. On Android,
+  ///   waits for native layout and is called again when the measured content
+  ///   size changes. Empty results report `(0, 0)`.
   /// * [onBannerPlaceLoadError]: called with the error message if loading
   ///   fails or takes longer than [loadingTimeout].
   /// * [onBannerPlacePreloaded]: called when preloading succeeds.

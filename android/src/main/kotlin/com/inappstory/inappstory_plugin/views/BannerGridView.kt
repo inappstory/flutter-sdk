@@ -26,7 +26,9 @@ class BannerGridView(
     bannerDataListener
 ) {
     private var bannerGrid: BannerGrid? = null
+    private var contentLayout: BannerGridContentLayout? = null
     override val waitForContentLoaded: Boolean = false
+    override val waitForLayout: Boolean = true
 
     init {
         initialize(creationParams)
@@ -47,24 +49,41 @@ class BannerGridView(
         placeId: String,
         loadCallback: BannerPlaceLoadCallbackHandler
     ): View {
-        return BannerGrid(context).apply {
+        val grid = BannerGrid(context).apply {
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
             setAppearanceManager(appearanceManager)
             loadCallback(loadCallback)
-            setPlaceId(placeId)
             bannerGrid = this
+        }
+        return BannerGridContentLayout(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+            onContentLayout = loadCallback::onContentLayout
+            addView(grid)
+            contentLayout = this
+            // Binding a place can synchronously replay cached data. The SDK
+            // derives row heights from measuredWidth, so bind only after layout.
+            whenWidthReady {
+                grid.setPlaceId(placeId)
+            }
         }
     }
 
     override fun loadBanners() {
-        bannerGrid?.loadBanners()
+        val grid = bannerGrid ?: return
+        contentLayout?.whenWidthReady { grid.loadBanners() }
     }
 
     override fun reloadBanners() {
-        bannerGrid?.reloadBanners()
+        val grid = bannerGrid ?: return
+        contentLayout?.whenWidthReady {
+            grid.reloadBanners()
+        }
     }
 
     override fun pauseBanners() {
@@ -76,7 +95,10 @@ class BannerGridView(
     }
 
     override fun disposeBannerView(view: View?) {
-        val grid = view as? BannerGrid ?: return
+        (view as? BannerGridContentLayout)?.dispose()
+        contentLayout = null
+        val grid = bannerGrid ?: return
+        grid.loadCallback(InactiveBannerPlaceLoadCallback)
         try {
             grid.setPlaceId(null)
         } catch (_: Throwable) {
