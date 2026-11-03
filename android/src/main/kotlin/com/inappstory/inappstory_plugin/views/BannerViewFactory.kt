@@ -1,6 +1,8 @@
 package com.inappstory.inappstory_plugin.views
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
@@ -40,8 +42,14 @@ class BannerViewFactory(
             createBannersCallback()
         }
         return if (creationParams?.get("layoutType") == "grid") {
+            // Native banner readers require Activity, not Flutter's context wrapper.
+            var activityContext = context
+            while (activityContext is ContextWrapper && activityContext !is Activity) {
+                activityContext = activityContext.baseContext
+            }
+            check(activityContext is Activity) { "BannerGrid requires an Activity context" }
             BannerGridView(
-                context,
+                activityContext,
                 creationParams,
                 flutterPluginBinding,
                 appearanceManager,
