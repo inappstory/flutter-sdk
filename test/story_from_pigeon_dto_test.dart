@@ -2,7 +2,6 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inappstory_plugin/inappstory_plugin.dart';
 import 'package:inappstory_plugin/src/data/story_from_pigeon_dto.dart';
 import 'package:inappstory_plugin/src/generated/pigeon_generated.g.dart';
 

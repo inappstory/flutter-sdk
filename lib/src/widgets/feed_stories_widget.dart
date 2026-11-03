@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../controllers/feed_stories_controller.dart';
 import '../helpers/id_gen.dart';
+import '../helpers/shimmer.dart';
 import 'base/default_feed_favorites_widget.dart';
 import 'builders/base_story_builder.dart';
 import 'builders/builders.dart';

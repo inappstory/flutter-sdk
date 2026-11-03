@@ -18,8 +18,8 @@ mixin IASOnboardingLoadCallback<T extends StatefulWidget> on State<T>
   }
 
   @override
-  void onboardingLoadSuccess(int count, String feed) {}
+  Future<void> onboardingLoadSuccess(int count, String feed) async {}
 
   @override
-  void onboardingLoadError(String feed, String? reason) {}
+  Future<void> onboardingLoadError(String feed, String? reason) async {}
 }

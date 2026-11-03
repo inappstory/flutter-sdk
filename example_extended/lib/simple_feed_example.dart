@@ -108,11 +108,11 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   }
 
   @override
-  void callToAction(
-    SlideDataDto? slideData,
+  Future<void> callToAction(
+    SlideData? slideData,
     String? url,
-    ClickActionDto? clickAction,
-  ) {
+    ClickAction? clickAction,
+  ) async {
     setState(() {
       final content =
           'slideData:$slideData url:$url clickAction:${clickAction?.name}';
@@ -130,54 +130,54 @@ class _SimpleFeedExampleState extends State<SimpleFeedExampleWidget>
   int alreadyShownCounter = 0;
 
   @override
-  void alreadyShown() => showBanner(
+  Future<void> alreadyShown() async => showBanner(
     'IShowStoryOnceCallback.alreadyShown(${++alreadyShownCounter})',
   );
 
   int onErrorCounter = 0;
 
   @override
-  void onError() =>
+  Future<void> onError() async =>
       showBanner('IShowStoryOnceCallback.onError(${++onErrorCounter})');
 
   int onShowCounter = 0;
 
   @override
-  void onShow() =>
+  Future<void> onShow() async =>
       showBanner('IShowStoryOnceCallback.onShow(${++onShowCounter})');
 
   @override
-  void onCloseStory(SlideDataDto? slideData) {
+  Future<void> onCloseStory(SlideData? slideData) async {
     log("closeStory");
   }
 
   @override
-  void onShowStory(StoryDataDto? storyData) {
+  Future<void> onShowStory(StoryData? storyData) async {
     log("onShowStory");
   }
 
   @override
-  void onShareStory(SlideDataDto? slideData) {
+  Future<void> onShareStory(SlideData? slideData) async {
     log("onShareStory");
   }
 
   @override
-  void onDislikeStoryTap(SlideDataDto? slideData, bool isDislike) {
+  Future<void> onDislikeStoryTap(SlideData? slideData, bool isDislike) async {
     log("onDislikeStory $isDislike");
   }
 
   @override
-  void onLikeStoryTap(SlideDataDto? slideData, bool isLike) {
+  Future<void> onLikeStoryTap(SlideData? slideData, bool isLike) async {
     log("onLikeStory $isLike");
   }
 
   @override
-  void onShowSlide(SlideDataDto? slideData) {
+  Future<void> onShowSlide(SlideData? slideData) async {
     log("onShowSlide");
   }
 
   @override
-  void onFavoriteTap(SlideDataDto? slideData, bool isFavorite) {
+  Future<void> onFavoriteTap(SlideData? slideData, bool isFavorite) async {
     log("onFavoriteTap $isFavorite");
   }
 }

@@ -1,5 +1,5 @@
 import '../data/goods_item_data.dart';
-import '../generated/pigeon_generated.g.dart'
+import '../generated/appearance_manager.g.dart'
     show GoodsItemDataDto, SkusCallbackFlutterApi;
 
 typedef SkusCallbackImpl = Future<List<GoodsItemData>> Function(

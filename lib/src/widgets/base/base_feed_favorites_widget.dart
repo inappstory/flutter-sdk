@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import '../../data/favorite_from_dto.dart';
+import '../../data/feed_favorite.dart';
 import '../../generated/pigeon_generated.g.dart' show IASStoryListHostApi;
 import '../streams/feed_stories_stream.dart';
 
@@ -18,7 +18,7 @@ class BaseFeedFavoritesWidget extends StatelessWidget {
   final double? aspectRatio;
   final String feed;
 
-  final Iterable<FavoriteFromDto> favorites;
+  final Iterable<FeedFavorite> favorites;
   final IASStoryListHostApi iasStoryListHostApi;
   final FeedFavoritesWidgetBuilder favoritesWidgetBuilder;
 

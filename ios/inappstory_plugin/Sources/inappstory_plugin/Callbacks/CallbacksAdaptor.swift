@@ -124,22 +124,22 @@ class CallbacksAdaptor {
 
     private func mapStoryType(arg: StoryType) -> StoryTypeDto {
         switch arg {
-        case .story: return StoryTypeDto.cOMMON
-        case .storyUGC: return StoryTypeDto.uGC
+        case .story: return StoryTypeDto.common
+        case .storyUGC: return StoryTypeDto.ugc
         @unknown default:
-            return StoryTypeDto.cOMMON
+            return StoryTypeDto.common
         }
     }
 
     private func mapStorySource(arg: StorySource) -> SourceTypeDto {
         switch arg {
-        case .favorite: return SourceTypeDto.fAVORITE
-        case .list: return SourceTypeDto.lIST
-        case .onboarding: return SourceTypeDto.oNBOARDING
-        case .single: return SourceTypeDto.sINGLE
+        case .favorite: return SourceTypeDto.favorite
+        case .list: return SourceTypeDto.list
+        case .onboarding: return SourceTypeDto.onboarding
+        case .single: return SourceTypeDto.single
         @unknown default:
-            return SourceTypeDto.sINGLE
-            //    case FIXME NO stack: return SourceTypeDto.sTACK
+            return SourceTypeDto.single
+            //    case FIXME NO stack: return SourceTypeDto.stack
         }
     }
 }

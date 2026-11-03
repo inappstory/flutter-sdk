@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:meta/meta.dart';
 
+/// Reloads the stories of an attached feed.
 typedef FeedReloadCallback = Future<void> Function();
 
 /// A controller for managing feed stories.
@@ -10,11 +11,13 @@ class FeedStoriesController {
 
   FeedReloadCallback? _reload;
 
+  /// Connects the controller to a feed widget that reloads via [reload].
   @internal
   void attach(FeedReloadCallback reload) {
     _reload = reload;
   }
 
+  /// Disconnects [reload] if it is the one currently attached.
   @internal
   void detach(FeedReloadCallback reload) {
     if (identical(_reload, reload)) {

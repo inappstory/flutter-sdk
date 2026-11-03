@@ -13,7 +13,8 @@ class IosBannerView extends BannerPlatformView {
     required super.placeId,
     required super.onPlatformViewCreated,
     required super.autoLoad,
-    super.bannerDecoration,
+    super.layoutType,
+    super.gridDecoration,
     super.decoration,
   });
 

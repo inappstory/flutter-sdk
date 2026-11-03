@@ -11,9 +11,9 @@ import '../generated/pigeon_generated.g.dart'
 import 'observable.dart';
 import 'story.dart';
 
-class StoryFromPigeonDto
+class PigeonStory
     implements Story, InAppStoryAPIListSubscriberFlutterApi {
-  StoryFromPigeonDto(
+  PigeonStory(
       this.dto, this.feed, this.iasStoryListHostApi, this.observable);
 
   StoryAPIDataDto dto;
@@ -69,16 +69,16 @@ class StoryFromPigeonDto
   }
 
   @override
-  void updateStoriesData(List<StoryAPIDataDto?> list) {}
+  Future<void> updateStoriesData(List<StoryAPIDataDto?> list) async {}
 
   @override
-  void updateStoryData(StoryAPIDataDto newDto) {
+  Future<void> updateStoryData(StoryAPIDataDto newDto) async {
     if (newDto.id != dto.id || !controller.hasListener) return;
     controller.add(dto = newDto);
   }
 
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {}
+  Future<void> updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) async {}
 
   @override
   Stream<void> get updates => controller.stream;
@@ -86,7 +86,7 @@ class StoryFromPigeonDto
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StoryFromPigeonDto &&
+      other is PigeonStory &&
           runtimeType == other.runtimeType &&
           dto.id == other.dto.id;
 
@@ -97,14 +97,16 @@ class StoryFromPigeonDto
   int get id => dto.id;
 
   @override
-  void storiesLoaded(int size, String feed) {}
+  Future<void> storiesLoaded(int size, String feed) async {}
 
   @override
-  void scrollToStory(int index, String feed, String uniqueId) {}
+  Future<void> scrollToStory(int index, String feed, String uniqueId) async {}
 
   @override
-  void storiesUpdateFailure(String feed, String? reason) {}
+  Future<void> storiesUpdateFailure(String feed, String? reason) async {}
 }
+
+typedef StoryFromPigeonDto = PigeonStory;
 
 File? nullableFileFromString(String? filePath) {
   if (filePath == null || filePath.trim().isEmpty) return null;

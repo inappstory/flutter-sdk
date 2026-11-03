@@ -43,10 +43,10 @@ class CallToActionCallbackAdaptor {
         -> ClickActionDto?
     {
         switch arg {
-        case .button: return ClickActionDto.bUTTON
-        case .deeplink: return ClickActionDto.dEEPLINK
-        case .game: return ClickActionDto.gAME
-        case .swipe: return ClickActionDto.sWIPE
+        case .button: return ClickActionDto.button
+        case .deeplink: return ClickActionDto.deeplink
+        case .game: return ClickActionDto.game
+        case .swipe: return ClickActionDto.swipe
         @unknown default:
             return nil
         }

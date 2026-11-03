@@ -1,8 +1,9 @@
+import '../data/story_data.dart';
 import '../generated/pigeon_generated.g.dart'
     show CallToActionCallbackFlutterApi, ClickActionDto, SlideDataDto;
 
 typedef CallToActionImpl = void Function(
-    SlideDataDto? slideData, String? url, ClickActionDto? clickAction);
+    SlideData? slideData, String? url, ClickAction? clickAction);
 
 class CallToActionCallbackImpl implements CallToActionCallbackFlutterApi {
   final List<CallToActionImpl> _callbacks = [];
@@ -22,10 +23,14 @@ class CallToActionCallbackImpl implements CallToActionCallbackFlutterApi {
   }
 
   @override
-  void callToAction(
-      SlideDataDto? slideData, String? url, ClickActionDto? clickAction) {
+  Future<void> callToAction(
+      SlideDataDto? slideData, String? url, ClickActionDto? clickAction) async {
+    final domainSlideData =
+        slideData == null ? null : SlideData.fromDto(slideData);
+    final domainClickAction =
+        clickAction == null ? null : ClickAction.fromDto(clickAction);
     for (final callback in _callbacks) {
-      callback.call(slideData, url, clickAction);
+      callback.call(domainSlideData, url, domainClickAction);
     }
   }
 }

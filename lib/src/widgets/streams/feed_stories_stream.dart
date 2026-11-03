@@ -5,8 +5,12 @@ import 'package:flutter/widgets.dart';
 
 import '../../../inappstory_plugin.dart';
 import '../../data/favorite_from_dto.dart';
-import '../../data/feed_favorite.dart';
 import '../../data/story_from_pigeon_dto.dart';
+import '../../generated/pigeon_generated.g.dart'
+    show
+        IASStoryListHostApi,
+        StoryAPIDataDto,
+        StoryFavoriteItemAPIDataDto;
 import '../../ias_story_list_host_api_decorator.dart';
 import '../../in_app_story_api_list_subscriber_flutter_api_observable.dart';
 import 'stories_stream.dart';
@@ -72,7 +76,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void updateStoriesData(List<StoryAPIDataDto?> list) {
+  Future<void> updateStoriesData(List<StoryAPIDataDto?> list) async {
     disarmLoadWatchdog();
     stories = list
         .whereType<StoryAPIDataDto>()
@@ -83,7 +87,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void updateStoryData(StoryAPIDataDto storyData) {
+  Future<void> updateStoryData(StoryAPIDataDto storyData) async {
     try {
       final story = stories
           .where((element) => element.dto.id == storyData.id)
@@ -97,7 +101,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+  Future<void> updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) async {
     favorites =
         list.whereType<StoryFavoriteItemAPIDataDto>().map(FavoriteFromDto.new);
 
@@ -106,13 +110,13 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) {
+  Future<void> storiesLoaded(int size, String feed) async {
     disarmLoadWatchdog();
     onStoriesLoaded?.call(size, feed);
   }
 
   @override
-  void storiesUpdateFailure(String feed, String? reason) {
+  Future<void> storiesUpdateFailure(String feed, String? reason) async {
     if (feed != this.feed) return;
     disarmLoadWatchdog();
     onStoriesLoadError?.call(reason);
@@ -120,7 +124,7 @@ class FeedStoriesStream extends StoriesStream {
   }
 
   @override
-  void scrollToStory(int id, String feed, String uniqueId) {
+  Future<void> scrollToStory(int id, String feed, String uniqueId) async {
     if (uniqueId != this.uniqueId) {
       return;
     }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Mirror the universal agent config from .agents/ into each vendor's folder.
+# Generate vendor-specific agent config from .agents/.
 #
 # .agents/ is the single source of truth and is committed to git.
 # Vendor folders (.claude, .codex, ...) are generated from it and gitignored.
@@ -7,19 +7,34 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   # repo root
 
-# Vendors to populate. Add ".codex" ".cursor" ".gemini" as you adopt them.
-VENDORS=(.claude)
-
-for dir in "${VENDORS[@]}"; do
-  mkdir -p "$dir"
-  # Copy every item in .agents/ except this script.
-  for item in .agents/*; do
-    name="$(basename "$item")"
-    [ "$name" = "setup" ] && continue
-    rm -rf "${dir:?}/$name"
-    cp -R "$item" "$dir/$name"
+sync_directory() {
+  local source="$1"
+  local destination="$2"
+  local item
+  mkdir -p "$destination"
+  for item in "$source"/*; do
+    [ -e "$item" ] || continue
+    rm -rf "${destination:?}/$(basename "$item")"
+    cp -R "$item" "$destination/"
   done
-done
+}
+
+# Skills use each vendor's native discovery path. Codex reads .agents/skills
+# directly, so it does not need a duplicate in .codex/.
+sync_directory .agents/skills .claude/skills
+sync_directory .agents/skills .gemini/skills
+sync_directory .agents/skills .cursor/skills
+sync_directory .agents/skills .github/skills
+
+# These vendors share a settings schema for SessionStart hooks.
+cp .agents/settings.json .claude/settings.json
+cp .agents/settings.json .gemini/settings.json
+
+# Other vendors use different hook schemas and locations.
+mkdir -p .codex .cursor .github/hooks
+cp .agents/vendor-configs/codex/hooks.json .codex/hooks.json
+cp .agents/vendor-configs/cursor/hooks.json .cursor/hooks.json
+cp .agents/vendor-configs/copilot/session-start.json .github/hooks/agent-setup.json
 
 # Install committed git hooks into .git/hooks (keeps existing LFS hooks intact).
 if [ -d .git ]; then

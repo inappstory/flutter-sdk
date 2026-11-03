@@ -46,6 +46,15 @@ class IASSingleStoryAdaptor: IASSingleStoryHostApi {
         tokenMap[token] = cancellationToken
     }
 
+    func showWithTargeting(storyId: String, token: String, tags: [String]?) throws {
+        let cancellationToken = singleStoryAPI.showStoryWithTargeting(
+            with: storyId,
+            tags: tags,
+            complete: showComplete
+        )
+        tokenMap[token] = cancellationToken
+    }
+
     func cancelByToken(token: String) throws -> Bool {
         if tokenMap[token] != nil {
             let result = tokenMap[token]!.cancel()

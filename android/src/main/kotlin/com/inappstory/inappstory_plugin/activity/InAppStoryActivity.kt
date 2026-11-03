@@ -3,6 +3,7 @@ package com.inappstory.inappstory_plugin.activity
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
+import com.inappstory.inappstory_plugin.R
 import io.flutter.embedding.android.FlutterFragmentActivity
 
 open class InAppStoryActivity : FlutterFragmentActivity() {
@@ -10,6 +11,7 @@ open class InAppStoryActivity : FlutterFragmentActivity() {
     val backPressManager = BackPressManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        theme.applyStyle(R.style.InAppStoryAppCompatFallback, false)
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

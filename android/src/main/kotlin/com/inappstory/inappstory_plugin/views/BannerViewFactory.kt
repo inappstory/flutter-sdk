@@ -1,6 +1,8 @@
 package com.inappstory.inappstory_plugin.views
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
 import com.inappstory.inappstory_plugin.runOnMainThread
 import com.inappstory.sdk.AppearanceManager
@@ -15,7 +17,8 @@ import BannerData as BannerDataDto
 
 class BannerViewFactory(
     val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
-    private val appearanceManager: AppearanceManager
+    private val appearanceManager: AppearanceManager,
+    private val placeholderStore: BannerPlaceholderStore,
 ) :
     PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -38,15 +41,33 @@ class BannerViewFactory(
         if (bannersCallback == null) {
             createBannersCallback()
         }
-        return BannerView(
-            context,
-            viewId,
-            creationParams,
-            flutterPluginBinding,
-            appearanceManager,
-            bannerPlaceManagerAdaptor,
-            bannerDataListener,
-        )
+        return if (creationParams?.get("layoutType") == "grid") {
+            // Native banner readers require Activity, not Flutter's context wrapper.
+            var activityContext = context
+            while (activityContext is ContextWrapper && activityContext !is Activity) {
+                activityContext = activityContext.baseContext
+            }
+            check(activityContext is Activity) { "BannerGrid requires an Activity context" }
+            BannerGridView(
+                activityContext,
+                creationParams,
+                flutterPluginBinding,
+                appearanceManager,
+                bannerPlaceManagerAdaptor,
+                bannerDataListener,
+                placeholderStore,
+            )
+        } else {
+            BannerCarouselView(
+                context,
+                creationParams,
+                flutterPluginBinding,
+                appearanceManager,
+                bannerPlaceManagerAdaptor,
+                bannerDataListener,
+                placeholderStore,
+            )
+        }
     }
 
     private fun createBannersCallback() {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="HostEditTextTheme">
+        <item name="editTextStyle">@android:style/Widget.Material.EditText</item>
+    </style>
+</resources>

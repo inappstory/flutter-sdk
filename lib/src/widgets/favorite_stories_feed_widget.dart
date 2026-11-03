@@ -6,7 +6,21 @@ import 'builders/base_story_builder.dart';
 import 'feed_stories_widget.dart';
 import 'streams/favorites_stories_stream.dart';
 
+/// Displays the user's favorite stories from a feed in a horizontal list.
+///
+/// Shows nothing while loading or on error unless [loaderBuilder] or
+/// [errorBuilder] is set, and shows nothing if there are no favorites.
 class FavoriteStoriesFeedWidget extends FeedStoriesWidget {
+  /// Creates a list of favorite stories from [feed].
+  ///
+  /// * [feed]: the ID of the feed to show favorites from.
+  /// * [height]: the height of the list. Defaults to 120.0.
+  /// * [controller]: reloads the stories on demand.
+  /// * [loaderBuilder]: builds the widget shown while loading.
+  /// * [errorBuilder]: builds the widget shown if loading fails.
+  /// * [decorator]: customizes the appearance of the list and its items.
+  /// * [storyBuilder]: builds each story item. Defaults to the SDK's story
+  ///   cell.
   const FavoriteStoriesFeedWidget({
     super.key,
     required super.feed,

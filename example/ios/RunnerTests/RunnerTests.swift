@@ -1,4 +1,5 @@
 import Flutter
+import InAppStorySDK
 import UIKit
 import XCTest
 
@@ -247,9 +248,8 @@ class BannerPlaceTests: XCTestCase {
 
     // 0xFFFF0000 = Red with Alpha 255
     let redColor: Int64 = 0xFFFF_0000
-    let decoration = BannerDecorationDTO(color: redColor, image: nil)
 
-    placeholder.setDecoration(decoration, registrar: registrar)
+    placeholder.setDecoration(color: redColor, image: nil, registrar: registrar)
 
     guard let bgColor = placeholder.backgroundColor else {
       XCTFail("Background color should be set by setDecoration")
@@ -272,8 +272,7 @@ class BannerPlaceTests: XCTestCase {
     let placeholder = CustomPlaceholderView(frame: .zero)
     let initialColor = placeholder.backgroundColor
 
-    let decoration = BannerDecorationDTO(color: nil, image: nil)
-    placeholder.setDecoration(decoration, registrar: MockRegistrar())
+    placeholder.setDecoration(color: nil, image: nil, registrar: MockRegistrar())
 
     XCTAssertEqual(placeholder.backgroundColor, initialColor)
   }
@@ -283,6 +282,60 @@ class BannerPlaceTests: XCTestCase {
     XCTAssertFalse(placeholder.isAnimate)
     placeholder.start()
     placeholder.stop()
+  }
+
+  func testCustomPlaceholderView_setDecorationDirectColorAndImage() {
+    let placeholder = CustomPlaceholderView(frame: CGRect(x: 0, y: 0, width: 300, height: 140))
+    let registrar = MockRegistrar()
+
+    let redColor: Int64 = 0xFFFF_0000
+    placeholder.setDecoration(color: redColor, image: nil, registrar: registrar)
+
+    guard let bgColor = placeholder.backgroundColor else {
+      XCTFail("Background color should be set by setDecoration")
+      return
+    }
+
+    var red: CGFloat = 0
+    var green: CGFloat = 0
+    var blue: CGFloat = 0
+    var alpha: CGFloat = 0
+    bgColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+    XCTAssertEqual(red, 1.0, accuracy: 0.01)
+  }
+
+  func testAppearanceManagerAdaptor_setPlaceholders_doesNotThrow() throws {
+    let messenger = MockBinaryMessenger()
+    let registrar = MockRegistrar()
+    let adaptor = AppearanceManagerAdaptor(binaryMessenger: messenger, pluginRegistrar: registrar)
+
+    let deco = PlaceholderDecorationDto(color: 0xFFFF_0000, image: nil)
+
+    XCTAssertNoThrow(try adaptor.setStoriesPlaceholder(decoration: deco))
+
+    XCTAssertNoThrow(try adaptor.setStoriesPlaceholder(decoration: nil))
+  }
+
+  func testAppearanceManagerAdaptor_setBannersPlaceholder_setsAndClearsBannerPlaceholder() throws {
+    let adaptor = AppearanceManagerAdaptor(
+      binaryMessenger: MockBinaryMessenger(),
+      pluginRegistrar: MockRegistrar()
+    )
+
+    try adaptor.setBannersPlaceholder(
+      decoration: PlaceholderDecorationDto(color: 0xFFFF_0000, image: nil)
+    )
+    let set = expectation(description: "placeholder set on main queue")
+    DispatchQueue.main.async { set.fulfill() }
+    waitForExpectations(timeout: 1.0)
+    XCTAssertTrue(InAppStory.shared.placeholderBannerView is CustomPlaceholderView)
+
+    try adaptor.setBannersPlaceholder(decoration: nil)
+    let cleared = expectation(description: "placeholder cleared on main queue")
+    DispatchQueue.main.async { cleared.fulfill() }
+    waitForExpectations(timeout: 1.0)
+    XCTAssertNil(InAppStory.shared.placeholderBannerView)
   }
 
   // MARK: - BannerPlaceView Update Logic Tests
@@ -314,4 +367,3 @@ class BannerPlaceTests: XCTestCase {
     XCTAssertEqual(resultContent.height, 120)
   }
 }
-

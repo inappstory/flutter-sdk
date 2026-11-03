@@ -40,17 +40,23 @@ class BannerPlaceDecoration {
 
 @FlutterApi()
 abstract class BannerPlaceCallbackFlutterApi {
+  @asyncCallback
   void onBannerScroll(int index);
 
+  @asyncCallback
   void onBannerPlaceLoaded(int size, int widgetHeight);
 
+  @asyncCallback
   void onActionWith(BannerData bannerData, String widgetEventName,
       Map<String, Object?>? widgetData);
 
+  @asyncCallback
   void onBannerPlacePreloaded();
 
+  @asyncCallback
   void onBannerPlacePreloadedError();
 
+  @asyncCallback
   void onBannerPlaceLoadError(String message);
 }
 
@@ -67,11 +73,6 @@ enum GradientType {
   linear,
   radial,
   sweep,
-}
-
-class BannerDecorationDTO {
-  late int? color;
-  late String? image;
 }
 
 class BannerData {

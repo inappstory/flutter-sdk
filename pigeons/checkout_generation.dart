@@ -9,19 +9,20 @@ import 'package:pigeon/pigeon.dart';
   swiftOut: 'ios/inappstory_plugin/Sources/inappstory_plugin/CheckoutGenerated.g.swift',
   swiftOptions: SwiftOptions(includeErrorClass: false),
 ))
-// BannerPlaceManagerHostApi
+// CheckoutManagerCallbackFlutterApi
 
 @FlutterApi()
 abstract class CheckoutManagerCallbackFlutterApi {
-  @async
+  @asyncCallback
   ProductCart onProductCartUpdate(ProductCartOffer offer);
 
-  @async
+  @asyncCallback
   ProductCart getProductCartState();
 }
 
 @FlutterApi()
 abstract class CheckoutCallbackFlutterApi {
+  @asyncCallback
   void onProductCartClicked();
 }
 

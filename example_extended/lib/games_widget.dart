@@ -39,36 +39,36 @@ class _GamesWidgetState extends State<GamesWidget> with IASGameReaderCallback {
   }
 
   void startIASGame() async {
-    IASGamesHostApi().openGame(_inputController.text);
+    InAppStoryManager.instance.openGame(_inputController.text);
   }
 
   @override
-  void startGame(ContentDataDto? gameData) {
+  Future<void> startGame(ContentData? gameData) async {
     log('startGame');
   }
 
   @override
-  void closeGame(ContentDataDto? gameData) {
+  Future<void> closeGame(ContentData? gameData) async {
     log('closeGame');
   }
 
   @override
-  void eventGame(
-    ContentDataDto? gameData,
+  Future<void> eventGame(
+    ContentData? gameData,
     String? id,
     String? eventName,
-    Map<String?, Object?>? payload,
-  ) {
+    Map<String, Object?>? payload,
+  ) async {
     log('eventGame');
   }
 
   @override
-  void finishGame(ContentDataDto? gameData, Map<String?, Object?>? result) {
+  Future<void> finishGame(ContentData? gameData, Map<String, Object?>? result) async {
     log('finishGame');
   }
 
   @override
-  void gameError(ContentDataDto? gameData, String? message) {
+  Future<void> gameError(ContentData? gameData, String? message) async {
     log('gameError');
   }
 }

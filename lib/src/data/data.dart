@@ -1,5 +1,10 @@
 export 'enum.dart';
+export 'feed_favorite.dart';
+export 'game_content_data.dart';
 export 'goods_item_appearance.dart';
 export 'goods_item_data.dart';
+export 'in_app_message_data.dart';
 export 'option_keys.dart';
+export 'placeholder_decoration.dart';
 export 'story.dart';
+export 'story_data.dart';

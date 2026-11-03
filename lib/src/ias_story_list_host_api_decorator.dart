@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/services.dart';
 
-import '../inappstory_plugin.dart' show IASStoryListHostApi;
+import 'generated/pigeon_generated.g.dart' show IASStoryListHostApi;
 import 'controllers/ias_manager.dart';
 
 class IASStoryListHostApiDecorator implements IASStoryListHostApi {
@@ -60,10 +60,12 @@ class IASStoryListHostApiDecorator implements IASStoryListHostApi {
   }
 
   @override
+  // ignore: non_constant_identifier_names
   BinaryMessenger? get pigeonVar_binaryMessenger =>
       decorated.pigeonVar_binaryMessenger;
 
   @override
+  // ignore: non_constant_identifier_names
   String get pigeonVar_messageChannelSuffix =>
       decorated.pigeonVar_messageChannelSuffix;
 

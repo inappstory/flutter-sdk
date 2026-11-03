@@ -9,21 +9,36 @@ import 'package:inappstory_plugin/src/in_app_story_api_list_subscriber_flutter_a
 class RecordingSubscriber implements InAppStoryAPIListSubscriberFlutterApi {
   final calls = <String>[];
   @override
-  void updateStoriesData(List<StoryAPIDataDto> list) =>
-      calls.add('updateStoriesData');
+  Future<void> updateStoriesData(List<StoryAPIDataDto?> list) {
+    calls.add('updateStoriesData');
+    return Future.value();
+  }
   @override
-  void updateStoryData(StoryAPIDataDto var1) => calls.add('updateStoryData');
+  Future<void> updateStoryData(StoryAPIDataDto var1) {
+    calls.add('updateStoryData');
+    return Future.value();
+  }
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto> list) =>
-      calls.add('updateFavoriteStoriesData');
+  Future<void> updateFavoriteStoriesData(
+      List<StoryFavoriteItemAPIDataDto?> list) {
+    calls.add('updateFavoriteStoriesData');
+    return Future.value();
+  }
   @override
-  void storiesLoaded(int size, String feed) => calls.add('storiesLoaded');
+  Future<void> storiesLoaded(int size, String feed) {
+    calls.add('storiesLoaded');
+    return Future.value();
+  }
   @override
-  void scrollToStory(int index, String feed, String uniqueId) =>
-      calls.add('scrollToStory');
+  Future<void> scrollToStory(int index, String feed, String uniqueId) {
+    calls.add('scrollToStory');
+    return Future.value();
+  }
   @override
-  void storiesUpdateFailure(String feed, String? reason) =>
-      calls.add('storiesUpdateFailure');
+  Future<void> storiesUpdateFailure(String feed, String? reason) {
+    calls.add('storiesUpdateFailure');
+    return Future.value();
+  }
 }
 
 void main() {

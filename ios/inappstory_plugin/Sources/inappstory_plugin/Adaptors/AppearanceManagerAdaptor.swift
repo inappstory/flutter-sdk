@@ -287,6 +287,31 @@ class AppearanceManagerAdaptor: AppearanceManagerHostApi {
         }
     }
 
+    func setStoriesPlaceholder(decoration: PlaceholderDecorationDto?) throws {
+        DispatchQueue.main.async {
+            InAppStory.shared.placeholderView = self.makePlaceholder(decoration)
+        }
+    }
+
+    func setBannersPlaceholder(decoration: PlaceholderDecorationDto?) throws {
+        DispatchQueue.main.async {
+            InAppStory.shared.placeholderBannerView = self.makePlaceholder(decoration)
+        }
+    }
+
+    private func makePlaceholder(_ decoration: PlaceholderDecorationDto?) -> CustomPlaceholderView? {
+        guard let decoration, decoration.color != nil || decoration.image != nil else {
+            return nil
+        }
+        let placeholder = CustomPlaceholderView()
+        placeholder.setDecoration(
+            color: decoration.color,
+            image: decoration.image,
+            registrar: pluginRegistrar
+        )
+        return placeholder
+    }
+
     private func getUIImage(path: String) -> UIImage? {
         let key = self.pluginRegistrar.lookupKey(forAsset: path)
         let path = Bundle.main.path(forResource: key, ofType: nil)

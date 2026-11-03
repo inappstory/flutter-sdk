@@ -55,10 +55,28 @@ class IASMessagesAdaptor(
         messageId: String,
         token: String,
         onlyPreloaded: Boolean,
-        bottomPadding: Double?
+        bottomPadding: Double?,
     ) {
-        val settings =
-            InAppMessageOpenSettings().id(messageId.toInt()).showOnlyIfLoaded(onlyPreloaded)
+        val settings = InAppMessageOpenSettings()
+            .id(messageId.toInt())
+            .showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    override fun showByIdWithTargeting(
+        messageId: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?,
+        tags: List<String>?
+    ) {
+        val settings = InAppMessageOpenSettings()
+            .id(messageId.toInt())
+            .showOnlyIfLoaded(onlyPreloaded)
+            .apply {
+                useTargeting()
+                if (tags != null) tags(tags)
+            }
         showIAM(settings, token, bottomPadding)
     }
 
@@ -68,7 +86,23 @@ class IASMessagesAdaptor(
         onlyPreloaded: Boolean,
         bottomPadding: Double?
     ) {
-        val settings = InAppMessageOpenSettings().event(event).showOnlyIfLoaded(onlyPreloaded)
+        val settings = InAppMessageOpenSettings()
+            .event(event)
+            .showOnlyIfLoaded(onlyPreloaded)
+        showIAM(settings, token, bottomPadding)
+    }
+
+    override fun showByEventWithTargeting(
+        event: String,
+        token: String,
+        onlyPreloaded: Boolean,
+        bottomPadding: Double?,
+        tags: List<String>?
+    ) {
+        val settings = InAppMessageOpenSettings()
+            .event(event)
+            .showOnlyIfLoaded(onlyPreloaded)
+            .apply { if (tags != null) tags(tags) }
         showIAM(settings, token, bottomPadding)
     }
 

@@ -12,6 +12,7 @@ import com.inappstory.inappstory_plugin.callbacks.IASLoggerImpl
 import com.inappstory.inappstory_plugin.callbacks.InAppMessageCallbackAdaptor
 import com.inappstory.inappstory_plugin.callbacks.InAppStoryCallbacksAdaptor
 import com.inappstory.inappstory_plugin.runOnMainThread
+import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
 import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
 import com.inappstory.sdk.InAppStoryManager
@@ -52,9 +53,12 @@ class InappstorySdkModuleAdaptor(
 
     private var feedListAdaptors: MutableList<IASStoryListAdaptor> = mutableListOf()
 
+    private val bannerPlaceholderStore = BannerPlaceholderStore(flutterPluginBinding)
+
     private val bannerFactory = BannerViewFactory(
         flutterPluginBinding,
         appearanceManager,
+        bannerPlaceholderStore,
     )
 
     init {
@@ -75,6 +79,16 @@ class InappstorySdkModuleAdaptor(
                     Log.w("InAppStory", "showById called before initWith")
                 }
 
+                override fun showByIdWithTargeting(
+                    messageId: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
+                    bottomPadding: Double?,
+                    tags: List<String>?
+                ) {
+                    Log.w("InAppStory", "showByIdWithTargeting called before initWith")
+                }
+
                 override fun showByEvent(
                     event: String,
                     token: String,
@@ -82,6 +96,16 @@ class InappstorySdkModuleAdaptor(
                     bottomPadding: Double?
                 ) {
                     Log.w("InAppStory", "showByEvent called before initWith")
+                }
+
+                override fun showByEventWithTargeting(
+                    event: String,
+                    token: String,
+                    onlyPreloaded: Boolean,
+                    bottomPadding: Double?,
+                    tags: List<String>?
+                ) {
+                    Log.w("InAppStory", "showByEventWithTargeting called before initWith")
                 }
 
                 override fun preloadMessages(
@@ -108,6 +132,14 @@ class InappstorySdkModuleAdaptor(
 
                 override fun show(storyId: String, token: String) {
                     Log.w("InAppStory", "show story by id called before initWith")
+                }
+
+                override fun showWithTargeting(
+                    storyId: String,
+                    token: String,
+                    tags: List<String>?
+                ) {
+                    Log.w("InAppStory", "show story with targeting called before initWith")
                 }
 
                 override fun cancelByToken(token: String): Boolean {
@@ -303,11 +335,17 @@ class InappstorySdkModuleAdaptor(
                 InAppMessageCallbackAdaptor(flutterPluginBinding, inAppStoryManager)
 
             appearanceManagerAdaptor =
-                AppearanceManagerAdaptor(flutterPluginBinding, appearanceManager, activityHolder)
+                AppearanceManagerAdaptor(
+                    flutterPluginBinding,
+                    appearanceManager,
+                    activityHolder,
+                    bannerPlaceholderStore,
+                )
 
             singleStoryApi = IASSingleStoryAdaptor(
                 flutterPluginBinding,
                 appearanceManager,
+                inAppStoryManager,
                 inAppStoryAPI.singleStory,
                 activityHolder,
             )

@@ -39,7 +39,7 @@ class FavoritesStoriesStream extends StoriesStream {
   Function(String? reason)? onStoriesLoadError;
 
   @override
-  void updateStoriesData(List<StoryAPIDataDto?> list) {
+  Future<void> updateStoriesData(List<StoryAPIDataDto?> list) async {
     disarmLoadWatchdog();
     stories = list
         .whereType<StoryAPIDataDto>()
@@ -52,7 +52,7 @@ class FavoritesStoriesStream extends StoriesStream {
   }
 
   @override
-  void updateStoryData(StoryAPIDataDto storyData) {
+  Future<void> updateStoryData(StoryAPIDataDto storyData) async {
     try {
       final story = stories
           .where((element) => element.dto.id == storyData.id)
@@ -64,7 +64,7 @@ class FavoritesStoriesStream extends StoriesStream {
   }
 
   @override
-  void updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) {
+  Future<void> updateFavoriteStoriesData(List<StoryFavoriteItemAPIDataDto?> list) async {
     disarmLoadWatchdog();
     if (list.isEmpty) {
       stories = <StoryFromPigeonDto>[];
@@ -74,14 +74,14 @@ class FavoritesStoriesStream extends StoriesStream {
     final newList = <StoryFromPigeonDto>[];
     for (final favorite in list) {
       var item = stories
-          .where((element) => element.dto.id == favorite!.id)
+          .where((element) => element.dto.id == favorite?.id)
           .firstOrNull;
       if (item != null) {
         newList.add(item);
         continue;
       }
       item = tempStories
-          .where((element) => element.dto.id == favorite!.id)
+          .where((element) => element.dto.id == favorite?.id)
           .firstOrNull;
       if (item != null) {
         newList.add(item);
@@ -107,16 +107,16 @@ class FavoritesStoriesStream extends StoriesStream {
   }
 
   @override
-  void storiesLoaded(int size, String feed) {
+  Future<void> storiesLoaded(int size, String feed) async {
     disarmLoadWatchdog();
     onStoriesLoaded?.call(size, feed);
   }
 
   @override
-  void scrollToStory(int index, String feed, String uniqueId) {}
+  Future<void> scrollToStory(int index, String feed, String uniqueId) async {}
 
   @override
-  void storiesUpdateFailure(String feed, String? reason) {
+  Future<void> storiesUpdateFailure(String feed, String? reason) async {
     if (feed != this.feed) return;
     disarmLoadWatchdog();
     onStoriesLoadError?.call(reason);

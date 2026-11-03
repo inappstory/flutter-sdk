@@ -16,6 +16,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     private var placeId: String
     private var bannerWidgetId: String
+    private var isGrid = false
 
     private var bannersAppearance: IASBannersAppearance?
 
@@ -49,22 +50,6 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self.bannerPlaceManagerAdaptor = bannerManager
 
         self.registrar = registrar
-
-        var decoration: BannerDecorationDTO?
-
-        if let args = args as? [String: Any],
-           let bannerDecoMap = args["bannerDecoration"] as? [String: Any] {
-            decoration = BannerDecorationDTO(
-                color: bannerDecoMap["color"] as? Int64,
-                image: bannerDecoMap["image"] as? String
-            )
-        }
-
-        if let decoration = decoration, (decoration.color != nil || decoration.image != nil) {
-            let placeholder = CustomPlaceholderView()
-            placeholder.setDecoration(decoration, registrar: registrar)
-            InAppStory.shared.placeholderView = placeholder
-        }
 
         super.init()
         // iOS views can be created here
@@ -264,12 +249,24 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     }
 
     func createNativeView(view _view: UIView, args _args: [String: Any]) {
+        isGrid = (_args["layoutType"] as? String) == "grid"
+
         let shouldLoop = _args["loop"] as? Bool
         let sideInset = _args["bannerOffset"] as? NSNumber
         let interItemSpacing = _args["bannersGap"] as? NSNumber
         let cornerRadius = _args["cornerRadius"] as? NSNumber
 
-        if shouldLoop != nil && sideInset != nil && interItemSpacing != nil
+        if isGrid {
+            let horizontalGap = _args["gridHorizontalGap"] as? NSNumber
+            let verticalGap = _args["gridVerticalGap"] as? NSNumber
+            let gridCornerRadius = _args["gridCornerRadius"] as? NSNumber
+            self.bannersAppearance = IASBannersAppearance(
+                layoutType: .tilesList,
+                cornerRadius: CGFloat(gridCornerRadius?.doubleValue ?? 16),
+                columnSpacing: CGFloat(horizontalGap?.doubleValue ?? 8),
+                rowSpacing: CGFloat(verticalGap?.doubleValue ?? 8)
+            )
+        } else if shouldLoop != nil && sideInset != nil && interItemSpacing != nil
             && cornerRadius != nil
         {
             self.bannersAppearance = IASBannersAppearance(
@@ -340,6 +337,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self._bannersView?.isUserInteractionEnabled = self.isInteractionEnabled
         self._bannersView?.bannersDidScroll = { [weak self] index in
             guard let self else { return }
+            guard !self.isGrid else { return }
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 self.callbackFlutterApi?.onBannerScroll(

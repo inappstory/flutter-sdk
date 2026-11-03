@@ -12,27 +12,28 @@ export 'src/data/data.dart';
 export 'src/generated/banner_place_generated.g.dart' show BannerData;
 export 'src/generated/checkout_generated.g.dart'
     show ProductCart, ProductCartOffer;
-export 'src/generated/pigeon_generated.g.dart'
-    hide
-        InAppStoryManagerHostApi,
-        AppearanceManagerHostApi,
-        IASSingleStoryHostApi,
-        IASInAppMessagesHostApi,
-        GameReaderCallbackFlutterApi,
-        ErrorCallbackFlutterApi,
-        CallToActionCallbackFlutterApi;
 export 'src/widgets/decorators/decorators.dart';
 export 'src/widgets/placeholders/placeholders.dart';
 export 'src/widgets/widgets.dart';
 
+/// The entry point of the InAppStory SDK.
+///
+/// Call [initWith] once before using any other SDK feature.
 class InAppStoryPlugin {
+  /// Returns the shared plugin instance.
   factory InAppStoryPlugin() => _singleton ??= InAppStoryPlugin._private();
 
   InAppStoryPlugin._private();
 
   static InAppStoryPlugin? _singleton;
 
-  /// The [InAppStoryPlugin] initialization method.
+  /// Initializes the SDK with the project [apiKey] and the current [userId].
+  ///
+  /// * [anonymous]: whether the user is anonymous.
+  /// * [userSign]: the signature of [userId], if user signing is used.
+  /// * [locale]: the content language.
+  /// * [cacheSize]: the size of the SDK cache.
+  /// * [tags]: the initial tags used for targeting.
   ///
   /// Invalid [tags] are dropped: initialization then proceeds with no tags
   /// rather than throwing.
@@ -57,6 +58,7 @@ class InAppStoryPlugin {
     );
   }
 
+  /// Returns whether the SDK has been initialized with [initWith].
   Future<bool> isInitialized() async {
     return InappstoryPluginPlatform.instance.isInitialized();
   }

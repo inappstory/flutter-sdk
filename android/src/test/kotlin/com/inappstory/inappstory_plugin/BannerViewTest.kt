@@ -1,6 +1,6 @@
 package com.inappstory.inappstory_plugin
 
-import BannerDecorationDTO
+import PlaceholderDecorationDto
 import BannerPlaceCallbackFlutterApi
 import BannerData as PigeonBannerData
 import com.inappstory.inappstory_plugin.adaptors.BannerPlaceLoadError
@@ -19,11 +19,15 @@ import com.inappstory.inappstory_plugin.adaptors.ShowByIndexPayload
 import com.inappstory.inappstory_plugin.adaptors.ShowNext
 import com.inappstory.inappstory_plugin.adaptors.ShowPrevious
 import com.inappstory.inappstory_plugin.views.BannerPlaceLoadCallbackHandler
-import com.inappstory.inappstory_plugin.views.CustomBannerPlaceAppearanceWithoutBannerDecoration
+import com.inappstory.inappstory_plugin.views.InactiveBannerPlaceLoadCallback
+import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
+import com.inappstory.inappstory_plugin.views.CustomBannerCarouselAppearance
+import com.inappstory.inappstory_plugin.views.CustomBannerGridAppearance
 import com.inappstory.sdk.banners.BannerCarouselNavigationCallback
 import com.inappstory.sdk.banners.BannerData
-import com.inappstory.sdk.banners.BannerPlaceLoadCallback
 import com.inappstory.sdk.banners.BannerPlacePreloadCallback
+import android.content.Context
+import android.view.View
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.BinaryMessenger
 import java.nio.ByteBuffer
@@ -31,6 +35,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class FakeBinaryMessenger : BinaryMessenger {
@@ -196,7 +201,50 @@ class BannerViewTest {
         assertEquals(true, visibility)
     }
 
+    @Test
+    fun bannerPlaceLoadCallback_withoutWaitingForContentLoaded_sendsOnBannerPlaceLoadedImmediately() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        var visibility: Boolean? = null
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            onVisibilityChanged = { visibility = it },
+            waitForContentLoaded = false
+        )
 
+        val bannerList = listOf(BannerData(1, "test_place", null))
+        callback.bannerPlaceLoaded(2, bannerList, 160)
+
+        assertEquals(1, messenger.sentMessages.size)
+        val (channel, args) = messenger.sentMessages[0]
+        assertTrue(channel.contains("onBannerPlaceLoaded"))
+        assertEquals(2L, args[0])
+        assertEquals(160L, args[1])
+        assertEquals(true, visibility)
+    }
+
+    @Test
+    fun givenNonEmptyGrid_whenNativeHeightIsMatchParent_thenNoCollapsedHeightIsSent() {
+        val messenger = FakeBinaryMessenger()
+        val callbackApi = BannerPlaceCallbackFlutterApi(messenger)
+        val callback = BannerPlaceLoadCallbackHandler(
+            placeId = "test_place",
+            callbackApi = callbackApi,
+            toDp = { it.toLong() },
+            waitForContentLoaded = false,
+            waitForLayout = true
+        )
+
+        val bannerList = listOf(BannerData(1, "test_place", null))
+        callback.bannerPlaceLoaded(1, bannerList, -1)
+
+        assertTrue(messenger.sentMessages.isEmpty(), "Wait for the full grid layout, not height 0")
+
+        callback.onContentLayout(420)
+        assertEquals(listOf(1L, 420L), messenger.sentMessages.single().second)
+    }
 
     @Test
     fun bannerPlaceLoadCallback_resetState_clearsFlags() {
@@ -359,12 +407,13 @@ class BannerViewTest {
     }
 
     @Test
-    fun customBannerPlaceAppearanceWithoutBannerDecoration_customValues() {
-        val appearance = CustomBannerPlaceAppearanceWithoutBannerDecoration(
+    fun customBannerCarouselAppearance_customValues() {
+        val appearance = CustomBannerCarouselAppearance(
             bannerOffset = 16,
             bannersGap = 8,
             cornerRadius = 12,
             loop = true,
+            loadingPlaceholder = { null },
         )
 
         assertEquals(16, appearance.nextBannerOffset())
@@ -375,16 +424,102 @@ class BannerViewTest {
     }
 
     @Test
-    fun dummyBannerPlaceLoadCallback_hasNonNullBannerPlaceAndSafeCallbacks() {
-        val dummy = object : BannerPlaceLoadCallback("") {
-            override fun bannerPlaceLoaded(
-                size: Int, bannerData: List<BannerData>, widgetHeight: Int
-            ) {}
+    fun customBannerCarouselAppearance_usesPlaceholderFromProvider() {
+        val placeholder = org.mockito.Mockito.mock(View::class.java)
+        val appearance = CustomBannerCarouselAppearance(
+            bannerOffset = null,
+            bannersGap = null,
+            cornerRadius = null,
+            loop = null,
+            loadingPlaceholder = { placeholder },
+        )
 
-            override fun loadError() {}
-            override fun bannerLoaded(p0: Int, p1: Boolean) {}
-            override fun bannerLoadError(p0: Int, p1: Boolean) {}
-        }
+        assertSame(placeholder, appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
+    fun customBannerGridAppearance_customValues() {
+        val appearance = CustomBannerGridAppearance(
+            horizontalGap = 12,
+            verticalGap = 16,
+            cornerRadius = 4,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(12, appearance.horizontalGap())
+        assertEquals(16, appearance.verticalGap())
+        assertEquals(4, appearance.cornerRadius())
+        assertEquals(2, appearance.columnCount())
+    }
+
+    @Test
+    fun customBannerGridAppearance_nullValues_fallBackToSdkDefaults() {
+        val appearance = CustomBannerGridAppearance(
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(8, appearance.horizontalGap())
+        assertEquals(8, appearance.verticalGap())
+        assertEquals(16, appearance.cornerRadius())
+    }
+
+    @Test
+    fun customBannerGridAppearance_usesPlaceholderFromProvider() {
+        val placeholder = org.mockito.Mockito.mock(View::class.java)
+        val appearance = CustomBannerGridAppearance(
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { placeholder },
+        )
+
+        assertSame(placeholder, appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
+    fun bannerPlaceholderStore_withoutDecoration_returnsNull() {
+        val store = BannerPlaceholderStore { _, _ -> error("must not build a view") }
+
+        assertNull(store.createView(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
+    fun bannerPlaceholderStore_withEmptyDecoration_returnsNull() {
+        val store = BannerPlaceholderStore { _, _ -> error("must not build a view") }
+        store.decoration = PlaceholderDecorationDto(color = null, image = null)
+
+        assertNull(store.createView(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
+    fun bannerPlaceholderStore_readsLatestDecorationOnEachCall() {
+        val built = mutableListOf<PlaceholderDecorationDto>()
+        val view = org.mockito.Mockito.mock(View::class.java)
+        val store = BannerPlaceholderStore { _, decoration -> built.add(decoration); view }
+        val context = org.mockito.Mockito.mock(Context::class.java)
+
+        store.decoration = PlaceholderDecorationDto(color = 0xFFFF0000L, image = null)
+        assertSame(view, store.createView(context))
+        store.decoration = PlaceholderDecorationDto(color = null, image = "assets/loader.png")
+        store.createView(context)
+        store.decoration = null
+        assertNull(store.createView(context))
+
+        assertEquals(
+            listOf(
+                PlaceholderDecorationDto(color = 0xFFFF0000L, image = null),
+                PlaceholderDecorationDto(color = null, image = "assets/loader.png"),
+            ),
+            built,
+        )
+    }
+
+    @Test
+    fun dummyBannerPlaceLoadCallback_hasNonNullBannerPlaceAndSafeCallbacks() {
+        val dummy = InactiveBannerPlaceLoadCallback
 
         // Must be non-null so BannerCarousel.loadCallback does not throw NullPointerException on callback.bannerPlace()
         assertEquals("", dummy.bannerPlace())
@@ -392,40 +527,6 @@ class BannerViewTest {
         dummy.loadError()
         dummy.bannerLoaded(1, true)
         dummy.bannerLoadError(1, false)
-    }
-
-    @Test
-    fun bannerDecoration_withIntegerColor_decodesCorrectly() {
-        // Flutter StandardMessageCodec decodes small/32-bit ints (like Colors.transparent = 0) as java.lang.Integer
-        val map = mapOf<String, Any?>(
-            "color" to 0,
-            "image" to null
-        )
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
-        assertEquals(0L, dto.color)
-        assertNull(dto.image)
-    }
-
-    @Test
-    fun bannerDecoration_withLongColor_decodesCorrectly() {
-        val map = mapOf<String, Any?>(
-            "color" to 4294967295L,
-            "image" to "assets/bg.png"
-        )
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
-        assertEquals(4294967295L, dto.color)
-        assertEquals("assets/bg.png", dto.image)
-    }
-
-    @Test
-    fun bannerDecoration_withNullValues_decodesCorrectly() {
-        val map = mapOf<String, Any?>(
-            "color" to null,
-            "image" to null
-        )
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.decorationToDTO(map)
-        assertNull(dto.color)
-        assertNull(dto.image)
     }
 
     @Test
@@ -502,54 +603,4 @@ class BannerViewTest {
         assertEquals(1, preloadErrors.size)
         assertEquals("test_place_3", preloadErrors[0])
     }
-
-    @Test
-    fun decorationToDTO_handlesDoubleAndIntColors() {
-        val dto1 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to 4294967295.0))
-        assertEquals(4294967295L, dto1.color)
-
-        val dto2 = com.inappstory.inappstory_plugin.views.BannerView.Companion.decorationToDTO(mapOf("color" to -1))
-        assertEquals(-1L, dto2.color)
-    }
-
-    @Test
-    fun decorationToDTO_decodesInt32ColorAsLong() {
-        // StandardMessageCodec sends ARGB32 values that fit in 32 bits as
-        // java.lang.Integer; alpha < 0x80 lands here and used to throw
-        // ClassCastException on the former `it as Long` cast.
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
-            .decorationToDTO(mapOf("color" to 0x33FFFFFF))
-
-        assertEquals(0x33FFFFFFL, dto.color)
-    }
-
-    @Test
-    fun decorationToDTO_decodesColorAcrossTheInt32Boundary() {
-        val belowBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
-            .decorationToDTO(mapOf("color" to 0x7F000000))
-        assertEquals(0x7F000000L, belowBoundary.color)
-
-        val aboveBoundary = com.inappstory.inappstory_plugin.views.BannerView.Companion
-            .decorationToDTO(mapOf("color" to 0x80000000L))
-        assertEquals(0x80000000L, aboveBoundary.color)
-    }
-
-    @Test
-    fun decorationToDTO_decodesOpaqueColorSentAsLong() {
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
-            .decorationToDTO(mapOf("color" to 0xFF000000L))
-
-        assertEquals(0xFF000000L, dto.color)
-    }
-
-    @Test
-    fun decorationToDTO_returnsNullColorAndImageWhenAbsent() {
-        val dto = com.inappstory.inappstory_plugin.views.BannerView.Companion
-            .decorationToDTO(emptyMap())
-
-        assertNull(dto.color)
-        assertNull(dto.image)
-    }
 }
-
-

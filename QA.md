@@ -31,6 +31,16 @@ melos run test
 # Android native unit tests (Kotlin / JUnit)
 melos run test:android
 
+# Android input-dialog theme regression tests (requires a device/emulator)
+cd example/android
+./gradlew :inappstory_plugin:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.inappstory.inappstory_plugin.InputDialogThemeTest
+cd ../..
+
+# Android full-grid measurement regression (requires a device/emulator)
+cd example/android
+./gradlew :inappstory_plugin:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.inappstory.inappstory_plugin.BannerGridContentLayoutTest
+cd ../..
+
 # iOS native unit tests (Swift / XCTest)
 melos run test:ios
 
@@ -64,8 +74,11 @@ melos run mutation-test  # or ./scripts/mutation_test.sh
 - [ ] Story reader opens and navigates slides
 - [ ] Favorites display and toggle
 - [ ] Banner places load and rotate
+- [ ] Android `app-head` as a grid shows all four banners, including the complete bottom row; taps and Reload work with the plugin connected by a local path dependency
+- [ ] Grid height updates after width/content changes without repeated callbacks for an unchanged size; leaving the page or changing place ID during loading produces no stale callbacks
 - [ ] Onboarding stories show correctly
 - [ ] In-app messages display and dismiss
+- [ ] Rate us comment fields open the keyboard on tap and accept text with the default Flutter Android theme
 - [ ] Error states handled gracefully (no connection, timeout)
 - [ ] Deep links work correctly
 - [ ] Video stories play with sound control
