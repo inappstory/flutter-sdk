@@ -2,8 +2,10 @@ package com.inappstory.inappstory_plugin.views
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.inappstory.sdk.AppearanceManager
+import com.inappstory.sdk.banners.ui.banner.BannerView
 import com.inappstory.sdk.banners.ui.grid.BannerGrid
 import com.inappstory.sdk.banners.ui.grid.DefaultBannerGridAppearance
 import com.inappstory.inappstory_plugin.adaptors.IASBannerPlaceManagerAdaptor
@@ -55,6 +57,20 @@ class BannerGridView(
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
             setAppearanceManager(appearanceManager)
+            (creationParams?.get("gridCornerRadius") as? Number)?.let { radius ->
+                val radiusPx = radius.toFloat() * context.resources.displayMetrics.density
+                // SDK 1.26.0 creates grid banners without applying cornerRadius().
+                setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+                    override fun onChildViewAdded(parent: View, child: View) {
+                        val row = child as? ViewGroup ?: return
+                        for (index in 0 until row.childCount) {
+                            (row.getChildAt(index) as? BannerView)?.setBannerRadius(radiusPx)
+                        }
+                    }
+
+                    override fun onChildViewRemoved(parent: View, child: View) {}
+                })
+            }
             loadCallback(loadCallback)
             bannerGrid = this
         }
