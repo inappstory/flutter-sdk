@@ -117,6 +117,6 @@ class CustomBannerGridAppearance(
     override fun verticalGap(): Int = verticalGap ?: super.verticalGap()
     override fun cornerRadius(): Int = cornerRadius ?: super.cornerRadius()
 
-    override fun loadingPlaceholder(context: Context?): View =
+    override fun loadingPlaceholder(context: Context?): View? =
         context?.let(loadingPlaceholder) ?: super.loadingPlaceholder(context)
 }

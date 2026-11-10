@@ -1,3 +1,9 @@
+## [0.11.1]
+
+### Added
+
+- `BannerList` widget for vertically scrolling banner places, customizable with `BannerListDecoration`
+
 ## [0.11.0]
 
 ### Added

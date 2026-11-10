@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../generated/banner_place_generated.g.dart';
 import '../decorators/banner_grid_decoration.dart';
+import '../decorators/banner_list_decoration.dart';
 
 class BannerPlatformView extends StatelessWidget {
   const BannerPlatformView({
@@ -12,6 +13,7 @@ class BannerPlatformView extends StatelessWidget {
     required this.autoLoad,
     this.layoutType = 'carousel',
     this.gridDecoration,
+    this.listDecoration,
     this.decoration,
   });
 
@@ -25,6 +27,7 @@ class BannerPlatformView extends StatelessWidget {
 
   final String layoutType;
   final BannerGridDecoration? gridDecoration;
+  final BannerListDecoration? listDecoration;
 
   final Function() onPlatformViewCreated;
 
@@ -41,6 +44,18 @@ class BannerPlatformView extends StatelessWidget {
       creationParams['gridHorizontalGap'] = grid.horizontalGap;
       creationParams['gridVerticalGap'] = grid.verticalGap;
       creationParams['gridCornerRadius'] = grid.cornerRadius;
+    }
+    final list = listDecoration;
+    if (list != null) {
+      if (list.edgePadding != null) {
+        creationParams['listEdgePadding'] = list.edgePadding;
+      }
+      if (list.verticalGap != null) {
+        creationParams['listVerticalGap'] = list.verticalGap;
+      }
+      if (list.cornerRadius != null) {
+        creationParams['listCornerRadius'] = list.cornerRadius;
+      }
     }
     if (decoration != null) {
       creationParams['loop'] = decoration?.loop ?? false;

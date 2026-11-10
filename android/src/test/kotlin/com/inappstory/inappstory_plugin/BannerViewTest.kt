@@ -424,6 +424,19 @@ class BannerViewTest {
     }
 
     @Test
+    fun givenCarouselWithoutCustomPlaceholder_whenSdkRequestsLoader_thenReturnsNull() {
+        val appearance = CustomBannerCarouselAppearance(
+            bannerOffset = null,
+            bannersGap = null,
+            cornerRadius = null,
+            loop = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertNull(appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
     fun customBannerCarouselAppearance_usesPlaceholderFromProvider() {
         val placeholder = org.mockito.Mockito.mock(View::class.java)
         val appearance = CustomBannerCarouselAppearance(
@@ -464,6 +477,18 @@ class BannerViewTest {
         assertEquals(8, appearance.horizontalGap())
         assertEquals(8, appearance.verticalGap())
         assertEquals(16, appearance.cornerRadius())
+    }
+
+    @Test
+    fun givenGridWithoutCustomPlaceholder_whenSdkRequestsLoader_thenReturnsNull() {
+        val appearance = CustomBannerGridAppearance(
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertNull(appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
     }
 
     @Test

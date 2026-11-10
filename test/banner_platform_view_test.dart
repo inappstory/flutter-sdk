@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inappstory_plugin/src/widgets/base/banner_platform_view.dart';
 import 'package:inappstory_plugin/src/widgets/decorators/banner_grid_decoration.dart';
+import 'package:inappstory_plugin/src/widgets/decorators/banner_list_decoration.dart';
 
 class _CapturingBannerPlatformView extends BannerPlatformView {
   const _CapturingBannerPlatformView({
     required this.onBuild,
     required super.layoutType,
     super.gridDecoration,
+    super.listDecoration,
   }) : super(
           bannerWidgetId: 'test-widget',
           placeId: 'test-place',
@@ -79,6 +81,54 @@ void main() {
           contains('gridCornerRadius'),
         )),
       );
+    });
+
+    testWidgets(
+        'WHEN configured as a list THEN the native layout is vertical list',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _CapturingBannerPlatformView(
+            layoutType: 'list',
+            onBuild: (params) => creationParams = params,
+          ),
+        ),
+      );
+
+      expect(creationParams?['layoutType'], 'list');
+      expect(
+        creationParams?.keys,
+        isNot(anyOf(
+          contains('gridHorizontalGap'),
+          contains('gridVerticalGap'),
+          contains('gridCornerRadius'),
+          contains('listEdgePadding'),
+          contains('listVerticalGap'),
+          contains('listCornerRadius'),
+        )),
+      );
+    });
+
+    testWidgets(
+        'WHEN configured with list decoration THEN appearance reaches native creation parameters',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _CapturingBannerPlatformView(
+            layoutType: 'list',
+            listDecoration: const BannerListDecoration(
+              edgePadding: 12.5,
+              verticalGap: 16.5,
+              cornerRadius: 4,
+            ),
+            onBuild: (params) => creationParams = params,
+          ),
+        ),
+      );
+
+      expect(creationParams?['listEdgePadding'], 12.5);
+      expect(creationParams?['listVerticalGap'], 16.5);
+      expect(creationParams?['listCornerRadius'], 4.0);
     });
   });
 }

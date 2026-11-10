@@ -57,6 +57,16 @@ class BannerViewFactory(
                 bannerDataListener,
                 placeholderStore,
             )
+        } else if (creationParams?.get("layoutType") == "list") {
+            BannerListView(
+                context,
+                creationParams,
+                flutterPluginBinding,
+                appearanceManager,
+                bannerPlaceManagerAdaptor,
+                bannerDataListener,
+                placeholderStore,
+            )
         } else {
             BannerCarouselView(
                 context,
