@@ -59,6 +59,26 @@ void main() {
       expect(creationParams?['gridHorizontalGap'], 12.5);
       expect(creationParams?['gridVerticalGap'], 16.5);
       expect(creationParams?['gridCornerRadius'], 4.0);
+      expect(creationParams?['gridColumns'], 2);
+    });
+
+    testWidgets(
+        'WHEN configured as a grid with custom columns THEN columns count reaches native creation parameters',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _CapturingBannerPlatformView(
+            layoutType: 'grid',
+            gridDecoration: const BannerGridDecoration(
+              columns: 3,
+            ),
+            onBuild: (params) => creationParams = params,
+          ),
+        ),
+      );
+
+      expect(creationParams?['layoutType'], 'grid');
+      expect(creationParams?['gridColumns'], 3);
     });
 
     testWidgets(
@@ -79,6 +99,7 @@ void main() {
           contains('gridHorizontalGap'),
           contains('gridVerticalGap'),
           contains('gridCornerRadius'),
+          contains('gridColumns'),
         )),
       );
     });
@@ -102,6 +123,7 @@ void main() {
           contains('gridHorizontalGap'),
           contains('gridVerticalGap'),
           contains('gridCornerRadius'),
+          contains('gridColumns'),
           contains('listEdgePadding'),
           contains('listVerticalGap'),
           contains('listCornerRadius'),

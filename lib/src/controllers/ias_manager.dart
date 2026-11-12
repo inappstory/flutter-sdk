@@ -78,40 +78,40 @@ class InAppStoryManager {
     await _iasManager.setPlaceholders(placeholders);
   }
 
-  /// Replaces the current tags with [tags], returning `true` when they were
-  /// valid and applied as-is.
+  /// Replaces the current tags with [tags].
   ///
-  /// If validation fails, the entire tag list is cleared and `false` is
-  /// returned. Validation failures are logged; native-call errors propagate.
+  /// Invalid tags are ignored (and logged); only valid tags (up to 100) are
+  /// applied. Returns `true` when the operation succeeds. Native-call errors
+  /// propagate.
   Future<bool> setTags(List<String> tags) async {
-    final valid = checkTags(tags);
-    await _iasManager.setTags(valid ? tags : const <String>[]);
-    return valid;
-  }
-
-  /// Adds [tags] to the current tags, returning `true` when they were valid and
-  /// added.
-  ///
-  /// If validation fails, nothing is added and `false` is returned.
-  /// Validation failures are logged; native-call errors propagate.
-  Future<bool> addTags(List<String> tags) async {
-    if (!checkTags(tags)) {
-      return false;
-    }
-    await _iasManager.addTags(tags);
+    final sanitized = sanitizeTags(tags);
+    await _iasManager.setTags(sanitized);
     return true;
   }
 
-  /// Removes [tags] from the current tags, returning `true` when they were valid
-  /// and removed.
+  /// Adds [tags] to the current tags.
   ///
-  /// If validation fails, nothing is removed and `false` is returned.
-  /// Validation failures are logged; native-call errors propagate.
-  Future<bool> removeTags(List<String> tags) async {
-    if (!checkTags(tags)) {
-      return false;
+  /// Invalid tags are ignored (and logged); only valid tags (up to 100) are
+  /// added. If no valid tags remain, the native call is skipped. Returns `true`
+  /// when the operation succeeds. Native-call errors propagate.
+  Future<bool> addTags(List<String> tags) async {
+    final sanitized = sanitizeTags(tags);
+    if (sanitized.isNotEmpty) {
+      await _iasManager.addTags(sanitized);
     }
-    await _iasManager.removeTags(tags);
+    return true;
+  }
+
+  /// Removes [tags] from the current tags.
+  ///
+  /// Invalid tags are ignored (and logged); only valid tags are removed.
+  /// If no valid tags remain, the native call is skipped. Returns `true` when
+  /// the operation succeeds. Native-call errors propagate.
+  Future<bool> removeTags(List<String> tags) async {
+    final sanitized = sanitizeTags(tags);
+    if (sanitized.isNotEmpty) {
+      await _iasManager.removeTags(sanitized);
+    }
     return true;
   }
 
@@ -124,8 +124,8 @@ class InAppStoryManager {
   /// * [tags]: replaces the current tags.
   /// * [placeholders]: replaces the text placeholders.
   ///
-  /// Invalid [tags] are dropped, so an invalid set clears the tags rather than
-  /// throwing.
+  /// Invalid [tags] are ignored (and logged): only valid tags (up to 100) are
+  /// applied rather than throwing.
   Future<void> setUserSettings({
     bool? anonymous,
     String? userId,
@@ -278,7 +278,7 @@ class InAppStoryManager {
   ///
   /// Non-null [tags] override the tags for this request without changing SDK
   /// settings. An empty list explicitly requests no tags. Validation failures
-  /// are logged and the entire invalid list is replaced with an empty list.
+  /// are logged and invalid tags are ignored (filtered out).
   /// A `null` value is passed through for the native SDK to handle.
   ///
   /// [onlyPreloaded] requires the message to have been preloaded; it does not
@@ -338,7 +338,7 @@ class InAppStoryManager {
   ///
   /// Non-null [tags] override the tags for this request without changing SDK
   /// settings. An empty list explicitly requests no tags. Validation failures
-  /// are logged and the entire invalid list is replaced with an empty list.
+  /// are logged and invalid tags are ignored (filtered out).
   /// A `null` value is passed through for the native SDK to handle.
   ///
   /// [onlyPreloaded] requires the message to have been preloaded.
@@ -433,7 +433,7 @@ class InAppStoryManager {
   ///
   /// Non-null [tags] override the tags for this request without changing SDK
   /// settings. An empty list explicitly requests no tags. Validation failures
-  /// are logged and the entire invalid list is replaced with an empty list.
+  /// are logged and invalid tags are ignored (filtered out).
   /// A `null` value is passed through for the native SDK to handle.
   ///
   /// Completes with `true` if the native call returns without error, or `false`

@@ -39,6 +39,8 @@ class BannerGridView(
     override fun configureAppearance(creationParams: Map<String?, Any?>?) {
         appearanceManager.csBannerGridInterface(
             CustomBannerGridAppearance(
+                columns = (creationParams?.get("gridColumns") as? Number)?.toInt()
+                    ?: (creationParams?.get("gridColumnCount") as? Number)?.toInt(),
                 horizontalGap = (creationParams?.get("gridHorizontalGap") as? Number)?.toInt(),
                 verticalGap = (creationParams?.get("gridVerticalGap") as? Number)?.toInt(),
                 cornerRadius = (creationParams?.get("gridCornerRadius") as? Number)?.toInt(),
@@ -124,11 +126,13 @@ class BannerGridView(
 }
 
 class CustomBannerGridAppearance(
+    private val columns: Int? = null,
     private val horizontalGap: Int?,
     private val verticalGap: Int?,
     private val cornerRadius: Int?,
     private val loadingPlaceholder: (Context) -> View?,
 ) : DefaultBannerGridAppearance() {
+    override fun columnCount(): Int = columns ?: super.columnCount()
     override fun horizontalGap(): Int = horizontalGap ?: super.horizontalGap()
     override fun verticalGap(): Int = verticalGap ?: super.verticalGap()
     override fun cornerRadius(): Int = cornerRadius ?: super.cornerRadius()

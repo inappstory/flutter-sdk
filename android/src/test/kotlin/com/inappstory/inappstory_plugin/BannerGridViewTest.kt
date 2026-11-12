@@ -37,6 +37,7 @@ class BannerGridViewTest {
                 context,
                 mapOf(
                     "autoLoad" to false,
+                    "gridColumns" to 3,
                     "gridHorizontalGap" to 12.0,
                     "gridVerticalGap" to 20.0,
                     "gridCornerRadius" to 32.5,
@@ -68,8 +69,72 @@ class BannerGridViewTest {
                 }
             }
             val gridAppearance = appearance.csBannerGridInterface()
+            assertEquals(3, gridAppearance.columnCount())
             assertEquals(12, gridAppearance.horizontalGap())
             assertEquals(20, gridAppearance.verticalGap())
+            view.dispose()
+        }
+    }
+
+    @Test
+    fun givenGridColumnCountAlias_whenConfigured_thenAppliesColumnCount() {
+        val context = Mockito.mock(Context::class.java)
+        val resources = Mockito.mock(Resources::class.java)
+        val metrics = DisplayMetrics().apply { density = 2f }
+        Mockito.`when`(context.resources).thenReturn(resources)
+        Mockito.`when`(resources.displayMetrics).thenReturn(metrics)
+        val binding = Mockito.mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        Mockito.`when`(binding.binaryMessenger).thenReturn(FakeBinaryMessenger())
+        Mockito.`when`(binding.applicationContext).thenReturn(context)
+        val appearance = AppearanceManager()
+
+        Mockito.mockConstruction(BannerGrid::class.java) { grid, _ ->
+            Mockito.`when`(grid.context).thenReturn(context)
+        }.use {
+            val view = BannerGridView(
+                context,
+                mapOf(
+                    "autoLoad" to false,
+                    "gridColumnCount" to 4,
+                ),
+                binding,
+                appearance,
+                IASBannerPlaceManagerAdaptor(binding),
+                BannerDataListener(),
+                BannerPlaceholderStore { _, _ -> error("must not build a placeholder") },
+            )
+            val gridAppearance = appearance.csBannerGridInterface()
+            assertEquals(4, gridAppearance.columnCount())
+            view.dispose()
+        }
+    }
+
+    @Test
+    fun givenNoGridColumns_whenConfigured_thenDefaultsToTwoColumns() {
+        val context = Mockito.mock(Context::class.java)
+        val resources = Mockito.mock(Resources::class.java)
+        val metrics = DisplayMetrics().apply { density = 2f }
+        Mockito.`when`(context.resources).thenReturn(resources)
+        Mockito.`when`(resources.displayMetrics).thenReturn(metrics)
+        val binding = Mockito.mock(FlutterPlugin.FlutterPluginBinding::class.java)
+        Mockito.`when`(binding.binaryMessenger).thenReturn(FakeBinaryMessenger())
+        Mockito.`when`(binding.applicationContext).thenReturn(context)
+        val appearance = AppearanceManager()
+
+        Mockito.mockConstruction(BannerGrid::class.java) { grid, _ ->
+            Mockito.`when`(grid.context).thenReturn(context)
+        }.use {
+            val view = BannerGridView(
+                context,
+                mapOf("autoLoad" to false),
+                binding,
+                appearance,
+                IASBannerPlaceManagerAdaptor(binding),
+                BannerDataListener(),
+                BannerPlaceholderStore { _, _ -> error("must not build a placeholder") },
+            )
+            val gridAppearance = appearance.csBannerGridInterface()
+            assertEquals(2, gridAppearance.columnCount())
             view.dispose()
         }
     }

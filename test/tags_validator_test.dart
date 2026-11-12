@@ -64,18 +64,78 @@ void main() {
     });
   });
 
+  group('GIVEN isValidTag', () {
+    test('WHEN tag is valid THEN it returns true', () {
+      expect(isValidTag('tag1'), isTrue);
+      expect(isValidTag('my-tag_2'), isTrue);
+      expect(isValidTag('тег'), isTrue);
+    });
+
+    test('WHEN tag is empty or invalid THEN it returns false', () {
+      expect(isValidTag(''), isFalse);
+      expect(isValidTag('bad tag'), isFalse);
+      expect(isValidTag('tag!'), isFalse);
+    });
+  });
+
+  group('GIVEN tagValidationError', () {
+    test('WHEN tag is valid THEN it returns null', () {
+      expect(tagValidationError('valid_tag-1'), isNull);
+    });
+
+    test('WHEN tag is empty THEN it reports empty', () {
+      expect(tagValidationError(''), contains('empty'));
+    });
+
+    test('WHEN tag contains forbidden characters THEN it names the character', () {
+      final error = tagValidationError('bad tag');
+      expect(error, contains('"bad tag"'));
+      expect(error, contains('U+0020'));
+    });
+  });
+
+  group('GIVEN checkTag', () {
+    test('WHEN tag is valid THEN it returns true', () {
+      expect(checkTag('tag1'), isTrue);
+    });
+
+    test('WHEN tag is invalid THEN it returns false', () {
+      expect(checkTag('bad tag'), isFalse);
+    });
+  });
+
   group('GIVEN sanitizeTags', () {
     test('WHEN the tags are valid THEN it returns them unchanged', () {
       expect(sanitizeTags(['sport', 'news']), ['sport', 'news']);
     });
 
-    test('WHEN a tag is invalid THEN it returns an empty list', () {
-      expect(sanitizeTags(['good', 'bad tag']), isEmpty);
+    test('WHEN a list contains both valid and invalid tags THEN invalid tags are ignored and valid tags are kept', () {
+      expect(
+        sanitizeTags(['good', 'bad tag', 'also_good', '', 'тег!']),
+        ['good', 'also_good'],
+      );
     });
 
-    test('WHEN the tag count is over the limit THEN it returns an empty list',
+    test('WHEN all tags are invalid THEN it returns an empty list', () {
+      expect(sanitizeTags(['bad tag', '', 'invalid!']), isEmpty);
+    });
+
+    test('WHEN the tag count is over the limit THEN it caps at $maxTagsCount valid tags',
         () {
-      expect(sanitizeTags(List.generate(101, (i) => 'tag_$i')), isEmpty);
+      final input = List.generate(105, (i) => 'tag_$i');
+      final expected = List.generate(100, (i) => 'tag_$i');
+      expect(sanitizeTags(input), expected);
+    });
+
+    test('WHEN list has invalid tags and over limit valid tags THEN only valid up to $maxTagsCount are kept',
+        () {
+      final input = <String>[
+        'invalid tag',
+        ...List.generate(105, (i) => 'tag_$i'),
+        'another invalid',
+      ];
+      final expected = List.generate(100, (i) => 'tag_$i');
+      expect(sanitizeTags(input), expected);
     });
   });
 

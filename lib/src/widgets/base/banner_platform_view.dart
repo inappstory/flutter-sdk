@@ -44,6 +44,7 @@ class BannerPlatformView extends StatelessWidget {
       creationParams['gridHorizontalGap'] = grid.horizontalGap;
       creationParams['gridVerticalGap'] = grid.verticalGap;
       creationParams['gridCornerRadius'] = grid.cornerRadius;
+      creationParams['gridColumns'] = grid.columns;
     }
     final list = listDecoration;
     if (list != null) {

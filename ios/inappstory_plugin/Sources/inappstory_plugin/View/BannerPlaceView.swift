@@ -275,11 +275,15 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
             let horizontalGap = _args["gridHorizontalGap"] as? NSNumber
             let verticalGap = _args["gridVerticalGap"] as? NSNumber
             let gridCornerRadius = _args["gridCornerRadius"] as? NSNumber
+            let columnCount = (_args["gridColumns"] as? NSNumber)?.intValue
+                ?? (_args["gridColumnCount"] as? NSNumber)?.intValue
+                ?? 2
             self.bannersAppearance = IASBannersAppearance(
                 layoutType: .tilesList,
                 cornerRadius: CGFloat(gridCornerRadius?.doubleValue ?? 16),
                 columnSpacing: CGFloat(horizontalGap?.doubleValue ?? 8),
-                rowSpacing: CGFloat(verticalGap?.doubleValue ?? 8)
+                rowSpacing: CGFloat(verticalGap?.doubleValue ?? 8),
+                columnCount: columnCount
             )
         } else if shouldLoop != nil && sideInset != nil && interItemSpacing != nil
             && cornerRadius != nil

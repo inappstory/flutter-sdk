@@ -453,27 +453,56 @@ class BannerViewTest {
     @Test
     fun customBannerGridAppearance_customValues() {
         val appearance = CustomBannerGridAppearance(
+            columns = 4,
             horizontalGap = 12,
             verticalGap = 16,
             cornerRadius = 4,
             loadingPlaceholder = { null },
         )
 
+        assertEquals(4, appearance.columnCount())
         assertEquals(12, appearance.horizontalGap())
         assertEquals(16, appearance.verticalGap())
         assertEquals(4, appearance.cornerRadius())
-        assertEquals(2, appearance.columnCount())
     }
 
     @Test
-    fun customBannerGridAppearance_nullValues_fallBackToSdkDefaults() {
+    fun customBannerGridAppearance_customColumnCount() {
         val appearance = CustomBannerGridAppearance(
+            columns = 3,
             horizontalGap = null,
             verticalGap = null,
             cornerRadius = null,
             loadingPlaceholder = { null },
         )
 
+        assertEquals(3, appearance.columnCount())
+    }
+
+    @Test
+    fun customBannerGridAppearance_nullColumnCount_fallBackToSdkDefault() {
+        val appearance = CustomBannerGridAppearance(
+            columns = null,
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(2, appearance.columnCount())
+    }
+
+    @Test
+    fun customBannerGridAppearance_nullValues_fallBackToSdkDefaults() {
+        val appearance = CustomBannerGridAppearance(
+            columns = null,
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(2, appearance.columnCount())
         assertEquals(8, appearance.horizontalGap())
         assertEquals(8, appearance.verticalGap())
         assertEquals(16, appearance.cornerRadius())
