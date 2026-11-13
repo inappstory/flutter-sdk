@@ -732,6 +732,51 @@ void main() {
         );
       });
 
+      test('WHEN created without columns THEN columns defaults to 2', () {
+        const grid = BannerGrid(placeId: 'test_place', height: 180);
+
+        expect(grid.columns, 2);
+        expect(grid.gridDecoration.columns, 2);
+      });
+
+      test('WHEN created with custom columns parameter THEN columns applies to gridDecoration', () {
+        const grid = BannerGrid(
+          placeId: 'test_place',
+          height: 180,
+          columns: 3,
+        );
+
+        expect(grid.columns, 3);
+        expect(grid.gridDecoration.columns, 3);
+      });
+
+      test('WHEN created with columns in gridDecoration THEN columns reflects decoration count', () {
+        const grid = BannerGrid(
+          placeId: 'test_place',
+          height: 180,
+          gridDecoration: BannerGridDecoration(columns: 4),
+        );
+
+        expect(grid.columns, 4);
+        expect(grid.gridDecoration.columns, 4);
+      });
+
+      test('WHEN both columns parameter and gridDecoration are provided THEN columns parameter takes precedence', () {
+        const grid = BannerGrid(
+          placeId: 'test_place',
+          height: 180,
+          gridDecoration: BannerGridDecoration(
+            horizontalGap: 12,
+            columns: 4,
+          ),
+          columns: 3,
+        );
+
+        expect(grid.columns, 3);
+        expect(grid.gridDecoration.columns, 3);
+        expect(grid.gridDecoration.horizontalGap, 12);
+      });
+
       testWidgets(
           'WHEN native reports loaded content THEN it forwards the full content height',
           (tester) async {
@@ -773,6 +818,33 @@ void main() {
         expect(reportedSize, 4);
         expect(reportedHeight, 612);
         expect(tester.getSize(find.byType(BannerGrid)).height, 420);
+      });
+    });
+
+    group('$BannerGridDecoration', () {
+      test('WHEN created with defaults THEN columns and columnCount are 2', () {
+        const decoration = BannerGridDecoration();
+        expect(decoration.columns, 2);
+        expect(decoration.columnCount, 2);
+      });
+
+      test('WHEN created with custom columns THEN columns and columnCount reflect it', () {
+        const decoration = BannerGridDecoration(columns: 4);
+        expect(decoration.columns, 4);
+        expect(decoration.columnCount, 4);
+      });
+
+      test('WHEN compared with identical columns THEN decorations are equal', () {
+        const first = BannerGridDecoration(columns: 3);
+        const second = BannerGridDecoration(columns: 3);
+        expect(first, equals(second));
+        expect(first.hashCode, equals(second.hashCode));
+      });
+
+      test('WHEN compared with different columns THEN decorations are not equal', () {
+        const first = BannerGridDecoration(columns: 2);
+        const second = BannerGridDecoration(columns: 3);
+        expect(first, isNot(equals(second)));
       });
     });
   });

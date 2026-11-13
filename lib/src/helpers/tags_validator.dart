@@ -13,11 +13,49 @@ final _allowedTag = RegExp(r'^[\p{L}\p{M}0-9_-]+$', unicode: true);
 /// first offending character once a tag has failed [_allowedTag].
 final _allowedTagChar = RegExp(r'^[\p{L}\p{M}0-9_-]$', unicode: true);
 
+/// Returns true when [tag] is non-empty and contains only allowed characters.
+bool isValidTag(String tag) => tag.isNotEmpty && _allowedTag.hasMatch(tag);
+
+/// Returns a message describing why [tag] is invalid, or null when it is valid.
+///
+/// A tag is invalid when it is empty or contains anything other than unicode
+/// letters or marks, digits `0-9`, `-` and `_`.
+String? tagValidationError(String tag) {
+  if (tag.isEmpty) {
+    return 'Tag must not be empty.';
+  }
+  if (_allowedTag.hasMatch(tag)) {
+    return null;
+  }
+  // Slow path: the tag is invalid, so walk it once to name the offender.
+  for (final rune in tag.runes) {
+    final char = String.fromCharCode(rune);
+    if (!_allowedTagChar.hasMatch(char)) {
+      final code = rune.toRadixString(16).toUpperCase().padLeft(4, '0');
+      return 'Tag "$tag" contains an invalid character "$char" (U+$code). '
+          'Allowed characters: unicode letters, digits 0-9, "-" and "_".';
+    }
+  }
+  return null;
+}
+
+/// Validates a single [tag], logging the reason to the console when it is invalid.
+///
+/// Returns true when [tag] is valid; false when it is invalid.
+bool checkTag(String tag) {
+  final error = tagValidationError(tag);
+  if (error != null) {
+    log(error, name: 'InAppStory.tags', level: 900);
+    return false;
+  }
+  return true;
+}
+
 /// Returns a message describing why [tags] are invalid, or null when they are
 /// valid.
 ///
 /// Tags are invalid when the list contains more than [maxTagsCount] tags,
-/// or when a tag is empty or contains anything other than unicode letters or
+/// or when any tag is empty or contains anything other than unicode letters or
 /// marks, digits `0-9`, `-` and `_`.
 String? tagsValidationError(List<String> tags) {
   if (tags.length > maxTagsCount) {
@@ -25,20 +63,9 @@ String? tagsValidationError(List<String> tags) {
   }
 
   for (final tag in tags) {
-    if (tag.isEmpty) {
-      return 'Tag must not be empty.';
-    }
-    if (_allowedTag.hasMatch(tag)) {
-      continue;
-    }
-    // Slow path: the tag is invalid, so walk it once to name the offender.
-    for (final rune in tag.runes) {
-      final char = String.fromCharCode(rune);
-      if (!_allowedTagChar.hasMatch(char)) {
-        final code = rune.toRadixString(16).toUpperCase().padLeft(4, '0');
-        return 'Tag "$tag" contains an invalid character "$char" (U+$code). '
-            'Allowed characters: unicode letters, digits 0-9, "-" and "_".';
-      }
+    final error = tagValidationError(tag);
+    if (error != null) {
+      return error;
     }
   }
 
@@ -47,19 +74,43 @@ String? tagsValidationError(List<String> tags) {
 
 /// Validates [tags], logging the reason to the console when they are invalid.
 ///
-/// Returns true when the tags are valid and may be used as-is; false when they
-/// should be dropped (sent empty).
+/// Returns true when all tags are valid and the count does not exceed
+/// [maxTagsCount]; false otherwise.
 bool checkTags(List<String> tags) {
-  final error = tagsValidationError(tags);
-  if (error != null) {
-    log(error, name: 'InAppStory.tags', level: 900);
-    return false;
+  var allValid = true;
+  if (tags.length > maxTagsCount) {
+    log('The list must not contain more than $maxTagsCount tags.',
+        name: 'InAppStory.tags', level: 900);
+    allValid = false;
   }
-  return true;
+  for (final tag in tags) {
+    if (!checkTag(tag)) {
+      allValid = false;
+    }
+  }
+  return allValid;
 }
 
-/// Returns [tags] when they pass [checkTags], or an empty list when they do
-/// not. Invalid tags are dropped (and logged) so the SDK is used with no tags
-/// instead of failing.
-List<String> sanitizeTags(List<String> tags) =>
-    checkTags(tags) ? tags : const <String>[];
+/// Filters [tags] to keep only valid tags, respecting [maxTagsCount] (100).
+///
+/// Invalid tags (empty tags or tags with forbidden characters) are logged and
+/// ignored. If the number of valid tags exceeds [maxTagsCount], excess tags
+/// are dropped and a warning is logged.
+List<String> sanitizeTags(List<String> tags) {
+  final validTags = <String>[];
+  var loggedCountLimit = false;
+
+  for (final tag in tags) {
+    if (checkTag(tag)) {
+      if (validTags.length < maxTagsCount) {
+        validTags.add(tag);
+      } else if (!loggedCountLimit) {
+        log('The list must not contain more than $maxTagsCount tags.',
+            name: 'InAppStory.tags', level: 900);
+        loggedCountLimit = true;
+      }
+    }
+  }
+
+  return validTags;
+}

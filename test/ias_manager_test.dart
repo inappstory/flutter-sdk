@@ -41,6 +41,18 @@ void main() {
       return calls;
     }
 
+    List<List<Object?>> captureHostCalls(String method) {
+      final channel =
+          'dev.flutter.pigeon.inappstory_plugin.InAppStoryManagerHostApi.$method';
+      final calls = <List<Object?>>[];
+      messenger.setMockMessageHandler(channel, (data) async {
+        calls.add(codec.decodeMessage(data)! as List<Object?>);
+        return codec.encodeMessage(<Object?>[]);
+      });
+      addTearDown(() => messenger.setMockMessageHandler(channel, null));
+      return calls;
+    }
+
     group('GIVEN the logger', () {
       test('WHEN unset THEN a logger is created', () {
         expect(manager.logger, isA<IASLogger>());
@@ -131,6 +143,25 @@ void main() {
           ['story-id', isA<String>(), <String>[]],
         ]);
       });
+
+      test('THEN invalid tags are ignored and valid tags are forwarded',
+          () async {
+        final calls = captureStoryCalls('showWithTargeting');
+
+        final operation = manager.showStoryWithTargeting(
+          'story-id',
+          tags: const ['promo', 'not valid'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          [
+            'story-id',
+            isA<String>(),
+            ['promo'],
+          ],
+        ]);
+      });
     });
 
     group('WHEN showing an in-app message by ID', () {
@@ -191,6 +222,27 @@ void main() {
           ['message-id', isA<String>(), false, null, <String>[]],
         ]);
       });
+
+      test('THEN the targeting method ignores invalid tags and keeps valid ones',
+          () async {
+        final calls = captureIAMCalls('showByIdWithTargeting');
+
+        final operation = manager.showIAMByIdWithTargeting(
+          'message-id',
+          tags: const ['promo', 'not valid'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          [
+            'message-id',
+            isA<String>(),
+            false,
+            null,
+            ['promo']
+          ],
+        ]);
+      });
     });
 
     group('WHEN showing an in-app message by event', () {
@@ -223,6 +275,155 @@ void main() {
             ['promo']
           ],
         ]);
+      });
+
+      test('THEN the targeting method ignores invalid tags and keeps valid ones',
+          () async {
+        final calls = captureIAMCalls('showByEventWithTargeting');
+
+        final operation = manager.showIAMByEventWithTargeting(
+          'welcome',
+          tags: const ['promo', 'not valid'],
+        );
+
+        expect(await operation.value, isTrue);
+        expect(calls, [
+          [
+            'welcome',
+            isA<String>(),
+            false,
+            null,
+            ['promo']
+          ],
+        ]);
+      });
+    });
+
+    group('GIVEN setTags', () {
+      test('WHEN tags are valid THEN it forwards them to native and returns true',
+          () async {
+        final calls = captureHostCalls('setTags');
+
+        final result = await manager.setTags(['news', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN tags contain invalid items THEN invalid tags are ignored and valid tags are forwarded',
+          () async {
+        final calls = captureHostCalls('setTags');
+
+        final result = await manager.setTags(['news', 'bad tag', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN all tags are invalid THEN an empty list is forwarded to native and returns true',
+          () async {
+        final calls = captureHostCalls('setTags');
+
+        final result = await manager.setTags(['bad tag', '']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [<String>[]],
+        ]);
+      });
+    });
+
+    group('GIVEN addTags', () {
+      test('WHEN tags are valid THEN it forwards them to native and returns true',
+          () async {
+        final calls = captureHostCalls('addTags');
+
+        final result = await manager.addTags(['news', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN tags contain invalid items THEN invalid tags are ignored and valid tags are forwarded',
+          () async {
+        final calls = captureHostCalls('addTags');
+
+        final result = await manager.addTags(['news', 'bad tag', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN all tags are invalid THEN the native call is skipped and returns true',
+          () async {
+        final calls = captureHostCalls('addTags');
+
+        final result = await manager.addTags(['bad tag', '']);
+
+        expect(result, isTrue);
+        expect(calls, isEmpty);
+      });
+    });
+
+    group('GIVEN removeTags', () {
+      test('WHEN tags are valid THEN it forwards them to native and returns true',
+          () async {
+        final calls = captureHostCalls('removeTags');
+
+        final result = await manager.removeTags(['news', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN tags contain invalid items THEN invalid tags are ignored and valid tags are forwarded',
+          () async {
+        final calls = captureHostCalls('removeTags');
+
+        final result = await manager.removeTags(['news', 'bad tag', 'sport']);
+
+        expect(result, isTrue);
+        expect(calls, [
+          [
+            ['news', 'sport']
+          ],
+        ]);
+      });
+
+      test(
+          'WHEN all tags are invalid THEN the native call is skipped and returns true',
+          () async {
+        final calls = captureHostCalls('removeTags');
+
+        final result = await manager.removeTags(['bad tag', '']);
+
+        expect(result, isTrue);
+        expect(calls, isEmpty);
       });
     });
 

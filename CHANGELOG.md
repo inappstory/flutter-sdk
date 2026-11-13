@@ -1,3 +1,19 @@
+## [0.11.1]
+
+### Added
+
+- `BannerList` widget for vertically scrolling banner places, customizable with `BannerListDecoration`
+- Сontrol columns in `BannerGrid`, default 2
+
+### Fixed 
+
+- Tag validation
+- Prevented repeated banner taps from opening duplicate story readers
+
+### Changed
+
+- Updated iOS SDK to 1.29.10
+
 ## [0.11.0]
 
 ### Added

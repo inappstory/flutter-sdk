@@ -27,6 +27,7 @@ abstract class BannerPlaceBase extends StatefulWidget {
     required this.placeId,
     required this.height,
     this.placeDecoration,
+    this.listDecoration,
     this.autoLoad = true,
     this.isInteractionEnabled,
     this.bannerPlaceLoaderBuilder,
@@ -47,6 +48,9 @@ abstract class BannerPlaceBase extends StatefulWidget {
 
   final BannerPlaceDecoration? placeDecoration;
 
+  /// Optional padding, spacing and corner radius for a vertical banner list.
+  final BannerListDecoration? listDecoration;
+
   final BannerPlaceLoaderBuilder? bannerPlaceLoaderBuilder;
   final BannerPlaceErrorBuilder? bannerPlaceErrorBuilder;
 
@@ -65,6 +69,9 @@ abstract class BannerPlaceBase extends StatefulWidget {
 
   @protected
   bool get isGrid;
+
+  @protected
+  bool get isList => false;
 
   @protected
   BannerGridDecoration? get gridDecoration => null;
@@ -272,8 +279,13 @@ class _BannerPlaceState extends State<BannerPlaceBase>
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           autoLoad: widget.autoLoad,
-          layoutType: widget.isGrid ? 'grid' : 'carousel',
+          layoutType: widget.isGrid
+              ? 'grid'
+              : widget.isList
+                  ? 'list'
+                  : 'carousel',
           gridDecoration: widget.gridDecoration,
+          listDecoration: widget.listDecoration,
           onPlatformViewCreated: () {
             _platformViewCreated = true;
             if (!_lastInteractionState) {
@@ -294,8 +306,13 @@ class _BannerPlaceState extends State<BannerPlaceBase>
           placeId: widget.placeId,
           decoration: widget.placeDecoration,
           autoLoad: widget.autoLoad,
-          layoutType: widget.isGrid ? 'grid' : 'carousel',
+          layoutType: widget.isGrid
+              ? 'grid'
+              : widget.isList
+                  ? 'list'
+                  : 'carousel',
           gridDecoration: widget.gridDecoration,
+          listDecoration: widget.listDecoration,
           onPlatformViewCreated: () {
             _platformViewCreated = true;
             if (!_lastInteractionState) {

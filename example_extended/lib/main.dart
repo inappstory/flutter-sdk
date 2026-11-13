@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inappstory_plugin/inappstory_plugin.dart';
 
+import 'banner_list_example.dart';
 import 'games_widget.dart';
 import 'in_app_messages.dart';
 import 'keys.dart';
@@ -46,6 +47,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void onGamesTap() {
     navigatorState.push(MaterialPageRoute(builder: (_) => const GamesWidget()));
+  }
+
+  void onBannerListTap() {
+    navigatorState.push(
+      MaterialPageRoute(builder: (_) => const BannerListExample()),
+    );
   }
 
   void onInAppMessagesTap() {
@@ -99,6 +106,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       ElevatedButton(
                         onPressed: onSimpleExampleTap,
                         child: const Text('Simple Feed Example'),
+                      ),
+                      ElevatedButton(
+                        onPressed: onBannerListTap,
+                        child: const Text('Banner List'),
                       ),
                       ElevatedButton(
                         onPressed: onGamesTap,

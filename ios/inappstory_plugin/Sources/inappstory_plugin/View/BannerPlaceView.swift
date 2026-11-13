@@ -17,6 +17,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
     private var placeId: String
     private var bannerWidgetId: String
     private var isGrid = false
+    private var isList = false
 
     private var bannersAppearance: IASBannersAppearance?
 
@@ -250,21 +251,39 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
 
     func createNativeView(view _view: UIView, args _args: [String: Any]) {
         isGrid = (_args["layoutType"] as? String) == "grid"
+        isList = (_args["layoutType"] as? String) == "list"
 
         let shouldLoop = _args["loop"] as? Bool
         let sideInset = _args["bannerOffset"] as? NSNumber
         let interItemSpacing = _args["bannersGap"] as? NSNumber
         let cornerRadius = _args["cornerRadius"] as? NSNumber
 
-        if isGrid {
+        if isList {
+            self.bannersAppearance = IASBannersAppearance(
+                layoutType: .verticalList,
+                sideInset: CGFloat(
+                    (_args["listEdgePadding"] as? NSNumber)?.doubleValue ?? 0
+                ),
+                interItemSpacing: CGFloat(
+                    (_args["listVerticalGap"] as? NSNumber)?.doubleValue ?? 8
+                ),
+                cornerRadius: CGFloat(
+                    (_args["listCornerRadius"] as? NSNumber)?.doubleValue ?? 16
+                )
+            )
+        } else if isGrid {
             let horizontalGap = _args["gridHorizontalGap"] as? NSNumber
             let verticalGap = _args["gridVerticalGap"] as? NSNumber
             let gridCornerRadius = _args["gridCornerRadius"] as? NSNumber
+            let columnCount = (_args["gridColumns"] as? NSNumber)?.intValue
+                ?? (_args["gridColumnCount"] as? NSNumber)?.intValue
+                ?? 2
             self.bannersAppearance = IASBannersAppearance(
                 layoutType: .tilesList,
                 cornerRadius: CGFloat(gridCornerRadius?.doubleValue ?? 16),
                 columnSpacing: CGFloat(horizontalGap?.doubleValue ?? 8),
-                rowSpacing: CGFloat(verticalGap?.doubleValue ?? 8)
+                rowSpacing: CGFloat(verticalGap?.doubleValue ?? 8),
+                columnCount: columnCount
             )
         } else if shouldLoop != nil && sideInset != nil && interItemSpacing != nil
             && cornerRadius != nil
@@ -337,7 +356,7 @@ class BannerPlaceView: NSObject, FlutterPlatformView, BannerViewHostApi {
         self._bannersView?.isUserInteractionEnabled = self.isInteractionEnabled
         self._bannersView?.bannersDidScroll = { [weak self] index in
             guard let self else { return }
-            guard !self.isGrid else { return }
+            guard !self.isGrid && !self.isList else { return }
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 self.callbackFlutterApi?.onBannerScroll(

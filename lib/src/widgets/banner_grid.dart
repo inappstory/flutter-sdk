@@ -1,7 +1,7 @@
 import 'base/banner_place_base.dart';
 import 'decorators/banner_grid_decoration.dart';
 
-/// Displays banners in a two-column grid without internal scrolling.
+/// Displays banners in a grid with a configurable column count (defaults to 2) without internal scrolling.
 ///
 /// Update [height] from [onBannerPlaceLoaded] to fit all rows. Use an outer
 /// scrollable when the grid content may exceed the available screen space.
@@ -18,6 +18,7 @@ class BannerGrid extends BannerPlaceBase {
   /// * [bannerPlaceErrorBuilder]: builds the widget shown if loading fails.
   /// * [onActionWith]: called when a widget inside a banner sends an event.
   /// * [gridDecoration]: the gaps and corner radius of the grid.
+  /// * [columns]: the number of columns in the grid. Defaults to 2.
   /// * [onBannerPlaceLoaded]: called with the number of banners and the full
   ///   content height in logical pixels, including all rows and gaps. On Android,
   ///   waits for native layout and is called again when the measured content
@@ -35,7 +36,8 @@ class BannerGrid extends BannerPlaceBase {
     super.key,
     required super.placeId,
     required super.height,
-    this.gridDecoration = const BannerGridDecoration(),
+    BannerGridDecoration gridDecoration = const BannerGridDecoration(),
+    int? columns,
     super.autoLoad,
     super.isInteractionEnabled,
     super.bannerPlaceLoaderBuilder,
@@ -47,11 +49,26 @@ class BannerGrid extends BannerPlaceBase {
     super.onPreloadedError,
     super.hideOnEmpty,
     super.loadingTimeout,
-  });
+  })  : _columns = columns,
+        _gridDecoration = gridDecoration;
 
-  /// Gaps and corner radius of the grid.
+  final int? _columns;
+  final BannerGridDecoration _gridDecoration;
+
+  /// Number of columns in the grid. Defaults to 2.
+  int get columns => _columns ?? gridDecoration.columns;
+
+  /// Gaps, corner radius, and column count of the grid.
   @override
-  final BannerGridDecoration gridDecoration;
+  BannerGridDecoration get gridDecoration =>
+      _columns != null && _columns != _gridDecoration.columns
+          ? BannerGridDecoration(
+              horizontalGap: _gridDecoration.horizontalGap,
+              verticalGap: _gridDecoration.verticalGap,
+              cornerRadius: _gridDecoration.cornerRadius,
+              columns: _columns!,
+            )
+          : _gridDecoration;
 
   @override
   bool get isGrid => true;

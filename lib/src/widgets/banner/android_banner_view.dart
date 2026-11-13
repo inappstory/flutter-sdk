@@ -14,6 +14,7 @@ class AndroidBannerView extends BannerPlatformView {
     required super.onPlatformViewCreated,
     super.layoutType,
     super.gridDecoration,
+    super.listDecoration,
     super.decoration,
   });
 
@@ -25,11 +26,17 @@ class AndroidBannerView extends BannerPlatformView {
   ) {
     return AndroidView(
       viewType: viewType,
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-        Factory<OneSequenceGestureRecognizer>(
-          () => HorizontalDragGestureRecognizer(),
-        ),
-      },
+      gestureRecognizers: layoutType == 'list'
+          ? <Factory<OneSequenceGestureRecognizer>>{
+              Factory<OneSequenceGestureRecognizer>(
+                () => VerticalDragGestureRecognizer(),
+              ),
+            }
+          : <Factory<OneSequenceGestureRecognizer>>{
+              Factory<OneSequenceGestureRecognizer>(
+                () => HorizontalDragGestureRecognizer(),
+              ),
+            },
       layoutDirection: TextDirection.ltr,
       creationParams: Map<String, dynamic>.from(creationParams),
       creationParamsCodec: const StandardMessageCodec(),

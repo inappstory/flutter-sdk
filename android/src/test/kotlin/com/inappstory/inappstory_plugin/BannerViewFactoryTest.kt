@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import com.inappstory.inappstory_plugin.views.BannerCarouselView
 import com.inappstory.inappstory_plugin.views.BannerGridView
+import com.inappstory.inappstory_plugin.views.BannerListView
 import com.inappstory.inappstory_plugin.views.BannerPlaceholderStore
 import com.inappstory.inappstory_plugin.views.BannerViewFactory
 import com.inappstory.sdk.AppearanceManager
@@ -54,6 +55,20 @@ class BannerViewFactoryTest {
             bannerContext = construction.arguments()[0]
         }.use {
             createFactory().create(context, 1, mapOf("layoutType" to "carousel"))
+        }
+
+        assertSame(context, bannerContext)
+    }
+
+    @Test
+    fun whenListUsesWrappedContext_preservesPlatformContext() {
+        val context = Mockito.mock(ContextWrapper::class.java)
+        var bannerContext: Any? = null
+
+        Mockito.mockConstruction(BannerListView::class.java) { _, construction ->
+            bannerContext = construction.arguments()[0]
+        }.use {
+            createFactory().create(context, 1, mapOf("layoutType" to "list"))
         }
 
         assertSame(context, bannerContext)

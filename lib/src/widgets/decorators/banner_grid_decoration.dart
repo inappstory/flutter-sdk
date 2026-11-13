@@ -4,6 +4,7 @@ class BannerGridDecoration {
     this.horizontalGap = 8,
     this.verticalGap = 8,
     this.cornerRadius = 16,
+    this.columns = 2,
   });
 
   /// Distance between grid columns.
@@ -15,14 +16,22 @@ class BannerGridDecoration {
   /// Corner radius of each banner.
   final double cornerRadius;
 
+  /// Number of columns in the grid.
+  final int columns;
+
+  /// Alias for [columns].
+  int get columnCount => columns;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BannerGridDecoration &&
           horizontalGap == other.horizontalGap &&
           verticalGap == other.verticalGap &&
-          cornerRadius == other.cornerRadius;
+          cornerRadius == other.cornerRadius &&
+          columns == other.columns;
 
   @override
-  int get hashCode => Object.hash(horizontalGap, verticalGap, cornerRadius);
+  int get hashCode =>
+      Object.hash(horizontalGap, verticalGap, cornerRadius, columns);
 }

@@ -424,6 +424,19 @@ class BannerViewTest {
     }
 
     @Test
+    fun givenCarouselWithoutCustomPlaceholder_whenSdkRequestsLoader_thenReturnsNull() {
+        val appearance = CustomBannerCarouselAppearance(
+            bannerOffset = null,
+            bannersGap = null,
+            cornerRadius = null,
+            loop = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertNull(appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
+    }
+
+    @Test
     fun customBannerCarouselAppearance_usesPlaceholderFromProvider() {
         val placeholder = org.mockito.Mockito.mock(View::class.java)
         val appearance = CustomBannerCarouselAppearance(
@@ -440,20 +453,63 @@ class BannerViewTest {
     @Test
     fun customBannerGridAppearance_customValues() {
         val appearance = CustomBannerGridAppearance(
+            columns = 4,
             horizontalGap = 12,
             verticalGap = 16,
             cornerRadius = 4,
             loadingPlaceholder = { null },
         )
 
+        assertEquals(4, appearance.columnCount())
         assertEquals(12, appearance.horizontalGap())
         assertEquals(16, appearance.verticalGap())
         assertEquals(4, appearance.cornerRadius())
+    }
+
+    @Test
+    fun customBannerGridAppearance_customColumnCount() {
+        val appearance = CustomBannerGridAppearance(
+            columns = 3,
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(3, appearance.columnCount())
+    }
+
+    @Test
+    fun customBannerGridAppearance_nullColumnCount_fallBackToSdkDefault() {
+        val appearance = CustomBannerGridAppearance(
+            columns = null,
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
         assertEquals(2, appearance.columnCount())
     }
 
     @Test
     fun customBannerGridAppearance_nullValues_fallBackToSdkDefaults() {
+        val appearance = CustomBannerGridAppearance(
+            columns = null,
+            horizontalGap = null,
+            verticalGap = null,
+            cornerRadius = null,
+            loadingPlaceholder = { null },
+        )
+
+        assertEquals(2, appearance.columnCount())
+        assertEquals(8, appearance.horizontalGap())
+        assertEquals(8, appearance.verticalGap())
+        assertEquals(16, appearance.cornerRadius())
+    }
+
+    @Test
+    fun givenGridWithoutCustomPlaceholder_whenSdkRequestsLoader_thenReturnsNull() {
         val appearance = CustomBannerGridAppearance(
             horizontalGap = null,
             verticalGap = null,
@@ -461,9 +517,7 @@ class BannerViewTest {
             loadingPlaceholder = { null },
         )
 
-        assertEquals(8, appearance.horizontalGap())
-        assertEquals(8, appearance.verticalGap())
-        assertEquals(16, appearance.cornerRadius())
+        assertNull(appearance.loadingPlaceholder(org.mockito.Mockito.mock(Context::class.java)))
     }
 
     @Test

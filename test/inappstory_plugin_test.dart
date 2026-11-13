@@ -63,6 +63,17 @@ void main() {
       });
     });
 
+    group('WHEN tags contain both valid and invalid items', () {
+      test('THEN invalid tags are ignored and valid tags are passed to native init',
+          () async {
+        await InAppStoryPlugin().initWith('key', 'user',
+            tags: ['sport', 'bad tag', 'news']);
+
+        expect(mock.initWithCalls, 1);
+        expect(mock.lastTags, ['sport', 'news']);
+      });
+    });
+
     group('WHEN tags are valid', () {
       test('THEN they are passed through to the native init', () async {
         await InAppStoryPlugin().initWith('key', 'user', tags: ['sport']);

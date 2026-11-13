@@ -15,6 +15,7 @@ class IosBannerView extends BannerPlatformView {
     required super.autoLoad,
     super.layoutType,
     super.gridDecoration,
+    super.listDecoration,
     super.decoration,
   });
 
@@ -25,11 +26,17 @@ class IosBannerView extends BannerPlatformView {
       child: UiKitView(
         viewType: viewType,
         hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-          Factory<OneSequenceGestureRecognizer>(
-            () => HorizontalDragGestureRecognizer(),
-          ),
-        },
+        gestureRecognizers: layoutType == 'list'
+            ? <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                  () => VerticalDragGestureRecognizer(),
+                ),
+              }
+            : <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                  () => HorizontalDragGestureRecognizer(),
+                ),
+              },
         layoutDirection: TextDirection.ltr,
         creationParams: Map<String, dynamic>.from(creationParams),
         creationParamsCodec: const StandardMessageCodec(),

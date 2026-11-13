@@ -33,10 +33,10 @@ class InAppStoryPlugin {
   /// * [userSign]: the signature of [userId], if user signing is used.
   /// * [locale]: the content language.
   /// * [cacheSize]: the size of the SDK cache.
-  /// * [tags]: the initial tags used for targeting.
+  /// * [tags]: the initial tags.
   ///
-  /// Invalid [tags] are dropped: initialization then proceeds with no tags
-  /// rather than throwing.
+  /// Invalid [tags] are ignored (and logged): initialization proceeds with
+  /// valid tags only (or no tags if none are valid) rather than throwing.
   Future<void> initWith(
     String apiKey,
     String userId, {
