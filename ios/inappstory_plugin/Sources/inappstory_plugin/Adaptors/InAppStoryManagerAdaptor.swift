@@ -2,7 +2,7 @@ import Flutter
 import Foundation
 @_spi(IAS_API) import InAppStorySDK
 
-enum MyError: Error {
+enum CheckoutManagerError: Error {
     case invalidInput(message: String)
 }
 
@@ -188,27 +188,25 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
             guard let self else { return }
 
             let offerDTO = offerToDTO(offer)
-            print("The quantity is \(offer.quantity)")
             DispatchQueue.main.async { [self] in
                 self.checkoutManagerCallback.onProductCartUpdate(
                     offer: offerDTO,
                     completion: { result in
                         switch result {
                         case .success(let cartFromFlutter):
-                            let productCart: InAppStorySDK.ProductCart =
-                                InAppStorySDK.ProductCart(
-                                    offers: [],
-                                    price: cartFromFlutter.price,
-                                    oldPrice: cartFromFlutter.oldPrice,
-                                    priceCurrency: cartFromFlutter.priceCurrency
-                                )
+                            let productCart = self.productCartFromDTO(
+                                cartFromFlutter
+                            )
                             complete(.success(productCart))
-                        case .failure:
+                        case .failure(let error):
+                            print(
+                                "Product cart update failed: \(error.localizedDescription)"
+                            )
                             complete(
                                 .failure(
-                                    MyError.invalidInput(
+                                    CheckoutManagerError.invalidInput(
                                         message:
-                                            "Error while getting product cart"
+                                            "Product cart update failed: \(error.localizedDescription)"
                                     )
                                 )
                             )
@@ -239,12 +237,16 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
                             productCartFromFlutter
                         )
                         complete(.success(productCart))
-                    case .failure(_):
+                    case .failure(let error):
+                        print(
+                            "Product cart update failed: \(error.localizedDescription)"
+                        )
                         complete(
                             .failure(
-                                MyError.invalidInput(
+                                CheckoutManagerError.invalidInput(
                                     message:
-                                        "Error while getting product cart"
+                                        "Product cart update failed: \(error.localizedDescription)"
+
                                 )
                             )
                         )
@@ -281,27 +283,27 @@ class InAppStoryManagerAdaptor: InAppStoryManagerHostApi {
         return offerDTO
     }
 
-        func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
-            -> InAppStorySDK.ProductCartOffer
-        {
-            return InAppStorySDK.ProductCartOffer(
-                offerId: offer.offerId,
-                groupId: offer.groupId,
-                name: offer.name,
-                description: offer.offerDescription,
-                url: offer.url,
-                coverUrl: offer.coverUrl,
-                imageUrls: offer.imageUrls,
-                currency: offer.currency,
-                price: offer.price,
-                oldPrice: offer.oldPrice,
-                adult: offer.adult,
-                availability: Int(offer.availability),
-                size: offer.size,
-                color: offer.color,
-                quantity: Int(offer.quantity)
-            )
-        }
+    func offerFromDTO(_ offer: inappstory_plugin.ProductCartOffer)
+        -> InAppStorySDK.ProductCartOffer
+    {
+        return InAppStorySDK.ProductCartOffer(
+            offerId: offer.offerId,
+            groupId: offer.groupId,
+            name: offer.name,
+            description: offer.offerDescription,
+            url: offer.url,
+            coverUrl: offer.coverUrl,
+            imageUrls: offer.imageUrls,
+            currency: offer.currency,
+            price: offer.price,
+            oldPrice: offer.oldPrice,
+            adult: offer.adult,
+            availability: Int(offer.availability),
+            size: offer.size,
+            color: offer.color,
+            quantity: Int(offer.quantity)
+        )
+    }
 
     func productCartFromDTO(_ productCart: inappstory_plugin.ProductCart)
         -> InAppStorySDK.ProductCart

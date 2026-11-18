@@ -1,3 +1,10 @@
+## [0.11.2]
+
+### Fixed 
+
+- resolved an issue with updating the cart on iOS
+
+
 ## [0.11.1]
 
 ### Added
