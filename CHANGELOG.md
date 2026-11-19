@@ -1,3 +1,9 @@
+## [0.11.3]
+
+### Changed
+
+- relax meta constraint to ^1.17.0
+
 ## [0.11.2]
 
 ### Fixed 
