@@ -1,1 +1,36 @@
 example_extended/
+
+# Keep these rules aligned with the root .gitignore, which pub ignores
+# when .pubignore exists.
+.claude/
+.codex/
+.cursor/
+.gemini/
+.aider*
+.github/
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.iml
+*.ipr
+*.iws
+.idea/
+coverage/
+graphify-out/
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+build/
+example_extended/lib/keys.dart
+skills-lock.json
+.build/
+.swiftpm/
+ios/FlutterFramework
+.widget_preview/
